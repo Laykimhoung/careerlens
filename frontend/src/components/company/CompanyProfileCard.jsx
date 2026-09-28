@@ -1,0 +1,1 @@
+export default function CompanyProfileCard() { return <div>CompanyProfileCard</div>; }

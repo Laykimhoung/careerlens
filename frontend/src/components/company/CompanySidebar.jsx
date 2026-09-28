@@ -1,0 +1,1 @@
+export default function CompanySidebar() { return <div>CompanySidebar</div>; }

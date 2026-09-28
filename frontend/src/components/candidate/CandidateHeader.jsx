@@ -1,0 +1,1 @@
+export default function CandidateHeader() { return <header>CandidateHeader</header>; }

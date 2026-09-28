@@ -1,0 +1,1 @@
+export default function ApplicantTable() { return <div>ApplicantTable</div>; }

@@ -1,0 +1,1 @@
+export default function ApplicantDetails() { return <div>ApplicantDetails</div>; }

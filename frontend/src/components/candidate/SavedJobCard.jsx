@@ -1,0 +1,1 @@
+export default function SavedJobCard() { return <div>SavedJobCard</div>; }

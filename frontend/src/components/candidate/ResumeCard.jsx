@@ -1,0 +1,1 @@
+export default function ResumeCard() { return <div>ResumeCard</div>; }

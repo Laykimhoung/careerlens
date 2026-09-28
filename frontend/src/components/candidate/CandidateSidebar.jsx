@@ -1,0 +1,1 @@
+export default function CandidateSidebar() { return <div>CandidateSidebar</div>; }

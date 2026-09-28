@@ -1,0 +1,1 @@
+export default function CompanyHeader() { return <header>CompanyHeader</header>; }

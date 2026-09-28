@@ -1,0 +1,1 @@
+export default function RegisterForm() { return <form>RegisterForm</form>; }
