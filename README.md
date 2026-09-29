@@ -26,6 +26,6 @@ documented in their respective directories.
 - `main` — stable project version
 - `develop` — shared integration branch
 - `backend/kimhoung` — backend development
-- `frontend/dana` — authentication
-- `frontend/en` — landing page and candidate dashboard
+- `frontend/dana` — landing page 
+- `frontend/en` — authentication and candidate dashboard
 - `frontend/youe` — company and admin dashboards
