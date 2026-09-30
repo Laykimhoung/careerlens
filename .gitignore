@@ -22,6 +22,7 @@ dist/
 .vite/
 
 # Testing and coverage
+/test.py
 .coverage
 htmlcov/
 .pytest_cache/
