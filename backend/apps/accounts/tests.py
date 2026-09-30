@@ -65,3 +65,45 @@ class AuthenticationTests(APITestCase):
         }
         response = self.client.post(self.login_url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
+class ProfileTests(APITestCase):
+    def setUp(self):
+        self.candidate_user = User.objects.create_user(
+            username="candidate",
+            email="candidate@example.com",
+            password="password123",
+            role=User.Role.CANDIDATE
+        )
+        self.candidate_profile = CandidateProfile.objects.create(user=self.candidate_user)
+
+        self.company_user = User.objects.create_user(
+            username="company",
+            email="company@example.com",
+            password="password123",
+            role=User.Role.COMPANY
+        )
+        self.company_profile = CompanyProfile.objects.create(user=self.company_user, company_name="Test Company")
+
+    def test_current_user_endpoint(self):
+        self.client.force_authenticate(user=self.candidate_user)
+        response = self.client.get(reverse('current_user'))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['username'], "candidate")
+
+    def test_update_candidate_profile(self):
+        self.client.force_authenticate(user=self.candidate_user)
+        url = reverse('candidate-detail', args=[self.candidate_profile.id])
+        data = {"university": "Harvard"}
+        response = self.client.patch(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.candidate_profile.refresh_from_db()
+        self.assertEqual(self.candidate_profile.university, "Harvard")
+
+    def test_unauthorized_profile_update(self):
+        self.client.force_authenticate(user=self.company_user)
+        url = reverse('candidate-detail', args=[self.candidate_profile.id])
+        data = {"university": "MIT"}
+        response = self.client.patch(url, data, format='json')
+        # company user cannot edit candidate profile
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

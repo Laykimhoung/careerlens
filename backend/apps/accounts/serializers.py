@@ -5,6 +5,29 @@ from .models import CandidateProfile, CompanyProfile
 
 User = get_user_model()
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'email', 'first_name', 'last_name', 'role')
+        read_only_fields = ('username', 'email', 'role')
+
+class CandidateProfileSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+
+    class Meta:
+        model = CandidateProfile
+        fields = ('id', 'user', 'university', 'major', 'graduation_year', 'bio', 'resume_file')
+        read_only_fields = ('user',)
+
+class CompanyProfileSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+
+    class Meta:
+        model = CompanyProfile
+        fields = ('id', 'user', 'company_name', 'industry', 'size', 'location', 'website', 'verification_status')
+        read_only_fields = ('user', 'verification_status')
+
+
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         write_only=True,
