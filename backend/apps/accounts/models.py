@@ -63,3 +63,31 @@ class CompanyProfile(models.Model):
 
     def __str__(self):
         return self.company_name
+
+class CandidateSkill(models.Model):
+    class Proficiency(models.TextChoices):
+        BEGINNER = "BEGINNER", "Beginner"
+        INTERMEDIATE = "INTERMEDIATE", "Intermediate"
+        EXPERT = "EXPERT", "Expert"
+
+    candidate = models.ForeignKey(CandidateProfile, on_delete=models.CASCADE, related_name="skills")
+    skill = models.ForeignKey("jobs.Skill", on_delete=models.CASCADE, related_name="candidate_skills")
+    proficiency = models.CharField(max_length=20, choices=Proficiency.choices, default=Proficiency.INTERMEDIATE)
+
+    class Meta:
+        unique_together = ('candidate', 'skill')
+
+    def __str__(self):
+        return f"{self.candidate.user.username} - {self.skill.name}"
+
+
+class AuditLog(models.Model):
+    actor = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name="audit_logs")
+    action = models.CharField(max_length=255)
+    target_type = models.CharField(max_length=255, blank=True)
+    target_id = models.CharField(max_length=255, blank=True)
+    details = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.actor} - {self.action} at {self.created_at}"
