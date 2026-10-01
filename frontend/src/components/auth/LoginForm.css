@@ -1,0 +1,72 @@
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.login-form__header {
+  margin-bottom: 8px;
+}
+
+.login-form__title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111827;
+  letter-spacing: -0.3px;
+}
+
+.login-form__subtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin-top: 4px;
+}
+
+.login-form__forgot {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
+
+.login-form__forgot-link {
+  font-size: 12px;
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.login-form__forgot-link:hover {
+  text-decoration: underline;
+}
+
+.login-form__footer {
+  text-align: center;
+  font-size: 13px;
+  color: #6b7280;
+  margin-top: 4px;
+}
+
+.login-form__footer a {
+  color: #2563eb;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.login-form__footer a:hover {
+  text-decoration: underline;
+}
+
+.login-form__divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #d1d5db;
+  font-size: 12px;
+}
+
+.login-form__divider::before,
+.login-form__divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background-color: #e5e7eb;
+}
