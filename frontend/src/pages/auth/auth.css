@@ -1,0 +1,38 @@
+.auth-page-header {
+  margin-bottom: 28px;
+}
+
+.auth-page-header__title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111827;
+  letter-spacing: -0.3px;
+}
+
+.auth-page-header__subtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin-top: 5px;
+}
+
+/* Reset password form */
+.reset-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.reset-form__footer {
+  text-align: center;
+  font-size: 13px;
+}
+
+.reset-form__footer a {
+  color: #2563eb;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.reset-form__footer a:hover {
+  text-decoration: underline;
+}

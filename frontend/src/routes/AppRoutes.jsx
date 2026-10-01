@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import ProtectedRoute from "../components/common/ProtectedRoute";
 import MainLayout from "../layouts/MainLayout";
 import CandidateLayout from "../layouts/CandidateLayout";
 import CompanyLayout from "../layouts/CompanyLayout";
@@ -47,7 +48,14 @@ export default function AppRoutes() {
           <Route path="/reset-password" element={<ResetPassword />} />
         </Route>
 
-        <Route path="/candidate" element={<CandidateLayout />}>
+        <Route
+          path="/candidate"
+          element={
+            <ProtectedRoute role="candidate">
+              <CandidateLayout />
+            </ProtectedRoute>
+          }
+        >
           <Route index element={<CandidateDashboard />} />
           <Route path="profile" element={<CandidateProfile />} />
           <Route path="resume" element={<CandidateResume />} />
