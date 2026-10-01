@@ -1,0 +1,19 @@
+﻿.admin-layout {
+  min-height: 100vh;
+  background: #f8f9fa;
+  color: #192721;
+  font-family: "Aptos", "Segoe UI", sans-serif;
+  display: flex;
+}
+
+.admin-main {
+  flex: 1;
+  margin-left: 250px;
+  min-height: 100vh;
+}
+
+.admin-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 40px;
+}

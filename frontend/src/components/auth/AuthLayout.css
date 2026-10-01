@@ -1,0 +1,228 @@
+/* ── Auth Layout ─────────────────────────────────────────────────────────── */
+.auth-layout {
+  min-height: 100vh;
+  display: flex;
+}
+
+/* ── Left branding panel ─────────────────────────────────────────────────── */
+.auth-layout__brand {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 48px;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 45%, #4338ca 100%);
+}
+
+@media (min-width: 1024px) {
+  .auth-layout__brand {
+    display: flex;
+    width: 50%;
+  }
+}
+
+/* Decorative circles */
+.auth-layout__circle {
+  position: absolute;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.06);
+}
+.auth-layout__circle--1 { width: 320px; height: 320px; top: -80px; left: -80px; }
+.auth-layout__circle--2 { width: 260px; height: 260px; top: 35%; right: -64px; }
+.auth-layout__circle--3 { width: 380px; height: 380px; bottom: -64px; left: 25%; }
+
+/* Logo */
+.auth-layout__logo {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.auth-layout__logo-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-layout__logo-icon svg {
+  width: 20px;
+  height: 20px;
+  color: #ffffff;
+}
+
+.auth-layout__logo-text {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.3px;
+}
+
+/* Center content */
+.auth-layout__content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.auth-layout__headline {
+  font-size: 38px;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+}
+
+.auth-layout__headline span {
+  color: #bfdbfe;
+}
+
+.auth-layout__subtitle {
+  font-size: 16px;
+  color: #bfdbfe;
+  line-height: 1.65;
+  max-width: 340px;
+  margin-top: 8px;
+}
+
+/* Stats grid */
+.auth-layout__stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.auth-layout__stat {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 16px 10px;
+  text-align: center;
+}
+
+.auth-layout__stat-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.auth-layout__stat-label {
+  font-size: 11px;
+  color: #bfdbfe;
+  margin-top: 4px;
+}
+
+/* Testimonial */
+.auth-layout__testimonial {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.auth-layout__testimonial-text {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.65;
+  font-style: italic;
+}
+
+.auth-layout__testimonial-author {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.auth-layout__testimonial-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background-color: #93c5fd;
+  color: #1e3a8a;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.auth-layout__testimonial-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.auth-layout__testimonial-role {
+  font-size: 11px;
+  color: #bfdbfe;
+  margin-top: 1px;
+}
+
+/* Footer */
+.auth-layout__footer {
+  position: relative;
+  font-size: 12px;
+  color: #93c5fd;
+}
+
+/* ── Right form panel ────────────────────────────────────────────────────── */
+.auth-layout__form-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 48px 24px;
+  background-color: #ffffff;
+  overflow-y: auto;
+}
+
+.auth-layout__mobile-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 40px;
+  text-decoration: none;
+}
+
+@media (min-width: 1024px) {
+  .auth-layout__mobile-logo {
+    display: none;
+  }
+}
+
+.auth-layout__mobile-logo-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background-color: #2563eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-layout__mobile-logo-icon svg {
+  width: 18px;
+  height: 18px;
+  color: #ffffff;
+}
+
+.auth-layout__mobile-logo-text {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.auth-layout__form-box {
+  width: 100%;
+  max-width: 380px;
+}
