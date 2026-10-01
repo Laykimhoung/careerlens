@@ -37,3 +37,30 @@
 - **GET, PATCH** `/api/auth/companies/{id}/`
   - Description: Retrieves a specific company profile. `PATCH` is only allowed if the authenticated user owns the profile (`IsOwnerOrReadOnly`).
   - Fields updatable via PATCH: `company_name`, `industry`, `size`, `location`, `website`
+
+## Jobs
+
+### Skills
+- **GET** `/api/skills/`
+  - Description: Lists all skills. (Globally readable).
+
+### Jobs
+- **GET** `/api/jobs/`
+  - Description: Lists jobs. Unauthenticated users and candidates only see `PUBLISHED` jobs. Companies see their own jobs (any status) plus `PUBLISHED` jobs from other companies.
+
+- **GET** `/api/jobs/{id}/`
+  - Description: Retrieves details for a specific job.
+
+- **POST** `/api/jobs/`
+  - Description: Creates a new job. (Requires `IsCompanyUser`). Automatically assigns the authenticated user's company as the owner.
+
+- **PATCH, DELETE** `/api/jobs/{id}/`
+  - Description: Updates or deletes a job. (Requires `IsJobOwnerOrReadOnly`). Only the company that created the job can modify it.
+
+### Saved Jobs
+- **GET** `/api/saved-jobs/`
+  - Description: Lists jobs saved by the currently authenticated candidate. (Requires `IsCandidateUser`).
+
+- **POST** `/api/saved-jobs/`
+  - Body: `{"job_id": 123}`
+  - Description: Saves a job for the currently authenticated candidate. Automatically infers the candidate from the authenticated user.
