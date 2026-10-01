@@ -22,7 +22,6 @@ dist/
 .vite/
 
 # Testing and coverage
-/test.py
 .coverage
 htmlcov/
 .pytest_cache/
@@ -36,3 +35,10 @@ htmlcov/
 .DS_Store
 Thumbs.db
 Desktop.ini
+
+# Temporary notes
+/note.txt
+/note.md
+
+# Private learning directory
+my-learning/
