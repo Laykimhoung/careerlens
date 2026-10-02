@@ -85,6 +85,19 @@ export function AuthProvider({ children }) {
 
   const clearError = useCallback(() => setError(null), []);
 
+  const switchRole = useCallback((newRole) => {
+    if (user) {
+      setUser({ ...user, role: newRole });
+    } else {
+      setUser({
+        id: 1,
+        full_name: "Dara Sok",
+        email: "demo@test.com",
+        role: newRole
+      });
+    }
+  }, [user]);
+
   // Role helpers
   const isAuthenticated = Boolean(token && user);
   const isCandidate = isAuthenticated && user?.role === "candidate";
@@ -104,6 +117,7 @@ export function AuthProvider({ children }) {
     register,
     logout,
     clearError,
+    switchRole,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
