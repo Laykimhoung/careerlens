@@ -1,0 +1,86 @@
+.job-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 16px 20px;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  transition: box-shadow 0.2s;
+}
+
+.job-card:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.job-card__title-link {
+  text-decoration: none;
+}
+
+.job-card__title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #0f766e; /* Teal color matching the image */
+  margin-bottom: 4px;
+  transition: color 0.15s;
+}
+
+.job-card__title-link:hover .job-card__title {
+  color: #115e59;
+  text-decoration: underline;
+}
+
+.job-card__meta {
+  font-size: 13px;
+  color: #4b5563;
+  margin-bottom: 4px;
+}
+
+.job-card__salary {
+  font-size: 13px;
+  color: #374151;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.job-card__tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.job-card__tag {
+  background-color: #f3f4f6;
+  color: #4b5563;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.job-card__actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* Adjust outline button for teal theme locally if needed */
+.job-card__actions .btn--outline {
+  color: #374151;
+  border-color: #d1d5db;
+}
+
+.job-card__actions .btn--outline:hover {
+  background-color: #f9fafb;
+}
+
+@media (max-width: 640px) {
+  .job-card {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .job-card__actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
