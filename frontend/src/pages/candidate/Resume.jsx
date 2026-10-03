@@ -1,1 +1,0 @@
-export default function Resume() { return <div>Candidate Resume</div>; }

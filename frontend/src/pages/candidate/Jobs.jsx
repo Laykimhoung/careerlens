@@ -1,1 +1,0 @@
-export default function Jobs() { return <div>Candidate Jobs</div>; }

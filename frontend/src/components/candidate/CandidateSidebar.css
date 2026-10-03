@@ -1,0 +1,237 @@
+.sidebar {
+  width: 260px;
+  background-color: #ffffff;
+  border-right: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 40;
+  transition: transform 0.3s ease;
+}
+
+@media (max-width: 1024px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+  .sidebar--open {
+    transform: translateX(0);
+  }
+}
+
+@media (min-width: 1025px) {
+  .sidebar {
+    position: static;
+    transform: none;
+  }
+}
+
+.sidebar__header {
+  height: 64px;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.sidebar__logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: #111827;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.sidebar__logo-icon {
+  width: 32px;
+  height: 32px;
+  background-color: #2563eb;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.sidebar__logo-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.sidebar__close {
+  display: none;
+  background: none;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.sidebar__close:hover {
+  color: #111827;
+}
+
+@media (max-width: 1024px) {
+  .sidebar__close {
+    display: block;
+  }
+}
+
+.sidebar__nav {
+  flex: 1;
+  padding: 20px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow-y: auto;
+}
+
+.sidebar__link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #4b5563;
+  font-weight: 500;
+  font-size: 14px;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.sidebar__link svg {
+  width: 20px;
+  height: 20px;
+  color: #9ca3af;
+  transition: color 0.15s;
+}
+
+.sidebar__link:hover {
+  background-color: #f3f4f6;
+  color: #111827;
+}
+
+.sidebar__link:hover svg {
+  color: #4b5563;
+}
+
+.sidebar__link.active {
+  background-color: #eff6ff;
+  color: #1d4ed8;
+}
+
+.sidebar__link.active svg {
+  color: #2563eb;
+}
+
+.sidebar__footer {
+  padding: 20px 12px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.sidebar__logout {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  color: #ef4444;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.sidebar__logout:hover {
+  background-color: #fef2f2;
+}
+
+.sidebar__logout svg {
+  width: 20px;
+  height: 20px;
+}
+
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(17, 24, 39, 0.5);
+  z-index: 30;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+@media (max-width: 1024px) {
+  .sidebar-overlay--visible {
+    display: block;
+    opacity: 1;
+  }
+}
+/* ── Custom Sidebar Footer UI ────────────────────────────────────────────── */
+.sidebar__role-switcher {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #0f766e;
+  border-radius: 6px;
+  background-color: #ffffff;
+  color: #111827;
+  font-size: 14px;
+  outline: none;
+  cursor: pointer;
+  margin-bottom: 16px;
+  appearance: auto; /* native dropdown arrow */
+}
+
+.sidebar__role-switcher:focus {
+  box-shadow: 0 0 0 2px rgba(15, 118, 110, 0.2);
+}
+
+.sidebar__user-profile {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sidebar__user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar__user-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.sidebar__user-role {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.sidebar__logout-btn {
+  padding: 6px 12px;
+  background-color: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  color: #1e3a8a; /* Dark blue matching image */
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.sidebar__logout-btn:hover {
+  background-color: #f9fafb;
+  border-color: #9ca3af;
+}

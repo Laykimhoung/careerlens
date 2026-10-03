@@ -1,1 +1,0 @@
-export default function Applications() { return <div>Candidate Applications</div>; }

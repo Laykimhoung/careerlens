@@ -1,0 +1,55 @@
+.applications-page {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.applications-filters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  overflow-x: auto;
+  padding-bottom: 8px; /* Room for scrollbar on mobile */
+}
+
+.applications-filters::-webkit-scrollbar {
+  height: 4px;
+}
+.applications-filters::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 4px;
+}
+
+.app-filter-btn {
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid #d1d5db;
+  background-color: #ffffff;
+  color: #4b5563;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+
+.app-filter-btn:hover {
+  background-color: #f3f4f6;
+}
+
+.app-filter-btn--active {
+  background-color: #111827;
+  color: #ffffff;
+  border-color: #111827;
+}
+
+.app-filter-btn--active:hover {
+  background-color: #374151;
+  border-color: #374151;
+}
+
+.applications-list__header {
+  margin-bottom: 16px;
+  font-size: 14px;
+  color: #4b5563;
+  font-weight: 500;
+}

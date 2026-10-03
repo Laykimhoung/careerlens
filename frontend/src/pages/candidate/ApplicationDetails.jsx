@@ -1,1 +1,0 @@
-export default function ApplicationDetails() { return <div>ApplicationDetails</div>; }

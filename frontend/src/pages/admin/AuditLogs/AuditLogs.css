@@ -1,0 +1,7 @@
+/* AuditLogs CSS */
+.audit-timestamp {
+  color: #9ca3af;
+  font-size: 12px;
+  white-space: nowrap;
+  font-family: monospace;
+}

@@ -1,0 +1,166 @@
+.resume-page {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.resume-section {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 32px;
+  margin-bottom: 24px;
+}
+
+.resume-section__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.resume-section__title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+}
+
+/* ── Upload Area ────────────────────────────────────────────────────────── */
+.resume-upload {
+  border: 2px dashed #d1d5db;
+  border-radius: 8px;
+  padding: 40px 20px;
+  text-align: center;
+  background-color: #f9fafb;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.resume-upload:hover {
+  border-color: #0f766e;
+  background-color: #f0fdf4;
+}
+
+.resume-upload__icon {
+  width: 48px;
+  height: 48px;
+  color: #9ca3af;
+  margin: 0 auto 16px auto;
+}
+
+.resume-upload:hover .resume-upload__icon {
+  color: #0f766e;
+}
+
+.resume-upload__text {
+  font-size: 14px;
+  color: #4b5563;
+  margin-bottom: 8px;
+}
+
+.resume-upload__text strong {
+  color: #0f766e;
+}
+
+.resume-upload__hint {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+/* ── Current File ───────────────────────────────────────────────────────── */
+.resume-file {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background-color: #ffffff;
+}
+
+.resume-file__info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.resume-file__icon {
+  width: 32px;
+  height: 32px;
+  color: #ef4444; /* PDF red */
+}
+
+.resume-file__details p {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.resume-file__details span {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.resume-file__actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* ── Timeline / List ────────────────────────────────────────────────────── */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.timeline-item {
+  position: relative;
+  padding-left: 20px;
+  border-left: 2px solid #e5e7eb;
+}
+
+.timeline-item::before {
+  content: "";
+  position: absolute;
+  left: -6px;
+  top: 4px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #0f766e;
+}
+
+.timeline-item__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.timeline-item__title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.timeline-item__subtitle {
+  font-size: 14px;
+  color: #4b5563;
+  font-weight: 500;
+}
+
+.timeline-item__date {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.timeline-item__desc {
+  font-size: 14px;
+  color: #4b5563;
+  line-height: 1.5;
+}
+
+@media (max-width: 640px) {
+  .timeline-item__header {
+    flex-direction: column;
+  }
+}
