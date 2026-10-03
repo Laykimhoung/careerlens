@@ -1,1 +1,5 @@
 /* CSS for CompanyHeader */
+
+.company-topbar { min-height: 68px; padding: 12px 30px; display: flex; align-items: center; justify-content: space-between; gap: 16px; background: #fff; border-bottom: 1px solid #dfe7e1; }
+.company-topbar strong { font-size: 14px; }
+.company-topbar small { display: block; color: #66766d; font-size: 12px; }

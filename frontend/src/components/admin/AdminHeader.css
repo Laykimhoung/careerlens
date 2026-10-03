@@ -1,1 +1,6 @@
 /* CSS for AdminHeader */
+
+.admin-header { min-height: 64px; padding: 12px 26px; display: flex; align-items: center; justify-content: space-between; gap: 15px; background: #fff; border-bottom: 1px solid #dfe7e1; }
+.admin-header h1 { margin: 0; font-size: 16px; }
+.admin-header p { margin: 3px 0 0; color: #68776f; font-size: 12px; }
+.admin-header-actions { display: flex; align-items: center; gap: 12px; }
