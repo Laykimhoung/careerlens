@@ -1,1 +1,17 @@
 /* CSS for ApplicantBoard */
+
+.workspace-board { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 20px; align-items: flex-start; min-height: 60vh; }
+.board-column { flex: 0 0 300px; background: #e8edea; border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 12px; }
+.board-column-header { display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 14px; color: #173f35; padding: 4px 4px 8px; border-bottom: 2px solid #dfe7e1; }
+.board-column-count { background: #dfe7e1; color: #66766d; padding: 2px 8px; border-radius: 12px; font-size: 12px; }
+.board-card { background: #fff; border: 1px solid #dfe7e1; border-radius: 6px; padding: 12px; cursor: grab; box-shadow: 0 1px 3px rgba(0,0,0,0.05); transition: box-shadow 0.2s, transform 0.2s; }
+.view-toggle { display: flex; gap: 4px; background: #e8edea; padding: 4px; border-radius: 6px; }
+.board-card:active { cursor: grabbing; }
+.board-card:hover { box-shadow: 0 3px 6px rgba(0,0,0,0.1); transform: translateY(-2px); }
+.board-card.dragging { opacity: 0.5; }
+.board-column.drag-over { background: #d3e5dc; }
+.board-card-title { font-weight: 600; font-size: 14px; margin-bottom: 4px; display: flex; justify-content: space-between; }
+.board-card-role { font-size: 13px; color: #3a6254; margin-bottom: 8px; }
+.board-card-meta { font-size: 12px; color: #66766d; display: flex; justify-content: space-between; align-items: center; margin-top: 12px; padding-top: 12px; border-top: 1px dashed #dfe7e1; }
+.board-card-skills { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+.board-card-skill { background: #f2f5f2; color: #66766d; font-size: 11px; padding: 2px 6px; border-radius: 4px; }
