@@ -1,0 +1,20 @@
+/* Settings CSS */
+.settings-danger-zone {
+  border-left: 4px solid #ef4444;
+}
+
+.settings-danger-zone h2 {
+  color: #b91c1c;
+}
+
+.settings-danger-zone p {
+  color: #6b7280;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.settings-saved-msg {
+  font-size: 13px;
+  color: #15803d;
+  font-weight: 600;
+}
