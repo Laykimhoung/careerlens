@@ -89,10 +89,10 @@ Tasks:
 **Pages:**
 ```text
 frontend/src/pages/auth/
-├── Login.jsx
-├── Register.jsx
-├── ForgotPassword.jsx
-└── ResetPassword.jsx
+├── Login/
+├── Register/
+├── ForgotPassword/
+└── ResetPassword/
 ```
 
 **Components:**
@@ -133,14 +133,14 @@ Tasks:
 **Pages:**
 ```text
 frontend/src/pages/candidate/
-├── Dashboard.jsx
-├── Profile.jsx
-├── Resume.jsx
-├── Jobs.jsx
-├── JobDetails.jsx
-├── Applications.jsx
-├── ApplicationDetails.jsx
-└── SavedJobs.jsx
+├── Dashboard/
+├── Profile/
+├── Resume/
+├── Jobs/
+├── JobDetails/
+├── Applications/
+├── ApplicationDetails/
+└── SavedJobs/
 ```
 
 **Components:**
@@ -189,14 +189,14 @@ Tasks:
 **Pages:**
 ```text
 frontend/src/pages/company/
-├── Dashboard.jsx
-├── Profile.jsx
-├── Jobs.jsx
-├── CreateJob.jsx
-├── EditJob.jsx
-├── Applicants.jsx
-├── ApplicantDetails.jsx
-└── Interviews.jsx
+├── Dashboard/
+├── Profile/
+├── Jobs/
+├── CreateJob/
+├── EditJob/
+├── Applicants/
+├── ApplicantDetails/
+└── Interviews/
 ```
 
 **Components:**
@@ -236,12 +236,12 @@ Tasks:
 **Pages:**
 ```text
 frontend/src/pages/admin/
-├── Dashboard.jsx
-├── Users.jsx
-├── Companies.jsx
-├── Candidates.jsx
-├── Jobs.jsx
-└── Verification.jsx
+├── Dashboard/
+├── Users/
+├── Companies/
+├── Candidates/
+├── Jobs/
+└── Verification/
 ```
 
 **Components:**
@@ -269,10 +269,10 @@ The frontend alone must never be treated as the security boundary.
 ---
 
 ### Teammate 4 — Kimhoung
-**Branch:** `backend/kimhoung`  
-**Role:** Backend Developer + Team Lead
+**Branches:** `backend/kimhoung` and `frontend/kimhoung`  
+**Role:** Backend Developer + Team Lead + Frontend Support
 
-Responsible for Django, PostgreSQL, API development, and backend integration.
+Responsible for Django, PostgreSQL, API development, backend integration, and shared frontend structural maintenance.
 
 Tasks:
 - Design and maintain database models.
@@ -287,6 +287,7 @@ Tasks:
 - Implement admin APIs and reporting.
 - Maintain API documentation.
 - Coordinate API contracts with all frontend members.
+- Establish and maintain the shared frontend structure and global frontend foundation.
 - Review integration issues between React and Django.
 
 **Main ownership:**
@@ -338,6 +339,8 @@ coordinating with Kimhoung.
 | `services/applicationService.js` | Youe |
 | `services/interviewService.js` | Youe |
 | `services/adminService.js` | Youe |
+| `styles/` | Kimhoung |
+| `context/` | Kimhoung |
 ---
 ##  Backend Folder Ownership Summary
 | Folder or file | Owner |
@@ -352,19 +355,20 @@ The following files affect multiple parts of the application.
 frontend/src/
 ├── App.jsx
 ├── main.jsx
-├── index.css
 ├── routes/AppRoutes.jsx
-├── services/api.js
+├── context/
+├── styles/
+├── services/
 ├── hooks/useFetch.js
 ├── hooks/useForm.js
 ├── utils/constants.js
 ├── utils/validators.js
 ├── utils/formatters.js
 ├── utils/storage.js
-├── layouts/MainLayout.jsx
-├── layouts/CandidateLayout.jsx
-├── layouts/CompanyLayout.jsx
-└── layouts/AdminLayout.jsx
+├── layouts/MainLayout/MainLayout.jsx
+├── layouts/CandidateLayout/CandidateLayout.jsx
+├── layouts/CompanyLayout/CompanyLayout.jsx
+└── layouts/AdminLayout/AdminLayout.jsx
 ```
 
 Rules:
@@ -532,6 +536,7 @@ main
     ├── frontend/dana
     ├── frontend/en
     ├── frontend/youe
+    ├── frontend/kimhoung
     └── backend/kimhoung
 ```
 
@@ -540,7 +545,8 @@ main
 - `frontend/dana`: Dana's work.
 - `frontend/en`: En's work.
 - `frontend/youe`: Youe's work.
-- `backend/kimhoung`: Kimhoung's work.
+- `frontend/kimhoung`: Kimhoung's frontend support work.
+- `backend/kimhoung`: Kimhoung's backend work.
 
 Each member should normally work on their own branch.
 

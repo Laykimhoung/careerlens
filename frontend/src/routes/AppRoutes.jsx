@@ -1,47 +1,47 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ProtectedRoute from "../components/common/ProtectedRoute";
-import MainLayout from "../layouts/MainLayout";
-import CandidateLayout from "../layouts/CandidateLayout";
-import CompanyLayout from "../layouts/CompanyLayout";
-import AdminLayout from "../layouts/AdminLayout";
+import MainLayout from "../layouts/MainLayout/MainLayout";
+import CandidateLayout from "../layouts/CandidateLayout/CandidateLayout";
+import CompanyLayout from "../layouts/CompanyLayout/CompanyLayout";
+import AdminLayout from "../layouts/AdminLayout/AdminLayout";
 
-import Home from "../pages/landing/Home";
-import Login from "../pages/auth/Login";
-import Register from "../pages/auth/Register";
-import ForgotPassword from "../pages/auth/ForgotPassword";
-import ResetPassword from "../pages/auth/ResetPassword";
+import Home from "../pages/landing/Home/Home";
+import Login from "../pages/auth/Login/Login";
+import Register from "../pages/auth/Register/Register";
+import ForgotPassword from "../pages/auth/ForgotPassword/ForgotPassword";
+import ResetPassword from "../pages/auth/ResetPassword/ResetPassword";
 
-import CandidateDashboard from "../pages/candidate/Dashboard";
-import CandidateProfile from "../pages/candidate/Profile";
-import CandidateResume from "../pages/candidate/Resume";
-import CandidateJobs from "../pages/candidate/Jobs";
-import CandidateJobDetails from "../pages/candidate/JobDetails";
-import CandidateApplications from "../pages/candidate/Applications";
-import CandidateApplicationDetails from "../pages/candidate/ApplicationDetails";
-import CandidateSavedJobs from "../pages/candidate/SavedJobs";
+import CandidateDashboard from "../pages/candidate/Dashboard/Dashboard";
+import CandidateProfile from "../pages/candidate/Profile/Profile";
+import CandidateResume from "../pages/candidate/Resume/Resume";
+import CandidateJobs from "../pages/candidate/Jobs/Jobs";
+import CandidateJobDetails from "../pages/candidate/JobDetails/JobDetails";
+import CandidateApplications from "../pages/candidate/Applications/Applications";
+import CandidateApplicationDetails from "../pages/candidate/ApplicationDetails/ApplicationDetails";
+import CandidateSavedJobs from "../pages/candidate/SavedJobs/SavedJobs";
 
-import CompanyDashboard from "../pages/company/Dashboard";
-import CompanyProfile from "../pages/company/Profile";
-import CompanyJobs from "../pages/company/Jobs";
-import CompanyCreateJob from "../pages/company/CreateJob";
-import CompanyEditJob from "../pages/company/EditJob";
-import CompanyApplicants from "../pages/company/Applicants";
-import CompanyApplicantDetails from "../pages/company/ApplicantDetails";
-import CompanyInterviews from "../pages/company/Interviews";
+import CompanyDashboard from "../pages/company/Dashboard/Dashboard";
+import CompanyProfile from "../pages/company/Profile/Profile";
+import CompanyJobs from "../pages/company/Jobs/Jobs";
+import CompanyCreateJob from "../pages/company/CreateJob/CreateJob";
+import CompanyEditJob from "../pages/company/EditJob/EditJob";
+import CompanyApplicants from "../pages/company/Applicants/Applicants";
+import CompanyApplicantDetails from "../pages/company/ApplicantDetails/ApplicantDetails";
+import CompanyInterviews from "../pages/company/Interviews/Interviews";
 
-import AdminDashboard from "../pages/admin/Dashboard";
-import AdminUsers from "../pages/admin/Users";
-import AdminCompanies from "../pages/admin/Companies";
-import AdminCandidates from "../pages/admin/Candidates";
-import AdminJobs from "../pages/admin/Jobs";
-import AdminVerification from "../pages/admin/Verification";
-import AdminApplications from "../pages/admin/Applications";
-import AdminReports from "../pages/admin/Reports";
-import AdminCategories from "../pages/admin/Categories";
-import AdminSkills from "../pages/admin/Skills";
-import AdminAuditLogs from "../pages/admin/AuditLogs";
-import AdminNotifications from "../pages/admin/Notifications";
-import AdminSettings from "../pages/admin/Settings";
+import AdminDashboard from "../pages/admin/Dashboard/Dashboard";
+import AdminUsers from "../pages/admin/Users/Users";
+import AdminCompanies from "../pages/admin/Companies/Companies";
+import AdminCandidates from "../pages/admin/Candidates/Candidates";
+import AdminJobs from "../pages/admin/Jobs/Jobs";
+import AdminVerification from "../pages/admin/Verification/Verification";
+import AdminApplications from "../pages/admin/Applications/Applications";
+import AdminReports from "../pages/admin/Reports/Reports";
+import AdminCategories from "../pages/admin/Categories/Categories";
+import AdminSkills from "../pages/admin/Skills/Skills";
+import AdminAuditLogs from "../pages/admin/AuditLogs/AuditLogs";
+import AdminNotifications from "../pages/admin/Notifications/Notifications";
+import AdminSettings from "../pages/admin/Settings/Settings";
 
 export default function AppRoutes() {
   return (
