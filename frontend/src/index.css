@@ -1,7 +1,87 @@
+:root {
+  /* Brand Colors - Blue Theme */
+  --color-primary: #638ECB;
+  --color-primary-hover: #4e73a8;
+  --color-primary-light: #a3c1e8;
+  --color-primary-soft: #ebf1fa;
+  
+  /* Sidebar Colors (Replacing dark green with dark blue) */
+  --color-sidebar-bg: #1b2b44;
+  --color-sidebar-text: #f8fafc;
+  --color-sidebar-muted: #94a3b8;
+  --color-sidebar-active: #273e63;
+  --color-sidebar-border: #2d476d;
+
+  /* Backgrounds */
+  --color-bg-primary: #f8fafc;
+  --color-surface: #ffffff;
+  --color-surface-hover: #f1f5f9;
+
+  /* Text */
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #475569;
+  --color-text-muted: #64748b;
+
+  /* Borders and Focus */
+  --color-border: #e2e8f0;
+  --color-border-strong: #cbd5e1;
+  --color-focus-ring: #638ECB;
+
+  /* Semantic Colors */
+  --color-success: #16a34a;
+  --color-success-bg: #dcfce7;
+  --color-warning: #d97706;
+  --color-warning-bg: #fef3c7;
+  --color-danger: #dc2626;
+  --color-danger-border: #fca5a5;
+  --color-danger-bg: #fee2e2;
+  --color-info: #2563eb;
+
+  /* Typography */
+  --font-body: 'Plus Jakarta Sans', 'Aptos', 'Segoe UI', system-ui, sans-serif;
+  --fs-body: 1rem;
+  --fs-small: 0.875rem;
+
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+
+  /* Layout & Spacing */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --sidebar-width: 248px;
+
+  /* Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s ease;
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
 }
 
 html,
@@ -12,9 +92,9 @@ body,
 }
 
 body {
-  font-family: Arial, Helvetica, sans-serif;
-  background-color: #f5f7fa;
-  color: #1f2937;
+  font-family: var(--font-body);
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
   line-height: 1.6;
 }
 
@@ -25,32 +105,32 @@ div {
 
 h1 {
   font-size: 32px;
-  font-weight: 700;
-  margin-bottom: 16px;
+  font-weight: var(--fw-bold);
+  margin-bottom: var(--space-md);
 }
 
 h2 {
   font-size: 26px;
-  font-weight: 600;
+  font-weight: var(--fw-semibold);
   margin-bottom: 14px;
 }
 
 h3 {
   font-size: 22px;
-  font-weight: 600;
+  font-weight: var(--fw-semibold);
   margin-bottom: 12px;
 }
 
 h4 {
   font-size: 18px;
-  font-weight: 600;
+  font-weight: var(--fw-semibold);
   margin-bottom: 10px;
 }
 
 p {
-  font-size: 16px;
+  font-size: var(--fs-body);
   margin-bottom: 10px;
-  color: #64748b;
+  color: var(--color-text-secondary);
 }
 
 /* Links */
@@ -64,10 +144,10 @@ button {
   border: none;
   outline: none;
   padding: 10px 18px;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   cursor: pointer;
   font-size: 15px;
-  transition: 0.2s ease;
+  transition: var(--transition-fast);
 }
 
 button:hover {
@@ -80,16 +160,20 @@ textarea,
 select {
   width: 100%;
   padding: 10px 12px;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
   outline: none;
   font-size: 15px;
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
 }
 
 input:focus,
 textarea:focus,
 select:focus {
-  border-color: #2563eb;
+  border-color: var(--color-focus-ring);
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 1px;
 }
 
 /* Images */
@@ -106,10 +190,11 @@ ol {
 
 /* Cards */
 .card {
-  background: white;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-sm);
 }
 
 /* Container */
@@ -117,7 +202,7 @@ ol {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
+  padding: var(--space-xl);
 }
 
 /* Flex utility */
@@ -140,5 +225,5 @@ ol {
 /* Grid */
 .grid {
   display: grid;
-  gap: 20px;
+  gap: var(--space-xl);
 }
