@@ -35,6 +35,13 @@ import AdminCompanies from "../pages/admin/Companies";
 import AdminCandidates from "../pages/admin/Candidates";
 import AdminJobs from "../pages/admin/Jobs";
 import AdminVerification from "../pages/admin/Verification";
+import AdminApplications from "../pages/admin/Applications";
+import AdminReports from "../pages/admin/Reports";
+import AdminCategories from "../pages/admin/Categories";
+import AdminSkills from "../pages/admin/Skills";
+import AdminAuditLogs from "../pages/admin/AuditLogs";
+import AdminNotifications from "../pages/admin/Notifications";
+import AdminSettings from "../pages/admin/Settings";
 
 export default function AppRoutes() {
   return (
@@ -80,10 +87,17 @@ export default function AppRoutes() {
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
           <Route path="users" element={<AdminUsers />} />
-          <Route path="companies" element={<AdminCompanies />} />
           <Route path="candidates" element={<AdminCandidates />} />
-          <Route path="jobs" element={<AdminJobs />} />
+          <Route path="companies" element={<AdminCompanies />} />
           <Route path="verification" element={<AdminVerification />} />
+          <Route path="jobs" element={<AdminJobs />} />
+          <Route path="applications" element={<AdminApplications />} />
+          <Route path="reports" element={<AdminReports />} />
+          <Route path="categories" element={<AdminCategories />} />
+          <Route path="skills" element={<AdminSkills />} />
+          <Route path="audit-logs" element={<AdminAuditLogs />} />
+          <Route path="notifications" element={<AdminNotifications />} />
+          <Route path="settings" element={<AdminSettings />} />
         </Route>
       </Routes>
     </BrowserRouter>

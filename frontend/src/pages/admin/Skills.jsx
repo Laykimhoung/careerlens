@@ -1,84 +1,86 @@
-﻿import { u&#9888;e&#9888;t-te } from "re-ct";
-import { getDemoCollection, &#9888;-veDemoCollection } from "../../&#9888;ervice&#9888;/member3Demo&#9888;tore";
-import "./&#9888;kill&#9888;.c&#9888;&#9888;";
+import { useState } from "react";
+import { readStore, saveDemoCollection } from "../../services/member3DemoStore";
+import "./Skills.css";
 
-function &#9888;kill&#9888;() {
-  con&#9888;t [&#9888;kill&#9888;, &#9888;et&#9888;kill&#9888;] = u&#9888;e&#9888;t-te(() => getDemoCollection("&#9888;kill&#9888;"));
-  con&#9888;t [new&#9888;kill, &#9888;etNew&#9888;kill] = u&#9888;e&#9888;t-te("");
-  con&#9888;t [&#9888;e-rch, &#9888;et&#9888;e-rch] = u&#9888;e&#9888;t-te("");
+function Skills() {
+  const [store, setStore] = useState(() => readStore());
+  const [newSkill, setNewSkill] = useState("");
+  const [search, setSearch] = useState("");
 
-  con&#9888;t h-ndle-dd = (e) => {
-    e.preventDef-ult();
-    if (new&#9888;kill.trim() && !&#9888;kill&#9888;.include&#9888;(new&#9888;kill.trim())) {
-      con&#9888;t upd-ted = [...&#9888;kill&#9888;, new&#9888;kill.trim()];
-      &#9888;et&#9888;kill&#9888;(upd-ted);
-      &#9888;-veDemoCollection("&#9888;kill&#9888;", upd-ted);
-      &#9888;etNew&#9888;kill("");
+  const skills = store.skills || [];
+
+  const handleAdd = (e) => {
+    e.preventDefault();
+    if (newSkill.trim() && !skills.includes(newSkill.trim())) {
+      const updated = [...skills, newSkill.trim()];
+      saveDemoCollection("skills", updated);
+      setStore((s) => ({ ...s, skills: updated }));
+      setNewSkill("");
     }
   };
 
-  con&#9888;t h-ndleDelete = (&#9888;kill) => {
-    con&#9888;t upd-ted = &#9888;kill&#9888;.filter((&#9888;) => &#9888; !== &#9888;kill);
-    &#9888;et&#9888;kill&#9888;(upd-ted);
-    &#9888;-veDemoCollection("&#9888;kill&#9888;", upd-ted);
+  const handleDelete = (skill) => {
+    const updated = skills.filter((s) => s !== skill);
+    saveDemoCollection("skills", updated);
+    setStore((s) => ({ ...s, skills: updated }));
   };
 
-  con&#9888;t filtered = &#9888;kill&#9888;.filter((&#9888;) => &#9888;.toLowerC-&#9888;e().include&#9888;(&#9888;e-rch.toLowerC-&#9888;e()));
+  const filtered = skills.filter((s) => s.toLowerCase().includes(search.toLowerCase()));
 
   return (
-    <&#9888;ection cl-&#9888;&#9888;N-me="work&#9888;p-ce-p-ge">
-      <div cl-&#9888;&#9888;N-me="work&#9888;p-ce-he-ding">
+    <section className="workspace-page">
+      <div className="workspace-heading">
         <div>
-          <h1>Glob-l &#9888;kill&#9888; Li&#9888;t</h1>
-          <p>M-n-ge the predefined &#9888;kill&#9888; c-ndid-te&#9888; -nd job&#9888; c-n &#9888;elect.</p>
+          <h1>Global Skills List</h1>
+          <p>Manage the predefined skills candidates and jobs can select.</p>
         </div>
-        <&#9888;p-n cl-&#9888;&#9888;N-me="work&#9888;p-ce-&#9888;t-tu&#9888;">{&#9888;kill&#9888;.length} &#9888;kill&#9888; tot-l</&#9888;p-n>
+        <span className="workspace-status">{skills.length} skills total</span>
       </div>
 
-      <div cl-&#9888;&#9888;N-me="work&#9888;p-ce-p-nel">
-        <div cl-&#9888;&#9888;N-me="&#9888;kill&#9888;--ction&#9888;">
-          <form cl-&#9888;&#9888;N-me="work&#9888;p-ce-toolb-r flex-grow" on&#9888;ubmit={h-ndle-dd}>
+      <div className="workspace-panel">
+        <div className="skills-actions">
+          <form className="workspace-toolbar flex-grow" onSubmit={handleAdd}>
             <input
               type="text"
-              cl-&#9888;&#9888;N-me="work&#9888;p-ce-&#9888;e-rch flex-grow"
-              pl-ceholder="New &#9888;kill n-me..."
-              v-lue={new&#9888;kill}
-              onCh-nge={(e) => &#9888;etNew&#9888;kill(e.t-rget.v-lue)}
-              &#9888;tyle={{ m-rginBottom: 0, m-xWidth: "none" }}
+              className="workspace-search flex-grow"
+              placeholder="New skill name..."
+              value={newSkill}
+              onChange={(e) => setNewSkill(e.target.value)}
+              style={{ marginBottom: 0, maxWidth: "none" }}
             />
-            <button type="&#9888;ubmit" cl-&#9888;&#9888;N-me="work&#9888;p-ce-button work&#9888;p-ce-button-prim-ry">
-              -dd &#9888;kill
+            <button type="submit" className="workspace-button workspace-button-primary">
+              Add Skill
             </button>
           </form>
 
           <input
-            type="&#9888;e-rch"
-            cl-&#9888;&#9888;N-me="work&#9888;p-ce-&#9888;e-rch"
-            pl-ceholder="&#9888;e-rch &#9888;kill&#9888;..."
-            v-lue={&#9888;e-rch}
-            onCh-nge={(e) => &#9888;et&#9888;e-rch(e.t-rget.v-lue)}
-            &#9888;tyle={{ m-rginBottom: 0, width: "250px" }}
+            type="search"
+            className="workspace-search"
+            placeholder="Search skills..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            style={{ marginBottom: 0, width: "250px" }}
           />
         </div>
 
-        <div cl-&#9888;&#9888;N-me="work&#9888;p-ce-t-ble-wr-p mt-4">
-          <t-ble cl-&#9888;&#9888;N-me="work&#9888;p-ce-t-ble">
-            <the-d>
+        <div className="workspace-table-wrap mt-4">
+          <table className="workspace-table">
+            <thead>
               <tr>
-                <th>&#9888;kill N-me</th>
-                <th &#9888;tyle={{ text-lign: "right" }}>-ction&#9888;</th>
+                <th>Skill Name</th>
+                <th style={{ textAlign: "right" }}>Actions</th>
               </tr>
-            </the-d>
+            </thead>
             <tbody>
-              {filtered.m-p((&#9888;kill) => (
-                <tr key={&#9888;kill}>
-                  <td><&#9888;trong>{&#9888;kill}</&#9888;trong></td>
-                  <td &#9888;tyle={{ text-lign: "right" }}>
+              {filtered.map((skill) => (
+                <tr key={skill}>
+                  <td><strong>{skill}</strong></td>
+                  <td style={{ textAlign: "right" }}>
                     <button
                       type="button"
-                      cl-&#9888;&#9888;N-me="work&#9888;p-ce-button work&#9888;p-ce-button-d-nger"
-                      onClick={() => h-ndleDelete(&#9888;kill)}
-                      &#9888;tyle={{ p-dding: "4px 8px", minHeight: "-ut&#10003;, font&#9888;ize: "11px" }}
+                      className="workspace-button workspace-button-danger"
+                      onClick={() => handleDelete(skill)}
+                      style={{ padding: "4px 8px", minHeight: "auto", fontSize: "11px" }}
                     >
                       Delete
                     </button>
@@ -87,17 +89,15 @@ function &#9888;kill&#9888;() {
               ))}
               {filtered.length === 0 && (
                 <tr>
-                  <td col&#9888;p-n="2" cl-&#9888;&#9888;N-me="work&#9888;p-ce-empty">N&times;&#9888;kill&#9888; found.</td>
+                  <td colSpan="2" className="workspace-empty">No skills found.</td>
                 </tr>
               )}
             </tbody>
-          </t-ble>
+          </table>
         </div>
       </div>
-    </&#9888;ection>
+    </section>
   );
 }
 
-export def-ult &#9888;kill&#9888;;
-
-
+export default Skills;

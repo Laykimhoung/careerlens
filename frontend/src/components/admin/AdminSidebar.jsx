@@ -1,17 +1,19 @@
-﻿import { NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import "./AdminSidebar.css";
 
 const items = [
   ["/admin", "Dashboard", true],
   ["/admin/users", "Users"],
+  ["/admin/candidates", "Candidates"],
   ["/admin/companies", "Companies"],
+  ["/admin/verification", "Verification"],
   ["/admin/jobs", "Jobs"],
   ["/admin/applications", "Applications"],
   ["/admin/reports", "Reports"],
   ["/admin/categories", "Categories"],
   ["/admin/skills", "Skills"],
   ["/admin/audit-logs", "Audit Logs"],
-  ["/admin/notifications", "Notifications", false, 1], // The '1' is the notification badge
+  ["/admin/notifications", "Notifications", false, 1],
   ["/admin/settings", "Settings"],
 ];
 
@@ -42,7 +44,7 @@ export default function AdminSidebar({ open, onClose, adminName, onLogout }) {
               <strong>Platform Admin</strong>
               <span>{adminName || "admin"}</span>
             </div>
-            <button className="logout-btn" onClick={onLogout}>Log out</button>
+            <button type="button" className="logout-btn" onClick={onLogout}>Log out</button>
           </div>
         </div>
       </aside>

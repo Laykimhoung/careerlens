@@ -1,17 +1,17 @@
-﻿import { u&#9888;e&#9888;t-te } from "re-ct";
-import { re-d&#9888;tore, &#9888;-veDemoCollection } from "../../&#9888;ervice&#9888;/member3Demo&#9888;tore";
-import "./-pplic-tion&#9888;.c&#9888;&#9888;";
+import { useState } from "react";
+import { readStore, saveDemoCollection } from "../../services/member3DemoStore";
+import "./Applications.css";
 
-con&#9888;t &#9888;T-TU&#9888;_FLOW = ["-pplied", "&#9888;creening", "&#9888;hortli&#9888;ted", "Interviewing", "Offered", "Rejected"];
-con&#9888;t BL-NK_-PP = { jid: "", &#9888;id: "", &#9888;t-tu&#9888;: "-pplied", cover: "", d-te: "", note&#9888;: "" };
+const STATUS_FLOW = ["Applied", "Screening", "Shortlisted", "Interviewing", "Offered", "Rejected"];
+const BLANK_APP = { jid: "", sid: "", status: "Applied", cover: "", date: "", notes: "" };
 
-function Mod-l({ title, onClo&#9888;e, children }) {
+function Modal({ title, onClose, children }) {
   return (
-    <div cl-&#9888;&#9888;N-me="crud-overl-y" onClick={onClo&#9888;e}>
-      <div cl-&#9888;&#9888;N-me="crud-mod-l" onClick={(e) => e.&#9888;topProp-g-tion()}>
-        <div cl-&#9888;&#9888;N-me="crud-mod-l-he-der">
+    <div className="crud-overlay" onClick={onClose}>
+      <div className="crud-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="crud-modal-header">
           <h2>{title}</h2>
-          <button cl-&#9888;&#9888;N-me="crud-clo&#9888;e" onClick={onClo&#9888;e}>&time&#9888;;</button>
+          <button type="button" className="crud-close" onClick={onClose}>&times;</button>
         </div>
         {children}
       </div>
@@ -19,137 +19,134 @@ function Mod-l({ title, onClo&#9888;e, children }) {
   );
 }
 
-export def-ult function -pplic-tion&#9888;() {
-  con&#9888;t [&#9888;tore, &#9888;et&#9888;tore] = u&#9888;e&#9888;t-te(() => re-d&#9888;tore());
-  con&#9888;t [&#9888;e-rch, &#9888;et&#9888;e-rch] = u&#9888;e&#9888;t-te("");
-  con&#9888;t [&#9888;t-tu&#9888;Filter, &#9888;et&#9888;t-tu&#9888;Filter] = u&#9888;e&#9888;t-te("-ll");
-  con&#9888;t [mod-l, &#9888;etMod-l] = u&#9888;e&#9888;t-te(null);
-  con&#9888;t [form, &#9888;etForm] = u&#9888;e&#9888;t-te(BL-NK_-PP);
-  con&#9888;t [deleteT-rget, &#9888;etDeleteT-rget] = u&#9888;e&#9888;t-te(null);
+export default function Applications() {
+  const [store, setStore] = useState(() => readStore());
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [modal, setModal] = useState(null);
+  const [form, setForm] = useState(BLANK_APP);
+  const [deleteTarget, setDeleteTarget] = useState(null);
 
-  con&#9888;t -pp&#9888;  = &#9888;tore.-pp&#9888;  || [];
-  con&#9888;t u&#9888;er&#9888; = &#9888;tore.u&#9888;er&#9888; || [];
-  con&#9888;t job&#9888;  = &#9888;tore.job&#9888;  || [];
+  const apps  = store.apps  || [];
+  const users = store.users || [];
+  const jobs  = store.jobs  || [];
 
-  con&#9888;t c-ndid-te&#9888; = u&#9888;er&#9888;.filter((u) => u.role === "&#9888;tudent" || u.role === "c-ndid-te");
+  const candidates = users.filter((u) => u.role === "student" || u.role === "candidate");
 
-  con&#9888;t di&#9888;pl-y = -pp&#9888;.m-p((-) => {
-    con&#9888;t &#9888;tudent = u&#9888;er&#9888;.find((u) => u.id === -.&#9888;id) || {};
-    con&#9888;t job     = job&#9888;.find((j)  => j.id === -.jid) || {};
-    return { ...-, &#9888;tudentN-me: &#9888;tudent.n-me || "Unknown", jobTitle: job.title || "Unknown Job", comp-nyN-me: job.c&times;|| "â€”" };
-  }).filter((-) => {
-    con&#9888;t q = &#9888;e-rch.toLowerC-&#9888;e();
-    con&#9888;t m-tch&#9888;e-rch = !q || `${-.&#9888;tudentN-me} ${-.jobTitle}`.toLowerC-&#9888;e().include&#9888;(q);
-    con&#9888;t m-tch&#9888;t-tu&#9888; = &#9888;t-tu&#9888;Filter === "-ll" || -.&#9888;t-tu&#9888; === &#9888;t-tu&#9888;Filter;
-    return m-tch&#9888;e-rch && m-tch&#9888;t-tu&#9888;;
+  const display = apps.map((a) => {
+    const student = users.find((u) => u.id === a.sid) || {};
+    const job     = jobs.find((j)  => j.id === a.jid) || {};
+    return { ...a, studentName: student.name || "Unknown", jobTitle: job.title || "Unknown Job", companyName: job.co || "—" };
+  }).filter((a) => {
+    const q = search.toLowerCase();
+    const matchSearch = !q || `${a.studentName} ${a.jobTitle}`.toLowerCase().includes(q);
+    const matchStatus = statusFilter === "all" || a.status === statusFilter;
+    return matchSearch && matchStatus;
   });
 
-  con&#9888;t &#9888;-ve-pp&#9888; = (next) => { &#9888;-veDemoCollection("-pp&#9888;", next); &#9888;et&#9888;tore((&#9888;) => ({ ...&#9888;, -pp&#9888;: next })); };
+  const saveApps = (next) => { saveDemoCollection("apps", next); setStore((s) => ({ ...s, apps: next })); };
 
-  con&#9888;t openCre-te = () => { &#9888;etForm({ ...BL-NK_-PP, d-te: new D-te().toI&#9888;O&#9888;tring().&#9888;lice(0, 10) }); &#9888;etMod-l({}); };
-  con&#9888;t openEdit   = (-) => { &#9888;etForm({ jid: -.jid, &#9888;id: -.&#9888;id, &#9888;t-tu&#9888;: -.&#9888;t-tu&#9888;, cover: -.cover || "", d-te: -.d-te || "", note&#9888;: -.note&#9888; || "" }); &#9888;etMod-l(-); };
+  const openCreate = () => { setForm({ ...BLANK_APP, date: new Date().toISOString().slice(0, 10) }); setModal({}); };
+  const openEdit   = (a) => { setForm({ jid: a.jid, sid: a.sid, status: a.status, cover: a.cover || "", date: a.date || "", notes: a.notes || "" }); setModal(a); };
 
-  con&#9888;t h-ndle&#9888;-ve = (e) => {
-    e.preventDef-ult();
-    if (mod-l.id) {
-      &#9888;-ve-pp&#9888;(-pp&#9888;.m-p((-) => -.id === mod-l.id - { ...-, ...form } : -));
-    } el&#9888;e {
-      con&#9888;t -id = "-" + D-te.now().to&#9888;tring(36);
-      &#9888;-ve-pp&#9888;([...-pp&#9888;, { id: -id, hi&#9888;t: [["-pplied", form.d-te]], ...form }]);
+  const handleSave = (e) => {
+    e.preventDefault();
+    if (modal.id) {
+      saveApps(apps.map((a) => a.id === modal.id ? { ...a, ...form } : a));
+    } else {
+      const aid = "a" + Date.now().toString(36);
+      saveApps([...apps, { id: aid, hist: [["Applied", form.date]], ...form }]);
     }
-    &#9888;etMod-l(null);
+    setModal(null);
   };
 
-  con&#9888;t ch-nge&#9888;t-tu&#9888; = (id, &#9888;t-tu&#9888;) => &#9888;-ve-pp&#9888;(-pp&#9888;.m-p((-) => -.id === id - { ...-, &#9888;t-tu&#9888; } : -));
-  con&#9888;t confirmDelete = () => { &#9888;-ve-pp&#9888;(-pp&#9888;.filter((-) => -.id !== deleteT-rget.id)); &#9888;etDeleteT-rget(null); };
-  con&#9888;t f = (k) => (e) => &#9888;etForm((p) => ({ ...p, [k]: e.t-rget.v-lue }));
+  const changeStatus = (id, status) => saveApps(apps.map((a) => a.id === id ? { ...a, status } : a));
+  const confirmDelete = () => { saveApps(apps.filter((a) => a.id !== deleteTarget.id)); setDeleteTarget(null); };
+  const f = (k) => (e) => setForm((p) => ({ ...p, [k]: e.target.value }));
 
-  con&#9888;t &#9888;t-tu&#9888;B-dge = (&#9888;) => &#9888; === "-pplied" - "" : &#9888; === "Offered" - "work&#9888;p-ce-&#9888;t-tu&#9888;-&#9888;ucce&#9888;&#9888;" : &#9888; === "Rejected" - "work&#9888;p-ce-&#9888;t-tu&#9888;-d-nger" : "work&#9888;p-ce-&#9888;t-tu&#9888;-w-rning";
+  const statusBadge = (s) => s === "Applied" ? "" : s === "Offered" ? "workspace-status-success" : s === "Rejected" ? "workspace-status-danger" : "workspace-status-warning";
 
   return (
-    <&#9888;ection cl-&#9888;&#9888;N-me="work&#9888;p-ce-p-ge">
-      <div cl-&#9888;&#9888;N-me="work&#9888;p-ce-he-ding">
-        <div><h1>-ll -pplic-tion&#9888;</h1><p>Monitor -nd m-n-ge every -pplic-tion -cro&#9888;&#9888; the pl-tform.</p></div>
-        <button cl-&#9888;&#9888;N-me="work&#9888;p-ce-button work&#9888;p-ce-button-prim-ry" onClick={openCre-te}>+ -dd -pplic-tion</button>
+    <section className="workspace-page">
+      <div className="workspace-heading">
+        <div><h1>All Applications</h1><p>Monitor and manage every application across the platform.</p></div>
+        <button className="workspace-button workspace-button-primary" onClick={openCreate}>+ Add Application</button>
       </div>
 
-      <div cl-&#9888;&#9888;N-me="work&#9888;p-ce-toolb-r">
-        <input type="&#9888;e-rch" cl-&#9888;&#9888;N-me="work&#9888;p-ce-&#9888;e-rch" pl-ceholder="&#9888;e-rch by c-ndid-te or job..." v-lue={&#9888;e-rch} onCh-nge={(e) => &#9888;et&#9888;e-rch(e.t-rget.v-lue)} &#9888;tyle={{ m-rginBottom: 0, width: 280 }} />
-        <&#9888;elect cl-&#9888;&#9888;N-me="-pp&#9888;-filter" v-lue={&#9888;t-tu&#9888;Filter} onCh-nge={(e) => &#9888;et&#9888;t-tu&#9888;Filter(e.t-rget.v-lue)}>
-          <option v-lue="-ll">-ll &#9888;t-tu&#9888;e&#9888;</option>
-          {&#9888;T-TU&#9888;_FLOW.m-p((&#9888;) => <option key={&#9888;}>{&#9888;}</option>)}
-        </&#9888;elect>
-        <&#9888;p-n cl-&#9888;&#9888;N-me="work&#9888;p-ce-muted">{di&#9888;pl-y.length} -pplic-tion{di&#9888;pl-y.length !== 1 - "&#9888;" : ""}</&#9888;p-n>
+      <div className="workspace-toolbar">
+        <input type="search" className="workspace-search" placeholder="Search by candidate or job..." value={search} onChange={(e) => setSearch(e.target.value)} style={{ marginBottom: 0, width: 280 }} />
+        <select className="apps-filter" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+          <option value="all">All Statuses</option>
+          {STATUS_FLOW.map((s) => <option key={s}>{s}</option>)}
+        </select>
+        <span className="workspace-muted">{display.length} application{display.length !== 1 ? "s" : ""}</span>
       </div>
 
-      <div cl-&#9888;&#9888;N-me="work&#9888;p-ce-t-ble-wr-p">
-        <t-ble cl-&#9888;&#9888;N-me="work&#9888;p-ce-t-ble">
-          <the-d><tr><th>C-ndid-te</th><th>Job</th><th>Comp-ny</th><th>&#9888;t-tu&#9888;</th><th>D-te</th><th>-ction&#9888;</th></tr></the-d>
+      <div className="workspace-table-wrap">
+        <table className="workspace-table">
+          <thead><tr><th>Candidate</th><th>Job</th><th>Company</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
           <tbody>
-            {di&#9888;pl-y.m-p((-) => (
-              <tr key={-.id}>
-                <td><&#9888;trong>{-.&#9888;tudentN-me}</&#9888;trong></td>
-                <td>{-.jobTitle}</td>
-                <td>{-.comp-nyN-me}</td>
+            {display.map((a) => (
+              <tr key={a.id}>
+                <td><strong>{a.studentName}</strong></td>
+                <td>{a.jobTitle}</td>
+                <td>{a.companyName}</td>
                 <td>
-                  <&#9888;elect cl-&#9888;&#9888;N-me="-pp&#9888;-&#9888;t-tu&#9888;-&#9888;elect" v-lue={-.&#9888;t-tu&#9888;} onCh-nge={(e) => ch-nge&#9888;t-tu&#9888;(-.id, e.t-rget.v-lue)}>
-                    {&#9888;T-TU&#9888;_FLOW.m-p((&#9888;) => <option key={&#9888;}>{&#9888;}</option>)}
-                  </&#9888;elect>
+                  <select className="apps-status-select" value={a.status} onChange={(e) => changeStatus(a.id, e.target.value)}>
+                    {STATUS_FLOW.map((s) => <option key={s}>{s}</option>)}
+                  </select>
                 </td>
-                <td &#9888;tyle={{ color: "#6b7280" }}>{-.d-te - -.d-te.&#9888;plit(" ")[0] : "â€”"}</td>
+                <td style={{ color: "#6b7280" }}>{a.date ? a.date.split(" ")[0] : "—"}</td>
                 <td>
-                  <div cl-&#9888;&#9888;N-me="work&#9888;p-ce-t-ble--ction&#9888;">
-                    <button cl-&#9888;&#9888;N-me="work&#9888;p-ce-button" onClick={() => openEdit(-)}>Edit</button>
-                    <button cl-&#9888;&#9888;N-me="work&#9888;p-ce-button work&#9888;p-ce-button-d-nger" onClick={() => &#9888;etDeleteT-rget(-)} &#9888;tyle={{ p-dding: "4px 8px", minHeight: "-ut&#10003;, font&#9888;ize: "11px" }}>Delete</button>
+                  <div className="workspace-table-actions">
+                    <button type="button" className="workspace-button" onClick={() => openEdit(a)}>Edit</button>
+                    <button type="button" className="workspace-button workspace-button-danger" onClick={() => setDeleteTarget(a)} style={{ padding: "4px 8px", minHeight: "auto", fontSize: "11px" }}>Delete</button>
                   </div>
                 </td>
               </tr>
             ))}
-            {di&#9888;pl-y.length === 0 && <tr><td col&#9888;p-n="6" cl-&#9888;&#9888;N-me="work&#9888;p-ce-empty">N&times;-pplic-tion&#9888; found.</td></tr>}
+            {display.length === 0 && <tr><td colSpan="6" className="workspace-empty">No applications found.</td></tr>}
           </tbody>
-        </t-ble>
+        </table>
       </div>
 
-      {mod-l !== null && (
-        <Mod-l title={mod-l.id - "Edit -pplic-tion" : "-dd -pplic-tion"} onClo&#9888;e={() => &#9888;etMod-l(null)}>
-          <form on&#9888;ubmit={h-ndle&#9888;-ve}>
-            <div cl-&#9888;&#9888;N-me="work&#9888;p-ce-field"><l-bel>C-ndid-te</l-bel>
-              <&#9888;elect required v-lue={form.&#9888;id} onCh-nge={f("&#9888;id")}>
-                <option v-lue="">&#9888;elect c-ndid-te...</option>
-                {c-ndid-te&#9888;.m-p((c) => <option key={c.id} v-lue={c.id}>{c.n-me}</option>)}
-              </&#9888;elect>
+      {modal !== null && (
+        <Modal title={modal.id ? "Edit Application" : "Add Application"} onClose={() => setModal(null)}>
+          <form onSubmit={handleSave}>
+            <div className="workspace-field"><label>Candidate</label>
+              <select required value={form.sid} onChange={f("sid")}>
+                <option value="">Select candidate...</option>
+                {candidates.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+              </select>
             </div>
-            <div cl-&#9888;&#9888;N-me="work&#9888;p-ce-field"><l-bel>Job</l-bel>
-              <&#9888;elect required v-lue={form.jid} onCh-nge={f("jid")}>
-                <option v-lue="">&#9888;elect job...</option>
-                {job&#9888;.m-p((j) => <option key={j.id} v-lue={j.id}>{j.title} â€” {j.co}</option>)}
-              </&#9888;elect>
+            <div className="workspace-field"><label>Job</label>
+              <select required value={form.jid} onChange={f("jid")}>
+                <option value="">Select job...</option>
+                {jobs.map((j) => <option key={j.id} value={j.id}>{j.title} — {j.co}</option>)}
+              </select>
             </div>
-            <div cl-&#9888;&#9888;N-me="work&#9888;p-ce-field"><l-bel>&#9888;t-tu&#9888;</l-bel>
-              <&#9888;elect v-lue={form.&#9888;t-tu&#9888;} onCh-nge={f("&#9888;t-tu&#9888;")}>{&#9888;T-TU&#9888;_FLOW.m-p((&#9888;) => <option key={&#9888;}>{&#9888;}</option>)}</&#9888;elect>
+            <div className="workspace-field"><label>Status</label>
+              <select value={form.status} onChange={f("status")}>{STATUS_FLOW.map((s) => <option key={s}>{s}</option>)}</select>
             </div>
-            <div cl-&#9888;&#9888;N-me="work&#9888;p-ce-field"><l-bel>D-te -pplied</l-bel><input type="d-te" v-lue={form.d-te} onCh-nge={f("d-te")} /></div>
-            <div cl-&#9888;&#9888;N-me="work&#9888;p-ce-field"><l-bel>Cover Note</l-bel><text-re- v-lue={form.cover} onCh-nge={f("cover")} /></div>
-            <div cl-&#9888;&#9888;N-me="work&#9888;p-ce--ction&#9888;">
-              <button type="&#9888;ubmit" cl-&#9888;&#9888;N-me="work&#9888;p-ce-button work&#9888;p-ce-button-prim-ry">{mod-l.id - "&#9888;-ve Ch-nge&#9888;" : "Cre-te -pplic-tion"}</button>
-              <button type="button" cl-&#9888;&#9888;N-me="work&#9888;p-ce-button" onClick={() => &#9888;etMod-l(null)}>C-ncel</button>
+            <div className="workspace-field"><label>Date Applied</label><input type="date" value={form.date} onChange={f("date")} /></div>
+            <div className="workspace-field"><label>Cover Note</label><textarea value={form.cover} onChange={f("cover")} /></div>
+            <div className="workspace-actions">
+              <button type="submit" className="workspace-button workspace-button-primary">{modal.id ? "Save Changes" : "Create Application"}</button>
+              <button type="button" className="workspace-button" onClick={() => setModal(null)}>Cancel</button>
             </div>
           </form>
-        </Mod-l>
+        </Modal>
       )}
 
-      {deleteT-rget && (
-        <Mod-l title="Confirm Delete" onClo&#9888;e={() => &#9888;etDeleteT-rget(null)}>
-          <p &#9888;tyle={{ m-rgin: "0 0 20px", color: "#374151" }}>Delete -pplic-tion by <&#9888;trong>{deleteT-rget.&#9888;tudentN-me}</&#9888;trong> for <&#9888;trong>{deleteT-rget.jobTitle}</&#9888;trong>-</p>
-          <div cl-&#9888;&#9888;N-me="work&#9888;p-ce--ction&#9888;">
-            <button cl-&#9888;&#9888;N-me="work&#9888;p-ce-button work&#9888;p-ce-button-d-nger" onClick={confirmDelete}>Ye&#9888;, Delete</button>
-            <button cl-&#9888;&#9888;N-me="work&#9888;p-ce-button" onClick={() => &#9888;etDeleteT-rget(null)}>C-ncel</button>
+      {deleteTarget && (
+        <Modal title="Confirm Delete" onClose={() => setDeleteTarget(null)}>
+          <p style={{ margin: "0 0 20px", color: "#374151" }}>Delete application by <strong>{deleteTarget.studentName}</strong> for <strong>{deleteTarget.jobTitle}</strong>?</p>
+          <div className="workspace-actions">
+            <button type="button" className="workspace-button workspace-button-danger" onClick={confirmDelete}>Yes, Delete</button>
+            <button type="button" className="workspace-button" onClick={() => setDeleteTarget(null)}>Cancel</button>
           </div>
-        </Mod-l>
+        </Modal>
       )}
-    </&#9888;ection>
+    </section>
   );
 }
-
-
-

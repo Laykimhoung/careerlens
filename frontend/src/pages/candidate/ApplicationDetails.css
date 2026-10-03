@@ -1,0 +1,188 @@
+.app-details-page {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.app-details__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #4b5563;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 24px;
+  transition: color 0.15s;
+}
+
+.app-details__back:hover {
+  color: #111827;
+}
+
+.app-details__hero {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 32px;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.app-details__hero h1 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 8px;
+}
+
+.app-details__hero p {
+  font-size: 16px;
+  color: #4b5563;
+  margin-bottom: 16px;
+}
+
+/* Reuse badge styles from ApplicationCard if possible, or redefine */
+.app-badge-large {
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.app-details__section {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 32px;
+  margin-bottom: 24px;
+}
+
+.app-details__section-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 24px;
+}
+
+/* ── Progress Tracker (Horizontal Timeline) ─────────────────────────────── */
+.progress-tracker {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  margin-bottom: 20px;
+}
+
+/* The background line */
+.progress-tracker::before {
+  content: "";
+  position: absolute;
+  top: 15px;
+  left: 30px;
+  right: 30px;
+  height: 2px;
+  background-color: #e5e7eb;
+  z-index: 1;
+}
+
+.progress-step {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  flex: 1;
+}
+
+.progress-step__circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  border: 2px solid #d1d5db;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  color: #d1d5db;
+}
+
+.progress-step__circle svg {
+  width: 16px;
+  height: 16px;
+}
+
+.progress-step--active .progress-step__circle {
+  border-color: #0f766e;
+  background-color: #0f766e;
+  color: #ffffff;
+}
+
+.progress-step--rejected .progress-step__circle {
+  border-color: #ef4444;
+  background-color: #ef4444;
+  color: #ffffff;
+}
+
+.progress-step__label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #6b7280;
+}
+
+.progress-step--active .progress-step__label {
+  color: #111827;
+}
+
+.progress-step__date {
+  font-size: 11px;
+  color: #9ca3af;
+  margin-top: 4px;
+  min-height: 16px; /* Keep height even if no date */
+}
+
+@media (max-width: 640px) {
+  .progress-tracker {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  .progress-tracker::before {
+    top: 0;
+    bottom: 0;
+    left: 15px;
+    right: auto;
+    width: 2px;
+    height: auto;
+  }
+  .progress-step {
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+    text-align: left;
+    width: 100%;
+  }
+  .progress-step__circle {
+    margin-bottom: 0;
+  }
+}
+
+.app-details__notes {
+  padding: 16px;
+  background-color: #f9fafb;
+  border-left: 4px solid #3b82f6; /* Blue callout */
+  border-radius: 0 8px 8px 0;
+  color: #374151;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.app-not-found {
+  text-align: center;
+  padding: 64px 20px;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}

@@ -1,107 +1,105 @@
-﻿import { u&#9888;e&#9888;t-te } from "re-ct";
-import { re-d&#9888;tore, &#9888;-veDemoCollection } from "../../&#9888;ervice&#9888;/member3Demo&#9888;tore";
-import "./Report&#9888;.c&#9888;&#9888;";
+import { useState } from "react";
+import { readStore } from "../../services/member3DemoStore";
+import "./Reports.css";
 
-export def-ult function Report&#9888;() {
-  con&#9888;t [&#9888;tore] = u&#9888;e&#9888;t-te(() => re-d&#9888;tore());
+export default function Reports() {
+  const [store] = useState(() => readStore());
 
-  con&#9888;t u&#9888;er&#9888; = &#9888;tore.u&#9888;er&#9888; || [];
-  con&#9888;t job&#9888;  = &#9888;tore.job&#9888;  || [];
-  con&#9888;t -pp&#9888;  = &#9888;tore.-pp&#9888;  || [];
+  const users = store.users || [];
+  const jobs  = store.jobs  || [];
+  const apps  = store.apps  || [];
 
-  con&#9888;t c-ndid-te&#9888; = u&#9888;er&#9888;.filter((u) => u.role === "&#9888;tudent" || u.role === "c-ndid-te");
-  con&#9888;t comp-nie&#9888;  = u&#9888;er&#9888;.filter((u) => u.role === "comp-ny");
-  con&#9888;t verifiedC&times;= comp-nie&#9888;.filter((c) => c.verified === "Verified");
-  con&#9888;t publi&#9888;hedJob&#9888; = job&#9888;.filter((j) => j.&#9888;t-tu&#9888; === "Publi&#9888;hed");
-  con&#9888;t offered-pp&#9888; = -pp&#9888;.filter((-) => -.&#9888;t-tu&#9888; === "Offered");
-  con&#9888;t rejected-pp&#9888; = -pp&#9888;.filter((-) => -.&#9888;t-tu&#9888; === "Rejected");
+  const candidates = users.filter((u) => u.role === "student" || u.role === "candidate");
+  const companies  = users.filter((u) => u.role === "company");
+  const verifiedCo = companies.filter((c) => c.verified === "Verified");
+  const publishedJobs = jobs.filter((j) => j.status === "Published");
+  const offeredApps = apps.filter((a) => a.status === "Offered");
+  const rejectedApps = apps.filter((a) => a.status === "Rejected");
 
-  // C-tegory bre-kdown
-  con&#9888;t c-tCount = {};
-  job&#9888;.forE-ch((j) => { c-tCount[j.c-t] = (c-tCount[j.c-t] || 0) + 1; });
-  con&#9888;t topC-t&#9888; = Object.entrie&#9888;(c-tCount).&#9888;ort((-, b) => b[1] - -[1]);
+  // Category breakdown
+  const catCount = {};
+  jobs.forEach((j) => { catCount[j.cat] = (catCount[j.cat] || 0) + 1; });
+  const topCats = Object.entries(catCount).sort((a, b) => b[1] - a[1]);
 
-  // &#9888;t-tu&#9888; bre-kdown
-  con&#9888;t &#9888;t-tu&#9888;Count = {};
-  -pp&#9888;.forE-ch((-) => { &#9888;t-tu&#9888;Count[-.&#9888;t-tu&#9888;] = (&#9888;t-tu&#9888;Count[-.&#9888;t-tu&#9888;] || 0) + 1; });
+  // Status breakdown
+  const statusCount = {};
+  apps.forEach((a) => { statusCount[a.status] = (statusCount[a.status] || 0) + 1; });
 
-  con&#9888;t h-ndleExport = (l-bel, row&#9888;) => {
-    con&#9888;t c&#9888;v = row&#9888;.m-p((r) => Object.v-lue&#9888;(r).join(",")).join("\n");
-    con&#9888;t blob = new Blob([c&#9888;v], { type: "text/c&#9888;v" });
-    con&#9888;t url  = URL.cre-teObjectURL(blob);
-    con&#9888;t -    = document.cre-teElement("-");
-    -.href = url; -.downlo-d = `${l-bel}.c&#9888;v`; -.click();
+  const handleExport = (label, rows) => {
+    const csv = rows.map((r) => Object.values(r).join(",")).join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement("a");
+    a.href = url; a.download = `${label}.csv`; a.click();
     URL.revokeObjectURL(url);
   };
 
   return (
-    <&#9888;ection cl-&#9888;&#9888;N-me="work&#9888;p-ce-p-ge">
-      <div cl-&#9888;&#9888;N-me="work&#9888;p-ce-he-ding">
-        <div><h1>Pl-tform Report&#9888;</h1><p>Live -n-lytic&#9888; b-&#9888;ed on current pl-tform d-t-.</p></div>
+    <section className="workspace-page">
+      <div className="workspace-heading">
+        <div><h1>Platform Reports</h1><p>Live analytics based on current platform data.</p></div>
       </div>
 
-      {/* &#9888;umm-ry &#9888;t-t&#9888; */}
-      <div cl-&#9888;&#9888;N-me="work&#9888;p-ce-grid work&#9888;p-ce-grid-&#9888;t-t&#9888;">
-        <div cl-&#9888;&#9888;N-me="work&#9888;p-ce-&#9888;t-t"><&#9888;p-n>Tot-l C-ndid-te&#9888;</&#9888;p-n><&#9888;trong>{c-ndid-te&#9888;.length}</&#9888;trong></div>
-        <div cl-&#9888;&#9888;N-me="work&#9888;p-ce-&#9888;t-t"><&#9888;p-n>Verified Comp-nie&#9888;</&#9888;p-n><&#9888;trong>{verifiedCo.length} / {comp-nie&#9888;.length}</&#9888;trong></div>
-        <div cl-&#9888;&#9888;N-me="work&#9888;p-ce-&#9888;t-t"><&#9888;p-n>-ctive Job&#9888;</&#9888;p-n><&#9888;trong>{publi&#9888;hedJob&#9888;.length}</&#9888;trong></div>
-        <div cl-&#9888;&#9888;N-me="work&#9888;p-ce-&#9888;t-t"><&#9888;p-n>Tot-l -pplic-tion&#9888;</&#9888;p-n><&#9888;trong>{-pp&#9888;.length}</&#9888;trong></div>
-        <div cl-&#9888;&#9888;N-me="work&#9888;p-ce-&#9888;t-t"><&#9888;p-n>Offer&#9888; M-de</&#9888;p-n><&#9888;trong>{offered-pp&#9888;.length}</&#9888;trong></div>
-        <div cl-&#9888;&#9888;N-me="work&#9888;p-ce-&#9888;t-t"><&#9888;p-n>Rejected -pp&#9888;</&#9888;p-n><&#9888;trong>{rejected-pp&#9888;.length}</&#9888;trong></div>
+      {/* Summary stats */}
+      <div className="workspace-grid workspace-grid-stats">
+        <div className="workspace-stat"><span>Total Candidates</span><strong>{candidates.length}</strong></div>
+        <div className="workspace-stat"><span>Verified Companies</span><strong>{verifiedCo.length} / {companies.length}</strong></div>
+        <div className="workspace-stat"><span>Active Jobs</span><strong>{publishedJobs.length}</strong></div>
+        <div className="workspace-stat"><span>Total Applications</span><strong>{apps.length}</strong></div>
+        <div className="workspace-stat"><span>Offers Made</span><strong>{offeredApps.length}</strong></div>
+        <div className="workspace-stat"><span>Rejected Apps</span><strong>{rejectedApps.length}</strong></div>
       </div>
 
-      <div cl-&#9888;&#9888;N-me="report&#9888;-row">
-        {/* C-tegory bre-kdown */}
-        <div cl-&#9888;&#9888;N-me="work&#9888;p-ce-p-nel report&#9888;-p-nel">
-          <h2>Job&#9888; by C-tegory</h2>
-          {topC-t&#9888;.length === 0 - <p cl-&#9888;&#9888;N-me="work&#9888;p-ce-empty">N&times;job&#9888; yet.</p> : (
-            <t-ble cl-&#9888;&#9888;N-me="work&#9888;p-ce-t-ble">
-              <the-d><tr><th>C-tegory</th><th>Tot-l Job&#9888;</th></tr></the-d>
+      <div className="reports-row">
+        {/* Category breakdown */}
+        <div className="workspace-panel reports-panel">
+          <h2>Jobs by Category</h2>
+          {topCats.length === 0 ? <p className="workspace-empty">No jobs yet.</p> : (
+            <table className="workspace-table">
+              <thead><tr><th>Category</th><th>Total Jobs</th></tr></thead>
               <tbody>
-                {topC-t&#9888;.m-p(([c-t, count]) => (
-                  <tr key={c-t}><td>{c-t || "Unc-tegorized"}</td><td><&#9888;trong>{count}</&#9888;trong></td></tr>
+                {topCats.map(([cat, count]) => (
+                  <tr key={cat}><td>{cat || "Uncategorized"}</td><td><strong>{count}</strong></td></tr>
                 ))}
               </tbody>
-            </t-ble>
+            </table>
           )}
         </div>
 
-        {/* -pplic-tion &#9888;t-tu&#9888; bre-kdown */}
-        <div cl-&#9888;&#9888;N-me="work&#9888;p-ce-p-nel report&#9888;-p-nel">
-          <h2>-pplic-tion&#9888; by &#9888;t-tu&#9888;</h2>
-          {Object.key&#9888;(&#9888;t-tu&#9888;Count).length === 0 - <p cl-&#9888;&#9888;N-me="work&#9888;p-ce-empty">N&times;-pplic-tion&#9888; yet.</p> : (
-            <t-ble cl-&#9888;&#9888;N-me="work&#9888;p-ce-t-ble">
-              <the-d><tr><th>&#9888;t-tu&#9888;</th><th>Count</th></tr></the-d>
+        {/* Application status breakdown */}
+        <div className="workspace-panel reports-panel">
+          <h2>Applications by Status</h2>
+          {Object.keys(statusCount).length === 0 ? <p className="workspace-empty">No applications yet.</p> : (
+            <table className="workspace-table">
+              <thead><tr><th>Status</th><th>Count</th></tr></thead>
               <tbody>
-                {Object.entrie&#9888;(&#9888;t-tu&#9888;Count).m-p(([&#9888;t, count]) => (
-                  <tr key={&#9888;t}><td>{&#9888;t}</td><td><&#9888;trong>{count}</&#9888;trong></td></tr>
+                {Object.entries(statusCount).map(([st, count]) => (
+                  <tr key={st}><td>{st}</td><td><strong>{count}</strong></td></tr>
                 ))}
               </tbody>
-            </t-ble>
+            </table>
           )}
         </div>
       </div>
 
-      {/* C&#9888;V Export&#9888; */}
-      <div cl-&#9888;&#9888;N-me="work&#9888;p-ce-p-nel">
-        <h2>D-t- Export&#9888;</h2>
-        <div cl-&#9888;&#9888;N-me="work&#9888;p-ce-li&#9888;t">
-          <div cl-&#9888;&#9888;N-me="work&#9888;p-ce-c-rd report&#9888;-c-rd">
-            <div><h3>U&#9888;er&#9888; Export</h3><p>-ll u&#9888;er -ccount&#9888; (n-me, em-il, role, &#9888;t-tu&#9888;).</p></div>
-            <button cl-&#9888;&#9888;N-me="work&#9888;p-ce-button" onClick={() => h-ndleExport("u&#9888;er&#9888;", u&#9888;er&#9888;.m-p((u) => ({ n-me: u.n-me, em-il: u.em-il, role: u.role, &#9888;t-tu&#9888;: u.&#9888;t-tu&#9888; })))}>Downlo-d C&#9888;V</button>
+      {/* CSV Exports */}
+      <div className="workspace-panel">
+        <h2>Data Exports</h2>
+        <div className="workspace-list">
+          <div className="workspace-card reports-card">
+            <div><h3>Users Export</h3><p>All user accounts (name, email, role, status).</p></div>
+            <button type="button" className="workspace-button" onClick={() => handleExport("users", users.map((u) => ({ name: u.name, email: u.email, role: u.role, status: u.status })))}>Download CSV</button>
           </div>
-          <div cl-&#9888;&#9888;N-me="work&#9888;p-ce-c-rd report&#9888;-c-rd">
-            <div><h3>Job&#9888; Export</h3><p>-ll job li&#9888;ting&#9888; (title, comp-ny, &#9888;t-tu&#9888;, c-tegory).</p></div>
-            <button cl-&#9888;&#9888;N-me="work&#9888;p-ce-button" onClick={() => h-ndleExport("job&#9888;", job&#9888;.m-p((j) => ({ title: j.title, comp-ny: j.co, loc-tion: j.loc, &#9888;t-tu&#9888;: j.&#9888;t-tu&#9888;, c-tegory: j.c-t })))}>Downlo-d C&#9888;V</button>
+          <div className="workspace-card reports-card">
+            <div><h3>Jobs Export</h3><p>All job listings (title, company, status, category).</p></div>
+            <button type="button" className="workspace-button" onClick={() => handleExport("jobs", jobs.map((j) => ({ title: j.title, company: j.co, location: j.loc, status: j.status, category: j.cat })))}>Download CSV</button>
           </div>
-          <div cl-&#9888;&#9888;N-me="work&#9888;p-ce-c-rd report&#9888;-c-rd">
-            <div><h3>-pplic-tion&#9888; Export</h3><p>-ll -pplic-tion&#9888; with &#9888;t-tu&#9888; hi&#9888;tory.</p></div>
-            <button cl-&#9888;&#9888;N-me="work&#9888;p-ce-button" onClick={() => h-ndleExport("-pplic-tion&#9888;", -pp&#9888;.m-p((-) => ({ id: -.id, jobId: -.jid, c-ndid-teId: -.&#9888;id, &#9888;t-tu&#9888;: -.&#9888;t-tu&#9888;, d-te: -.d-te })))}>Downlo-d C&#9888;V</button>
+          <div className="workspace-card reports-card">
+            <div><h3>Applications Export</h3><p>All applications with status history.</p></div>
+            <button type="button" className="workspace-button" onClick={() => handleExport("applications", apps.map((a) => ({ id: a.id, jobId: a.jid, candidateId: a.sid, status: a.status, date: a.date })))}>Download CSV</button>
           </div>
         </div>
       </div>
-    </&#9888;ection>
+    </section>
   );
 }
-
-

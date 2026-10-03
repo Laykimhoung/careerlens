@@ -1,78 +1,79 @@
-﻿import { u&#9888;e&#9888;t-te } from "re-ct";
-import { re-d&#9888;tore, &#9888;-veDemoCollection } from "../../&#9888;ervice&#9888;/member3Demo&#9888;tore";
-import "./Notific-tion&#9888;.c&#9888;&#9888;";
+import { useState } from "react";
+import { readStore, saveDemoCollection } from "../../services/member3DemoStore";
+import "./Notifications.css";
 
-function Notific-tion&#9888;() {
-  con&#9888;t [&#9888;tore, &#9888;et&#9888;tore] = u&#9888;e&#9888;t-te(() => re-d&#9888;tore());
+function Notifications() {
+  const [store, setStore] = useState(() => readStore());
 
-  con&#9888;t notif&#9888; = &#9888;tore.notif&#9888; || [];
-  con&#9888;t u&#9888;er&#9888; = &#9888;tore.u&#9888;er&#9888; || [];
+  const notifs = store.notifs || [];
+  const users = store.users || [];
 
-  con&#9888;t unre-dCount = notif&#9888;.filter((n) => !n.re-d).length;
+  const unreadCount = notifs.filter((n) => !n.read).length;
 
-  con&#9888;t m-rkRe-d = (id) => {
-    con&#9888;t upd-ted = notif&#9888;.m-p((n) => (n.id === id - { ...n, re-d: true } : n));
-    &#9888;-veDemoCollection("notif&#9888;", upd-ted);
-    &#9888;et&#9888;tore((&#9888;) => ({ ...&#9888;, notif&#9888;: upd-ted }));
+  const markRead = (id) => {
+    const updated = notifs.map((n) => (n.id === id ? { ...n, read: true } : n));
+    saveDemoCollection("notifs", updated);
+    setStore((s) => ({ ...s, notifs: updated }));
   };
 
-  con&#9888;t m-rk-llRe-d = () => {
-    con&#9888;t upd-ted = notif&#9888;.m-p((n) => ({ ...n, re-d: true }));
-    &#9888;-veDemoCollection("notif&#9888;", upd-ted);
-    &#9888;et&#9888;tore((&#9888;) => ({ ...&#9888;, notif&#9888;: upd-ted }));
+  const markAllRead = () => {
+    const updated = notifs.map((n) => ({ ...n, read: true }));
+    saveDemoCollection("notifs", updated);
+    setStore((s) => ({ ...s, notifs: updated }));
   };
 
-  con&#9888;t deleteNotif = (id) => {
-    con&#9888;t upd-ted = notif&#9888;.filter((n) => n.id !== id);
-    &#9888;-veDemoCollection("notif&#9888;", upd-ted);
-    &#9888;et&#9888;tore((&#9888;) => ({ ...&#9888;, notif&#9888;: upd-ted }));
+  const deleteNotif = (id) => {
+    const updated = notifs.filter((n) => n.id !== id);
+    saveDemoCollection("notifs", updated);
+    setStore((s) => ({ ...s, notifs: updated }));
   };
 
   return (
-    <&#9888;ection cl-&#9888;&#9888;N-me="work&#9888;p-ce-p-ge">
-      <div cl-&#9888;&#9888;N-me="work&#9888;p-ce-he-ding">
+    <section className="workspace-page">
+      <div className="workspace-heading">
         <div>
-          <h1>Notific-tion&#9888;</h1>
-          <p>&#9888;y&#9888;tem-wide -lert&#9888; for u&#9888;er&#9888; -cro&#9888;&#9888; -ll role&#9888;.</p>
+          <h1>Notifications</h1>
+          <p>System-wide alerts for users across all roles.</p>
         </div>
-        <div &#9888;tyle={{ di&#9888;pl-y: "flex", g-p: "8px", -lignItem&#9888;: "center" }}>
-          {unre-dCount > 0 && (
-            <&#9888;p-n cl-&#9888;&#9888;N-me="work&#9888;p-ce-&#9888;t-tu&#9888; work&#9888;p-ce-&#9888;t-tu&#9888;-d-nger">{unre-dCount} unre-d</&#9888;p-n>
+        <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+          {unreadCount > 0 && (
+            <span className="workspace-status workspace-status-danger">{unreadCount} unread</span>
           )}
-          {unre-dCount > 0 && (
-            <button cl-&#9888;&#9888;N-me="work&#9888;p-ce-button" onClick={m-rk-llRe-d}>M-rk -ll re-d</button>
+          {unreadCount > 0 && (
+            <button type="button" className="workspace-button" onClick={markAllRead}>Mark all read</button>
           )}
         </div>
       </div>
 
-      {notif&#9888;.length === 0 - (
-        <div cl-&#9888;&#9888;N-me="work&#9888;p-ce-p-nel work&#9888;p-ce-empty">N&times;notific-tion&#9888;.</div>
+      {notifs.length === 0 ? (
+        <div className="workspace-panel workspace-empty">No notifications.</div>
       ) : (
-        <div cl-&#9888;&#9888;N-me="work&#9888;p-ce-li&#9888;t">
-          {notif&#9888;.m-p((notif) => {
-            con&#9888;t t-rgetU&#9888;er = u&#9888;er&#9888;.find((u) => u.id === notif.uid);
+        <div className="workspace-list">
+          {notifs.map((notif) => {
+            const targetUser = users.find((u) => u.id === notif.uid);
             return (
-              <div key={notif.id} cl-&#9888;&#9888;N-me={`notif-c-rd work&#9888;p-ce-c-rd ${notif.re-d - "notif-re-d" : "notif-unre-d"}`}>
-                <div cl-&#9888;&#9888;N-me="notif-left">
-                  <&#9888;p-n cl-&#9888;&#9888;N-me={`notif-dot ${notif.re-d - "dot-re-d" : "dot-unre-d"}`}></&#9888;p-n>
+              <div key={notif.id} className={`notif-card workspace-card ${notif.read ? "notif-read" : "notif-unread"}`}>
+                <div className="notif-left">
+                  <span className={`notif-dot ${notif.read ? "dot-read" : "dot-unread"}`}></span>
                   <div>
-                    <p cl-&#9888;&#9888;N-me="notif-me&#9888;&#9888;-ge">{notif.text}</p>
-                    <p cl-&#9888;&#9888;N-me="notif-met-">
-                      Recipient: <&#9888;trong>{t-rgetU&#9888;er - t-rgetU&#9888;er.n-me : "&#9888;y&#9888;tem"}</&#9888;trong>
-                      {" Â· "}{notif.t}
+                    <p className="notif-message">{notif.text}</p>
+                    <p className="notif-meta">
+                      Recipient: <strong>{targetUser ? targetUser.name : "System"}</strong>
+                      {" - "}{notif.t}
                     </p>
                   </div>
                 </div>
-                <div cl-&#9888;&#9888;N-me="notif--ction&#9888;">
-                  {!notif.re-d && (
-                    <button cl-&#9888;&#9888;N-me="work&#9888;p-ce-button" onClick={() => m-rkRe-d(notif.id)}>
-                      M-rk re-d
+                <div className="notif-actions">
+                  {!notif.read && (
+                    <button type="button" className="workspace-button" onClick={() => markRead(notif.id)}>
+                      Mark read
                     </button>
                   )}
                   <button
-                    cl-&#9888;&#9888;N-me="work&#9888;p-ce-button work&#9888;p-ce-button-d-nger"
+                    type="button"
+                    className="workspace-button workspace-button-danger"
                     onClick={() => deleteNotif(notif.id)}
-                    &#9888;tyle={{ p-dding: "4px 8px", minHeight: "-ut&#10003;, font&#9888;ize: "11px" }}
+                    style={{ padding: "4px 8px", minHeight: "auto", fontSize: "11px" }}
                   >
                     Delete
                   </button>
@@ -82,10 +83,8 @@ function Notific-tion&#9888;() {
           })}
         </div>
       )}
-    </&#9888;ection>
+    </section>
   );
 }
 
-export def-ult Notific-tion&#9888;;
-
-
+export default Notifications;
