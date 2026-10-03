@@ -1,0 +1,22 @@
+/* Reports page */
+.reports-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+  .reports-row { grid-template-columns: 1fr; }
+}
+
+.reports-panel {
+  margin-bottom: 0;
+}
+
+.reports-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}

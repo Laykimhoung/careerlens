@@ -50,6 +50,15 @@
   background-color: #eff6ff;
 }
 
+.btn--teal {
+  background-color: #0f766e;
+  color: #ffffff;
+}
+.btn--teal:hover:not(:disabled) {
+  background-color: #0f766e; /* Keep same or slightly darker */
+  opacity: 0.9;
+}
+
 .btn--danger {
   background-color: #dc2626;
   color: #ffffff;

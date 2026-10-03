@@ -1,0 +1,38 @@
+.saved-jobs-page {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.saved-jobs__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.saved-jobs__count {
+  font-size: 15px;
+  color: #4b5563;
+  font-weight: 500;
+}
+
+.saved-jobs__empty {
+  text-align: center;
+  padding: 64px 20px;
+  background-color: #ffffff;
+  border: 1px dashed #d1d5db;
+  border-radius: 8px;
+}
+
+.saved-jobs__empty h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 8px;
+}
+
+.saved-jobs__empty p {
+  font-size: 15px;
+  color: #6b7280;
+  margin-bottom: 24px;
+}
