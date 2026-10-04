@@ -44,7 +44,37 @@ class JobViewSet(viewsets.ModelViewSet):
         return qs
 
     def perform_create(self, serializer):
-        serializer.save(company=self.request.user.company_profile)
+        from apps.accounts.utils import log_audit_action
+        instance = serializer.save(company=self.request.user.company_profile)
+        log_audit_action(
+            actor=self.request.user,
+            action="CREATE",
+            target_type="Job",
+            target_id=instance.id,
+            details=f"Created job {instance.title}"
+        )
+
+    def perform_update(self, serializer):
+        from apps.accounts.utils import log_audit_action
+        instance = serializer.save()
+        log_audit_action(
+            actor=self.request.user,
+            action="UPDATE",
+            target_type="Job",
+            target_id=instance.id,
+            details=f"Updated job {instance.title}"
+        )
+
+    def perform_destroy(self, instance):
+        from apps.accounts.utils import log_audit_action
+        log_audit_action(
+            actor=self.request.user,
+            action="DELETE",
+            target_type="Job",
+            target_id=instance.id,
+            details=f"Deleted job {instance.title}"
+        )
+        instance.delete()
 
 class SavedJobViewSet(viewsets.ModelViewSet):
     """

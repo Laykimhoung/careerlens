@@ -22,9 +22,9 @@ class ApplicationViewSet(viewsets.ModelViewSet):
             return Application.objects.none()
             
         if self.request.user.role == self.request.user.Role.CANDIDATE:
-            return Application.objects.filter(candidate=self.request.user.candidate_profile)
+            return Application.objects.filter(candidate=self.request.user.candidate_profile).order_by('-applied_at')
         elif self.request.user.role == self.request.user.Role.COMPANY:
-            return Application.objects.filter(job__company=self.request.user.company_profile)
+            return Application.objects.filter(job__company=self.request.user.company_profile).order_by('-applied_at')
         return Application.objects.none()
 
     def get_serializer_class(self):
@@ -46,13 +46,19 @@ class ApplicationViewSet(viewsets.ModelViewSet):
         return [permission() for permission in permission_classes]
 
     def perform_create(self, serializer):
+        from django.db import IntegrityError
+        from rest_framework import serializers
+        
         job_id = serializer.validated_data.get('job_id')
         job = get_object_or_404(Job, id=job_id, status=Job.Status.PUBLISHED)
         
-        serializer.save(
-            candidate=self.request.user.candidate_profile,
-            job=job
-        )
+        try:
+            serializer.save(
+                candidate=self.request.user.candidate_profile,
+                job=job
+            )
+        except IntegrityError:
+            raise serializers.ValidationError({"detail": "You have already applied for this job."})
 
     def perform_update(self, serializer):
         old_status = self.get_object().status

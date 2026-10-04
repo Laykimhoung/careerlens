@@ -33,15 +33,15 @@ class JobTests(APITestCase):
         response = self.client.get(reverse('job-list'))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         # Should only see job1_published
-        self.assertEqual(len(response.data), 1)
-        self.assertEqual(response.data[0]['title'], "Job 1")
+        self.assertEqual(len(response.data["results"]), 1)
+        self.assertEqual(response.data["results"][0]['title'], "Job 1")
 
     def test_list_jobs_as_company(self):
         """Companies should see all published jobs PLUS their own draft jobs."""
         self.client.force_authenticate(user=self.company_user1)
         response = self.client.get(reverse('job-list'))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 2)  # Published + own draft
+        self.assertEqual(len(response.data["results"]), 2)  # Published + own draft
 
     def test_create_job_as_company(self):
         self.client.force_authenticate(user=self.company_user1)
