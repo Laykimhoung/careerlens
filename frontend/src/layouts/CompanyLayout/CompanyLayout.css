@@ -23,13 +23,43 @@
 }
 
 .company-brand { 
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-sidebar-text); 
   padding: 4px 12px 28px; 
   font-size: 20px; 
   font-weight: var(--fw-bold); 
+  text-decoration: none;
 }
 
-.company-brand span { 
-  color: var(--color-primary-light); 
+.brand-logo {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  display: block;
+}
+
+.brand-text {
+  display: inline-flex;
+}
+
+.brand-career {
+  color: #016BFB;
+  transition: color 0.25s ease;
+}
+
+.brand-lens {
+  color: #fdfcf8;
+  transition: color 0.25s ease;
+}
+
+.company-brand:hover .brand-career {
+  color: #fdfcf8;
+}
+
+.company-brand:hover .brand-lens {
+  color: #016BFB;
 }
 
 .company-nav { 
