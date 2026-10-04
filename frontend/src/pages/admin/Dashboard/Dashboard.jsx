@@ -1,98 +1,237 @@
-﻿import React from "react";
+import React, { useState, useEffect } from "react";
+import {
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer,
+  PieChart, Pie, Cell, Legend
+} from 'recharts';
+import { Lottie } from 'lottie-react';
+import placeholderLottie from '../../../assets/lottie/placeholder.json';
 import './Dashboard.css';
 
-export default function Dashboard() {
-  const stats = [
-    { label: "Students", value: 3 },
-    { label: "Companies", value: 4 },
-    { label: "Jobs", value: 5 },
-    { label: "Applications", value: 4 },
-    { label: "Interviews", value: 0 },
-    { label: "Hires", value: 0 },
-  ];
+// Mock Data for Charts & Stats
+const registrationData = [
+  { name: 'Mon', users: 400, companies: 24 },
+  { name: 'Tue', users: 300, companies: 13 },
+  { name: 'Wed', users: 550, companies: 98 },
+  { name: 'Thu', users: 278, companies: 39 },
+  { name: 'Fri', users: 189, companies: 48 },
+  { name: 'Sat', users: 239, companies: 38 },
+  { name: 'Sun', users: 349, companies: 43 },
+];
 
-  const logs = [
-    { id: 1, time: "2026-09-26 09:12", message: "Company FutureWorks -> Verified" },
-    { id: 2, time: "2026-09-26 09:12", message: "Company FutureWorks -> Rejected" },
-    { id: 3, time: "2026-09-26 09:12", message: "Company FutureWorks -> Verified" },
-    { id: 4, time: "2026-09-26 09:12", message: "Company TechNova Cambodia -> Verified" },
-    { id: 5, time: "2026-09-24 16:28", message: "Platform initialised with demo data" },
-  ];
+const userDistributionData = [
+  { name: 'Candidates', value: 11200 },
+  { name: 'Companies', value: 864 },
+  { name: 'Admins', value: 12 },
+];
+const USER_COLORS = ['#016BFB', '#299C83', '#D79A45'];
+
+const jobCategoryData = [
+  { name: 'IT & Software', value: 450 },
+  { name: 'Business', value: 300 },
+  { name: 'Marketing', value: 200 },
+  { name: 'Design', value: 150 },
+  { name: 'Finance', value: 145 },
+];
+const JOB_COLORS = ['#016BFB', '#3b82f6', '#60a5fa', '#93c5fd', '#bfdbfe'];
+
+const logs = [
+  { id: 1, time: "Today, 09:12 AM", message: "Company FutureWorks -> Verified", status: "success" },
+  { id: 2, time: "Today, 08:45 AM", message: "Company TechNova -> Rejected", status: "error" },
+  { id: 3, time: "Yesterday, 14:30", message: "New Admin 'Alex' added", status: "info" },
+  { id: 4, time: "Yesterday, 11:20", message: "Platform initialized", status: "info" },
+];
+
+export default function Dashboard() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate API fetch delay
+    const timer = setTimeout(() => setIsLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <div className="admin-dashboard-container">
-      <h1 className="dashboard-title">Admin Dashboard</h1>
-
-      <div className="stats-grid">
-        {stats.map((stat) => (
-          <div key={stat.label} className="stat-card">
-            <h2>{stat.value}</h2>
-            <p>{stat.label}</p>
-          </div>
-        ))}
-      </div>
-
-      <div className="chart-container">
-        <div className="chart-y-axis">
-          <span>5.0</span>
-          <span>4.5</span>
-          <span>4.0</span>
-          <span>3.5</span>
-          <span>3.0</span>
-          <span>2.5</span>
-          <span>2.0</span>
-          <span>1.5</span>
-          <span>1.0</span>
-          <span>0.5</span>
-          <span>0</span>
+      {/* SECTION 1: Page Header */}
+      <div className="dashboard-header">
+        <div>
+          <h1 className="dashboard-title">Platform Overview</h1>
+          <p className="dashboard-subtitle">Welcome back, Admin. Here is what's happening today.</p>
         </div>
-        <div className="chart-bars-area">
-          <div className="chart-grid-lines">
-            {[...Array(11)].map((_, i) => (
-              <div key={i} className="chart-grid-line"></div>
-            ))}
-          </div>
-          <div className="chart-bars">
-            <div className="chart-bar-group">
-              <div className="chart-bar bar-students" style={{ height: "60%" }}></div>
-              <span>Students</span>
-            </div>
-            <div className="chart-bar-group">
-              <div className="chart-bar bar-companies" style={{ height: "80%" }}></div>
-              <span>Companies</span>
-            </div>
-            <div className="chart-bar-group">
-              <div className="chart-bar bar-jobs" style={{ height: "100%" }}></div>
-              <span>Jobs</span>
-            </div>
-            <div className="chart-bar-group">
-              <div className="chart-bar bar-applications" style={{ height: "80%" }}></div>
-              <span>Applications</span>
-            </div>
-            <div className="chart-bar-group">
-              <div className="chart-bar bar-interviews" style={{ height: "0%" }}></div>
-              <span>Interviews</span>
-            </div>
-            <div className="chart-bar-group">
-              <div className="chart-bar bar-hires" style={{ height: "0%" }}></div>
-              <span>Hires</span>
-            </div>
-          </div>
+        <div className="dashboard-actions">
+          <button className="refresh-btn" onClick={() => setIsLoading(true)}>
+            Refresh Data
+          </button>
         </div>
       </div>
 
-      <div className="audit-log-section">
-        <h3>Audit log</h3>
-        <div className="audit-log-list">
-          {logs.map((log) => (
-            <div key={log.id} className="audit-log-item">
-              <span className="log-time">{log.time}</span>
-              <span className="log-message">{log.message}</span>
-            </div>
-          ))}
+      {isLoading ? (
+        <div className="loading-skeleton">
+          <div className="skeleton-cards">
+            {[1, 2, 3, 4].map(i => <div key={i} className="skeleton-card"></div>)}
+          </div>
+          <div className="skeleton-charts">
+            <div className="skeleton-chart main"></div>
+            <div className="skeleton-chart side"></div>
+          </div>
         </div>
-        <button className="reset-btn">Reset demo data</button>
-      </div>
+      ) : (
+        <>
+          {/* SECTION 2: Primary Statistics */}
+          <div className="stats-grid">
+            <div className="stat-card">
+              <div className="stat-content">
+                <p className="stat-label">Total Users</p>
+                <h2 className="stat-value">12,480</h2>
+                <div className="stat-trend positive">↑ 12% vs last month</div>
+              </div>
+              <div className="stat-icon-wrapper">
+                <Lottie animationData={placeholderLottie} style={{ width: 40, height: 40 }} />
+              </div>
+            </div>
+            
+            <div className="stat-card">
+              <div className="stat-content">
+                <p className="stat-label">Companies</p>
+                <h2 className="stat-value">864</h2>
+                <div className="stat-trend positive">↑ 5% vs last month</div>
+              </div>
+              <div className="stat-icon-wrapper">
+                <Lottie animationData={placeholderLottie} style={{ width: 40, height: 40 }} />
+              </div>
+            </div>
+
+            <div className="stat-card">
+              <div className="stat-content">
+                <p className="stat-label">Job Posts</p>
+                <h2 className="stat-value">1,245</h2>
+                <div className="stat-trend positive">↑ 18% vs last month</div>
+              </div>
+              <div className="stat-icon-wrapper">
+                <Lottie animationData={placeholderLottie} style={{ width: 40, height: 40 }} />
+              </div>
+            </div>
+
+            <div className="stat-card">
+              <div className="stat-content">
+                <p className="stat-label">Pending Approvals</p>
+                <h2 className="stat-value">38</h2>
+                <div className="stat-trend negative">↓ 2 requires action</div>
+              </div>
+              <div className="stat-icon-wrapper">
+                <Lottie animationData={placeholderLottie} style={{ width: 40, height: 40 }} />
+              </div>
+            </div>
+          </div>
+
+          {/* SECTION 3: Main Analytics */}
+          <div className="charts-grid-main">
+            <div className="chart-card span-2">
+              <div className="chart-header">
+                <h3>Registration Trends</h3>
+                <span className="chart-badge">Past 7 Days</span>
+              </div>
+              <div className="chart-body" style={{ height: 300 }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={registrationData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#64748b', fontSize: 12}} dy={10} />
+                    <YAxis axisLine={false} tickLine={false} tick={{fill: '#64748b', fontSize: 12}} dx={-10} />
+                    <RechartsTooltip 
+                      contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}
+                    />
+                    <Legend iconType="circle" wrapperStyle={{ paddingTop: '20px' }}/>
+                    <Line type="monotone" dataKey="users" name="New Users" stroke="#016BFB" strokeWidth={3} dot={{r: 4, fill: '#016BFB', strokeWidth: 2, stroke: '#fff'}} activeDot={{r: 6}} />
+                    <Line type="monotone" dataKey="companies" name="New Companies" stroke="#299C83" strokeWidth={3} dot={{r: 4, fill: '#299C83', strokeWidth: 2, stroke: '#fff'}} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            <div className="chart-card">
+              <div className="chart-header">
+                <h3>User Distribution</h3>
+              </div>
+              <div className="chart-body" style={{ height: 300, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={userDistributionData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={70}
+                      outerRadius={95}
+                      paddingAngle={4}
+                      dataKey="value"
+                    >
+                      {userDistributionData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={USER_COLORS[index % USER_COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <RechartsTooltip 
+                      formatter={(value) => value.toLocaleString()}
+                      contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}
+                    />
+                    <Legend iconType="circle" verticalAlign="bottom" height={36} />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          </div>
+
+          {/* SECTION 4: Recruitment Analytics & Operations */}
+          <div className="charts-grid-secondary">
+            <div className="chart-card">
+              <div className="chart-header">
+                <h3>Job Categories</h3>
+              </div>
+              <div className="chart-body" style={{ height: 260 }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={jobCategoryData}
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={85}
+                      dataKey="value"
+                    >
+                      {jobCategoryData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={JOB_COLORS[index % JOB_COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <RechartsTooltip formatter={(value) => value.toLocaleString()} />
+                    <Legend layout="vertical" verticalAlign="middle" align="right" wrapperStyle={{ fontSize: '12px' }}/>
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            <div className="audit-log-section">
+              <div className="chart-header">
+                <h3>Recent Activities</h3>
+                <button className="reset-btn">View All</button>
+              </div>
+              <div className="audit-log-list">
+                {logs.map((log) => (
+                  <div key={log.id} className="audit-log-item">
+                    <div className={`log-indicator ${log.status}`}></div>
+                    <div className="log-details">
+                      <span className="log-message">{log.message}</span>
+                      <span className="log-time">{log.time}</span>
+                    </div>
+                  </div>
+                ))}
+                {logs.length === 0 && (
+                  <div className="empty-state">
+                    <Lottie animationData={placeholderLottie} style={{ width: 80, height: 80, margin: '0 auto' }} />
+                    <p>No recent activities</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

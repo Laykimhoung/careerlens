@@ -27,10 +27,10 @@ export default function UserTable({
         <table className="workspace-table">
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Role</th>
-              <th>Status</th>
+              <th>  Name</th>
+              <th>  Email</th>
+              <th>  Role</th>
+              <th>  Status</th>
               <th className="text-right">Actions</th>
             </tr>
           </thead>

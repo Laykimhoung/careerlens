@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import logoIcon from "../../assets/logo/logo.webp";
 import "./AdminSidebar.css";
 
 const items = [
@@ -22,7 +23,13 @@ export default function AdminSidebar({ open, onClose, adminName, onLogout }) {
     <>
       <button className={`admin-overlay ${open ? "open" : ""}`} onClick={onClose} aria-label="Close navigation" />
       <aside className={`admin-sidebar ${open ? "open" : ""}`}>
-        <a className="admin-brand" href="/admin">CareerLens</a>
+        <a className="admin-brand" href="/admin">
+          <img src={logoIcon} alt="CareerLens Logo" className="brand-logo" />
+          <span className="brand-text">
+            <span className="brand-career">Career</span>
+            <span className="brand-lens">Lens</span>
+          </span>
+        </a>
         
         <nav className="admin-nav" aria-label="Admin navigation">
           {items.map(([to, label, end, badge]) => (

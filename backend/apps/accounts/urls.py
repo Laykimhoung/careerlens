@@ -8,12 +8,14 @@ from .views import (
     RegisterView,
     CurrentUserView,
     CandidateProfileViewSet,
-    CompanyProfileViewSet
+    CompanyProfileViewSet,
+    AuditLogViewSet
 )
 
 router = DefaultRouter()
 router.register(r'candidates', CandidateProfileViewSet, basename='candidate')
 router.register(r'companies', CompanyProfileViewSet, basename='company')
+router.register(r'audit-logs', AuditLogViewSet, basename='auditlog')
 
 urlpatterns = [
     path('login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
