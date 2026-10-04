@@ -7,9 +7,10 @@ from .serializers import (
     RegisterSerializer, 
     UserSerializer, 
     CandidateProfileSerializer, 
-    CompanyProfileSerializer
+    CompanyProfileSerializer,
+    AuditLogSerializer
 )
-from .models import CandidateProfile, CompanyProfile
+from .models import CandidateProfile, CompanyProfile, AuditLog
 from .permissions import IsOwnerOrReadOnly
 
 User = get_user_model()
@@ -54,4 +55,16 @@ class CompanyProfileViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         # Allow searching/filtering if needed later
         return super().get_queryset()
+
+class AuditLogViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    View audit logs. Admins can view all, users can view their own.
+    """
+    serializer_class = AuditLogSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        if self.request.user.role == self.request.user.Role.ADMIN:
+            return AuditLog.objects.all().order_by('-created_at')
+        return AuditLog.objects.filter(actor=self.request.user).order_by('-created_at')
 

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
-from .models import CandidateProfile, CompanyProfile
+from .models import CandidateProfile, CompanyProfile, AuditLog
 
 User = get_user_model()
 
@@ -57,3 +57,9 @@ class RegisterSerializer(serializers.ModelSerializer):
             CompanyProfile.objects.create(user=user, company_name=user.username)
         
         return user
+
+class AuditLogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AuditLog
+        fields = ('id', 'actor', 'action', 'target_type', 'target_id', 'details', 'created_at')
+        read_only_fields = ('actor', 'action', 'target_type', 'target_id', 'details', 'created_at')
