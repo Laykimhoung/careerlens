@@ -86,6 +86,7 @@ main
     ├── frontend/dana
     ├── frontend/en
     ├── frontend/youe
+    ├── frontend/kimhoung
     └── backend/kimhoung
 ```
 
@@ -174,7 +175,7 @@ Each team member has a permanent development branch.
 | Dana     | `frontend/dana`    |
 | En       | `frontend/en`      |
 | Youe     | `frontend/youe`    |
-| Kimhoung | `backend/kimhoung` |
+| Kimhoung | `backend/kimhoung` and `frontend/kimhoung` |
 
 Make sure you are currently on `develop`:
 
@@ -211,6 +212,7 @@ git switch -c frontend/youe origin/develop
 ### Kimhoung
 
 ```bash
+git switch -c frontend/kimhoung origin/develop
 git switch -c backend/kimhoung origin/develop
 ```
 
