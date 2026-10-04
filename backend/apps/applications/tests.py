@@ -40,21 +40,21 @@ class ApplicationTests(APITestCase):
         self.client.force_authenticate(user=self.candidate_user1)
         response = self.client.get(reverse('application-list'))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
+        self.assertEqual(len(response.data["results"]), 1)
         
         self.client.force_authenticate(user=self.candidate_user2)
         response = self.client.get(reverse('application-list'))
-        self.assertEqual(len(response.data), 0)
+        self.assertEqual(len(response.data["results"]), 0)
 
     def test_list_applications_as_company(self):
         self.client.force_authenticate(user=self.company_user1)
         response = self.client.get(reverse('application-list'))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
+        self.assertEqual(len(response.data["results"]), 1)
 
         self.client.force_authenticate(user=self.company_user2)
         response = self.client.get(reverse('application-list'))
-        self.assertEqual(len(response.data), 0)
+        self.assertEqual(len(response.data["results"]), 0)
 
     def test_apply_to_job(self):
         self.client.force_authenticate(user=self.candidate_user2)
