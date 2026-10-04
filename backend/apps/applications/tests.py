@@ -4,7 +4,7 @@ from rest_framework.test import APITestCase
 from django.contrib.auth import get_user_model
 from apps.accounts.models import CompanyProfile, CandidateProfile
 from apps.jobs.models import Job
-from .models import Application
+from .models import Application, ApplicationStatusHistory, Interview
 
 User = get_user_model()
 
@@ -84,3 +84,38 @@ class ApplicationTests(APITestCase):
         data = {"status": "REJECTED"}
         response = self.client.patch(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_application_status_history_created_on_update(self):
+        self.client.force_authenticate(user=self.company_user1)
+        url = reverse('application-detail', args=[self.application1.id])
+        data = {"status": "REVIEWING"}
+        self.client.patch(url, data, format='json')
+        
+        history = ApplicationStatusHistory.objects.filter(application=self.application1)
+        self.assertEqual(history.count(), 1)
+        self.assertEqual(history.first().new_status, "REVIEWING")
+        self.assertEqual(history.first().changed_by, self.company_user1)
+
+    def test_schedule_interview(self):
+        self.client.force_authenticate(user=self.company_user1)
+        url = reverse('interview-list')
+        data = {
+            "application": self.application1.id,
+            "scheduled_at": "2026-12-01T10:00:00Z",
+            "location": "Zoom"
+        }
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Interview.objects.count(), 1)
+        self.assertEqual(Interview.objects.first().scheduled_by, self.company_user1)
+
+    def test_schedule_interview_unauthorized_company(self):
+        self.client.force_authenticate(user=self.company_user2)
+        url = reverse('interview-list')
+        data = {
+            "application": self.application1.id,
+            "scheduled_at": "2026-12-01T10:00:00Z"
+        }
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
