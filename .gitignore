@@ -42,3 +42,6 @@ Desktop.ini
 
 # Private learning directory
 my-learning/
+
+# Temporary test client
+backend-api-test/
