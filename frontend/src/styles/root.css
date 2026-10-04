@@ -1,44 +1,85 @@
 /* root.css */
 :root {
-  /* Colors - Light Mode */
-  --color-primary: #2563eb;
-  --color-primary-hover: #1d4ed8;
-  --color-primary-active: #1e40af;
+  /* Brand Colors - Blue Theme (from Youe) */
+  --color-primary: #638ECB;
+  --color-primary-hover: #4e73a8;
+  --color-primary-light: #a3c1e8;
+  --color-primary-soft: #ebf1fa;
+  --color-primary-active: #1e40af; /* Kept from new structure */
   
-  --color-background: #f8fafc;
+  /* Sidebar Colors for Admin/Company */
+  --color-sidebar-bg: #1b2b44;
+  --color-sidebar-text: #f8fafc;
+  --color-sidebar-muted: #94a3b8;
+  --color-sidebar-active: #273e63;
+  --color-sidebar-border: #2d476d;
+
+  /* Backgrounds */
+  --color-background: #f8fafc; /* For candidate layout */
+  --color-bg-primary: #f8fafc; /* For admin layout */
   --color-surface: #ffffff;
-  
+  --color-surface-hover: #f1f5f9;
+
+  /* Text */
   --color-text: #0f172a;
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #475569;
   --color-text-muted: #64748b;
-  
+
+  /* Borders and Focus */
   --color-border: #e2e8f0;
-  
+  --color-border-strong: #cbd5e1;
+  --color-focus-ring: #638ECB;
+
+  /* Semantic Colors */
   --color-success: #16a34a;
   --color-success-bg: #dcfce7;
   
   --color-warning: #d97706;
   --color-warning-bg: #fef3c7;
   
-  --color-error: #dc2626;
+  --color-danger: #dc2626;
+  --color-danger-border: #fca5a5;
+  --color-danger-bg: #fee2e2;
+  --color-error: #dc2626; /* Alias for danger */
   --color-error-bg: #fee2e2;
   
   --color-info: #0284c7;
   --color-info-bg: #e0f2fe;
-  
+
   /* Typography */
   --font-primary: "Plus Jakarta Sans", "Kantumruy Pro", system-ui, -apple-system, sans-serif;
+  --font-body: "Plus Jakarta Sans", "Aptos", "Segoe UI", system-ui, sans-serif;
   
-  /* Layout & Spacing (using rem, assuming 1rem = 16px) */
-  --radius-sm: 0.25rem;    /* 4px */
-  --radius-md: 0.375rem;   /* 6px */
-  --radius-lg: 0.5rem;     /* 8px */
-  
-  --shadow-sm: 0 0.0625rem 0.1875rem rgba(0,0,0,0.05); /* 0 1px 3px */
-  --shadow-md: 0 0.25rem 0.375rem rgba(0,0,0,0.1);    /* 0 4px 6px */
+  --fs-body: 1rem;
+  --fs-small: 0.875rem;
+
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+
+  /* Layout & Spacing */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
   
   --container-width: 80rem; /* 1280px */
-  --sidebar-width: 15rem;   /* 240px */
-  
+  --sidebar-width: 248px;
+
+  /* Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+
+  /* Transitions */
   --transition-fast: 0.15s ease;
   --transition-normal: 0.25s ease;
 }
@@ -47,15 +88,29 @@
 [data-theme="dark"] {
   --color-primary: #3b82f6;
   --color-primary-hover: #60a5fa;
+  --color-primary-light: #2563eb;
+  --color-primary-soft: #1e3a8a;
   --color-primary-active: #93c5fd;
   
+  --color-sidebar-bg: #0f172a;
+  --color-sidebar-text: #f8fafc;
+  --color-sidebar-muted: #94a3b8;
+  --color-sidebar-active: #1e293b;
+  --color-sidebar-border: #334155;
+  
   --color-background: #0f172a;
+  --color-bg-primary: #0f172a;
   --color-surface: #1e293b;
+  --color-surface-hover: #334155;
   
   --color-text: #f8fafc;
+  --color-text-primary: #f8fafc;
+  --color-text-secondary: #cbd5e1;
   --color-text-muted: #94a3b8;
   
   --color-border: #334155;
+  --color-border-strong: #475569;
+  --color-focus-ring: #3b82f6;
   
   --color-success: #22c55e;
   --color-success-bg: #052e16;
@@ -63,6 +118,9 @@
   --color-warning: #f59e0b;
   --color-warning-bg: #451a03;
   
+  --color-danger: #ef4444;
+  --color-danger-border: #991b1b;
+  --color-danger-bg: #450a0a;
   --color-error: #ef4444;
   --color-error-bg: #450a0a;
   
