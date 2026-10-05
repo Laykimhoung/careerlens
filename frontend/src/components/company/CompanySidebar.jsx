@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
 import logoIcon from "../../assets/logo/logo.webp";
 import "./CompanySidebar.css";
-
+import { useAuth } from "../../hooks/useAuth";
 
 const items = [
 	["/company", "Overview", true],
@@ -12,6 +12,8 @@ const items = [
 ];
 
 export default function CompanySidebar() {
+    const { user, switchRole } = useAuth();
+
 	return (
 		<aside className="company-sidebar">
 			<a className="company-brand" href="/company">
@@ -26,7 +28,18 @@ export default function CompanySidebar() {
 					<NavLink key={to} to={to} end={end}>{label}</NavLink>
 				))}
 			</nav>
-			<div className="company-sidebar-foot">Company workspace · Demo data</div>
+			<div className="company-sidebar-foot" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <select 
+                    style={{ padding: '6px', borderRadius: '4px', color: '#000', fontSize: '13px', width: '100%', cursor: 'pointer' }}
+                    value={user?.role || "company"}
+                    onChange={(e) => switchRole(e.target.value)}
+                >
+                    <option value="candidate">candidate</option>
+                    <option value="company">company</option>
+                    <option value="admin">admin</option>
+                </select>
+                <div style={{ opacity: 0.7, fontSize: '12px' }}>Company workspace &middot; Demo</div>
+            </div>
 		</aside>
 	);
 }

@@ -1,66 +1,180 @@
-.jobs-page {
-  max-width: 1000px;
-  margin: 0 auto;
+/* Candidate Jobs Styles (cj) */
+
+.cj-page {
+  max-width: 900px;
 }
 
-.jobs-search-bar {
+.cj-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 24px;
+}
+
+/* Filters */
+.cj-filters {
   display: flex;
-  gap: 12px;
-  background-color: #ffffff;
-  padding: 16px;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
+  flex-direction: column;
+  gap: 16px;
   margin-bottom: 32px;
 }
 
-.jobs-search-bar__input {
-  flex: 1;
+.cj-search {
+  width: 100%;
   padding: 10px 14px;
-  border: 1px solid #d1d5db;
+  border: 1px solid #cbd5e1;
   border-radius: 6px;
-  font-size: 14px;
+  font-size: 0.875rem;
+  color: #0f172a;
+  background-color: #ffffff;
   outline: none;
-  transition: border-color 0.15s;
+}
+.cj-search:focus {
+  border-color: #0f5a4a;
+  box-shadow: 0 0 0 1px #0f5a4a;
 }
 
-.jobs-search-bar__input:focus {
-  border-color: #2563eb;
+.cj-dropdowns {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+@media (max-width: 640px) {
+  .cj-dropdowns {
+    grid-template-columns: 1fr;
+  }
 }
 
-.jobs-search-bar__select {
-  width: 200px;
+.cj-select {
+  width: 100%;
   padding: 10px 14px;
-  border: 1px solid #d1d5db;
+  border: 1px solid #cbd5e1;
   border-radius: 6px;
-  font-size: 14px;
+  font-size: 0.875rem;
+  color: #334155;
+  background-color: #ffffff;
   outline: none;
-  background-color: white;
-  color: #374151;
   cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 14px;
+}
+.cj-select:focus {
+  border-color: #0f5a4a;
 }
 
-.jobs-search-bar__select:focus {
-  border-color: #2563eb;
+/* Job List & Cards */
+.cj-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cj-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 20px;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  gap: 16px;
+}
+
+.cj-card__left {
+  flex: 1;
+}
+
+.cj-card__title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f5a4a;
+  margin: 0 0 6px;
+}
+
+.cj-card__meta {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin: 0 0 4px;
+}
+
+.cj-card__salary {
+  font-size: 0.875rem;
+  color: #334155;
+  margin: 0 0 12px;
+}
+
+.cj-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.cj-card__tag {
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.cj-card__right {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* Buttons */
+.cj-btn {
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.cj-btn--outline {
+  background-color: #ffffff;
+  color: #0f172a;
+  border: 1px solid #cbd5e1;
+}
+.cj-btn--outline:hover {
+  background-color: #f1f5f9;
+}
+
+.cj-btn--solid {
+  background-color: #0f5a4a;
+  color: #ffffff;
+  border: 1px solid #0f5a4a;
+}
+.cj-btn--solid:hover {
+  background-color: #0b4539;
+}
+
+.cj-badge {
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+.cj-badge--applied {
+  background-color: #f8fafc;
+  color: #0f172a;
+  border: 1px solid #cbd5e1;
 }
 
 @media (max-width: 640px) {
-  .jobs-search-bar {
+  .cj-card {
     flex-direction: column;
   }
-  .jobs-search-bar__select {
+  .cj-card__right {
     width: 100%;
+    justify-content: flex-end;
   }
-}
-
-.jobs-list__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
-.jobs-list__count {
-  font-size: 14px;
-  color: #4b5563;
-  font-weight: 500;
 }

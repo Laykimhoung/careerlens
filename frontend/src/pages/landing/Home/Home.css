@@ -1,0 +1,345 @@
+/* Reset & Base */
+.landing-wrapper {
+  background: #f8fafc;
+  color: #0f172a;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.landing-header {
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  position: sticky;
+  top: 0;
+  z-index: 30;
+}
+
+.landing-header__inner {
+  max-width: 1152px;
+  margin: 0 auto;
+  padding: 0 16px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.landing-logo {
+  font-weight: 800;
+  font-size: 1.25rem;
+  letter-spacing: -0.025em;
+  color: #0f5a4a;
+  text-decoration: none;
+}
+
+.landing-logo span {
+  color: #0f172a;
+}
+
+.landing-nav {
+  display: none;
+  gap: 24px;
+  font-size: 0.875rem;
+}
+@media (min-width: 768px) {
+  .landing-nav { display: flex; }
+}
+
+.landing-nav a {
+  color: #0f172a;
+  text-decoration: none;
+}
+.landing-nav a:hover {
+  text-decoration: underline;
+}
+
+.landing-actions {
+  display: none;
+  gap: 8px;
+}
+@media (min-width: 768px) {
+  .landing-actions { display: flex; }
+}
+
+.landing-btn {
+  padding: 0.5rem 0.9rem;
+  border-radius: 0.375rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  background: #0f5a4a;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: background 0.2s;
+}
+.landing-btn:hover {
+  background: #0b4539;
+}
+
+.landing-btn.b2 {
+  background: #ffffff;
+  color: #0f172a;
+  border: 1px solid #cbd5e1;
+}
+.landing-btn.b2:hover {
+  background: #f1f5f9;
+}
+
+/* Hero Section */
+.landing-hero {
+  max-width: 1152px;
+  margin: 0 auto;
+  padding: 64px 16px;
+  display: grid;
+  gap: 40px;
+  align-items: center;
+}
+@media (min-width: 768px) {
+  .landing-hero { grid-template-columns: 1fr 1fr; }
+}
+
+.landing-hero__tag {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #0f5a4a;
+  margin-bottom: 8px;
+}
+
+.landing-hero__title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  line-height: 1.1;
+  margin: 0 0 16px;
+  letter-spacing: -0.025em;
+}
+@media (min-width: 768px) {
+  .landing-hero__title { font-size: 3rem; }
+}
+
+.landing-hero__desc {
+  color: #475569;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.landing-hero__cta {
+  display: flex;
+  gap: 12px;
+}
+
+/* Cards & Elements */
+.landing-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  padding: 1.25rem;
+}
+
+.landing-journey__title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748b;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.landing-journey__step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.landing-journey__step:last-child {
+  margin-bottom: 0;
+}
+
+.landing-journey__num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #0f5a4a;
+  color: #fff;
+  font-size: 0.875rem;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.landing-journey__text {
+  font-weight: 600;
+}
+
+.landing-journey__line {
+  margin-left: 13px;
+  height: 12px;
+  border-left: 2px solid #e2e8f0;
+}
+
+/* Page Sections */
+.landing-section {
+  background: #fff;
+  border-top: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
+}
+.landing-section--gray {
+  background: #f8fafc;
+  border: none;
+}
+.landing-section__inner {
+  max-width: 1152px;
+  margin: 0 auto;
+  padding: 48px 16px;
+}
+
+.landing-section__title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 24px;
+  letter-spacing: -0.025em;
+}
+
+.landing-grid-3 {
+  display: grid;
+  gap: 16px;
+}
+@media (min-width: 768px) {
+  .landing-grid-3 { grid-template-columns: repeat(3, 1fr); }
+}
+
+.landing-grid-4 {
+  display: grid;
+  gap: 16px;
+}
+@media (min-width: 768px) {
+  .landing-grid-4 { grid-template-columns: repeat(4, 1fr); }
+}
+
+.landing-feat__title {
+  font-weight: 700;
+  margin: 0 0 4px;
+}
+
+.landing-feat__desc {
+  font-size: 0.875rem;
+  color: #475569;
+  margin: 0;
+}
+
+.landing-step__num {
+  color: #0f5a4a;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.landing-footer {
+  background: #ffffff;
+  border-top: 1px solid #e2e8f0;
+  padding: 32px 16px;
+  text-align: center;
+}
+.landing-footer p {
+  color: #64748b;
+  font-size: 0.875rem;
+}
+
+/* Pipeline Steps */
+.landing-pipeline {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.landing-pipeline__step {
+  background: #f1f5f9;
+  padding: 6px 16px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #0f172a;
+}
+.landing-pipeline__arrow {
+  color: #94a3b8;
+  font-size: 16px;
+}
+
+/* Footer CTA (Green) */
+.landing-footer-cta {
+  background: #0f5a4a;
+  color: #ffffff;
+  padding: 80px 16px;
+  text-align: center;
+  margin-top: 64px;
+}
+.landing-footer-cta__inner {
+  max-width: 1152px;
+  margin: 0 auto;
+}
+.landing-footer-cta__actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+/* White Button variant */
+.landing-btn.b-white {
+  background: #ffffff;
+  color: #0f172a;
+  border: 1px solid #ffffff;
+}
+.landing-btn.b-white:hover {
+  background: #f8fafc;
+  border-color: #f8fafc;
+}
+
+/* Real White Footer */
+.landing-real-footer {
+  background: #ffffff;
+  padding: 64px 16px;
+}
+.landing-real-footer__inner {
+  max-width: 1152px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+@media (min-width: 768px) {
+  .landing-real-footer__inner {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+.landing-footer__brand p {
+  color: #64748b;
+  font-size: 14px;
+  margin-top: 8px;
+}
+.landing-footer__links {
+  display: flex;
+  gap: 64px;
+  flex-wrap: wrap;
+}
+.landing-footer__col h4 {
+  font-size: 14px;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 16px;
+}
+.landing-footer__col a {
+  display: block;
+  color: #475569;
+  text-decoration: none;
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+.landing-footer__col a:hover {
+  color: #0f5a4a;
+  text-decoration: underline;
+}
