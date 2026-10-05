@@ -1,7 +1,7 @@
 .sidebar {
   width: 260px;
-  background-color: #ffffff;
-  border-right: 1px solid #e5e7eb;
+  background-color: #1b2b44;
+  border-right: 1px solid #2d476d;
   display: flex;
   flex-direction: column;
   position: fixed;
@@ -34,7 +34,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid #2d476d;
 }
 
 .sidebar__logo {
@@ -42,7 +42,7 @@
   align-items: center;
   gap: 10px;
   text-decoration: none;
-  color: #111827;
+  color: #f8fafc;
   font-weight: 700;
   font-size: 18px;
 }
@@ -50,7 +50,7 @@
 .sidebar__logo-icon {
   width: 32px;
   height: 32px;
-  background-color: #2563eb;
+  background-color: #3b82f6;
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -98,7 +98,7 @@
   padding: 10px 12px;
   border-radius: 8px;
   text-decoration: none;
-  color: #4b5563;
+  color: #94a3b8;
   font-weight: 500;
   font-size: 14px;
   transition: background-color 0.15s, color 0.15s;
@@ -107,31 +107,32 @@
 .sidebar__link svg {
   width: 20px;
   height: 20px;
-  color: #9ca3af;
+  color: #94a3b8;
   transition: color 0.15s;
 }
 
 .sidebar__link:hover {
-  background-color: #f3f4f6;
-  color: #111827;
+  background-color: #273e63;
+  color: #f8fafc;
 }
 
 .sidebar__link:hover svg {
-  color: #4b5563;
+  color: #f8fafc;
 }
 
 .sidebar__link.active {
-  background-color: #eff6ff;
-  color: #1d4ed8;
+  background-color: #3b82f6; 
+  color: #ffffff;
+  /* border-left removed since it's a solid block now */
 }
 
 .sidebar__link.active svg {
-  color: #2563eb;
+  color: #ffffff;
 }
 
 .sidebar__footer {
   padding: 20px 12px;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid #2d476d;
 }
 
 .sidebar__logout {
@@ -151,7 +152,7 @@
 }
 
 .sidebar__logout:hover {
-  background-color: #fef2f2;
+  background-color: rgba(239, 68, 68, 0.1);
 }
 
 .sidebar__logout svg {
@@ -182,19 +183,19 @@
 .sidebar__role-switcher {
   width: 100%;
   padding: 10px 12px;
-  border: 1px solid #0f766e;
+  border: 1px solid #3b82f6;
   border-radius: 6px;
-  background-color: #ffffff;
-  color: #111827;
+  background-color: #273e63;
+  color: #f8fafc;
   font-size: 14px;
   outline: none;
   cursor: pointer;
   margin-bottom: 16px;
-  appearance: auto; /* native dropdown arrow */
+  appearance: auto;
 }
 
 .sidebar__role-switcher:focus {
-  box-shadow: 0 0 0 2px rgba(15, 118, 110, 0.2);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
 }
 
 .sidebar__user-profile {
@@ -211,20 +212,20 @@
 .sidebar__user-name {
   font-size: 15px;
   font-weight: 700;
-  color: #111827;
+  color: #f8fafc;
 }
 
 .sidebar__user-role {
   font-size: 13px;
-  color: #6b7280;
+  color: #94a3b8;
 }
 
 .sidebar__logout-btn {
   padding: 6px 12px;
-  background-color: #ffffff;
-  border: 1px solid #d1d5db;
+  background-color: transparent;
+  border: 1px solid #94a3b8;
   border-radius: 6px;
-  color: #1e3a8a; /* Dark blue matching image */
+  color: #f8fafc;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
@@ -232,6 +233,23 @@
 }
 
 .sidebar__logout-btn:hover {
-  background-color: #f9fafb;
-  border-color: #9ca3af;
+  background-color: #273e63;
+  border-color: #f8fafc;
+}
+/* ── New Sidebar Nav Styles (Badges) ─────────────────────────────────────── */
+.sidebar__link-label {
+  flex: 1;
+}
+
+.sidebar__badge {
+  background-color: #ef4444; /* Red color from image */
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
 }

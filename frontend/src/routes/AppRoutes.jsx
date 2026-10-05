@@ -6,8 +6,7 @@ import CompanyLayout from "../layouts/CompanyLayout/CompanyLayout";
 import AdminLayout from "../layouts/AdminLayout/AdminLayout";
 
 import Home from "../pages/landing/Home/Home";
-import Login from "../pages/auth/Login/Login";
-import Register from "../pages/auth/Register/Register";
+import AuthPage from "../pages/auth/AuthPage/AuthPage";
 import ForgotPassword from "../pages/auth/ForgotPassword/ForgotPassword";
 import ResetPassword from "../pages/auth/ResetPassword/ResetPassword";
 
@@ -19,6 +18,8 @@ import CandidateJobDetails from "../pages/candidate/JobDetails/JobDetails";
 import CandidateApplications from "../pages/candidate/Applications/Applications";
 import CandidateApplicationDetails from "../pages/candidate/ApplicationDetails/ApplicationDetails";
 import CandidateSavedJobs from "../pages/candidate/SavedJobs/SavedJobs";
+import CandidateMessages from "../pages/candidate/Messages/Messages";
+import CandidatePlaceholder from "../pages/candidate/PlaceholderPage";
 
 import CompanyDashboard from "../pages/company/Dashboard/Dashboard";
 import CompanyProfile from "../pages/company/Profile/Profile";
@@ -49,11 +50,13 @@ export default function AppRoutes() {
       <Routes>
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
         </Route>
+
+        {/* Auth Routes (Full screen, no Navbar/Footer) */}
+        <Route path="/login" element={<AuthPage />} />
+        <Route path="/register" element={<AuthPage />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
 
         <Route
           path="/candidate"
@@ -71,6 +74,10 @@ export default function AppRoutes() {
           <Route path="applications" element={<CandidateApplications />} />
           <Route path="applications/:id" element={<CandidateApplicationDetails />} />
           <Route path="saved-jobs" element={<CandidateSavedJobs />} />
+          <Route path="interviews" element={<CandidatePlaceholder title="Interviews" />} />
+          <Route path="messages" element={<CandidateMessages />} />
+          <Route path="notifications" element={<CandidatePlaceholder title="Notifications" />} />
+          <Route path="settings" element={<CandidatePlaceholder title="Settings" />} />
         </Route>
 
         <Route path="/company" element={<CompanyLayout />}>
