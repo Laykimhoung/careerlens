@@ -13,6 +13,7 @@
     "axios": "^1.20.0",
     "lottie-react": "^3.1.2",
     "lottie-web": "^5.13.0",
+    "ogl": "^1.0.11",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-router-dom": "^7.18.4",
