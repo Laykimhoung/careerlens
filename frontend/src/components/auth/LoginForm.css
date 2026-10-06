@@ -1,72 +1,248 @@
 .login-form {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 24px;
 }
 
-.login-form__header {
-  margin-bottom: 8px;
-}
-
-.login-form__title {
-  font-size: 24px;
-  font-weight: 700;
-  color: #111827;
-  letter-spacing: -0.3px;
-}
-
-.login-form__subtitle {
-  font-size: 14px;
-  color: #6b7280;
-  margin-top: 4px;
-}
-
-.login-form__forgot {
+/* Tether Fields */
+.tether-field {
   display: flex;
-  justify-content: flex-end;
-  margin-top: 4px;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.login-form__forgot-link {
-  font-size: 12px;
-  color: #2563eb;
+.tether-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tether-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1fd5a8;
+  letter-spacing: 0.5px;
+}
+
+.tether-forgot {
+  font-size: 13px;
+  color: #1fd5a8;
   text-decoration: none;
   font-weight: 500;
 }
 
-.login-form__forgot-link:hover {
-  text-decoration: underline;
-}
-
-.login-form__footer {
-  text-align: center;
-  font-size: 13px;
-  color: #6b7280;
-  margin-top: 4px;
-}
-
-.login-form__footer a {
-  color: #2563eb;
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.login-form__footer a:hover {
-  text-decoration: underline;
-}
-
-.login-form__divider {
+.tether-input-wrapper {
   display: flex;
   align-items: center;
-  gap: 12px;
-  color: #d1d5db;
-  font-size: 12px;
+  background-color: #090c0c;
+  border: 1px solid #1f2a2a;
+  border-radius: 12px;
+  padding: 0 16px;
+  height: 52px;
+  transition: all 0.2s ease;
 }
 
-.login-form__divider::before,
-.login-form__divider::after {
-  content: "";
+.tether-input-wrapper:focus-within {
+  border-color: #1fd5a8;
+}
+
+.tether-input-wrapper.valid {
+  border-color: #1fd5a8;
+}
+
+.tether-icon-left {
+  color: #818b8b;
+  display: flex;
+  align-items: center;
+  margin-right: 12px;
+}
+
+.tether-icon-right {
+  display: flex;
+  align-items: center;
+  margin-left: 12px;
+}
+
+.tether-icon-right.check {
+  color: #1fd5a8;
+  background-color: rgba(31, 213, 168, 0.1);
+  border-radius: 50%;
+  padding: 2px;
+}
+
+.tether-icon-right.eye {
+  color: #818b8b;
+  cursor: pointer;
+}
+
+.tether-icon-right.eye:hover {
+  color: #ffffff;
+}
+
+.tether-input {
   flex: 1;
-  height: 1px;
-  background-color: #e5e7eb;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  font-size: 15px;
+  font-family: inherit;
+}
+
+.tether-input::placeholder {
+  color: #4a5555;
+}
+
+/* Button & Track */
+.tether-track-container {
+  margin-top: 16px;
+  position: relative;
+  height: 56px;
+  width: 100%;
+}
+
+.tether-track {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 2px dashed #1f2a2a;
+  border-radius: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  transition: border-color 0.3s ease;
+}
+
+.tether-track::before {
+  content: '';
+  width: 20px;
+  height: 20px;
+  background-color: transparent;
+  border: 2px solid rgba(31, 213, 168, 0.4);
+  border-radius: 50%;
+  position: absolute;
+}
+
+.tether-track.locked {
+  border-color: transparent;
+}
+.tether-track.locked::before {
+  display: none;
+}
+
+/* The Glowing Cable */
+.tether-cable {
+  position: absolute;
+  top: calc(50% - 2px); /* Perfectly center the 4px height */
+  left: 50%;
+  height: 4px;
+  background-color: #1fd5a8;
+  box-shadow: 0 0 10px rgba(31, 213, 168, 0.8), 0 0 4px rgba(255, 255, 255, 0.5);
+  transform-origin: 0 50%; /* Rotate from the exact left center point */
+  z-index: 2; /* Below button (10), above track (1) */
+  border-radius: 2px;
+  transition: width 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+              transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.tether-btn-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.tether-btn {
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 28px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.tether-btn.unlocked {
+  background-color: #232b2b;
+  color: #818b8b;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.tether-btn.locked {
+  background: linear-gradient(135deg, #3de8be, #1fd5a8);
+  color: #050a0a;
+  box-shadow: 0 0 20px rgba(31, 213, 168, 0.4);
+}
+
+/* Footer Status */
+.tether-status {
+  text-align: center;
+  margin-top: 8px;
+  font-size: 13px;
+  color: #818b8b;
+}
+
+.tether-status-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.tether-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #818b8b;
+}
+
+.tether-status-dot.locked {
+  background-color: #1fd5a8;
+  box-shadow: 0 0 8px #1fd5a8;
+}
+
+.tether-status-msg.locked {
+  color: #1fd5a8;
+  font-weight: 500;
+}
+
+.tether-keyboard-hints {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.tether-key {
+  background-color: #1f2a2a;
+  color: #ffffff;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.tether-create {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 13px;
+  color: #818b8b;
+}
+
+.tether-create a {
+  color: #1fd5a8;
+  text-decoration: none;
+  font-weight: 600;
 }

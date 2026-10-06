@@ -10,6 +10,7 @@ export default function Button({
   fullWidth = false,
   onClick,
   className = "",
+  ...rest
 }) {
   const classes = [
     "btn",
@@ -27,6 +28,7 @@ export default function Button({
       onClick={onClick}
       disabled={disabled || loading}
       className={classes}
+      {...rest}
     >
       {loading && <span className="btn__spinner" aria-hidden="true" />}
       {children}

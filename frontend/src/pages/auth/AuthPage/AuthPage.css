@@ -1,0 +1,350 @@
+/* Overall background */
+.auth-page-bg {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #0b1313; /* Matches the dark background outside the floating box */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Floating Card Container */
+.auth-container {
+  position: relative;
+  width: 100%;
+  max-width: 960px;
+  height: 720px; /* Slightly taller than original 600px to fit new fields, but still floating */
+  background-color: #f7f6f1; /* Cream background */
+  border-radius: 32px; /* Very rounded premium corners */
+  overflow: hidden;
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.4);
+  display: flex;
+}
+
+/* 50% sides for the actual forms */
+.auth-side {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+}
+.auth-side-left { left: 0; }
+.auth-side-right { right: 0; }
+
+/* The animated Blade (Dark Green Overlay) */
+.auth-blade {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  background-color: #0c2d25; /* Dark forest green */
+  z-index: 10;
+  transition: transform 0.6s cubic-bezier(0.7, 0, 0.2, 1);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  padding: 60px;
+}
+
+.blade-on-left {
+  transform: translateX(0%);
+}
+
+.blade-on-right {
+  transform: translateX(100%);
+}
+
+/* Inner blade content cross-fade */
+.blade-content {
+  position: absolute;
+  left: 60px;
+  right: 60px;
+  transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+}
+.show-content {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  transition-delay: 0.2s; /* Wait for blade to start moving */
+}
+.hide-content {
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+  transition-delay: 0s;
+}
+
+.blade-brand {
+  color: #c9b183; /* Gold/tan */
+  font-size: 11px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin-bottom: 30px;
+  font-weight: 600;
+}
+
+.blade-title {
+  color: #f7f6f1;
+  font-size: 46px;
+  line-height: 1.1;
+  font-weight: 400;
+  margin-bottom: 24px;
+  font-family: "Georgia", "Times New Roman", serif; /* Serif font matching screenshot */
+}
+.blade-title em {
+  font-style: italic;
+}
+
+.blade-desc {
+  color: #92a39f;
+  font-size: 14px;
+  line-height: 1.6;
+  max-width: 280px;
+}
+
+/* Form Styles */
+.auth-form {
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-form h2 {
+  font-size: 26px;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 40px;
+  letter-spacing: -0.5px;
+}
+
+.auth-input-group {
+  margin-bottom: 28px;
+  position: relative;
+}
+
+.auth-input-group label {
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+  color: #777;
+  margin-bottom: 4px;
+}
+
+.auth-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.auth-input-wrapper input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  border-bottom: 2px solid #e5e0d8;
+  padding: 8px 30px 8px 0;
+  font-size: 15px;
+  color: #111;
+  outline: none;
+  transition: border-bottom-color 0.2s;
+}
+
+.auth-input-wrapper input:focus {
+  border-bottom-color: #c9b183; /* Gold focus underline */
+}
+
+.auth-icon {
+  position: absolute;
+  right: 0;
+  color: #a39f96;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-hint {
+  font-size: 11px;
+  color: #888;
+  text-align: right;
+  margin-top: 8px;
+}
+
+.auth-form-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.auth-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #666;
+  cursor: pointer;
+}
+.auth-checkbox input {
+  accent-color: #0c2d25;
+}
+
+.auth-link {
+  font-size: 12px;
+  font-weight: 500;
+  color: #111;
+  text-decoration: underline;
+}
+
+.auth-submit-btn {
+  background-color: #0c2d25;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  padding: 14px 0;
+  width: 100%;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+  margin-bottom: 24px;
+}
+
+.auth-submit-btn:hover {
+  background-color: #081e18;
+}
+.auth-submit-btn:active {
+  transform: scale(0.98);
+}
+
+.auth-submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.auth-switch-text {
+  font-size: 13px;
+  color: #777;
+  text-align: left;
+}
+
+.auth-switch-text a {
+  color: #111;
+  font-weight: 600;
+  text-decoration: underline;
+  margin-left: 4px;
+}
+
+.auth-error {
+  background-color: #fef2f2;
+  color: #991b1b;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  margin-bottom: 24px;
+}
+
+/* Tiny dev shortcut hidden bottom left */
+.dev-shortcut {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  z-index: 100;
+}
+.dev-shortcut:hover {
+  color: #ccc;
+}
+
+/* Mobile responsive fallback */
+@media (max-width: 768px) {
+  .auth-blade {
+    display: none; /* Hide blade on small screens */
+  }
+  .auth-side {
+    width: 100%;
+    background-color: #f7f6f1;
+    z-index: 1;
+  }
+  /* On mobile, whichever route we are on is active */
+  .auth-side-left {
+    display: var(--show-login, flex);
+  }
+  .auth-side-right {
+    display: var(--show-register, flex);
+  }
+}
+
+/* Additional classes for the new comprehensive registration forms */
+.auth-role-toggle {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.auth-role-btn {
+  padding: 6px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid #d1d5db;
+  background: transparent;
+  color: #4b5563;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.auth-role-btn.active {
+  background: #0f5a4a;
+  color: #fff;
+  border-color: #0f5a4a;
+}
+.auth-input-row {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+}
+.auth-input-row .auth-input-group {
+  flex: 1;
+}
+.auth-side-right {
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 40px 60px; /* Adjust padding for scrollbar */
+}
+/* Ensure form wrapper adapts */
+.auth-form.auth-form--register {
+  max-width: 440px; /* Wider to accommodate split fields */
+  margin: 0 auto;
+}
+.auth-form-scroll-wrapper {
+  width: 100%;
+  padding-bottom: 24px;
+}
+.auth-side-right {
+  display: block; /* override flex centering for scrollable content */
+}
+.auth-side-right .auth-form {
+  padding-top: 20px;
+}
+
+/* Update scrollable flex behavior so it centers when small, but scrolls when big without cutting top */
+.auth-side-right {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.auth-side-right::before,
+.auth-side-right::after {
+  content: '';
+  margin: auto;
+}
+.auth-form.auth-form--register {
+  margin: auto;
+  padding: 40px 0;
+}

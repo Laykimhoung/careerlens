@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
 import logoIcon from "../../assets/logo/logo.webp";
 import "./AdminSidebar.css";
+import { useAuth } from "../../hooks/useAuth";
 
 const items = [
   ["/admin", "Dashboard", true],
@@ -19,6 +20,8 @@ const items = [
 ];
 
 export default function AdminSidebar({ open, onClose, adminName, onLogout }) {
+  const { user, switchRole } = useAuth();
+  
   return (
     <>
       <button className={`admin-overlay ${open ? "open" : ""}`} onClick={onClose} aria-label="Close navigation" />
@@ -42,14 +45,20 @@ export default function AdminSidebar({ open, onClose, adminName, onLogout }) {
 
         <div className="admin-sidebar-foot">
           <div className="demo-mode-label">DEMO MODE</div>
-          <select className="demo-select" defaultValue="admin">
+          <select 
+            className="demo-select" 
+            value={user?.role || "admin"}
+            onChange={(e) => switchRole(e.target.value)}
+          >
+            <option value="candidate">candidate</option>
+            <option value="company">company</option>
             <option value="admin">admin</option>
           </select>
           
           <div className="user-profile">
             <div className="user-info">
               <strong>Platform Admin</strong>
-              <span>{adminName || "admin"}</span>
+              <span>{user?.full_name || adminName || "admin"}</span>
             </div>
             <button type="button" className="logout-btn" onClick={onLogout}>Log out</button>
           </div>

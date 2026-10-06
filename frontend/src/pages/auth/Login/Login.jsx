@@ -26,9 +26,15 @@ export default function Login() {
 
   return (
     <AuthLayout>
-      <div className="auth-page-header">
-        <h1 className="auth-page-header__title">Welcome back</h1>
-        <p className="auth-page-header__subtitle">Sign in to your CareerLens account</p>
+      <div className="auth-page-header" style={{ marginBottom: '40px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '24px' }}>
+          <div style={{ width: '24px', height: '24px', borderRadius: '50%', border: '2px solid #1fd5a8', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ width: '8px', height: '8px', backgroundColor: '#1fd5a8', borderRadius: '50%' }}></div>
+          </div>
+          <span style={{ color: '#818b8b', fontWeight: '600', letterSpacing: '2px', fontSize: '13px' }}>TETHER</span>
+        </div>
+        <h1 className="auth-page-header__title" style={{ color: '#ffffff', fontSize: '32px', marginBottom: '12px' }}>Sign in</h1>
+        <p className="auth-page-header__subtitle" style={{ color: '#818b8b', fontSize: '15px', lineHeight: '1.5' }}>Welcome back. Two fields stand between you and that button.</p>
       </div>
       <LoginForm onSubmit={handleSubmit} loading={loading} error={error} onClearError={clearError} />
       
