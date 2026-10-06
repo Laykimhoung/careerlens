@@ -1,17 +1,127 @@
-/* CSS for CompanySidebar */
-
 .company-sidebar {
-  width: 248px;
-  flex: 0 0 248px;
+  width: 260px;
+  flex: 0 0 260px;
   min-height: 100vh;
-  padding: 22px 15px;
-  background: #173f35;
-  color: #f6fbf8;
+  padding: 24px 16px;
+  background: #ffffff;
+  color: #333333;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #eaeaea;
+  box-sizing: border-box;
+}
+
+.company-brand { 
+  padding: 0 12px 32px; 
+  font-size: 22px; 
+  font-weight: 800; 
+  text-decoration: none;
+  display: block;
+}
+
+.brand-career { color: #0d4f40; }
+.brand-lens { color: #187b64; }
+
+.company-nav { 
+  display: flex; 
+  flex-direction: column;
+  gap: 8px; 
+}
+
+.company-nav a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  color: #555555;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.company-nav a:hover { 
+  background: #f4f7f6; 
+  color: #0d4f40;
+}
+
+.company-nav a.active { 
+  background: #e9f2ef; 
+  color: #0d4f40; 
+  font-weight: 600;
+  border-left: 4px solid #0d4f40;
+  padding-left: 12px;
+}
+
+.nav-badge {
+  background: #e12d39;
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.company-sidebar-foot { 
+  margin-top: auto; 
+  padding: 20px 0 0; 
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.demo-mode-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #888;
+  letter-spacing: 0.5px;
+}
+
+.role-selector {
+  padding: 8px;
+  border: 1px solid #dddddd;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  background: #ffffff;
+  color: #333;
+}
+
+.user-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.user-details {
   display: flex;
   flex-direction: column;
 }
-.company-brand { padding: 4px 12px 28px; font-size: 20px; font-weight: 800; }
-.company-brand span { color: #a9d9c5; }
-.company-nav { display: grid; gap: 5px; }
-.company-nav a.active, .company-nav a:hover { color: #fff; background: #285849; }
-.company-sidebar-foot { margin-top: auto; padding: 15px 12px 0; color: #c5dacf; border-top: 1px solid #3a6254; font-size: 12px; }
+
+.user-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111;
+}
+
+.user-role {
+  font-size: 12px;
+  color: #777;
+}
+
+.logout-btn {
+  background: none;
+  border: 1px solid #dddddd;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #333;
+}
+
+.logout-btn:hover {
+  background: #f5f5f5;
+}

@@ -350,12 +350,24 @@
   max-width: 360px;
 }
 
+/* Exempt shared admin form inputs from the 360px cap */
+.admin-layout .workspace-page .admin-input,
+.admin-layout .workspace-page .admin-inline-add input,
+.admin-layout .workspace-page .admin-inline-add select {
+  max-width: none;
+}
+
 .admin-layout .workspace-page button {
   font-family: inherit;
 }
 
 .admin-layout .workspace-page button:not(.workspace-button) {
   cursor: pointer;
+}
+
+/* Exempt admin-skill-btn from global button:hover opacity:0.9 dimming */
+.admin-layout .workspace-page button.admin-skill-btn:hover {
+  opacity: 1;
 }
 
 @media (max-width: 760px) {

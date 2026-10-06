@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { readStore, saveDemoCollection } from '../../../services/member3DemoStore';
 import './Companies.css';
+import '../../../styles/adminForms.css';
 
 const BLANK = { name: "", email: "", ind: "", loc: "", verified: "Pending Verification", status: "Active" };
 
@@ -39,7 +40,17 @@ export default function Companies() {
   const saveUsers = (next) => { saveDemoCollection("users", next); setStore((s) => ({ ...s, users: next })); };
 
   const openCreate = () => { setForm(BLANK); setModal({}); };
-  const openEdit = (c) => { setForm({ name: c.name, email: c.email, ind: c.ind || "", loc: c.loc || "", verified: c.verified || "Pending Verification", status: c.status || "Active" }); setModal(c); };
+  const openEdit = (c) => {
+    setForm({
+      name: c.name,
+      email: c.email,
+      ind: c.ind || "",
+      loc: c.loc || "",
+      verified: c.verified || "Pending Verification",
+      status: c.status || "Active",
+    });
+    setModal(c);
+  };
 
   const handleSave = (e) => {
     e.preventDefault();
@@ -54,9 +65,7 @@ export default function Companies() {
 
   const setVerification = (c, verified) => saveUsers(users.map((u) => u.id === c.id ? { ...u, verified } : u));
   const confirmDelete = () => { saveUsers(users.filter((u) => u.id !== deleteTarget.id)); setDeleteTarget(null); };
-
   const f = (k) => (e) => setForm((p) => ({ ...p, [k]: e.target.value }));
-
   const badgeClass = (v) => v === "Verified" ? "workspace-status-success" : v === "Pending Verification" ? "workspace-status-warning" : "workspace-status-danger";
 
   return (
@@ -107,19 +116,44 @@ export default function Companies() {
 
       {modal !== null && (
         <Modal title={modal.id ? "Edit Company" : "Add Company"} onClose={() => setModal(null)}>
-          <form onSubmit={handleSave}>
-            <div className="workspace-field"><label>Company Name</label><input required value={form.name} onChange={f("name")} /></div>
-            <div className="workspace-field"><label>Email</label><input type="email" required value={form.email} onChange={f("email")} /></div>
-            <div className="workspace-field"><label>Industry</label><input value={form.ind} onChange={f("ind")} placeholder="e.g. Technology" /></div>
-            <div className="workspace-field"><label>Location</label><input value={form.loc} onChange={f("loc")} placeholder="e.g. Phnom Penh" /></div>
-            <div className="workspace-field"><label>Verification</label>
-              <select value={form.verified} onChange={f("verified")}>
-                <option>Pending Verification</option><option>Verified</option><option>Rejected</option><option>Suspended</option>
+          <form onSubmit={handleSave} className="admin-form">
+            <p className="admin-form-section">Company Information</p>
+
+            <div className="admin-field">
+              <label className="admin-label">Company Name <span className="admin-required">*</span></label>
+              <input className="admin-input" required value={form.name} onChange={f("name")} placeholder="e.g. Acme Corp" />
+            </div>
+
+            <div className="admin-field">
+              <label className="admin-label">Email <span className="admin-required">*</span></label>
+              <input className="admin-input" type="email" required value={form.email} onChange={f("email")} placeholder="e.g. contact@acme.com" />
+            </div>
+
+            <div className="admin-field">
+              <label className="admin-label">Industry</label>
+              <input className="admin-input" value={form.ind} onChange={f("ind")} placeholder="e.g. Technology" />
+            </div>
+
+            <div className="admin-field">
+              <label className="admin-label">Location</label>
+              <input className="admin-input" value={form.loc} onChange={f("loc")} placeholder="e.g. Phnom Penh" />
+            </div>
+
+            <div className="admin-field">
+              <label className="admin-label">Verification Status</label>
+              <select className="admin-input admin-select" value={form.verified} onChange={f("verified")}>
+                <option>Pending Verification</option>
+                <option>Verified</option>
+                <option>Rejected</option>
+                <option>Suspended</option>
               </select>
             </div>
-            <div className="workspace-actions">
-              <button type="submit" className="workspace-button workspace-button-primary">{modal.id ? "Save Changes" : "Create Company"}</button>
+
+            <div className="admin-form-actions">
               <button type="button" className="workspace-button" onClick={() => setModal(null)}>Cancel</button>
+              <button type="submit" className="workspace-button workspace-button-primary">
+                {modal.id ? "Save Changes" : "Create Company"}
+              </button>
             </div>
           </form>
         </Modal>

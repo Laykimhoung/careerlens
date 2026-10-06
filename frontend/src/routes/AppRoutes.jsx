@@ -89,6 +89,11 @@ export default function AppRoutes() {
           <Route path="applicants" element={<CompanyApplicants />} />
           <Route path="applicants/:id" element={<CompanyApplicantDetails />} />
           <Route path="interviews" element={<CompanyInterviews />} />
+          <Route path="messages" element={<CandidatePlaceholder title="Messages" />} />
+          <Route path="talent-pool" element={<CandidatePlaceholder title="Talent Pool" />} />
+          <Route path="reports" element={<CandidatePlaceholder title="Reports" />} />
+          <Route path="notifications" element={<CandidatePlaceholder title="Notifications" />} />
+          <Route path="settings" element={<CandidatePlaceholder title="Settings" />} />
         </Route>
 
         <Route path="/admin" element={<AdminLayout />}>
