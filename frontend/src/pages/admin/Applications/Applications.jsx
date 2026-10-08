@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { readStore, saveDemoCollection } from '../../../services/member3DemoStore';
 import './Applications.css';
+import '../../../styles/adminForms.css';
 
 const STATUS_FLOW = ["Applied", "Screening", "Shortlisted", "Interviewing", "Offered", "Rejected"];
 const BLANK_APP = { jid: "", sid: "", status: "Applied", cover: "", date: "", notes: "" };
@@ -112,27 +113,47 @@ export default function Applications() {
 
       {modal !== null && (
         <Modal title={modal.id ? "Edit Application" : "Add Application"} onClose={() => setModal(null)}>
-          <form onSubmit={handleSave}>
-            <div className="workspace-field"><label>Candidate</label>
-              <select required value={form.sid} onChange={f("sid")}>
+          <form onSubmit={handleSave} className="admin-form">
+            <p className="admin-form-section">Application Details</p>
+
+            <div className="admin-field">
+              <label className="admin-label">Candidate <span className="admin-required">*</span></label>
+              <select className="admin-input admin-select" required value={form.sid} onChange={f("sid")}>
                 <option value="">Select candidate...</option>
                 {candidates.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
               </select>
             </div>
-            <div className="workspace-field"><label>Job</label>
-              <select required value={form.jid} onChange={f("jid")}>
+
+            <div className="admin-field">
+              <label className="admin-label">Job <span className="admin-required">*</span></label>
+              <select className="admin-input admin-select" required value={form.jid} onChange={f("jid")}>
                 <option value="">Select job...</option>
                 {jobs.map((j) => <option key={j.id} value={j.id}>{j.title} — {j.co}</option>)}
               </select>
             </div>
-            <div className="workspace-field"><label>Status</label>
-              <select value={form.status} onChange={f("status")}>{STATUS_FLOW.map((s) => <option key={s}>{s}</option>)}</select>
+
+            <div className="admin-field">
+              <label className="admin-label">Status</label>
+              <select className="admin-input admin-select" value={form.status} onChange={f("status")}>
+                {STATUS_FLOW.map((s) => <option key={s}>{s}</option>)}
+              </select>
             </div>
-            <div className="workspace-field"><label>Date Applied</label><input type="date" value={form.date} onChange={f("date")} /></div>
-            <div className="workspace-field"><label>Cover Note</label><textarea value={form.cover} onChange={f("cover")} /></div>
-            <div className="workspace-actions">
-              <button type="submit" className="workspace-button workspace-button-primary">{modal.id ? "Save Changes" : "Create Application"}</button>
+
+            <div className="admin-field">
+              <label className="admin-label">Date Applied</label>
+              <input className="admin-input admin-input-narrow" type="date" value={form.date} onChange={f("date")} />
+            </div>
+
+            <div className="admin-field">
+              <label className="admin-label">Cover Note</label>
+              <textarea className="admin-input admin-textarea" value={form.cover} onChange={f("cover")} placeholder="Optional cover note..." />
+            </div>
+
+            <div className="admin-form-actions">
               <button type="button" className="workspace-button" onClick={() => setModal(null)}>Cancel</button>
+              <button type="submit" className="workspace-button workspace-button-primary">
+                {modal.id ? "Save Changes" : "Create Application"}
+              </button>
             </div>
           </form>
         </Modal>

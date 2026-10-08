@@ -1,1 +1,226 @@
-/* CSS for Candidates */
+/* ─────────────────────────────────────────────
+   Candidates.css
+   Styles for Add / Edit Candidate modal form.
+   Relies on workspace-* and crud-* base classes
+   defined in AdminLayout.css / Applications.css.
+───────────────────────────────────────────── */
+
+/* ── Widen the modal slightly to give fields room ── */
+.crud-modal {
+  max-width: 560px;
+}
+
+/* ── Form container ── */
+.candidate-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0; /* spacing is handled per-field */
+}
+
+/* ── Section divider label ── */
+.candidate-section-label {
+  margin: 0 0 18px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  font-size: 11px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ── Field wrapper: label stacked above input ── */
+.candidate-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+/* ── Label typography ── */
+.candidate-label {
+  display: block;
+  font-size: 13px;
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-primary);
+  line-height: 1;
+}
+
+.candidate-required {
+  color: var(--color-danger);
+  margin-left: 2px;
+}
+
+/* ── Unified input / select style ──
+   Overrides the global max-width: 360px rule
+   set by AdminLayout for .workspace-page inputs */
+.candidate-input {
+  display: block;
+  width: 100% !important;     /* full-width inside field wrapper */
+  max-width: 100% !important; /* override AdminLayout constraint */
+  height: 44px;
+  padding: 0 12px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--color-text-primary);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  box-sizing: border-box;
+}
+
+.candidate-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.candidate-input:focus {
+  outline: none;
+  border-color: var(--color-focus-ring);
+  box-shadow: 0 0 0 3px rgba(99, 142, 203, 0.18);
+}
+
+/* ── Narrow variant for Graduation Year ── */
+.candidate-input-narrow {
+  max-width: 200px !important;
+}
+
+/* ── Select: needs extra right padding for the arrow ── */
+.candidate-select {
+  padding: 0 36px 0 12px;
+  appearance: auto; /* keep native dropdown arrow */
+  cursor: pointer;
+}
+
+/* ─────────────────── Skills ─────────────────── */
+
+/* Skill input + Add Skill button on one row */
+.candidate-skill-row {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.candidate-skill-input {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.candidate-skill-btn {
+  flex-shrink: 0;
+  height: 44px;
+  padding: 0 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-primary);
+  color: var(--color-surface);
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: var(--fw-semibold);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.candidate-skill-btn:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
+}
+
+.candidate-skill-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* Chip container */
+.candidate-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+/* Individual chip / tag */
+.candidate-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px 4px 10px;
+  background: var(--color-primary-soft);
+  color: var(--color-primary-hover);
+  border: 1px solid var(--color-primary-light);
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: var(--fw-medium);
+  line-height: 1;
+  transition: background var(--transition-fast);
+}
+
+.candidate-chip:hover {
+  background: #d8e8f7;
+}
+
+/* Remove (×) button inside chip */
+.candidate-chip-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  margin-left: 2px;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: 50%;
+  color: var(--color-primary-hover);
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.candidate-chip-remove:hover {
+  background: rgba(78, 115, 168, 0.18);
+  color: var(--color-danger);
+}
+
+/* ─────────────── Form actions row ─────────────── */
+.candidate-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-border);
+}
+
+/* Make primary action button slightly taller than table buttons */
+.candidate-form-actions .workspace-button {
+  min-height: 40px;
+  padding: 9px 18px;
+  font-size: 13px;
+}
+
+/* ─────────── Responsive: ≤ 480 px ─────────── */
+@media (max-width: 480px) {
+  .crud-modal {
+    padding: 20px 18px;
+  }
+
+  /* Stack Add Skill row on very small screens */
+  .candidate-skill-row {
+    flex-direction: column;
+  }
+
+  .candidate-skill-btn {
+    width: 100%;
+  }
+
+  .candidate-input-narrow {
+    max-width: 100% !important;
+  }
+}

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { readStore, saveDemoCollection } from '../../../services/member3DemoStore';
 import './Users.css';
+import '../../../styles/adminForms.css';
 
 const ROLES = ["student", "company", "admin"];
 const BLANK = { name: "", email: "", role: "student", status: "Active", pw: "demo123" };
@@ -23,7 +24,7 @@ export default function Users() {
   const [store, setStore] = useState(() => readStore());
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
-  const [modalUser, setModalUser] = useState(null); // null=closed, {}=create, user=edit
+  const [modalUser, setModalUser] = useState(null);
   const [form, setForm] = useState(BLANK);
   const [deleteTarget, setDeleteTarget] = useState(null);
 
@@ -38,7 +39,10 @@ export default function Users() {
   const saveUsers = (next) => { saveDemoCollection("users", next); setStore((s) => ({ ...s, users: next })); };
 
   const openCreate = () => { setForm(BLANK); setModalUser({}); };
-  const openEdit   = (u) => { setForm({ name: u.name, email: u.email, role: u.role, status: u.status, pw: u.pw || "" }); setModalUser(u); };
+  const openEdit = (u) => {
+    setForm({ name: u.name, email: u.email, role: u.role, status: u.status, pw: u.pw || "" });
+    setModalUser(u);
+  };
 
   const handleSave = (e) => {
     e.preventDefault();
@@ -53,7 +57,6 @@ export default function Users() {
 
   const toggleStatus = (u) => saveUsers(users.map((item) => item.id === u.id ? { ...item, status: item.status === "Active" ? "Suspended" : "Active" } : item));
   const confirmDelete = () => { saveUsers(users.filter((u) => u.id !== deleteTarget.id)); setDeleteTarget(null); };
-
   const f = (k) => (e) => setForm((p) => ({ ...p, [k]: e.target.value }));
 
   return (
@@ -99,23 +102,44 @@ export default function Users() {
       {/* Create / Edit Modal */}
       {modalUser !== null && (
         <Modal title={modalUser.id ? "Edit User" : "Add New User"} onClose={() => setModalUser(null)}>
-          <form onSubmit={handleSave}>
-            <div className="workspace-field"><label>Full Name</label><input required value={form.name} onChange={f("name")} /></div>
-            <div className="workspace-field"><label>Email</label><input type="email" required value={form.email} onChange={f("email")} /></div>
-            <div className="workspace-field"><label>Role</label>
-              <select value={form.role} onChange={f("role")}>
+          <form onSubmit={handleSave} className="admin-form">
+            <p className="admin-form-section">Account Information</p>
+
+            <div className="admin-field">
+              <label className="admin-label">Full Name <span className="admin-required">*</span></label>
+              <input className="admin-input" required value={form.name} onChange={f("name")} placeholder="e.g. John Smith" />
+            </div>
+
+            <div className="admin-field">
+              <label className="admin-label">Email <span className="admin-required">*</span></label>
+              <input className="admin-input" type="email" required value={form.email} onChange={f("email")} placeholder="e.g. john@example.com" />
+            </div>
+
+            <div className="admin-field">
+              <label className="admin-label">Role</label>
+              <select className="admin-input admin-select" value={form.role} onChange={f("role")}>
                 {ROLES.map((r) => <option key={r} value={r}>{r}</option>)}
               </select>
             </div>
-            <div className="workspace-field"><label>Status</label>
-              <select value={form.status} onChange={f("status")}>
-                <option>Active</option><option>Suspended</option>
+
+            <div className="admin-field">
+              <label className="admin-label">Status</label>
+              <select className="admin-input admin-select" value={form.status} onChange={f("status")}>
+                <option>Active</option>
+                <option>Suspended</option>
               </select>
             </div>
-            <div className="workspace-field"><label>Password</label><input value={form.pw} onChange={f("pw")} /></div>
-            <div className="workspace-actions">
-              <button type="submit" className="workspace-button workspace-button-primary">{modalUser.id ? "Save Changes" : "Create User"}</button>
+
+            <div className="admin-field">
+              <label className="admin-label">Password</label>
+              <input className="admin-input" value={form.pw} onChange={f("pw")} placeholder="e.g. demo123" />
+            </div>
+
+            <div className="admin-form-actions">
               <button type="button" className="workspace-button" onClick={() => setModalUser(null)}>Cancel</button>
+              <button type="submit" className="workspace-button workspace-button-primary">
+                {modalUser.id ? "Save Changes" : "Create User"}
+              </button>
             </div>
           </form>
         </Modal>
