@@ -1,5 +1,8 @@
 import { useState } from "react";
 import InterviewCard from '../../../components/company/InterviewCard';
+import Input from '../../../components/common/Input';
+import Select from '../../../components/common/Select';
+import Button from '../../../components/common/Button';
 import { readStore, saveDemoCollection } from '../../../services/member3DemoStore';
 import { useAuth } from "../../../hooks/useAuth";
 import './Interviews.css';
@@ -67,46 +70,50 @@ export default function Interviews() {
       <div className="workspace-split">
         <section className="dashboard-panel">
           <h2>Schedule an interview</h2>
-          <form onSubmit={scheduleInterview} className="admin-form">
-            <div className="admin-field">
-              <label className="admin-label">Candidate</label>
-              <select className="admin-input admin-select" name="appId" required defaultValue="">
-                <option value="" disabled>Select a candidate</option>
-                {applicants.map((app) => {
+          <form onSubmit={scheduleInterview}>
+            <Select 
+              id="appId" 
+              name="appId"
+              label="Candidate" 
+              required
+              options={[
+                { value: "", label: "Select a candidate" },
+                ...applicants.map(app => {
                   const student = store.users.find(u => u.id === app.sid) || {};
                   const job = store.jobs.find(j => j.id === app.jid) || {};
-                  return (
-                    <option key={app.id} value={app.id}>
-                      {student.name || "Unknown"} &middot; {job.title || "Job"}
-                    </option>
-                  );
-                })}
-              </select>
+                  return { value: app.id, label: `${student.name || "Unknown"} · ${job.title || "Job"}` };
+                })
+              ]}
+            />
+            
+            <div className="company-profile-grid">
+              <Input 
+                id="date" 
+                name="date" 
+                type="date" 
+                label="Date" 
+                min={new Date().toISOString().slice(0, 10)} 
+                required 
+              />
+              <Input 
+                id="time" 
+                name="time" 
+                type="time" 
+                label="Time" 
+                required 
+              />
             </div>
             
-            <div style={{ display: "flex", gap: "12px", width: "100%" }}>
-              <div className="admin-field" style={{ flex: 1 }}>
-                <label className="admin-label">Date</label>
-                <input className="admin-input" name="date" type="date" min={new Date().toISOString().slice(0, 10)} required />
-              </div>
-              <div className="admin-field" style={{ flex: 1 }}>
-                <label className="admin-label">Time</label>
-                <input className="admin-input" name="time" type="time" required />
-              </div>
-            </div>
+            <Select 
+              id="format" 
+              name="format"
+              label="Format" 
+              options={["Video call", "On-site", "Phone call"]}
+            />
             
-            <div className="admin-field">
-              <label className="admin-label">Format</label>
-              <select className="admin-input admin-select" name="format">
-                <option>Video call</option>
-                <option>On-site</option>
-                <option>Phone call</option>
-              </select>
+            <div className="workspace-actions" style={{ justifyContent: "flex-start", marginTop: "10px" }}>
+              <Button type="submit" variant="primary">Schedule interview</Button>
             </div>
-            
-            <button className="workspace-button workspace-button-primary" type="submit" style={{ marginTop: "10px" }}>
-              Schedule interview
-            </button>
           </form>
         </section>
         

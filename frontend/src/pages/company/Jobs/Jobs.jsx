@@ -56,8 +56,8 @@ export default function Jobs() {
           style={{ marginBottom: 0 }}
         />
         <select 
-          className="admin-input" 
-          style={{ width: 'auto', marginBottom: 0 }}
+          className="workspace-search" 
+          style={{ width: 'auto', marginBottom: 0, paddingRight: '36px' }}
           aria-label="Filter by status" 
           value={statusFilter} 
           onChange={(e) => setStatusFilter(e.target.value)}

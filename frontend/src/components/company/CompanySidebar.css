@@ -1,31 +1,61 @@
 .company-sidebar {
-  width: 260px;
-  flex: 0 0 260px;
-  min-height: 100vh;
-  padding: 24px 16px;
-  background: #ffffff;
-  color: #333333;
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 5;
   display: flex;
   flex-direction: column;
-  border-right: 1px solid #eaeaea;
-  box-sizing: border-box;
+  width: var(--sidebar-width, 250px);
+  background: var(--color-sidebar-bg);
+  color: var(--color-sidebar-text);
+  border-right: 1px solid var(--color-sidebar-border);
+  padding: 24px 16px;
+  font-family: var(--font-body);
 }
 
-.company-brand { 
-  padding: 0 12px 32px; 
-  font-size: 22px; 
-  font-weight: 800; 
+.company-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-sidebar-text);
+  font-size: 20px;
+  font-weight: var(--fw-bold, 800);
   text-decoration: none;
+  padding: 0 12px 32px;
+}
+
+.brand-logo {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
   display: block;
 }
 
-.brand-career { color: #0d4f40; }
-.brand-lens { color: #187b64; }
+.brand-text {
+  display: inline-flex;
+}
 
-.company-nav { 
-  display: flex; 
+.brand-career {
+  color: #fdfcf8;
+  transition: color 0.25s ease;
+}
+
+.brand-lens {
+  color: #016BFB;
+  transition: color 0.25s ease;
+}
+
+.company-brand:hover .brand-career {
+  color: #016BFB;
+}
+
+.company-brand:hover .brand-lens {
+  color: #fdfcf8;
+}
+
+.company-nav {
+  display: flex;
   flex-direction: column;
-  gap: 8px; 
+  gap: 4px;
 }
 
 .company-nav a {
@@ -33,95 +63,88 @@
   align-items: center;
   justify-content: space-between;
   padding: 12px 16px;
-  color: #555555;
-  text-decoration: none;
-  border-radius: 6px;
+  color: var(--color-sidebar-muted);
+  border-radius: var(--radius-sm, 6px);
   font-size: 14px;
-  font-weight: 500;
-  transition: all 0.2s ease;
+  text-decoration: none;
+  font-weight: var(--fw-medium, 500);
+  transition: all var(--transition-fast);
 }
 
-.company-nav a:hover { 
-  background: #f4f7f6; 
-  color: #0d4f40;
+.company-nav a:hover {
+  background: var(--color-sidebar-active);
+  color: var(--color-sidebar-text);
 }
 
-.company-nav a.active { 
-  background: #e9f2ef; 
-  color: #0d4f40; 
-  font-weight: 600;
-  border-left: 4px solid #0d4f40;
-  padding-left: 12px;
+.company-nav a.active {
+  background: var(--color-primary);
+  color: var(--color-surface);
 }
 
 .nav-badge {
-  background: #e12d39;
-  color: white;
+  background: var(--color-danger);
+  color: var(--color-surface);
   font-size: 11px;
-  font-weight: 700;
-  padding: 2px 8px;
+  font-weight: var(--fw-bold, 700);
+  padding: 2px 6px;
   border-radius: 12px;
 }
 
-.company-sidebar-foot { 
-  margin-top: auto; 
-  padding: 20px 0 0; 
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+.company-sidebar-foot {
+  margin-top: auto;
+  padding-top: 24px;
 }
 
 .demo-mode-label {
   font-size: 10px;
-  font-weight: 700;
-  color: #888;
-  letter-spacing: 0.5px;
+  font-weight: var(--fw-bold, 700);
+  color: var(--color-sidebar-muted);
+  text-transform: uppercase;
+  margin-bottom: 6px;
 }
 
 .role-selector {
-  padding: 8px;
-  border: 1px solid #dddddd;
-  border-radius: 6px;
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--color-sidebar-border);
+  border-radius: var(--radius-sm, 4px);
+  background: var(--color-sidebar-active);
+  color: var(--color-sidebar-text);
   font-size: 13px;
-  cursor: pointer;
-  background: #ffffff;
-  color: #333;
+  margin-bottom: 16px;
 }
 
 .user-info-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 10px;
-}
-
-.user-details {
-  display: flex;
-  flex-direction: column;
+  padding-top: 16px;
 }
 
 .user-name {
-  font-size: 14px;
-  font-weight: 700;
-  color: #111;
+  display: block;
+  font-size: 13px;
+  color: var(--color-sidebar-text);
+  margin-bottom: 2px;
 }
 
 .user-role {
+  display: block;
   font-size: 12px;
-  color: #777;
+  color: var(--color-sidebar-muted);
 }
 
 .logout-btn {
-  background: none;
-  border: 1px solid #dddddd;
+  background: transparent;
+  border: 1px solid var(--color-sidebar-border);
   padding: 6px 12px;
-  border-radius: 4px;
+  border-radius: var(--radius-sm, 4px);
   font-size: 12px;
-  font-weight: 600;
+  font-weight: var(--fw-semibold, 600);
+  color: var(--color-sidebar-text);
   cursor: pointer;
-  color: #333;
 }
 
 .logout-btn:hover {
-  background: #f5f5f5;
+  background: var(--color-sidebar-active);
 }
