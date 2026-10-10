@@ -2,6 +2,10 @@ import { useState } from "react";
 import { readStore, saveDemoCollection } from '../../../services/member3DemoStore';
 import { useAuth } from "../../../hooks/useAuth";
 import CompanyProfileCard from '../../../components/company/CompanyProfileCard';
+import Input from '../../../components/common/Input';
+import Select from '../../../components/common/Select';
+import Textarea from '../../../components/common/Textarea';
+import Button from '../../../components/common/Button';
 import './Profile.css';
 
 export default function Profile() {
@@ -63,54 +67,30 @@ export default function Profile() {
       )}
       
       <div className="workspace-split">
-        <form className="dashboard-panel admin-form" onSubmit={saveProfile}>
-          <div style={{ display: "flex", gap: "16px", marginBottom: "16px" }}>
-            <div className="admin-field" style={{ flex: 1 }}>
-              <label className="admin-label">Company name</label>
-              <input className="admin-input" id="companyName" name="companyName" value={profile.companyName || ""} onChange={updateField} required />
-            </div>
-            <div className="admin-field" style={{ flex: 1 }}>
-              <label className="admin-label">Industry</label>
-              <input className="admin-input" id="industry" name="industry" value={profile.industry || ""} onChange={updateField} required />
-            </div>
+        <form className="dashboard-panel" onSubmit={saveProfile}>
+          <div className="company-profile-grid">
+            <Input id="companyName" name="companyName" label="Company name" value={profile.companyName || ""} onChange={updateField} required />
+            <Input id="industry" name="industry" label="Industry" value={profile.industry || ""} onChange={updateField} required />
+            
+            <Select 
+              id="size" 
+              name="size" 
+              label="Company size" 
+              value={profile.size || ""} 
+              onChange={updateField}
+              options={["1-10 employees", "11-50 employees", "51-200 employees", "201-500 employees", "500+ employees"]}
+            />
+            <Input id="location" name="location" label="Location" value={profile.location || ""} onChange={updateField} />
+            
+            <Input id="website" name="website" type="url" label="Website" value={profile.website || ""} onChange={updateField} />
+            <Input id="contactEmail" name="contactEmail" type="email" label="Recruitment email" value={profile.contactEmail || ""} onChange={updateField} required />
           </div>
           
-          <div style={{ display: "flex", gap: "16px", marginBottom: "16px" }}>
-            <div className="admin-field" style={{ flex: 1 }}>
-              <label className="admin-label">Company size</label>
-              <select className="admin-input admin-select" id="size" name="size" value={profile.size || ""} onChange={updateField}>
-                <option>1-10 employees</option>
-                <option>11-50 employees</option>
-                <option>51-200 employees</option>
-                <option>201-500 employees</option>
-                <option>500+ employees</option>
-              </select>
-            </div>
-            <div className="admin-field" style={{ flex: 1 }}>
-              <label className="admin-label">Location</label>
-              <input className="admin-input" id="location" name="location" value={profile.location || ""} onChange={updateField} />
-            </div>
-          </div>
+          <Textarea id="description" name="description" label="About the company" value={profile.description || ""} onChange={updateField} required />
           
-          <div style={{ display: "flex", gap: "16px", marginBottom: "16px" }}>
-            <div className="admin-field" style={{ flex: 1 }}>
-              <label className="admin-label">Website</label>
-              <input className="admin-input" id="website" name="website" type="url" value={profile.website || ""} onChange={updateField} />
-            </div>
-            <div className="admin-field" style={{ flex: 1 }}>
-              <label className="admin-label">Recruitment email</label>
-              <input className="admin-input" id="contactEmail" name="contactEmail" type="email" value={profile.contactEmail || ""} onChange={updateField} required />
-            </div>
+          <div className="workspace-actions" style={{ justifyContent: "flex-end", marginTop: "10px" }}>
+            <Button type="submit" variant="primary">Save profile</Button>
           </div>
-          
-          <div className="admin-field">
-            <label className="admin-label">About the company</label>
-            <textarea className="admin-input" id="description" name="description" value={profile.description || ""} onChange={updateField} style={{ minHeight: "100px" }} />
-          </div>
-          
-          <button className="workspace-button workspace-button-primary" type="submit" style={{ marginTop: "10px" }}>
-            Save profile
-          </button>
         </form>
         
         <CompanyProfileCard profile={profile} />

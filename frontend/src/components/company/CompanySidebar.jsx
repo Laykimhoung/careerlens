@@ -15,12 +15,17 @@ const items = [
   ["/company/settings", "Settings"],
 ];
 
+import logoIcon from "../../assets/logo/logo.webp";
+
+// ...
+
 export default function CompanySidebar() {
   const { user, switchRole, logout } = useAuth();
 
   return (
     <aside className="company-sidebar">
       <a className="company-brand" href="/company">
+        <img src={logoIcon} alt="CareerLens Logo" className="brand-logo" />
         <span className="brand-text">
           <span className="brand-career">Career</span>
           <span className="brand-lens">Lens</span>

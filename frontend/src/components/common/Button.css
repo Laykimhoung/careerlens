@@ -26,37 +26,37 @@
 
 /* Variants */
 .btn--primary {
-  background-color: #2563eb;
-  color: #ffffff;
+  background-color: var(--color-primary);
+  color: var(--color-surface, #ffffff);
 }
 .btn--primary:hover:not(:disabled) {
-  background-color: #1d4ed8;
+  background-color: var(--color-primary-hover);
 }
 
 .btn--secondary {
-  background-color: #4b5563;
-  color: #ffffff;
+  background-color: var(--color-text-secondary);
+  color: var(--color-surface, #ffffff);
 }
 .btn--secondary:hover:not(:disabled) {
-  background-color: #374151;
+  background-color: var(--color-text-primary);
 }
 
 .btn--outline {
   background-color: transparent;
-  color: #2563eb;
-  border: 1.5px solid #2563eb;
+  color: var(--color-primary);
+  border: 1.5px solid var(--color-primary);
 }
 .btn--outline:hover:not(:disabled) {
-  background-color: #eff6ff;
+  background-color: var(--color-primary-soft);
 }
 
+/* Fallback/Legacy variant for teal, map to primary */
 .btn--teal {
-  background-color: #0f766e;
-  color: #ffffff;
+  background-color: var(--color-primary);
+  color: var(--color-surface, #ffffff);
 }
 .btn--teal:hover:not(:disabled) {
-  background-color: #0f766e; /* Keep same or slightly darker */
-  opacity: 0.9;
+  background-color: var(--color-primary-hover);
 }
 
 .btn--danger {

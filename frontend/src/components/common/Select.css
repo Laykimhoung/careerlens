@@ -1,24 +1,25 @@
-.textarea-wrapper {
+.select-wrapper {
   display: flex;
   flex-direction: column;
   gap: 6px;
   margin-bottom: 16px;
 }
 
-.textarea-label {
+.select-label {
   font-size: 13px;
   font-weight: var(--fw-semibold, 600);
   color: var(--color-text-primary);
 }
 
-.textarea-label__required {
+.select-label__required {
   color: var(--color-danger);
   margin-left: 2px;
 }
 
-.textarea-field {
+.select-field {
   width: 100%;
-  padding: 10px 12px;
+  height: 44px;
+  padding: 0 36px 0 12px;
   font-family: inherit;
   font-size: 14px;
   color: var(--color-text-primary);
@@ -26,42 +27,36 @@
   border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-md, 8px);
   outline: none;
-  resize: vertical;
-  min-height: 100px;
-  line-height: 1.5;
+  appearance: auto;
   transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
   box-sizing: border-box;
 }
 
-.textarea-field::placeholder {
-  color: var(--color-text-muted);
-}
-
-.textarea-field:hover:not(:disabled) {
+.select-field:hover:not(:disabled) {
   border-color: var(--color-text-muted);
 }
 
-.textarea-field:focus {
+.select-field:focus {
   border-color: var(--color-focus-ring);
   box-shadow: 0 0 0 3px rgba(99, 142, 203, 0.18);
 }
 
-.textarea-field:disabled {
+.select-field:disabled {
   background-color: var(--color-surface-hover);
   color: var(--color-text-muted);
   cursor: not-allowed;
 }
 
-.textarea-field--error {
+.select-field--error {
   border-color: var(--color-danger);
 }
 
-.textarea-field--error:focus {
+.select-field--error:focus {
   border-color: var(--color-danger);
   box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.18);
 }
 
-.textarea-error {
+.select-error {
   font-size: 12px;
   color: var(--color-danger);
   margin-top: 4px;
