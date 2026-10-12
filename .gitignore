@@ -45,3 +45,7 @@ my-learning/
 
 # Temporary test client
 backend-api-test/
+
+# Demo seed data manifest
+.demo_seed_manifest.json
+*.demo_manifest.json
