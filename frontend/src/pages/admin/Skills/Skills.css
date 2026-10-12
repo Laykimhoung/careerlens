@@ -1,16 +1,4 @@
 /* Skills page */
-.skills-actions {
-  display: flex;
-  gap: 16px;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-}
-
-.flex-grow {
-  flex-grow: 1;
-}
-
-.mt-4 {
-  margin-top: 16px;
+.skills-search-row {
+  margin-bottom: 12px;
 }

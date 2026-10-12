@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { readStore, saveDemoCollection } from '../../../services/member3DemoStore';
 import './Jobs.css';
+import '../../../styles/adminForms.css';
 
-const JOB_TYPES = ["Full-time", "Part-time", "Internship", "Contract", "Freelance"];
+const JOB_TYPES  = ["Full-time", "Part-time", "Internship", "Contract", "Freelance"];
 const WORK_MODES = ["On-site", "Remote", "Hybrid"];
 const STATUS_OPTS = ["Published", "Draft", "Paused", "Rejected"];
 const BLANK = { title: "", co: "", loc: "", type: "Full-time", work: "On-site", salary: "", cat: "", desc: "", status: "Published", skills: [], dept: "", deadline: "" };
@@ -27,7 +28,7 @@ export default function Jobs() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [modal, setModal] = useState(null);
   const [form, setForm] = useState(BLANK);
-  const [skillsInput, setSkillsInput] = useState("");
+  const [skillInput, setSkillInput] = useState("");
   const [deleteTarget, setDeleteTarget] = useState(null);
 
   const jobs = store.jobs || [];
@@ -42,28 +43,45 @@ export default function Jobs() {
 
   const saveJobs = (next) => { saveDemoCollection("jobs", next); setStore((s) => ({ ...s, jobs: next })); };
 
-  const openCreate = () => { setForm(BLANK); setSkillsInput(""); setModal({}); };
-  const openEdit = (j) => { setForm({ title: j.title, co: j.co, loc: j.loc, type: j.type, work: j.work, salary: j.salary, cat: j.cat, desc: j.desc, status: j.status, skills: j.skills || [], dept: j.dept || "", deadline: j.deadline || "" }); setSkillsInput((j.skills || []).join(", ")); setModal(j); };
+  const openCreate = () => { setForm({ ...BLANK, skills: [] }); setSkillInput(""); setModal({}); };
+  const openEdit = (j) => {
+    setForm({
+      title: j.title, co: j.co, loc: j.loc, type: j.type, work: j.work,
+      salary: j.salary, cat: j.cat, desc: j.desc, status: j.status,
+      skills: j.skills ? [...j.skills] : [],
+      dept: j.dept || "", deadline: j.deadline || "",
+    });
+    setSkillInput("");
+    setModal(j);
+  };
 
   const handleSave = (e) => {
     e.preventDefault();
-    const skillsArr = skillsInput.split(",").map((s) => s.trim()).filter(Boolean);
-    const data = { ...form, skills: skillsArr };
     if (modal.id) {
-      saveJobs(jobs.map((j) => j.id === modal.id ? { ...j, ...data } : j));
+      saveJobs(jobs.map((j) => j.id === modal.id ? { ...j, ...form } : j));
     } else {
       const jid = "j" + Date.now().toString(36);
-      saveJobs([...jobs, { id: jid, cid: "admin", ...data }]);
+      saveJobs([...jobs, { id: jid, cid: "admin", ...form }]);
     }
     setModal(null);
   };
 
   const setStatus = (j, status) => saveJobs(jobs.map((item) => item.id === j.id ? { ...item, status } : item));
   const confirmDelete = () => { saveJobs(jobs.filter((j) => j.id !== deleteTarget.id)); setDeleteTarget(null); };
-
   const f = (k) => (e) => setForm((p) => ({ ...p, [k]: e.target.value }));
-
   const statusBadge = (s) => s === "Published" ? "workspace-status-success" : s === "Paused" ? "workspace-status-warning" : s === "Rejected" ? "workspace-status-danger" : "workspace-status";
+
+  // Skill chip handlers
+  const addSkill = () => {
+    const trimmed = skillInput.trim();
+    if (!trimmed) return;
+    const skills = form.skills || [];
+    if (skills.map((s) => s.toLowerCase()).includes(trimmed.toLowerCase())) { setSkillInput(""); return; }
+    setForm((prev) => ({ ...prev, skills: [...(prev.skills || []), trimmed] }));
+    setSkillInput("");
+  };
+  const removeSkill = (idx) => setForm((prev) => ({ ...prev, skills: (prev.skills || []).filter((_, i) => i !== idx) }));
+  const handleSkillKeyDown = (e) => { if (e.key === "Enter") { e.preventDefault(); addSkill(); } };
 
   return (
     <section className="workspace-page">
@@ -110,33 +128,92 @@ export default function Jobs() {
 
       {modal !== null && (
         <Modal title={modal.id ? "Edit Job" : "Add New Job"} onClose={() => setModal(null)}>
-          <form onSubmit={handleSave}>
-            <div className="workspace-form-grid">
-              <div className="workspace-field"><label>Job Title</label><input required value={form.title} onChange={f("title")} /></div>
-              <div className="workspace-field"><label>Company Name</label><input required value={form.co} onChange={f("co")} /></div>
-              <div className="workspace-field"><label>Location</label><input value={form.loc} onChange={f("loc")} /></div>
-              <div className="workspace-field"><label>Salary</label><input value={form.salary} onChange={f("salary")} placeholder="e.g. $500-$800" /></div>
-              <div className="workspace-field"><label>Type</label>
-                <select value={form.type} onChange={f("type")}>{JOB_TYPES.map((t) => <option key={t}>{t}</option>)}</select>
+          <form onSubmit={handleSave} className="admin-form">
+            <p className="admin-form-section">Job Details</p>
+
+            <div className="admin-field">
+              <label className="admin-label">Job Title <span className="admin-required">*</span></label>
+              <input className="admin-input" required value={form.title} onChange={f("title")} placeholder="e.g. Software Engineer" />
+            </div>
+
+            <div className="admin-field">
+              <label className="admin-label">Company Name <span className="admin-required">*</span></label>
+              <input className="admin-input" required value={form.co} onChange={f("co")} placeholder="e.g. Acme Corp" />
+            </div>
+
+            <div className="admin-form-grid">
+              <div className="admin-field">
+                <label className="admin-label">Location</label>
+                <input className="admin-input" value={form.loc} onChange={f("loc")} placeholder="e.g. Phnom Penh" />
               </div>
-              <div className="workspace-field"><label>Work Mode</label>
-                <select value={form.work} onChange={f("work")}>{WORK_MODES.map((w) => <option key={w}>{w}</option>)}</select>
+              <div className="admin-field">
+                <label className="admin-label">Salary</label>
+                <input className="admin-input" value={form.salary} onChange={f("salary")} placeholder="e.g. $500–$800" />
               </div>
-              <div className="workspace-field"><label>Category</label>
-                <select value={form.cat} onChange={f("cat")}>
+              <div className="admin-field">
+                <label className="admin-label">Job Type</label>
+                <select className="admin-input admin-select" value={form.type} onChange={f("type")}>
+                  {JOB_TYPES.map((t) => <option key={t}>{t}</option>)}
+                </select>
+              </div>
+              <div className="admin-field">
+                <label className="admin-label">Work Mode</label>
+                <select className="admin-input admin-select" value={form.work} onChange={f("work")}>
+                  {WORK_MODES.map((w) => <option key={w}>{w}</option>)}
+                </select>
+              </div>
+              <div className="admin-field">
+                <label className="admin-label">Category</label>
+                <select className="admin-input admin-select" value={form.cat} onChange={f("cat")}>
                   <option value="">Select category</option>
                   {cats.map((c) => <option key={c}>{c}</option>)}
                 </select>
               </div>
-              <div className="workspace-field"><label>Status</label>
-                <select value={form.status} onChange={f("status")}>{STATUS_OPTS.map((s) => <option key={s}>{s}</option>)}</select>
+              <div className="admin-field">
+                <label className="admin-label">Status</label>
+                <select className="admin-input admin-select" value={form.status} onChange={f("status")}>
+                  {STATUS_OPTS.map((s) => <option key={s}>{s}</option>)}
+                </select>
               </div>
             </div>
-            <div className="workspace-field"><label>Skills (comma-separated)</label><input value={skillsInput} onChange={(e) => setSkillsInput(e.target.value)} placeholder="e.g. JavaScript, SQL, Git" /></div>
-            <div className="workspace-field"><label>Description</label><textarea value={form.desc} onChange={f("desc")} /></div>
-            <div className="workspace-actions">
-              <button type="submit" className="workspace-button workspace-button-primary">{modal.id ? "Save Changes" : "Create Job"}</button>
+
+            <div className="admin-field">
+              <label className="admin-label">Required Skills</label>
+              <div className="admin-skill-row">
+                <input
+                  className="admin-input admin-skill-input"
+                  value={skillInput}
+                  onChange={(e) => setSkillInput(e.target.value)}
+                  onKeyDown={handleSkillKeyDown}
+                  placeholder="Enter a skill..."
+                  maxLength={60}
+                />
+                <button type="button" className="admin-skill-btn" onClick={addSkill}>
+                  Add Skill
+                </button>
+              </div>
+              {(form.skills || []).length > 0 && (
+                <div className="admin-chips">
+                  {(form.skills || []).map((skill, idx) => (
+                    <span key={idx} className="admin-chip">
+                      {skill}
+                      <button type="button" className="admin-chip-remove" onClick={() => removeSkill(idx)} aria-label={`Remove ${skill}`}>&times;</button>
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="admin-field">
+              <label className="admin-label">Description</label>
+              <textarea className="admin-input admin-textarea" value={form.desc} onChange={f("desc")} placeholder="Describe the role, responsibilities, and requirements..." />
+            </div>
+
+            <div className="admin-form-actions">
               <button type="button" className="workspace-button" onClick={() => setModal(null)}>Cancel</button>
+              <button type="submit" className="workspace-button workspace-button-primary">
+                {modal.id ? "Save Changes" : "Create Job"}
+              </button>
             </div>
           </form>
         </Modal>

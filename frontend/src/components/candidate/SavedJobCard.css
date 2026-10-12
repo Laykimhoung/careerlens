@@ -21,13 +21,13 @@
 .saved-job-card__title {
   font-size: 16px;
   font-weight: 600;
-  color: #0f766e;
+  color: var(--color-primary);
   margin-bottom: 4px;
   transition: color 0.15s;
 }
 
 .saved-job-card__title-link:hover .saved-job-card__title {
-  color: #115e59;
+  color: var(--color-primary-hover);
   text-decoration: underline;
 }
 

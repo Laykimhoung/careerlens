@@ -1,3 +1,7 @@
+import Input from "../common/Input";
+import Select from "../common/Select";
+import Textarea from "../common/Textarea";
+import Button from "../common/Button";
 import "./JobForm.css";
 
 export default function JobForm({ initialJob = {}, onSubmit, submitLabel = "Save job" }) {
@@ -8,15 +12,22 @@ export default function JobForm({ initialJob = {}, onSubmit, submitLabel = "Save
 	};
 
 	return (
-		<form className="workspace-panel" onSubmit={handleSubmit}>
-			<div className="workspace-form-grid">
-				<div className="workspace-field"><label htmlFor="title">Job title</label><input id="title" name="title" defaultValue={initialJob.title || ""} required /></div>
-				<div className="workspace-field"><label htmlFor="department">Department</label><input id="department" name="department" defaultValue={initialJob.department || ""} required /></div>
-				<div className="workspace-field"><label htmlFor="type">Employment type</label><select id="type" name="type" defaultValue={initialJob.type || "Full-time"}><option>Full-time</option><option>Part-time</option><option>Contract</option><option>Internship</option></select></div>
-				<div className="workspace-field"><label htmlFor="location">Location</label><input id="location" name="location" defaultValue={initialJob.location || ""} required /></div>
+		<form className="workspace-panel company-job-form" onSubmit={handleSubmit}>
+			<div className="job-form-grid">
+				<Input id="title" label="Job title" defaultValue={initialJob.title || ""} required />
+				<Input id="department" label="Department" defaultValue={initialJob.department || ""} required />
+				<Select 
+					id="type" 
+					label="Employment type" 
+					defaultValue={initialJob.type || "Full-time"} 
+					options={["Full-time", "Part-time", "Contract", "Internship"]}
+				/>
+				<Input id="location" label="Location" defaultValue={initialJob.location || ""} required />
 			</div>
-			<div className="workspace-field"><label htmlFor="description">Role description</label><textarea id="description" name="description" defaultValue={initialJob.description || ""} required /></div>
-			<div className="workspace-actions"><button className="workspace-button workspace-button-primary" type="submit">{submitLabel}</button></div>
+			<Textarea id="description" label="Role description" defaultValue={initialJob.description || ""} required />
+			<div className="job-form-actions">
+				<Button type="submit" variant="primary">{submitLabel}</Button>
+			</div>
 		</form>
 	);
 }

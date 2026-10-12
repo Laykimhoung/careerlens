@@ -1,0 +1,311 @@
+/* =============================================================
+   adminForms.css — Shared modal form styles for all admin pages.
+   Imported by: Companies, Jobs, Users, Skills, Categories, etc.
+   (Candidates.css has its own copy; this handles all others.)
+   ============================================================= */
+
+/* ── Modal overlay & container (self-contained so each page
+      works independently of Applications.css) ── */
+.crud-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.crud-modal {
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  padding: 28px 32px;
+  width: 100%;
+  max-width: 560px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-md);
+}
+
+.crud-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.crud-modal-header h2 {
+  margin: 0;
+  font-size: 18px;
+  color: var(--color-text-primary);
+}
+
+.crud-close {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: var(--color-text-muted);
+}
+
+.crud-close:hover {
+  color: var(--color-text-primary);
+}
+
+
+
+/* ── Form container ── */
+.admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ── Section label / divider ── */
+.admin-form-section {
+  margin: 0 0 18px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  font-size: 11px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ── Field: label stacked above input ── */
+.admin-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+/* ── Label typography ── */
+.admin-label {
+  display: block;
+  font-size: 13px;
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-primary);
+  line-height: 1;
+}
+
+.admin-required {
+  color: var(--color-danger);
+  margin-left: 2px;
+}
+
+/* ── Unified input / select / textarea ──
+   Overrides AdminLayout's max-width: 360px rule
+   scoped only to these classes. */
+.admin-input {
+  display: block;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: 44px;
+  padding: 0 12px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--color-text-primary);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  box-sizing: border-box;
+}
+
+.admin-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.admin-input:focus {
+  outline: none;
+  border-color: var(--color-focus-ring);
+  box-shadow: 0 0 0 3px rgba(99, 142, 203, 0.18);
+}
+
+/* Textarea variant */
+.admin-textarea {
+  height: auto;
+  min-height: 100px;
+  padding: 10px 12px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+/* Select: keep native arrow */
+.admin-select {
+  padding: 0 36px 0 12px;
+  appearance: auto;
+  cursor: pointer;
+}
+
+/* Narrow variant — e.g. year or short selects */
+.admin-input-narrow {
+  max-width: 200px !important;
+}
+
+/* ── Two-column grid for wider modals ── */
+.admin-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 16px;
+}
+
+/* ── Skills chip row ── */
+.admin-skill-row {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.admin-skill-input {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+/* Use higher specificity than global `button { border: none }` reset */
+button.admin-skill-btn,
+.admin-skill-btn {
+  flex-shrink: 0;
+  height: 44px;
+  padding: 0 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-primary);
+  color: var(--color-surface) !important;
+  border: 1px solid var(--color-primary) !important;
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: var(--fw-semibold);
+  cursor: pointer;
+  white-space: nowrap;
+  opacity: 1;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+button.admin-skill-btn:hover:not(:disabled),
+.admin-skill-btn:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+  border-color: var(--color-primary-hover) !important;
+  opacity: 1;
+}
+
+button.admin-skill-btn:disabled,
+.admin-skill-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* Chip container */
+.admin-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+/* Individual chip */
+.admin-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background: var(--color-primary-soft);
+  color: var(--color-primary-hover);
+  border: 1px solid var(--color-primary-light);
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: var(--fw-medium);
+  line-height: 1;
+  transition: background var(--transition-fast);
+}
+
+.admin-chip:hover {
+  background: #d8e8f7;
+}
+
+/* Remove button inside chip */
+.admin-chip-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  margin-left: 2px;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: 50%;
+  color: var(--color-primary-hover);
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.admin-chip-remove:hover {
+  background: rgba(78, 115, 168, 0.18);
+  color: var(--color-danger);
+}
+
+/* ── Form actions row ── */
+.admin-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-border);
+}
+
+.admin-form-actions .workspace-button {
+  min-height: 40px;
+  padding: 9px 18px;
+  font-size: 13px;
+}
+
+/* ── Inline add-row (for Skills / Categories pages, no modal) ── */
+.admin-inline-add {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+  margin-bottom: 20px;
+}
+
+.admin-inline-add .admin-input {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.admin-inline-add .admin-skill-btn {
+  /* reuse same button style */
+}
+
+/* ── Responsive: ≤ 480 px ── */
+@media (max-width: 480px) {
+  .crud-modal {
+    padding: 20px 18px;
+  }
+
+  .admin-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-skill-row,
+  .admin-inline-add {
+    flex-direction: column;
+  }
+
+  .admin-skill-btn {
+    width: 100%;
+  }
+
+  .admin-input-narrow {
+    max-width: 100% !important;
+  }
+}

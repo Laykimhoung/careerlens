@@ -1,5 +1,6 @@
 import { NavLink, Link } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
+import logoIcon from "../../assets/logo/logo.webp";
 import "./CandidateSidebar.css";
 
 // SVG Icons for navigation
@@ -89,12 +90,11 @@ export default function CandidateSidebar({ isOpen, onClose }) {
       <aside className={`sidebar ${isOpen ? "sidebar--open" : ""}`}>
         <div className="sidebar__header">
           <Link to="/" className="sidebar__logo">
-            <div className="sidebar__logo-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                <path fillRule="evenodd" d="M9 4.5a.75.75 0 01.721.544l.813 2.846a3.75 3.75 0 002.576 2.576l2.846.813a.75.75 0 010 1.442l-2.846.813a3.75 3.75 0 00-2.576 2.576l-.813 2.846a.75.75 0 01-1.442 0l-.813-2.846a3.75 3.75 0 00-2.576-2.576l-2.846-.813a.75.75 0 010-1.442l2.846-.813A3.75 3.75 0 007.466 7.89l.813-2.846A.75.75 0 019 4.5zM18 1.5a.75.75 0 01.728.568l.258 1.036a2.25 2.25 0 001.91 1.91l1.036.258a.75.75 0 010 1.456l-1.036.258a2.25 2.25 0 00-1.91 1.91l-.258 1.036a.75.75 0 01-1.456 0l-.258-1.036a2.25 2.25 0 00-1.91-1.91l-1.036-.258a.75.75 0 010-1.456l1.036-.258a2.25 2.25 0 001.91-1.91l.258-1.036A.75.75 0 0118 1.5z" clipRule="evenodd" />
-              </svg>
-            </div>
-            <span>CareerLens</span>
+            <img src={logoIcon} alt="CareerLens Logo" className="brand-logo" />
+            <span className="brand-text">
+              <span className="brand-career">Career</span>
+              <span className="brand-lens">Lens</span>
+            </span>
           </Link>
           <button className="sidebar__close" onClick={onClose} aria-label="Close menu">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" style={{ width: "24px", height: "24px" }}>
