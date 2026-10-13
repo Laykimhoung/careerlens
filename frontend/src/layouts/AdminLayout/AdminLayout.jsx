@@ -21,9 +21,20 @@ export default function AdminLayout() {
 				open={menuOpen}
 				onClose={() => setMenuOpen(false)}
 				adminName={adminName}
-                onLogout={handleLogout}
+				onLogout={handleLogout}
 			/>
 			<div className="admin-main">
+				<header className="admin-mobile-bar">
+					<button
+						type="button"
+						className="workspace-button admin-menu-button"
+						onClick={() => setMenuOpen(true)}
+						aria-label="Open navigation"
+					>
+						&#9776; Menu
+					</button>
+					<span className="admin-mobile-title">CareerLens Admin</span>
+				</header>
 				<main className="admin-content">
 					<Outlet />
 				</main>

@@ -1,56 +1,86 @@
 /* Notifications CSS */
-.notif-card {
+.admin-layout .notif-card {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 16px;
-  transition: background var(--transition-fast);
+  gap: 20px;
+  padding: 20px 24px;
+  transition: background var(--transition-fast), box-shadow var(--transition-fast);
 }
 
-.notif-unread {
-  border-left: 3px solid var(--color-primary);
+.admin-layout .notif-card:hover {
+  box-shadow: var(--shadow-md);
 }
 
-.notif-read {
-  border-left: 3px solid var(--color-border-strong);
-  opacity: 0.75;
+.admin-layout .notif-unread {
+  border-left: 4px solid var(--color-primary);
 }
 
-.notif-left {
+.admin-layout .notif-read {
+  border-left: 4px solid var(--color-border-strong);
+  opacity: 0.82;
+}
+
+.admin-layout .notif-left {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
+  gap: 14px;
   flex: 1;
+  min-width: 0;
 }
 
-.notif-dot {
+.admin-layout .notif-dot {
   display: inline-block;
   width: 10px;
   height: 10px;
-  border-radius: var(--radius-full);
-  margin-top: 5px;
+  border-radius: var(--radius-full, 999px);
+  margin-top: 6px;
   flex-shrink: 0;
 }
 
-.dot-unread { background: var(--color-primary); }
-.dot-read   { background: var(--color-border-strong); }
+.admin-layout .dot-unread { background: var(--color-primary); }
+.admin-layout .dot-read   { background: var(--color-border-strong); }
 
-.notif-message {
-  margin: 0 0 4px;
-  font-size: 14px;
-  font-weight: var(--fw-medium, 500);
+.admin-layout .notif-message {
+  margin: 0 0 6px;
+  font-size: 14.5px;
+  font-weight: var(--fw-semibold, 600);
   color: var(--color-text-primary);
+  line-height: 1.45;
 }
 
-.notif-meta {
+.admin-layout .notif-meta {
   margin: 0;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--color-text-muted);
+  line-height: 1.4;
 }
 
-.notif-actions {
+.admin-layout .notif-actions {
   display: flex;
-  gap: 8px;
+  gap: 10px;
   align-items: center;
   flex-shrink: 0;
+}
+
+.admin-layout .notif-actions .workspace-button {
+  min-height: 36px;
+  padding: 6px 14px;
+  font-size: 12.5px;
+  border-radius: 8px;
+}
+
+@media (max-width: 640px) {
+  .admin-layout .notif-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+    padding: 18px;
+  }
+
+  .admin-layout .notif-actions {
+    justify-content: flex-end;
+    padding-top: 12px;
+    border-top: 1px solid var(--color-border);
+  }
 }

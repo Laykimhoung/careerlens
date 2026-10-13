@@ -1,61 +1,142 @@
-import { useState } from "react";
-import InterviewCard from '../../../components/company/InterviewCard';
-import Input from '../../../components/common/Input';
-import Select from '../../../components/common/Select';
-import Button from '../../../components/common/Button';
-import { readStore, saveDemoCollection } from '../../../services/member3DemoStore';
-import { useAuth } from "../../../hooks/useAuth";
-import './Interviews.css';
+import { useState, useEffect, useCallback, useMemo } from "react";
+import InterviewCard from "../../../components/company/InterviewCard";
+import Input from "../../../components/common/Input";
+import Select from "../../../components/common/Select";
+import Button from "../../../components/common/Button";
+import {
+  fetchNormalizedApplications,
+  updateApplication,
+} from "../../../services/applicationService";
+import {
+  fetchInterviewsList,
+  createInterview,
+  updateInterview,
+} from "../../../services/interviewService";
+import "./Interviews.css";
 
 export default function Interviews() {
-  const { user } = useAuth();
-  const [store, setStore] = useState(() => readStore());
-  
-  const companyId = user?.id === 2 ? "usr-c1" : user?.id;
-  const companyName = user?.full_name || "TechNova Cambodia";
+  const [applicants, setApplicants] = useState([]);
+  const [interviews, setInterviews] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [statusMsg, setStatusMsg] = useState({ type: "", text: "" });
 
-  // Filter company jobs
-  const companyJobs = (store.jobs || []).filter(j => j.cid === companyId || j.co === companyName || companyId === "usr-c1");
-  const jobIds = companyJobs.map(j => j.id);
-  
-  // Apps for this company
-  const applicants = (store.apps || []).filter(a => jobIds.includes(a.jid));
+  const loadData = useCallback(async () => {
+    setLoading(true);
+    try {
+      const [appList, intList] = await Promise.all([
+        fetchNormalizedApplications(),
+        fetchInterviewsList(),
+      ]);
+      setApplicants(appList);
+      setInterviews(intList);
+    } catch (err) {
+      setStatusMsg({
+        type: "error",
+        text: err.response?.data?.detail || "Failed to load interviews.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
-  const interviews = store.interviews || [];
-  // Only show interviews for applicants of this company
-  const companyInterviews = interviews.filter(i => applicants.some(a => a.id === i.appId));
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
-  const scheduleInterview = (event) => {
+  const enrichedInterviews = useMemo(() => {
+    const appMap = new Map(applicants.map((a) => [Number(a.id), a]));
+    return interviews.map((iv) => {
+      const app = appMap.get(Number(iv.application));
+      const dt = iv.scheduled_at ? new Date(iv.scheduled_at) : null;
+      const statusDisplay =
+        iv.status === "SCHEDULED"
+          ? "Scheduled"
+          : iv.status === "COMPLETED"
+          ? "Completed"
+          : "Canceled";
+      return {
+        id: iv.id,
+        appId: iv.application,
+        candidate: app?.candidateName || `Applicant #${iv.application}`,
+        role: app?.jobTitle || "Job Role",
+        date: dt
+          ? dt.toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            })
+          : "TBD",
+        time: dt
+          ? dt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+          : "",
+        format: iv.location || (iv.meeting_link ? "Video call" : "On-site"),
+        meetingLink: iv.meeting_link || "",
+        status: statusDisplay,
+        rawStatus: iv.status,
+      };
+    });
+  }, [interviews, applicants]);
+
+  const handleScheduleInterview = async (event) => {
     event.preventDefault();
-    const form = new FormData(event.currentTarget);
-    const appId = form.get("appId");
-    const app = applicants.find(a => a.id === appId);
-    if (!app) return;
+    const formEl = event.currentTarget;
+    const form = new FormData(formEl);
+    const appId = Number(form.get("appId"));
+    const date = form.get("date");
+    const time = form.get("time");
+    const format = form.get("format") || "Video call";
+    const meetingLink = (form.get("meeting_link") || "").trim();
+    const location = (form.get("location") || format).trim();
 
-    const student = store.users.find(u => u.id === app.sid) || {};
-    const job = store.jobs.find(j => j.id === app.jid) || {};
+    if (!appId || !date || !time) return;
 
-    const interview = {
-      id: `int-${Date.now()}`,
-      appId: app.id,
-      candidate: student.name || "Unknown Candidate",
-      role: job.title || "Job Role",
-      date: form.get("date"),
-      time: form.get("time"),
-      format: form.get("format"),
-      status: "Scheduled",
-    };
-    
-    const nextInterviews = [interview, ...interviews];
-    saveDemoCollection("interviews", nextInterviews);
-    setStore(s => ({ ...s, interviews: nextInterviews }));
-    event.currentTarget.reset();
+    setSubmitting(true);
+    setStatusMsg({ type: "", text: "" });
+    try {
+      const isoDateTime = new Date(`${date}T${time}`).toISOString();
+      const payload = {
+        application: appId,
+        scheduled_at: isoDateTime,
+        location,
+        meeting_link: meetingLink,
+        status: "SCHEDULED",
+      };
+      await createInterview(payload);
+      await updateApplication(appId, { status: "INTERVIEW" }).catch(() => {});
+      await loadData();
+      formEl.reset();
+      setStatusMsg({
+        type: "success",
+        text: "Interview scheduled and candidate notified.",
+      });
+    } catch (err) {
+      const detail =
+        err.response?.data?.detail ||
+        Object.values(err.response?.data || {})?.[0] ||
+        "Failed to schedule interview.";
+      setStatusMsg({ type: "error", text: String(detail) });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
-  const cancelInterview = (interview) => {
-    const nextInterviews = interviews.map((item) => item.id === interview.id ? { ...item, status: "Cancelled" } : item);
-    saveDemoCollection("interviews", nextInterviews);
-    setStore(s => ({ ...s, interviews: nextInterviews }));
+  const handleCancelInterview = async (interview) => {
+    try {
+      await updateInterview(interview.id, { status: "CANCELED" });
+      await loadData();
+    } catch (err) {
+      alert(err.response?.data?.detail || "Failed to cancel interview.");
+    }
+  };
+
+  const handleCompleteInterview = async (interview) => {
+    try {
+      await updateInterview(interview.id, { status: "COMPLETED" });
+      await loadData();
+    } catch (err) {
+      alert(err.response?.data?.detail || "Failed to update interview status.");
+    }
   };
 
   return (
@@ -66,64 +147,110 @@ export default function Interviews() {
           <p>Coordinate candidate conversations and interview times.</p>
         </div>
       </div>
-      
+
+      {statusMsg.text && (
+        <div
+          style={{
+            padding: "12px 16px",
+            borderRadius: "8px",
+            marginBottom: "16px",
+            backgroundColor: statusMsg.type === "error" ? "#fef2f2" : "#f0fdf4",
+            color: statusMsg.type === "error" ? "#b91c1c" : "#15803d",
+            fontSize: "14px",
+          }}
+        >
+          {statusMsg.text}
+        </div>
+      )}
+
       <div className="workspace-split">
         <section className="dashboard-panel">
           <h2>Schedule an interview</h2>
-          <form onSubmit={scheduleInterview}>
-            <Select 
-              id="appId" 
+          <form onSubmit={handleScheduleInterview}>
+            <Select
+              id="appId"
               name="appId"
-              label="Candidate" 
+              label="Candidate"
               required
               options={[
                 { value: "", label: "Select a candidate" },
-                ...applicants.map(app => {
-                  const student = store.users.find(u => u.id === app.sid) || {};
-                  const job = store.jobs.find(j => j.id === app.jid) || {};
-                  return { value: app.id, label: `${student.name || "Unknown"} · ${job.title || "Job"}` };
-                })
+                ...applicants.map((app) => ({
+                  value: String(app.id),
+                  label: `${app.candidateName} · ${app.jobTitle}`,
+                })),
               ]}
             />
-            
+
             <div className="company-profile-grid">
-              <Input 
-                id="date" 
-                name="date" 
-                type="date" 
-                label="Date" 
-                min={new Date().toISOString().slice(0, 10)} 
-                required 
+              <Input
+                id="date"
+                name="date"
+                type="date"
+                label="Date"
+                required
               />
-              <Input 
-                id="time" 
-                name="time" 
-                type="time" 
-                label="Time" 
-                required 
+              <Input
+                id="time"
+                name="time"
+                type="time"
+                label="Time"
+                required
               />
             </div>
-            
-            <Select 
-              id="format" 
+
+            <Select
+              id="format"
               name="format"
-              label="Format" 
+              label="Format"
               options={["Video call", "On-site", "Phone call"]}
             />
-            
-            <div className="workspace-actions" style={{ justifyContent: "flex-start", marginTop: "10px" }}>
-              <Button type="submit" variant="primary">Schedule interview</Button>
+
+            <Input
+              id="location"
+              name="location"
+              label="Location / Room (optional)"
+              placeholder="e.g. Phnom Penh HQ or Google Meet"
+            />
+
+            <Input
+              id="meeting_link"
+              name="meeting_link"
+              type="url"
+              label="Video Meeting URL (optional)"
+              placeholder="https://meet.google.com/..."
+            />
+
+            <div
+              className="workspace-actions"
+              style={{ justifyContent: "flex-start", marginTop: "10px" }}
+            >
+              <Button type="submit" variant="primary" loading={submitting}>
+                Schedule interview
+              </Button>
             </div>
           </form>
         </section>
-        
+
         <section className="dashboard-panel">
           <h2>Interview schedule</h2>
-          <div className="workspace-list" style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-            {companyInterviews.map((interview) => (
-              <InterviewCard key={interview.id} interview={interview} onCancel={cancelInterview} />
-            ))}
-            {!companyInterviews.length && (
+          <div
+            className="workspace-list"
+            style={{ display: "flex", flexDirection: "column", gap: "12px" }}
+          >
+            {loading ? (
+              <p style={{ textAlign: "center", padding: "30px", color: "#666" }}>
+                Loading scheduled interviews...
+              </p>
+            ) : enrichedInterviews.length > 0 ? (
+              enrichedInterviews.map((interview) => (
+                <InterviewCard
+                  key={interview.id}
+                  interview={interview}
+                  onCancel={handleCancelInterview}
+                  onComplete={handleCompleteInterview}
+                />
+              ))
+            ) : (
               <p style={{ textAlign: "center", padding: "30px", color: "#666" }}>
                 No interviews have been scheduled.
               </p>
@@ -133,4 +260,4 @@ export default function Interviews() {
       </div>
     </section>
   );
-}
+}

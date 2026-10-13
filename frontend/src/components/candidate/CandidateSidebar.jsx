@@ -1,5 +1,8 @@
+import { useState, useEffect } from "react";
 import { NavLink, Link } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
+import { getNotifications } from "../../services/candidateService";
+import { extractResults } from "../../services/api";
 import logoIcon from "../../assets/logo/logo.webp";
 import "./CandidateSidebar.css";
 
@@ -66,6 +69,16 @@ const icons = {
 
 export default function CandidateSidebar({ isOpen, onClose }) {
   const { user, logout, switchRole } = useAuth();
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    getNotifications()
+      .then((res) => {
+        const list = extractResults(res);
+        setUnreadCount(list.filter((n) => !n.is_read).length);
+      })
+      .catch(() => {});
+  }, []);
 
   const navLinks = [
     { to: "/candidate", label: "Dashboard", icon: icons.dashboard, end: true },
@@ -76,7 +89,7 @@ export default function CandidateSidebar({ isOpen, onClose }) {
     { to: "/candidate/messages", label: "Messages", icon: icons.messages },
     { to: "/candidate/profile", label: "My Profile", icon: icons.profile },
     { to: "/candidate/resume", label: "Resume", icon: icons.resume },
-    { to: "/candidate/notifications", label: "Notifications", icon: icons.notifications, badge: 1 },
+    { to: "/candidate/notifications", label: "Notifications", icon: icons.notifications, badge: unreadCount > 0 ? unreadCount : null },
     { to: "/candidate/settings", label: "Settings", icon: icons.settings },
   ];
 
@@ -131,7 +144,7 @@ export default function CandidateSidebar({ isOpen, onClose }) {
 
           <div className="sidebar__user-profile">
             <div className="sidebar__user-info">
-              <span className="sidebar__user-name">{user?.full_name || "Dara Sok"}</span>
+              <span className="sidebar__user-name">{user?.full_name || user?.username || "Candidate"}</span>
               <span className="sidebar__user-role">{user?.role || "candidate"}</span>
             </div>
             <button onClick={logout} className="sidebar__logout-btn">
