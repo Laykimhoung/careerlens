@@ -49,3 +49,7 @@ backend-api-test/
 # Demo seed data manifest
 .demo_seed_manifest.json
 *.demo_manifest.json
+
+# Local batch scripts
+run_servers.bat
+*.bat
