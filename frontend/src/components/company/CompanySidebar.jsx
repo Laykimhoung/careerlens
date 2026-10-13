@@ -1,26 +1,36 @@
+import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import "./CompanySidebar.css";
 import { useAuth } from "../../hooks/useAuth";
-
-const items = [
-  ["/company", "Dashboard", true],
-  ["/company/jobs", "Jobs"],
-  ["/company/applicants", "Applicants"],
-  ["/company/interviews", "Interviews"],
-  ["/company/messages", "Messages"],
-  ["/company/profile", "Company Profile"],
-  ["/company/talent-pool", "Talent Pool"],
-  ["/company/reports", "Reports"],
-  ["/company/notifications", "Notifications", false, 3], // 3 is the badge
-  ["/company/settings", "Settings"],
-];
-
+import { getNotifications } from "../../services/candidateService";
+import { extractResults } from "../../services/api";
 import logoIcon from "../../assets/logo/logo.webp";
-
-// ...
 
 export default function CompanySidebar() {
   const { user, switchRole, logout } = useAuth();
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    getNotifications()
+      .then((res) => {
+        const list = extractResults(res);
+        setUnreadCount(list.filter((n) => !n.is_read).length);
+      })
+      .catch(() => {});
+  }, []);
+
+  const items = [
+    ["/company", "Dashboard", true],
+    ["/company/jobs", "Jobs"],
+    ["/company/applicants", "Applicants"],
+    ["/company/interviews", "Interviews"],
+    ["/company/messages", "Messages"],
+    ["/company/profile", "Company Profile"],
+    ["/company/talent-pool", "Talent Pool"],
+    ["/company/reports", "Reports"],
+    ["/company/notifications", "Notifications", false, unreadCount > 0 ? unreadCount : null],
+    ["/company/settings", "Settings"],
+  ];
 
   return (
     <aside className="company-sidebar">
@@ -31,7 +41,7 @@ export default function CompanySidebar() {
           <span className="brand-lens">Lens</span>
         </span>
       </a>
-      
+
       <nav className="company-nav" aria-label="Company navigation">
         {items.map(([to, label, end, badge]) => (
           <NavLink key={to} to={to} end={end}>
@@ -42,8 +52,8 @@ export default function CompanySidebar() {
       </nav>
 
       <div className="company-sidebar-foot">
-        <div className="demo-mode-label">DEMO MODE</div>
-        <select 
+        <div className="demo-mode-label">ROLE SWITCHER</div>
+        <select
           className="role-selector"
           value={user?.role || "company"}
           onChange={(e) => switchRole(e.target.value)}
@@ -52,15 +62,19 @@ export default function CompanySidebar() {
           <option value="company">company</option>
           <option value="admin">admin</option>
         </select>
-        
+
         <div className="user-info-row">
           <div className="user-details">
-            <div className="user-name">{user?.full_name || "TechNova Cambodia"}</div>
+            <div className="user-name">
+              {user?.full_name || user?.username || "Company"}
+            </div>
             <div className="user-role">{user?.role || "company"}</div>
           </div>
-          <button className="logout-btn" onClick={logout}>Log out</button>
+          <button className="logout-btn" onClick={logout}>
+            Log out
+          </button>
         </div>
       </div>
     </aside>
   );
-}
+}

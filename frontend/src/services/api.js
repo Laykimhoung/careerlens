@@ -16,6 +16,9 @@ api.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    if (typeof FormData !== "undefined" && config.data instanceof FormData) {
+      delete config.headers["Content-Type"];
+    }
     return config;
   },
   (error) => Promise.reject(error)
@@ -40,5 +43,12 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+export function extractResults(response) {
+  const data = response?.data ?? response;
+  if (Array.isArray(data)) return data;
+  if (Array.isArray(data?.results)) return data.results;
+  return [];
+}
 
 export default api;

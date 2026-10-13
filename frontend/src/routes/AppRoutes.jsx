@@ -80,7 +80,14 @@ export default function AppRoutes() {
           <Route path="settings" element={<CandidatePlaceholder title="Settings" />} />
         </Route>
 
-        <Route path="/company" element={<CompanyLayout />}>
+        <Route
+          path="/company"
+          element={
+            <ProtectedRoute role="company">
+              <CompanyLayout />
+            </ProtectedRoute>
+          }
+        >
           <Route index element={<CompanyDashboard />} />
           <Route path="profile" element={<CompanyProfile />} />
           <Route path="jobs" element={<CompanyJobs />} />
@@ -96,7 +103,14 @@ export default function AppRoutes() {
           <Route path="settings" element={<CandidatePlaceholder title="Settings" />} />
         </Route>
 
-        <Route path="/admin" element={<AdminLayout />}>
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute role="admin">
+              <AdminLayout />
+            </ProtectedRoute>
+          }
+        >
           <Route index element={<AdminDashboard />} />
           <Route path="users" element={<AdminUsers />} />
           <Route path="candidates" element={<AdminCandidates />} />

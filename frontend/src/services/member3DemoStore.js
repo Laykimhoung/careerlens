@@ -2,15 +2,15 @@ const STORAGE_KEY = "careerlens-member3-demo";
 
 const initialData = {
   users: [
-    { id: "usr-admin", name: "System Admin", email: "admin@careerlens.edu", role: "admin", status: "Active", pw: "demo123" },
-    { id: "usr-c1", name: "Northstar Labs", email: "careers@northstar.example", role: "company", status: "Active", pw: "demo123", ind: "Software Development", loc: "Phnom Penh", verified: "Verified" },
-    { id: "usr-c2", name: "Kiri Digital", email: "hello@kiri.example", role: "company", status: "Active", pw: "demo123", ind: "Information Technology", loc: "Siem Reap", verified: "Pending Verification" },
-    { id: "usr-s1", name: "Sokha Chan", email: "sokha.chan@example.com", role: "student", status: "Active", pw: "demo123", uni: "RUPP", major: "Computer Science", year: "2026" },
-    { id: "usr-s2", name: "Dara Lim", email: "dara.lim@example.com", role: "student", status: "Active", pw: "demo123", uni: "ITC", major: "Software Engineering", year: "2025" },
+    { id: "usr-admin", name: "System Admin", email: "admin@careerlens.edu", role: "admin", status: "Active", pw: "demo123", createdAt: "2026-09-18" },
+    { id: "usr-c1", name: "Northstar Labs", email: "careers@northstar.example", role: "company", status: "Active", pw: "demo123", ind: "Software Development", loc: "Phnom Penh", verified: "Verified", createdAt: "2026-09-19" },
+    { id: "usr-c2", name: "Kiri Digital", email: "hello@kiri.example", role: "company", status: "Active", pw: "demo123", ind: "Information Technology", loc: "Siem Reap", verified: "Pending Verification", createdAt: "2026-09-21" },
+    { id: "usr-s1", name: "Sokha Chan", email: "sokha.chan@example.com", role: "student", status: "Active", pw: "demo123", uni: "RUPP", major: "Computer Science", year: "2026", createdAt: "2026-09-22" },
+    { id: "usr-s2", name: "Dara Lim", email: "dara.lim@example.com", role: "student", status: "Active", pw: "demo123", uni: "ITC", major: "Software Engineering", year: "2025", createdAt: "2026-09-24" },
   ],
   jobs: [
-    { id: "job-101", title: "Frontend Engineer", co: "Northstar Labs", cid: "usr-c1", type: "Full-time", loc: "Phnom Penh", status: "Published", salary: "$800-$1200", cat: "Engineering", skills: ["React", "CSS"], desc: "Build accessible UIs", dept: "Engineering", work: "Hybrid", deadline: "2026-12-31" },
-    { id: "job-102", title: "Product Design Intern", co: "Northstar Labs", cid: "usr-c1", type: "Internship", loc: "Remote", status: "Published", salary: "$300-$500", cat: "Design", skills: ["Figma"], desc: "Design interfaces", dept: "Design", work: "Remote", deadline: "2026-11-15" },
+    { id: "job-101", title: "Frontend Engineer", co: "Northstar Labs", cid: "usr-c1", type: "Full-time", loc: "Phnom Penh", status: "Published", salary: "$800-$1200", cat: "Engineering", skills: ["React", "CSS"], desc: "Build accessible UIs", dept: "Engineering", work: "Hybrid", deadline: "2026-12-31", createdAt: "2026-09-23" },
+    { id: "job-102", title: "Product Design Intern", co: "Northstar Labs", cid: "usr-c1", type: "Internship", loc: "Remote", status: "Published", salary: "$300-$500", cat: "Design", skills: ["Figma"], desc: "Design interfaces", dept: "Design", work: "Remote", deadline: "2026-11-15", createdAt: "2026-09-24" },
   ],
   apps: [
     { id: "app-201", jid: "job-101", sid: "usr-s1", status: "Applied", date: "2026-09-28", cover: "I love React.", notes: "", hist: [["Applied", "2026-09-28"]] },
@@ -28,10 +28,32 @@ const initialData = {
   ]
 };
 
+const initialDateById = {
+  "usr-admin": "2026-09-18",
+  "usr-c1": "2026-09-19",
+  "usr-c2": "2026-09-21",
+  "usr-s1": "2026-09-22",
+  "usr-s2": "2026-09-24",
+  "job-101": "2026-09-23",
+  "job-102": "2026-09-24",
+};
+
 export function readStore() {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
-    return saved ? { ...initialData, ...JSON.parse(saved) } : initialData;
+    if (!saved) return initialData;
+    const parsed = { ...initialData, ...JSON.parse(saved) };
+    if (Array.isArray(parsed.users)) {
+      parsed.users = parsed.users.map((u) => (
+        u.createdAt || !initialDateById[u.id] ? u : { ...u, createdAt: initialDateById[u.id] }
+      ));
+    }
+    if (Array.isArray(parsed.jobs)) {
+      parsed.jobs = parsed.jobs.map((j) => (
+        j.createdAt || !initialDateById[j.id] ? j : { ...j, createdAt: initialDateById[j.id] }
+      ));
+    }
+    return parsed;
   } catch {
     return initialData;
   }
