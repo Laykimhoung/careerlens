@@ -26,7 +26,12 @@ const DEMO_ROLE_CREDENTIALS = {
 
 function extractApiError(err, fallback) {
   const data = err?.response?.data;
-  if (!data) return err?.message || fallback;
+  if (!data) {
+    if (err?.message === "Network Error" || err?.code === "ERR_NETWORK") {
+      return "Unable to connect to the server. Please ensure the Django backend is running (http://127.0.0.1:8000).";
+    }
+    return err?.message || fallback;
+  }
   if (typeof data === "string") return data;
   if (data.detail) return data.detail;
   if (Array.isArray(data.non_field_errors) && data.non_field_errors[0]) {

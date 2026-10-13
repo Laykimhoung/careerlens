@@ -166,6 +166,27 @@
   justify-content: center;
 }
 
+button.auth-icon,
+.auth-icon-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  outline: none;
+  transition: color 0.15s ease, transform 0.1s ease;
+}
+
+button.auth-icon:hover,
+.auth-icon-btn:hover {
+  color: #111;
+}
+
+button.auth-icon:active,
+.auth-icon-btn:active {
+  transform: scale(0.92);
+}
+
 .auth-hint {
   font-size: 11px;
   color: #888;
