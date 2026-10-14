@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import GhostFibers from "../../../components/ui/GhostFibers";
+import ThemeLanguageToggle from "../../../components/common/ThemeLanguageToggle";
 import "./Home.css";
 
 export default function Home() {
@@ -35,6 +36,7 @@ export default function Home() {
             </nav>
 
             <div className="landing-actions">
+              <ThemeLanguageToggle />
               <Link to="/login" className="landing-btn b2">Log In</Link>
               <Link to="/register" className="landing-btn">Get Started</Link>
             </div>

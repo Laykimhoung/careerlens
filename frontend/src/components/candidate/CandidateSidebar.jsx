@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
+import { useLanguage } from "../../context/LanguageContext";
 import { getNotifications } from "../../services/candidateService";
 import { extractResults } from "../../services/api";
 import logoIcon from "../../assets/logo/logo.webp";
@@ -9,6 +10,7 @@ import "./CandidateSidebar.css";
 export default function CandidateSidebar({ isOpen, open, onClose }) {
   const isMenuOpen = Boolean(open || isOpen);
   const { user, logout, switchRole } = useAuth();
+  const { t } = useLanguage();
   const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
@@ -21,16 +23,16 @@ export default function CandidateSidebar({ isOpen, open, onClose }) {
   }, []);
 
   const items = [
-    ["/candidate", "Dashboard", true],
-    ["/candidate/jobs", "Find Jobs"],
-    ["/candidate/applications", "My Applications"],
-    ["/candidate/saved-jobs", "Saved Jobs"],
-    ["/candidate/interviews", "Interviews"],
-    ["/candidate/messages", "Messages"],
-    ["/candidate/profile", "My Profile"],
-    ["/candidate/resume", "Resume"],
-    ["/candidate/notifications", "Notifications", false, unreadCount > 0 ? unreadCount : null],
-    ["/candidate/settings", "Settings"],
+    ["/candidate", t("nav.dashboard"), true],
+    ["/candidate/jobs", t("nav.findJobs")],
+    ["/candidate/applications", t("nav.myApplications")],
+    ["/candidate/saved-jobs", t("nav.savedJobs")],
+    ["/candidate/interviews", t("nav.interviews")],
+    ["/candidate/messages", t("nav.messages")],
+    ["/candidate/profile", t("nav.myProfile")],
+    ["/candidate/resume", t("nav.resume")],
+    ["/candidate/notifications", t("nav.notifications"), false, unreadCount > 0 ? unreadCount : null],
+    ["/candidate/settings", t("nav.settings")],
   ];
 
   return (
@@ -66,15 +68,15 @@ export default function CandidateSidebar({ isOpen, open, onClose }) {
         </nav>
 
         <div className="candidate-sidebar-foot">
-          <div className="demo-mode-label">ROLE SWITCHER</div>
+          <div className="demo-mode-label">{t("common.roleSwitcher")}</div>
           <select
             className="role-selector"
             value={user?.role || "candidate"}
             onChange={(e) => switchRole(e.target.value)}
           >
-            <option value="candidate">candidate</option>
-            <option value="company">company</option>
-            <option value="admin">admin</option>
+            <option value="candidate">{t("auth.roleCandidate")}</option>
+            <option value="company">{t("auth.roleCompany")}</option>
+            <option value="admin">{t("common.platformAdmin")}</option>
           </select>
 
           <div className="user-info-row">
@@ -85,7 +87,7 @@ export default function CandidateSidebar({ isOpen, open, onClose }) {
               <div className="user-role">{user?.role || "candidate"}</div>
             </div>
             <button type="button" className="logout-btn" onClick={logout}>
-              Log out
+              {t("common.logOut")}
             </button>
           </div>
         </div>

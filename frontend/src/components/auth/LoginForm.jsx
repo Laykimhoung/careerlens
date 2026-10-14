@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useLanguage } from "../../context/LanguageContext";
 import ErrorMessage from "../common/ErrorMessage";
 import "./LoginForm.css";
 
 const INITIAL = { email: "", password: "" };
 
 export default function LoginForm({ onSubmit, loading, error, onClearError }) {
+  const { t } = useLanguage();
   const [values, setValues] = useState(INITIAL);
   const [showPassword, setShowPassword] = useState(false);
   const [buttonOffset, setButtonOffset] = useState({ x: 0, y: 0 });
@@ -57,7 +59,7 @@ export default function LoginForm({ onSubmit, loading, error, onClearError }) {
 
       {/* Email Field */}
       <div className="tether-field">
-        <label className="tether-label" htmlFor="email">Email</label>
+        <label className="tether-label" htmlFor="email">{t("common.email")}</label>
         <div className={`tether-input-wrapper ${isEmailValid ? 'valid' : ''}`}>
           <span className="tether-icon-left">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -88,8 +90,8 @@ export default function LoginForm({ onSubmit, loading, error, onClearError }) {
       {/* Password Field */}
       <div className="tether-field">
         <div className="tether-label-row">
-          <label className="tether-label" htmlFor="password">Password</label>
-          <Link to="/forgot-password" className="tether-forgot">Forgot?</Link>
+          <label className="tether-label" htmlFor="password">{t("auth.password")}</label>
+          <Link to="/forgot-password" className="tether-forgot">{t("auth.forgotPassword")}</Link>
         </div>
         <div className={`tether-input-wrapper ${isPasswordValid ? 'valid' : ''}`}>
           <span className="tether-icon-left">
@@ -159,7 +161,7 @@ export default function LoginForm({ onSubmit, loading, error, onClearError }) {
             onMouseEnter={handleButtonHover}
             disabled={loading}
           >
-            {loading ? "Loading..." : "Log in"}
+            {loading ? t("common.loading") : t("auth.login")}
           </button>
         </div>
       </div>
@@ -178,7 +180,7 @@ export default function LoginForm({ onSubmit, loading, error, onClearError }) {
       </div>
 
       <div className="tether-create">
-        No account yet? <Link to="/register">Create one</Link>
+        {t("auth.noAccount")} <Link to="/register">{t("auth.register")}</Link>
       </div>
 
     </form>
