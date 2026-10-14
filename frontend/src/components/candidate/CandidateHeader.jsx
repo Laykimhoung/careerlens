@@ -1,21 +1,28 @@
 import { useLocation } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
+import { useLanguage } from "../../context/LanguageContext";
+import ThemeLanguageToggle from "../common/ThemeLanguageToggle";
 import "./CandidateHeader.css";
 
 export default function CandidateHeader({ onMenuClick }) {
   const { user } = useAuth();
   const location = useLocation();
+  const { t } = useLanguage();
 
   // Helper to determine page title from URL
   const getPageTitle = () => {
     const path = location.pathname;
-    if (path === "/candidate") return "Dashboard";
-    if (path.includes("/profile")) return "My Profile";
-    if (path.includes("/resume")) return "My Resume";
-    if (path.includes("/jobs")) return "Find Jobs";
-    if (path.includes("/applications")) return "Applications";
-    if (path.includes("/saved-jobs")) return "Saved Jobs";
-    return "Dashboard";
+    if (path === "/candidate") return t("nav.dashboard");
+    if (path.includes("/profile")) return t("nav.myProfile");
+    if (path.includes("/resume")) return t("nav.resume");
+    if (path.includes("/jobs")) return t("nav.findJobs");
+    if (path.includes("/applications")) return t("nav.myApplications");
+    if (path.includes("/saved-jobs")) return t("nav.savedJobs");
+    if (path.includes("/interviews")) return t("nav.interviews");
+    if (path.includes("/messages")) return t("nav.messages");
+    if (path.includes("/notifications")) return t("nav.notifications");
+    if (path.includes("/settings")) return t("nav.settings");
+    return t("nav.dashboard");
   };
 
   // Get first letter of full name for avatar
@@ -24,8 +31,8 @@ export default function CandidateHeader({ onMenuClick }) {
   return (
     <header className="header">
       <div className="header__left">
-        <button 
-          className="header__menu-btn" 
+        <button
+          className="header__menu-btn"
           onClick={onMenuClick}
           aria-label="Open menu"
         >
@@ -35,8 +42,9 @@ export default function CandidateHeader({ onMenuClick }) {
         </button>
         <h1 className="header__title">{getPageTitle()}</h1>
       </div>
-      
+
       <div className="header__right">
+        <ThemeLanguageToggle />
         <div className="header__user">
           <span className="header__user-name">{user?.full_name || "User"}</span>
           <div className="header__avatar">{initial}</div>

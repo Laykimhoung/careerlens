@@ -1,9 +1,11 @@
 import { createContext, useContext, useState, useCallback, useEffect } from 'react';
+import { useLanguage } from './LanguageContext';
 
 const ModalContext = createContext(null);
 
 export function ModalProvider({ children }) {
   const [modalContent, setModalContent] = useState(null);
+  const { t } = useLanguage();
 
   const showModal = useCallback((title, content) => {
     setModalContent({ title, content });
@@ -15,18 +17,18 @@ export function ModalProvider({ children }) {
 
   const confirmModal = useCallback((title, onConfirm) => {
     setModalContent({
-      title: "Please confirm",
+      title: t("common.confirm"),
       content: (
         <>
-          <p className="text-sm mb-4">{title}</p>
+          <p className="text-sm mb-4" style={{ color: "var(--color-text-secondary)" }}>{title}</p>
           <div className="flex gap-2 justify-end">
-            <button className="btn b2" onClick={closeModal}>Cancel</button>
-            <button className="btn bd" onClick={() => { closeModal(); onConfirm(); }}>Confirm</button>
+            <button className="btn b2" onClick={closeModal}>{t("common.cancel")}</button>
+            <button className="btn bd" onClick={() => { closeModal(); onConfirm(); }}>{t("common.confirm")}</button>
           </div>
         </>
       )
     });
-  }, [closeModal]);
+  }, [closeModal, t]);
 
   // Handle Escape key
   useEffect(() => {
@@ -44,11 +46,23 @@ export function ModalProvider({ children }) {
       {children}
       
       {modalContent && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50" role="dialog" aria-modal="true" aria-label={modalContent.title}>
-          <div className="bg-white rounded-xl w-full max-w-lg max-h-[90vh] overflow-auto p-5 shadow-xl animate-[min_0.18s_ease_forwards]">
-            <div className="flex justify-between mb-3">
-              <h2 className="font-bold text-lg">{modalContent.title}</h2>
-              <button aria-label="Close dialog" onClick={closeModal} className="text-xl leading-none text-slate-400 hover:text-slate-700">
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50" role="dialog" aria-modal="true" aria-label={modalContent.title}>
+          <div
+            className="rounded-xl w-full max-w-lg max-h-[90vh] overflow-auto p-5 shadow-2xl animate-[min_0.18s_ease_forwards]"
+            style={{
+              backgroundColor: "var(--color-surface, #ffffff)",
+              color: "var(--color-text-primary, #0f172a)",
+              border: "1px solid var(--color-border, #e2e8f0)"
+            }}
+          >
+            <div className="flex justify-between mb-3 items-center">
+              <h2 className="font-bold text-lg" style={{ color: "var(--color-text-primary, #0f172a)" }}>{modalContent.title}</h2>
+              <button
+                aria-label="Close dialog"
+                onClick={closeModal}
+                className="text-xl leading-none text-slate-400 hover:text-slate-600 cursor-pointer p-1"
+                style={{ background: "none", border: "none" }}
+              >
                 &times;
               </button>
             </div>

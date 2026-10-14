@@ -1,0 +1,11 @@
+{
+  "required": "This field is required.",
+  "emailInvalid": "Please enter a valid email address.",
+  "passwordTooShort": "Password must be at least 8 characters.",
+  "passwordMismatch": "Passwords do not match.",
+  "usernameTaken": "This username is already taken.",
+  "emailTaken": "This email is already registered.",
+  "fileTooLarge": "File size exceeds the limit.",
+  "invalidFileType": "Invalid file type.",
+  "maxLength": "Maximum length exceeded."
+}

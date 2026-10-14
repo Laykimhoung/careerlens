@@ -3,11 +3,13 @@ import { NavLink } from "react-router-dom";
 import logoIcon from "../../assets/logo/logo.webp";
 import "./AdminSidebar.css";
 import { useAuth } from "../../hooks/useAuth";
+import { useLanguage } from "../../context/LanguageContext";
 import { getNotifications } from "../../services/candidateService";
 import { extractResults } from "../../services/api";
 
 export default function AdminSidebar({ open, onClose, adminName, onLogout }) {
   const { user, switchRole } = useAuth();
+  const { t } = useLanguage();
   const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
@@ -20,19 +22,19 @@ export default function AdminSidebar({ open, onClose, adminName, onLogout }) {
   }, []);
 
   const items = [
-    ["/admin", "Dashboard", true],
-    ["/admin/users", "Users"],
-    ["/admin/candidates", "Candidates"],
-    ["/admin/companies", "Companies"],
-    ["/admin/verification", "Verification"],
-    ["/admin/jobs", "Jobs"],
-    ["/admin/applications", "Applications"],
-    ["/admin/reports", "Reports"],
-    ["/admin/categories", "Categories"],
-    ["/admin/skills", "Skills"],
-    ["/admin/audit-logs", "Audit Logs"],
-    ["/admin/notifications", "Notifications", false, unreadCount > 0 ? unreadCount : null],
-    ["/admin/settings", "Settings"],
+    ["/admin", t("nav.dashboard"), true],
+    ["/admin/users", t("nav.users")],
+    ["/admin/candidates", t("nav.candidates")],
+    ["/admin/companies", t("nav.companies")],
+    ["/admin/verification", t("nav.verification")],
+    ["/admin/jobs", t("nav.jobs")],
+    ["/admin/applications", t("nav.applications")],
+    ["/admin/reports", t("nav.reports")],
+    ["/admin/categories", t("nav.categories")],
+    ["/admin/skills", t("nav.skills")],
+    ["/admin/audit-logs", t("nav.auditLogs")],
+    ["/admin/notifications", t("nav.notifications"), false, unreadCount > 0 ? unreadCount : null],
+    ["/admin/settings", t("nav.settings")],
   ];
 
   return (
@@ -67,24 +69,24 @@ export default function AdminSidebar({ open, onClose, adminName, onLogout }) {
         </nav>
 
         <div className="admin-sidebar-foot">
-          <div className="demo-mode-label">ROLE SWITCHER</div>
+          <div className="demo-mode-label">{t("common.roleSwitcher")}</div>
           <select
             className="demo-select"
             value={user?.role || "admin"}
             onChange={(e) => switchRole(e.target.value)}
           >
-            <option value="candidate">candidate</option>
-            <option value="company">company</option>
-            <option value="admin">admin</option>
+            <option value="candidate">{t("auth.roleCandidate")}</option>
+            <option value="company">{t("auth.roleCompany")}</option>
+            <option value="admin">{t("common.platformAdmin")}</option>
           </select>
 
           <div className="user-profile">
             <div className="user-info">
-              <strong>Platform Admin</strong>
+              <strong>{t("common.platformAdmin")}</strong>
               <span>{user?.full_name || adminName || user?.username || "admin"}</span>
             </div>
             <button type="button" className="logout-btn" onClick={onLogout}>
-              Log out
+              {t("common.logOut")}
             </button>
           </div>
         </div>

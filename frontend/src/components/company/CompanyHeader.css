@@ -1,5 +1,32 @@
 /* CSS for CompanyHeader */
 
-.company-topbar { min-height: 68px; padding: 12px 30px; display: flex; align-items: center; justify-content: space-between; gap: 16px; background: #fff; border-bottom: 1px solid #dfe7e1; }
-.company-topbar strong { font-size: 14px; }
-.company-topbar small { display: block; color: #66766d; font-size: 12px; }
+.company-topbar {
+  min-height: 64px;
+  padding: 12px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: var(--color-surface, #ffffff);
+  border-bottom: 1px solid var(--color-border, #dfe7e1);
+  color: var(--color-text-primary, #0f172a);
+}
+
+.company-topbar-info strong {
+  font-size: 15px;
+  font-weight: var(--fw-semibold, 600);
+  color: var(--color-text-primary, #0f172a);
+  display: block;
+}
+
+.company-topbar-info small {
+  display: block;
+  color: var(--color-text-muted, #66766d);
+  font-size: 12px;
+}
+
+.company-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
