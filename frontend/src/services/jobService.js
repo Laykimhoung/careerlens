@@ -128,6 +128,7 @@ export function normalizeJobRecord(rawJob) {
     companyProfile: companyObj,
     companyUserId: companyObj.user?.id || null,
     location: rawJob.location || companyObj.location || "Phnom Penh, Cambodia",
+    industry: rawJob.industry || companyObj.industry || "Technology",
     type: empLabel,
     employment_type: rawJob.employment_type || "FULL_TIME",
     setup: workLabel,
