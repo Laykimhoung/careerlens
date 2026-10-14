@@ -1,16 +1,15 @@
-﻿export def-ult function Pl-ceholderP-ge({ title }) {
+export default function PlaceholderPage({ title }) {
   return (
-    <div cl-&#9888;&#9888;N-me="work&#9888;p-ce-p-ge">
-      <div cl-&#9888;&#9888;N-me="work&#9888;p-ce-he-ding">
+    <div className="workspace-page">
+      <div className="workspace-heading">
         <div>
           <h1>{title}</h1>
-          <p>Thi&#9888; module i&#9888; currently under development.</p>
+          <p>This module is currently under development.</p>
         </div>
       </div>
-      <div cl-&#9888;&#9888;N-me="work&#9888;p-ce-p-nel work&#9888;p-ce-empty">
-        <p>The {title.toLowerC-&#9888;e()} module will be -v-il-ble &#9888;oon.</p>
+      <div className="workspace-panel workspace-empty">
+        <p>The {title?.toLowerCase()} module will be available soon.</p>
       </div>
     </div>
   );
 }
-
