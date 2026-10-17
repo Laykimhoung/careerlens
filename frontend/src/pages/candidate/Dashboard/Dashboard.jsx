@@ -1,4 +1,27 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+} from "recharts";
+import {
+  Search,
+  Bell,
+  Star,
+  Calendar,
+  Clock,
+  ArrowUpRight,
+  Bookmark,
+  CheckCircle2,
+  Video,
+  Sparkles,
+} from "lucide-react";
 import { useAuth } from "../../../hooks/useAuth";
 import JobCard from "../../../components/candidate/JobCard";
 import {
@@ -14,14 +37,39 @@ import {
 } from "../../../services/applicationService";
 import { fetchInterviewsList } from "../../../services/interviewService";
 import { extractResults } from "../../../services/api";
+import RecruitmentWorkspaceBanner from "../../../components/illustrations/RecruitmentWorkspaceBanner";
+import CandidateCareerSpotlight from "../../../components/illustrations/CandidateCareerSpotlight";
+import PlatformAnalyticsIllustration from "../../../components/illustrations/PlatformAnalyticsIllustration";
+import EmptyStateIllustration from "../../../components/illustrations/EmptyStateIllustration";
+import { useLanguage } from "../../../context/LanguageContext";
 import "./Dashboard.css";
+
+function CustomBarTooltip({ active, payload }) {
+  if (!active || !payload || payload.length === 0) return null;
+  const item = payload[0];
+  return (
+    <div className="candidate-dash-tooltip">
+      <span
+        className="candidate-dash-tooltip-dot"
+        style={{ backgroundColor: item.payload?.color || "#F97316" }}
+      />
+      <span className="candidate-dash-tooltip-label">{item.payload?.name}:</span>
+      <strong className="candidate-dash-tooltip-val">{item.value}</strong>
+    </div>
+  );
+}
 
 export default function CandidateDashboard() {
   const { user } = useAuth();
-  const firstName = user?.first_name || (user?.full_name ? user.full_name.split(" ")[0] : user?.username || "Candidate");
+  const { t } = useLanguage();
+  const navigate = useNavigate();
+  const firstName =
+    user?.first_name ||
+    (user?.full_name ? user.full_name.split(" ")[0] : user?.username || "Candidate");
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [searchFilter, setSearchFilter] = useState("");
   const [profile, setProfile] = useState(null);
   const [jobs, setJobs] = useState([]);
   const [applications, setApplications] = useState([]);
@@ -70,7 +118,7 @@ export default function CandidateDashboard() {
   );
 
   const profileCompletion = useMemo(() => {
-    if (!profile) return 25;
+    if (!profile) return 30;
     const u = profile.user || user || {};
     const checks = [
       Boolean(u.first_name || u.username),
@@ -97,8 +145,17 @@ export default function CandidateDashboard() {
       const bMatches = (b.tags || []).filter((t) => candSkills.has(t.toLowerCase())).length;
       return bMatches - aMatches;
     });
-    return sorted.slice(0, 4);
-  }, [jobs, profile]);
+
+    const filtered = searchFilter.trim()
+      ? sorted.filter(
+          (j) =>
+            j.title.toLowerCase().includes(searchFilter.toLowerCase()) ||
+            (j.company && j.company.toLowerCase().includes(searchFilter.toLowerCase()))
+        )
+      : sorted;
+
+    return filtered.slice(0, 4);
+  }, [jobs, profile, searchFilter]);
 
   const handleSaveJob = async (job) => {
     try {
@@ -128,6 +185,19 @@ export default function CandidateDashboard() {
     offers.length,
     applications.filter((a) => a.rawStatus === "OFFERED").length
   );
+  const reviewingCount = applications.filter(
+    (a) => a.rawStatus === "REVIEWING" || a.rawStatus === "SCREENING"
+  ).length;
+
+  const appOverviewsData = [
+    { name: "Applied", value: applications.length, color: "#F97316" },
+    { name: "Review", value: reviewingCount, color: "#FB923C" },
+    { name: "Interview", value: Math.max(interviewCount, interviews.length), color: "#EA580C" },
+    { name: "Offers", value: offerCount, color: "#16A34A" },
+    { name: "Saved", value: savedRecords.length, color: "#0284C7" },
+  ];
+
+  const maxVal = Math.max(4, ...appOverviewsData.map((d) => d.value));
 
   const upcomingInterviews = useMemo(() => {
     const appMap = new Map(applications.map((a) => [Number(a.id), a]));
@@ -138,140 +208,289 @@ export default function CandidateDashboard() {
         return {
           ...iv,
           jobTitle: app?.jobTitle || `Application #${iv.application}`,
-          company: app?.company || "Company",
+          company: app?.company || "Company Partner",
           formattedDate: iv.scheduled_at
             ? new Date(iv.scheduled_at).toLocaleString("en-US", {
                 month: "short",
                 day: "numeric",
-                year: "numeric",
                 hour: "numeric",
                 minute: "2-digit",
               })
-            : "TBD",
+            : "Scheduled Soon",
         };
       });
   }, [interviews, applications]);
 
+  // "On Process" Active candidate applications
+  const inProcessApps = useMemo(() => {
+    return applications
+      .filter((a) => ["APPLIED", "REVIEWING", "SCREENING", "INTERVIEW"].includes(a.rawStatus))
+      .slice(0, 4);
+  }, [applications]);
+
+  const todayFormatted = new Date().toLocaleDateString("en-US", {
+    weekday: "long",
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+
   return (
-    <div className="dashboard">
-      <h2 className="dashboard__welcome">Welcome, {firstName}</h2>
+    <div className="cand-dash-container">
+      {/* ── Top Header Bar (Matching Reference) ─────────────────────────────── */}
+      <header className="cand-dash-header">
+        <div className="cand-header-user">
+          <div className="cand-avatar-circle" aria-hidden="true">
+            {firstName.charAt(0).toUpperCase()}
+          </div>
+          <div>
+            <h1 className="cand-greeting-title">{t("admin.hi", "Hi")}, {firstName}</h1>
+            <p className="cand-greeting-sub">{t("candidate.exploreCareer", "Explore your tailored career opportunities")}</p>
+          </div>
+        </div>
+
+        <div className="cand-header-controls">
+          <div className="cand-search-bar">
+            <Search size={18} className="cand-search-icon" />
+            <input
+              type="search"
+              placeholder={t("candidate.searchPlaceholder", "Search jobs, skills...")}
+              value={searchFilter}
+              onChange={(e) => setSearchFilter(e.target.value)}
+              className="cand-search-input"
+            />
+          </div>
+
+          <Link to="/candidate/notifications" className="cand-notif-btn" title={t("common.nav.notifications", "Notifications")}>
+            <Bell size={20} />
+            {applications.length > 0 && <span className="cand-notif-badge">{applications.length}</span>}
+          </Link>
+        </div>
+      </header>
 
       {error && (
-        <div style={{ padding: "12px 16px", background: "#fef2f2", color: "#b91c1c", borderRadius: "8px", marginBottom: "16px" }}>
+        <div className="cand-error-banner" role="alert">
           {error}
         </div>
       )}
 
-      {/* Stats Row */}
-      <div className="dashboard__stats">
-        <div className="dashboard__stat-card">
-          <span className="dashboard__stat-number">{loading ? "..." : applications.length}</span>
-          <span className="dashboard__stat-label">Applications</span>
-        </div>
-        <div className="dashboard__stat-card">
-          <span className="dashboard__stat-number">{loading ? "..." : interviewCount}</span>
-          <span className="dashboard__stat-label">In interview stage</span>
-        </div>
-        <div className="dashboard__stat-card">
-          <span className="dashboard__stat-number">{loading ? "..." : offerCount}</span>
-          <span className="dashboard__stat-label">Offers</span>
-        </div>
-        <div className="dashboard__stat-card">
-          <span className="dashboard__stat-number">{loading ? "..." : savedRecords.length}</span>
-          <span className="dashboard__stat-label">Saved jobs</span>
-        </div>
-      </div>
-
-      {/* Profile Completion Bar */}
-      <div className="dashboard__progress-card">
-        <div className="dashboard__progress-label">
-          Profile completion: {profileCompletion}%
-        </div>
-        <div className="dashboard__progress-track">
-          <div
-            className="dashboard__progress-fill"
-            style={{ width: `${profileCompletion}%` }}
-          ></div>
-        </div>
-      </div>
-
-      {/* Recommended Jobs */}
-      <div className="dashboard__section">
-        <h3 className="dashboard__section-title">Recommended jobs</h3>
-        <div className="dashboard__job-list">
-          {loading ? (
-            <div className="dashboard__empty-state">Loading recommended jobs...</div>
-          ) : recommendedJobs.length > 0 ? (
-            recommendedJobs.map((job) => (
-              <JobCard
-                key={job.id}
-                job={job}
-                onSave={handleSaveJob}
-                onApply={handleApplyJob}
-                isSaved={savedJobIds.has(Number(job.id))}
-                isApplied={appliedJobIds.has(Number(job.id))}
-                applying={applyingJobId === job.id}
-              />
-            ))
-          ) : (
-            <div className="dashboard__empty-state">No published jobs available right now.</div>
-          )}
-        </div>
-      </div>
-
-      {/* Upcoming Interviews */}
-      <div className="dashboard__section">
-        <h3 className="dashboard__section-title">Upcoming interviews</h3>
-        {loading ? (
-          <div className="dashboard__empty-state">Loading interviews...</div>
-        ) : upcomingInterviews.length > 0 ? (
-          <div style={{ display: "grid", gap: "12px" }}>
-            {upcomingInterviews.map((iv) => (
-              <div
-                key={iv.id}
-                style={{
-                  background: "#fff",
-                  border: "1px solid #e2e8f0",
-                  borderRadius: "8px",
-                  padding: "16px",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  flexWrap: "wrap",
-                  gap: "12px",
-                }}
-              >
-                <div>
-                  <div style={{ fontWeight: 600, color: "#0f172a", fontSize: "15px" }}>
-                    {iv.jobTitle} — {iv.company}
-                  </div>
-                  <div style={{ fontSize: "13px", color: "#475569", marginTop: "4px" }}>
-                    Scheduled: <strong>{iv.formattedDate}</strong>
-                    {iv.location ? ` · Location: ${iv.location}` : ""}
-                  </div>
+      {/* ── 2-Column Responsive Workspace Grid ──────────────────────────────── */}
+      <div className="cand-main-grid">
+        {/* ── LEFT COLUMN ─────────────────────────────────────────────────── */}
+        <div className="cand-left-column">
+          {/* Top 3 Cards Row */}
+          <div className="cand-top-cards-row">
+            {/* 1. Feature Spotlight Card (Inspired by Reference) */}
+            <div className="cand-spotlight-card">
+              <span className="cand-spotlight-pill">{t("candidate.profileReadiness", "Profile Readiness")}</span>
+              <div className="cand-spotlight-illu">
+                <CandidateCareerSpotlight />
+              </div>
+              <div className="cand-spotlight-meta">
+                <div className="cand-stars-row">
+                  <Star size={14} fill="#F59E0B" color="#F59E0B" />
+                  <Star size={14} fill="#F59E0B" color="#F59E0B" />
+                  <Star size={14} fill="#F59E0B" color="#F59E0B" />
+                  <Star size={14} fill="#F59E0B" color="#F59E0B" />
+                  <Star size={14} fill="#F59E0B" color="#F59E0B" />
                 </div>
-                {iv.meeting_link && (
-                  <a
-                    href={iv.meeting_link}
-                    target="_blank"
-                    rel="noreferrer"
-                    style={{
-                      fontSize: "13px",
-                      fontWeight: 600,
-                      color: "#0d9488",
-                      textDecoration: "underline",
-                    }}
+                <h2 className="cand-spotlight-title">{profile?.major || t("candidate.title", "Career Candidate")}</h2>
+                <p className="cand-spotlight-desc">{profileCompletion}% {t("candidate.profileCompletion", "completed profile strength")}</p>
+                <Link to="/candidate/profile" className="cand-spotlight-btn">
+                  {t("candidate.editProfile", "Edit Profile")} &rarr;
+                </Link>
+              </div>
+            </div>
+
+            {/* 2. Center Overviews Bar Chart Card */}
+            <div className="cand-overview-card">
+              <div className="cand-overview-header">
+                <div>
+                  <h2 className="cand-overview-title">{t("candidate.appOverviews", "Application Overviews")}</h2>
+                  <p className="cand-overview-sub">{t("candidate.hiringPipeline", "Your hiring journey pipeline")}</p>
+                </div>
+                <span className="cand-overview-badge">{applications.length} {t("candidate.submitted", "Submitted")}</span>
+              </div>
+
+              <div className="cand-overview-chart">
+                <ResponsiveContainer width="100%" height={170}>
+                  <BarChart
+                    data={appOverviewsData}
+                    margin={{ top: 10, right: 12, left: -24, bottom: 0 }}
+                    barCategoryGap="20%"
                   >
-                    Join Meeting
-                  </a>
+                    <CartesianGrid stroke="#F1F5F9" vertical={false} strokeDasharray="3 3" />
+                    <XAxis
+                      dataKey="name"
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fill: "#94A3B8", fontSize: 11, fontWeight: 500 }}
+                      dy={6}
+                    />
+                    <YAxis
+                      domain={[0, maxVal]}
+                      allowDecimals={false}
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fill: "#94A3B8", fontSize: 11 }}
+                    />
+                    <Tooltip cursor={{ fill: "rgba(249, 115, 22, 0.08)" }} content={<CustomBarTooltip />} />
+                    <Bar dataKey="value" radius={[6, 6, 0, 0]} maxBarSize={30}>
+                      {appOverviewsData.map((entry) => (
+                        <Cell key={entry.name} fill={entry.color} />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            {/* 3. Right Score Highlight Card */}
+            <div className="cand-performer-card">
+              <div className="cand-performer-badge">
+                <PlatformAnalyticsIllustration />
+              </div>
+              <h2 className="cand-performer-name">{firstName}</h2>
+              <span className="cand-performer-role">{profile?.university || "Active Jobseeker"}</span>
+
+              <div className="cand-dual-stats">
+                <div className="cand-dual-stat-item">
+                  <strong>{applications.length}</strong>
+                  <span>{t("common.active", "Active")}</span>
+                </div>
+                <div className="cand-dual-stat-item">
+                  <strong>{savedRecords.length}</strong>
+                  <span>{t("candidate.savedJobs", "Saved")}</span>
+                </div>
+              </div>
+
+              <Link to="/candidate/jobs" className="cand-performer-btn">
+                {t("common.nav.findJobs", "Browse Jobs")}
+              </Link>
+            </div>
+          </div>
+
+          {/* Lower Grid: Recommended Jobs & Interview Calendar */}
+          <div className="cand-lower-section">
+            <div className="cand-jobs-panel">
+              <div className="cand-panel-header">
+                <div>
+                  <h2 className="cand-panel-title">{t("candidate.recommendedJobs", "Recommended Jobs")}</h2>
+                  <p className="cand-panel-sub">{t("candidate.matchedSkills", "Opportunities matched to your skills")}</p>
+                </div>
+                <Link to="/candidate/jobs" className="cand-see-all">
+                  {t("candidate.viewAll", "View All")} &rarr;
+                </Link>
+              </div>
+
+              <div className="cand-job-cards-list">
+                {loading ? (
+                  <p className="cand-empty-msg">{t("common.loading", "Loading recommended opportunities...")}</p>
+                ) : recommendedJobs.length > 0 ? (
+                  recommendedJobs.map((job) => (
+                    <JobCard
+                      key={job.id}
+                      job={job}
+                      onSave={handleSaveJob}
+                      onApply={handleApplyJob}
+                      isSaved={savedJobIds.has(Number(job.id))}
+                      isApplied={appliedJobIds.has(Number(job.id))}
+                      applying={applyingJobId === job.id}
+                    />
+                  ))
+                ) : (
+                  <div className="cand-empty-box">
+                    <EmptyStateIllustration />
+                    <p>{t("candidate.noJobsFound", "No jobs found matching your search. Check back soon!")}</p>
+                  </div>
                 )}
               </div>
-            ))}
+            </div>
           </div>
-        ) : (
-          <div className="dashboard__empty-state">No upcoming interviews.</div>
-        )}
+        </div>
+
+        {/* ── RIGHT COLUMN ────────────────────────────────────────────────── */}
+        <div className="cand-right-column">
+          {/* Scenic Workspace Banner */}
+          <div className="cand-banner-card">
+            <RecruitmentWorkspaceBanner />
+          </div>
+
+          {/* "On Process" Active Applications Card */}
+          <div className="cand-process-card">
+            <div className="cand-process-header">
+              <div>
+                <h2 className="cand-process-title">{t("admin.onProcess", "On Process")}</h2>
+                <span className="cand-process-date">{todayFormatted}</span>
+              </div>
+              <span className="cand-process-pill">{inProcessApps.length} {t("candidate.inProgress", "In Progress")}</span>
+            </div>
+
+            <div className="cand-process-list">
+              {inProcessApps.length === 0 ? (
+                <div className="cand-empty-process">
+                  <CheckCircle2 size={24} color="#10B981" />
+                  <p>{t("candidate.noPendingApps", "You have no pending applications right now.")}</p>
+                  <Link to="/candidate/jobs" className="cand-explore-link">
+                    {t("candidate.explorePositions", "Explore available positions")} &rarr;
+                  </Link>
+                </div>
+              ) : (
+                inProcessApps.map((app) => (
+                  <Link
+                    key={app.id}
+                    to="/candidate/applications"
+                    className="cand-process-item"
+                    style={{
+                      borderLeftColor:
+                        app.rawStatus === "INTERVIEW"
+                          ? "#8B5CF6"
+                          : app.rawStatus === "REVIEWING"
+                          ? "#3B82F6"
+                          : "#F97316",
+                    }}
+                  >
+                    <div className="cand-process-main">
+                      <strong className="cand-process-job">{app.jobTitle}</strong>
+                      <span className="cand-process-co">{app.company}</span>
+                    </div>
+
+                    <div className="cand-process-meta">
+                      <span className="cand-status-pill">{app.status}</span>
+                      <ArrowUpRight size={14} className="cand-arrow-icon" />
+                    </div>
+                  </Link>
+                ))
+              )}
+            </div>
+
+            {/* Upcoming Interviews Widget inside Process card */}
+            {upcomingInterviews.length > 0 && (
+              <div className="cand-interviews-box">
+                <div className="cand-interviews-title">
+                  <Calendar size={15} color="#016BFB" />
+                  <span>{t("candidate.scheduledInterview", "Scheduled Interview")}</span>
+                </div>
+                {upcomingInterviews.slice(0, 2).map((iv) => (
+                  <div key={iv.id} className="cand-interview-row">
+                    <div>
+                      <strong>{iv.jobTitle}</strong>
+                      <small>{iv.company}</small>
+                    </div>
+                    <span className="cand-time-chip">{iv.formattedDate}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <div className="cand-process-foot">
+              <Link to="/candidate/applications" className="cand-view-all-apps">
+                {t("candidate.viewAllApps", "View All My Applications")} &rarr;
+              </Link>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
-}
+}

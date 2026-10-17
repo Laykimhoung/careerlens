@@ -12,6 +12,7 @@ import {
   toBackendEmploymentType,
   toBackendWorkplaceType,
 } from "../../../services/jobService";
+import { useLanguage } from "../../../context/LanguageContext";
 import "./Jobs.css";
 import "../../../styles/adminForms.css";
 
@@ -61,6 +62,7 @@ function Modal({ title, onClose, children }) {
 }
 
 export default function Jobs() {
+  const { t } = useLanguage();
   const [jobs, setJobs] = useState([]);
   const [companies, setCompanies] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -240,14 +242,14 @@ export default function Jobs() {
     <section className="workspace-page">
       <div className="workspace-heading">
         <div>
-          <h1>Job Management</h1>
-          <p>Manage all job listings across all companies.</p>
+          <h1>{t("admin.jobManagement", "Job Management")}</h1>
+          <p>{t("admin.jobManagementDesc", "Manage all job listings across all companies.")}</p>
         </div>
         <button
           className="workspace-button workspace-button-primary"
           onClick={openCreate}
         >
-          + Add Job
+          {t("admin.addJob", "+ Add Job")}
         </button>
       </div>
 
@@ -271,7 +273,7 @@ export default function Jobs() {
         <input
           type="search"
           className="workspace-search"
-          placeholder="Search by title or company..."
+          placeholder={t("admin.searchJobs", "Search by title or company...")}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -280,15 +282,15 @@ export default function Jobs() {
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
         >
-          <option value="all">All Statuses</option>
-          {STATUS_OPTS.map((s) => (
-            <option key={s}>{s}</option>
-          ))}
+          <option value="all">{t("admin.allStatuses", "All Statuses")}</option>
+          <option value="Published">{t("admin.publish", "Published")}</option>
+          <option value="Draft">{t("admin.draft", "Draft")}</option>
+          <option value="Closed">{t("common.close", "Closed")}</option>
         </select>
         <span className="workspace-muted">
           {loading
-            ? "Loading..."
-            : `${filtered.length} job${filtered.length !== 1 ? "s" : ""}`}
+            ? t("common.loading", "Loading...")
+            : `${filtered.length} ${t("admin.jobsCount", "jobs")}`}
         </span>
       </div>
 
@@ -296,19 +298,19 @@ export default function Jobs() {
         <table className="workspace-table">
           <thead>
             <tr>
-              <th>Title</th>
-              <th>Company</th>
-              <th>Type</th>
-              <th>Location</th>
-              <th>Status</th>
-              <th style={{ textAlign: "right" }}>Actions</th>
+              <th>{t("candidate.jobTitle", "Title")}</th>
+              <th>{t("admin.companyName", "Company")}</th>
+              <th>{t("common.type", "Type")}</th>
+              <th>{t("admin.location", "Location")}</th>
+              <th>{t("common.status", "Status")}</th>
+              <th style={{ textAlign: "right" }}>{t("common.actions", "Actions")}</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
               <tr>
                 <td colSpan="6" className="workspace-empty">
-                  Loading job listings from database...
+                  {t("common.loading", "Loading...")}
                 </td>
               </tr>
             ) : (
@@ -323,7 +325,7 @@ export default function Jobs() {
                     <td>{j.loc}</td>
                     <td>
                       <span className={`workspace-status ${statusBadge(j.status)}`}>
-                        {j.status}
+                        {j.status === "Published" ? t("admin.publish", "Published") : j.status === "Draft" ? t("admin.draft", "Draft") : t("common.close", "Closed")}
                       </span>
                     </td>
                     <td>
@@ -333,7 +335,7 @@ export default function Jobs() {
                           className="workspace-button"
                           onClick={() => openEdit(j)}
                         >
-                          Edit
+                          {t("common.edit", "Edit")}
                         </button>
                         {j.status !== "Published" && (
                           <button
@@ -341,7 +343,7 @@ export default function Jobs() {
                             className="workspace-button workspace-button-primary"
                             onClick={() => setStatus(j, "Published")}
                           >
-                            Publish
+                            {t("admin.publish", "Publish")}
                           </button>
                         )}
                         {j.status !== "Draft" && (
@@ -350,7 +352,7 @@ export default function Jobs() {
                             className="workspace-button"
                             onClick={() => setStatus(j, "Draft")}
                           >
-                            Draft
+                            {t("admin.draft", "Draft")}
                           </button>
                         )}
                         {j.status !== "Closed" && (
@@ -359,7 +361,7 @@ export default function Jobs() {
                             className="workspace-button"
                             onClick={() => setStatus(j, "Closed")}
                           >
-                            Close
+                            {t("common.close", "Close")}
                           </button>
                         )}
                         <button
@@ -367,7 +369,7 @@ export default function Jobs() {
                           className="workspace-button workspace-button-danger"
                           onClick={() => setDeleteTarget(j)}
                         >
-                          Delete
+                          {t("common.delete", "Delete")}
                         </button>
                       </div>
                     </td>
@@ -376,7 +378,7 @@ export default function Jobs() {
                 {filtered.length === 0 && (
                   <tr>
                     <td colSpan="6" className="workspace-empty">
-                      No jobs found.
+                      {t("common.noResults", "No jobs found.")}
                     </td>
                   </tr>
                 )}
@@ -388,16 +390,16 @@ export default function Jobs() {
 
       {modal !== null && (
         <Modal
-          title={modal.id ? "Edit Job" : "Add New Job"}
+          title={modal.id ? t("admin.editJob", "Edit Job") : t("admin.addJob", "Add New Job")}
           onClose={() => setModal(null)}
         >
           <form onSubmit={handleSave} className="admin-form">
-            <p className="admin-form-section">Job Details</p>
+            <p className="admin-form-section">{t("admin.jobInfo", "Job Details")}</p>
 
             <div className="admin-form-grid">
               <div className="admin-field">
                 <label className="admin-label">
-                  Job Title <span className="admin-required">*</span>
+                  {t("candidate.jobTitle", "Job Title")} <span className="admin-required">*</span>
                 </label>
                 <input
                   className="admin-input"
@@ -410,7 +412,7 @@ export default function Jobs() {
 
               <div className="admin-field">
                 <label className="admin-label">
-                  Company <span className="admin-required">*</span>
+                  {t("admin.companyName", "Company")} <span className="admin-required">*</span>
                 </label>
                 {companies.length > 0 ? (
                   <select
@@ -448,7 +450,7 @@ export default function Jobs() {
 
             <div className="admin-form-grid">
               <div className="admin-field">
-                <label className="admin-label">Location</label>
+                <label className="admin-label">{t("admin.location", "Location")}</label>
                 <input
                   className="admin-input"
                   value={form.loc}
@@ -457,7 +459,7 @@ export default function Jobs() {
                 />
               </div>
               <div className="admin-field">
-                <label className="admin-label">Deadline</label>
+                <label className="admin-label">{t("candidate.deadline", "Deadline")}</label>
                 <input
                   type="date"
                   className="admin-input"
@@ -466,7 +468,7 @@ export default function Jobs() {
                 />
               </div>
               <div className="admin-field">
-                <label className="admin-label">Min Salary (USD)</label>
+                <label className="admin-label">{t("candidate.salary", "Min Salary (USD)")}</label>
                 <input
                   type="number"
                   className="admin-input"
@@ -476,7 +478,7 @@ export default function Jobs() {
                 />
               </div>
               <div className="admin-field">
-                <label className="admin-label">Max Salary (USD)</label>
+                <label className="admin-label">{t("candidate.salary", "Max Salary (USD)")}</label>
                 <input
                   type="number"
                   className="admin-input"
@@ -486,45 +488,45 @@ export default function Jobs() {
                 />
               </div>
               <div className="admin-field">
-                <label className="admin-label">Job Type</label>
+                <label className="admin-label">{t("common.type", "Job Type")}</label>
                 <select
                   className="admin-input admin-select"
                   value={form.type}
                   onChange={f("type")}
                 >
-                  {JOB_TYPES.map((t) => (
-                    <option key={t}>{t}</option>
+                  {JOB_TYPES.map((tVal) => (
+                    <option key={tVal} value={tVal}>{tVal}</option>
                   ))}
                 </select>
               </div>
               <div className="admin-field">
-                <label className="admin-label">Work Mode</label>
+                <label className="admin-label">{t("candidate.remote", "Work Mode")}</label>
                 <select
                   className="admin-input admin-select"
                   value={form.work}
                   onChange={f("work")}
                 >
                   {WORK_MODES.map((w) => (
-                    <option key={w}>{w}</option>
+                    <option key={w} value={w}>{w}</option>
                   ))}
                 </select>
               </div>
               <div className="admin-field">
-                <label className="admin-label">Status</label>
+                <label className="admin-label">{t("common.status", "Status")}</label>
                 <select
                   className="admin-input admin-select"
                   value={form.status}
                   onChange={f("status")}
                 >
                   {STATUS_OPTS.map((s) => (
-                    <option key={s}>{s}</option>
+                    <option key={s} value={s}>{s}</option>
                   ))}
                 </select>
               </div>
             </div>
 
             <div className="admin-field">
-              <label className="admin-label">Required Skills</label>
+              <label className="admin-label">{t("admin.skills", "Required Skills")}</label>
               <div className="admin-skill-row">
                 <input
                   className="admin-input admin-skill-input"
@@ -539,7 +541,7 @@ export default function Jobs() {
                   className="admin-skill-btn"
                   onClick={addSkill}
                 >
-                  Add Skill
+                  {t("candidate.addSkill", "Add Skill")}
                 </button>
               </div>
               {(form.skills || []).length > 0 && (
@@ -562,7 +564,7 @@ export default function Jobs() {
             </div>
 
             <div className="admin-field">
-              <label className="admin-label">Description</label>
+              <label className="admin-label">{t("common.description", "Description")}</label>
               <textarea
                 className="admin-input admin-textarea"
                 value={form.desc}
@@ -577,7 +579,7 @@ export default function Jobs() {
                 className="workspace-button"
                 onClick={() => setModal(null)}
               >
-                Cancel
+                {t("common.cancel", "Cancel")}
               </button>
               <button
                 type="submit"
@@ -585,10 +587,10 @@ export default function Jobs() {
                 disabled={saving}
               >
                 {saving
-                  ? "Saving..."
+                  ? t("common.loading", "Saving...")
                   : modal.id
-                  ? "Save Changes"
-                  : "Create Job"}
+                  ? t("admin.saveChanges", "Save Changes")
+                  : t("admin.addJob", "Create Job")}
               </button>
             </div>
           </form>
@@ -596,9 +598,9 @@ export default function Jobs() {
       )}
 
       {deleteTarget && (
-        <Modal title="Confirm Delete" onClose={() => setDeleteTarget(null)}>
+        <Modal title={t("admin.confirmDelete", "Confirm Delete")} onClose={() => setDeleteTarget(null)}>
           <p style={{ margin: "0 0 20px", color: "var(--color-text-secondary)" }}>
-            Delete <strong>{deleteTarget.title}</strong>? This cannot be undone.
+            {deleteTarget.title}?
           </p>
           <div className="workspace-actions">
             <button
@@ -606,14 +608,14 @@ export default function Jobs() {
               className="workspace-button"
               onClick={() => setDeleteTarget(null)}
             >
-              Cancel
+              {t("common.cancel", "Cancel")}
             </button>
             <button
               type="button"
               className="workspace-button workspace-button-danger"
               onClick={confirmDelete}
             >
-              Yes, Delete
+              {t("admin.yesDelete", "Yes, Delete")}
             </button>
           </div>
         </Modal>

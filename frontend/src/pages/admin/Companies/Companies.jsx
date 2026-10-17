@@ -6,6 +6,7 @@ import {
   deleteAdminCompany,
 } from "../../../services/adminService";
 import { registerApi } from "../../../services/authService";
+import { useLanguage } from "../../../context/LanguageContext";
 import "./Companies.css";
 import "../../../styles/adminForms.css";
 
@@ -70,6 +71,7 @@ function Modal({ title, onClose, children }) {
 }
 
 export default function Companies() {
+  const { t } = useLanguage();
   const [companies, setCompanies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -204,15 +206,22 @@ export default function Companies() {
       ? "workspace-status-warning"
       : "workspace-status-danger";
 
+  const getBadgeLabel = (v) => {
+    if (v === "Verified") return t("admin.verified", "Verified");
+    if (v === "Rejected") return t("admin.rejected", "Rejected");
+    if (v === "Suspended") return t("admin.suspended", "Suspended");
+    return t("admin.pendingVerification", "Pending Verification");
+  };
+
   return (
     <section className="workspace-page">
       <div className="workspace-heading">
         <div>
-          <h1>Company Management</h1>
-          <p>Create, review and manage company accounts.</p>
+          <h1>{t("admin.companyManagement", "Company Management")}</h1>
+          <p>{t("admin.companyManagementDesc", "Create, review and manage company accounts.")}</p>
         </div>
         <button className="workspace-button workspace-button-primary" onClick={openCreate}>
-          + Add Company
+          {t("admin.addCompany", "+ Add Company")}
         </button>
       </div>
 
@@ -236,7 +245,7 @@ export default function Companies() {
         <input
           type="search"
           className="workspace-search"
-          placeholder="Search companies..."
+          placeholder={t("admin.searchCompanies", "Search companies...")}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -245,16 +254,16 @@ export default function Companies() {
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
         >
-          <option value="all">All Statuses</option>
-          <option value="Verified">Verified</option>
-          <option value="Pending Verification">Pending</option>
-          <option value="Rejected">Rejected</option>
-          <option value="Suspended">Suspended</option>
+          <option value="all">{t("admin.allStatuses", "All Statuses")}</option>
+          <option value="Verified">{t("admin.verified", "Verified")}</option>
+          <option value="Pending Verification">{t("admin.pending", "Pending")}</option>
+          <option value="Rejected">{t("admin.rejected", "Rejected")}</option>
+          <option value="Suspended">{t("admin.suspended", "Suspended")}</option>
         </select>
         <span className="workspace-muted">
           {loading
-            ? "Loading..."
-            : `${filtered.length} compan${filtered.length !== 1 ? "ies" : "y"}`}
+            ? t("common.loading", "Loading...")
+            : `${filtered.length} ${t("admin.companiesCount", "companies")}`}
         </span>
       </div>
 
@@ -262,19 +271,19 @@ export default function Companies() {
         <table className="workspace-table">
           <thead>
             <tr>
-              <th>Company Name</th>
-              <th>Email</th>
-              <th>Industry</th>
-              <th>Location</th>
-              <th>Verification</th>
-              <th style={{ textAlign: "right" }}>Actions</th>
+              <th>{t("admin.companyName", "Company Name")}</th>
+              <th>{t("common.email", "Email")}</th>
+              <th>{t("admin.industry", "Industry")}</th>
+              <th>{t("admin.location", "Location")}</th>
+              <th>{t("admin.verification", "Verification")}</th>
+              <th style={{ textAlign: "right" }}>{t("common.actions", "Actions")}</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
               <tr>
                 <td colSpan="6" className="workspace-empty">
-                  Loading companies from database...
+                  {t("common.loading", "Loading...")}
                 </td>
               </tr>
             ) : (
@@ -289,7 +298,7 @@ export default function Companies() {
                     <td>{c.loc || "—"}</td>
                     <td>
                       <span className={`workspace-status ${badgeClass(c.verified)}`}>
-                        {c.verified || "Pending Verification"}
+                        {getBadgeLabel(c.verified)}
                       </span>
                     </td>
                     <td>
@@ -299,7 +308,7 @@ export default function Companies() {
                           className="workspace-button"
                           onClick={() => openEdit(c)}
                         >
-                          Edit
+                          {t("common.edit", "Edit")}
                         </button>
                         {c.verified !== "Verified" && (
                           <button
@@ -307,7 +316,7 @@ export default function Companies() {
                             className="workspace-button workspace-button-primary"
                             onClick={() => setVerification(c, "Verified")}
                           >
-                            Verify
+                            {t("admin.verify", "Verify")}
                           </button>
                         )}
                         {c.verified !== "Rejected" && (
@@ -316,7 +325,7 @@ export default function Companies() {
                             className="workspace-button"
                             onClick={() => setVerification(c, "Rejected")}
                           >
-                            Reject
+                            {t("admin.reject", "Reject")}
                           </button>
                         )}
                         {c.verified !== "Suspended" && (
@@ -325,7 +334,7 @@ export default function Companies() {
                             className="workspace-button"
                             onClick={() => setVerification(c, "Suspended")}
                           >
-                            Suspend
+                            {t("admin.suspend", "Suspend")}
                           </button>
                         )}
                         <button
@@ -333,7 +342,7 @@ export default function Companies() {
                           className="workspace-button workspace-button-danger"
                           onClick={() => setDeleteTarget(c)}
                         >
-                          Delete
+                          {t("common.delete", "Delete")}
                         </button>
                       </div>
                     </td>
@@ -342,7 +351,7 @@ export default function Companies() {
                 {filtered.length === 0 && (
                   <tr>
                     <td colSpan="6" className="workspace-empty">
-                      No companies found.
+                      {t("common.noResults", "No companies found.")}
                     </td>
                   </tr>
                 )}
@@ -354,15 +363,15 @@ export default function Companies() {
 
       {modal !== null && (
         <Modal
-          title={modal.id ? "Edit Company" : "Add Company"}
+          title={modal.id ? t("admin.editCompany", "Edit Company") : t("admin.addCompany", "Add Company")}
           onClose={() => setModal(null)}
         >
           <form onSubmit={handleSave} className="admin-form">
-            <p className="admin-form-section">Company Information</p>
+            <p className="admin-form-section">{t("admin.companyInfo", "Company Information")}</p>
 
             <div className="admin-field">
               <label className="admin-label">
-                Company Name <span className="admin-required">*</span>
+                {t("admin.companyName", "Company Name")} <span className="admin-required">*</span>
               </label>
               <input
                 className="admin-input"
@@ -375,7 +384,7 @@ export default function Companies() {
 
             <div className="admin-field">
               <label className="admin-label">
-                Email <span className="admin-required">*</span>
+                {t("common.email", "Email")} <span className="admin-required">*</span>
               </label>
               <input
                 className="admin-input"
@@ -389,7 +398,7 @@ export default function Companies() {
 
             <div className="admin-form-grid">
               <div className="admin-field">
-                <label className="admin-label">Industry</label>
+                <label className="admin-label">{t("admin.industry", "Industry")}</label>
                 <input
                   className="admin-input"
                   value={form.ind}
@@ -399,7 +408,7 @@ export default function Companies() {
               </div>
 
               <div className="admin-field">
-                <label className="admin-label">Location</label>
+                <label className="admin-label">{t("admin.location", "Location")}</label>
                 <input
                   className="admin-input"
                   value={form.loc}
@@ -410,16 +419,16 @@ export default function Companies() {
             </div>
 
             <div className="admin-field">
-              <label className="admin-label">Verification Status</label>
+              <label className="admin-label">{t("admin.verification", "Verification Status")}</label>
               <select
                 className="admin-input admin-select"
                 value={form.verified}
                 onChange={f("verified")}
               >
-                <option>Pending Verification</option>
-                <option>Verified</option>
-                <option>Rejected</option>
-                <option>Suspended</option>
+                <option value="Pending Verification">{t("admin.pending", "Pending Verification")}</option>
+                <option value="Verified">{t("admin.verified", "Verified")}</option>
+                <option value="Rejected">{t("admin.rejected", "Rejected")}</option>
+                <option value="Suspended">{t("admin.suspended", "Suspended")}</option>
               </select>
             </div>
 
@@ -429,14 +438,14 @@ export default function Companies() {
                 className="workspace-button"
                 onClick={() => setModal(null)}
               >
-                Cancel
+                {t("common.cancel", "Cancel")}
               </button>
               <button
                 type="submit"
                 className="workspace-button workspace-button-primary"
                 disabled={saving}
               >
-                {saving ? "Saving..." : modal.id ? "Save Changes" : "Create Company"}
+                {saving ? t("common.loading", "Saving...") : modal.id ? t("admin.saveChanges", "Save Changes") : t("admin.addCompany", "Create Company")}
               </button>
             </div>
           </form>
@@ -444,9 +453,9 @@ export default function Companies() {
       )}
 
       {deleteTarget && (
-        <Modal title="Confirm Delete" onClose={() => setDeleteTarget(null)}>
+        <Modal title={t("admin.confirmDelete", "Confirm Delete")} onClose={() => setDeleteTarget(null)}>
           <p style={{ margin: "0 0 20px", color: "var(--color-text-secondary)" }}>
-            Delete <strong>{deleteTarget.name}</strong>? This cannot be undone.
+            {deleteTarget.name}?
           </p>
           <div className="workspace-actions">
             <button
@@ -454,14 +463,14 @@ export default function Companies() {
               className="workspace-button"
               onClick={() => setDeleteTarget(null)}
             >
-              Cancel
+              {t("common.cancel", "Cancel")}
             </button>
             <button
               type="button"
               className="workspace-button workspace-button-danger"
               onClick={confirmDelete}
             >
-              Yes, Delete
+              {t("admin.yesDelete", "Yes, Delete")}
             </button>
           </div>
         </Modal>

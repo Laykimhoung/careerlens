@@ -16,14 +16,22 @@
   min-width: 0; 
   display: flex;
   flex-direction: column;
-  margin-left: var(--sidebar-width, 250px);
+  margin-left: var(--sidebar-width, 72px);
+  transition: margin-left 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (max-width: 900px) {
+  .company-main {
+    margin-left: 0;
+  }
 }
 
 .company-content { 
-  max-width: 1100px;
   width: 100%;
-  margin: 0; 
-  padding: 40px 60px; 
+  max-width: 1400px;
+  margin: 0 auto; 
+  padding: 32px; 
+  box-sizing: border-box;
 }
 
 /* --- Workspace utilities --- */

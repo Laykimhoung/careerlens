@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useAuth } from "../../hooks/useAuth";
+import { useLanguage } from "../../context/LanguageContext";
 import Button from "../../components/common/Button";
 import Input from "../../components/common/Input";
 import {
@@ -159,6 +160,7 @@ function NotificationsView() {
 
 function AccountSettingsView() {
   const { user, refreshUser } = useAuth();
+  const { t } = useLanguage();
   const [form, setForm] = useState({
     first_name: user?.first_name || "",
     last_name: user?.last_name || "",
@@ -216,10 +218,12 @@ function AccountSettingsView() {
   };
 
   return (
-    <div style={{ backgroundColor: "#fff", borderRadius: "10px", border: "1px solid #e2e8f0", padding: "24px", maxWidth: "680px" }}>
-      <h2 style={{ fontSize: "22px", color: "#0f172a", marginBottom: "6px" }}>Account Settings</h2>
-      <p style={{ color: "#64748b", fontSize: "14px", marginBottom: "20px" }}>
-        Update your account contact details and security credentials ({user?.username}).
+    <div style={{ backgroundColor: "#fff", borderRadius: "10px", border: "1px solid #e2e8f0", padding: "32px", width: "100%", maxWidth: "1000px", margin: "0 auto" }}>
+      <h2 style={{ fontSize: "24px", color: "#0f172a", marginBottom: "6px" }}>
+        {t("candidate.accountSettings", "Account Settings")}
+      </h2>
+      <p style={{ color: "#64748b", fontSize: "14px", marginBottom: "24px" }}>
+        {t("candidate.updateAccountSettings", "Update your account contact details and security credentials")} ({user?.username}).
       </p>
 
       {msg.text && (
@@ -241,20 +245,20 @@ function AccountSettingsView() {
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
           <Input
             id="first_name"
-            label="First Name"
+            label={t("candidate.firstName", "First Name")}
             value={form.first_name}
             onChange={handleChange}
           />
           <Input
             id="last_name"
-            label="Last Name"
+            label={t("candidate.lastName", "Last Name")}
             value={form.last_name}
             onChange={handleChange}
           />
         </div>
         <Input
           id="email"
-          label="Email Address"
+          label={t("common.email", "Email Address")}
           type="email"
           value={form.email}
           onChange={handleChange}
@@ -262,22 +266,22 @@ function AccountSettingsView() {
         />
         <Input
           id="phone"
-          label="Phone Number"
+          label={t("common.phone", "Phone Number")}
           value={form.phone}
           onChange={handleChange}
           placeholder="+855 12 345 678"
         />
         <Input
           id="password"
-          label="New Password (leave blank to keep current)"
+          label={t("candidate.newPasswordKeepCurrent", "New Password (leave blank to keep current)")}
           type="password"
           value={form.password}
           onChange={handleChange}
           placeholder="••••••••"
         />
         <div style={{ display: "flex", justifyContent: "flex-end" }}>
-          <Button type="submit" variant="teal" loading={saving}>
-            Save Account Settings
+          <Button type="submit" variant="primary" loading={saving}>
+            {t("candidate.saveAccountSettings", "Save Account Settings")}
           </Button>
         </div>
       </form>
@@ -716,9 +720,9 @@ function SharedMessagesView() {
                   marginBottom: "4px",
                   cursor: "pointer",
                   backgroundColor:
-                    Number(activeRecipientId) === Number(c.userId) ? "#f0fdfa" : "transparent",
+                    Number(activeRecipientId) === Number(c.userId) ? "#eff6ff" : "transparent",
                   color:
-                    Number(activeRecipientId) === Number(c.userId) ? "#0d9488" : "#0f172a",
+                    Number(activeRecipientId) === Number(c.userId) ? "#016bfb" : "#0f172a",
                   fontWeight: Number(activeRecipientId) === Number(c.userId) ? 600 : 400,
                 }}
               >
@@ -749,7 +753,7 @@ function SharedMessagesView() {
                       style={{
                         padding: "8px 12px",
                         borderRadius: "8px",
-                        backgroundColor: isMine ? "#0d9488" : "#fff",
+                        backgroundColor: isMine ? "#016bfb" : "#fff",
                         color: isMine ? "#fff" : "#0f172a",
                         border: isMine ? "none" : "1px solid #e2e8f0",
                         maxWidth: "70%",
@@ -771,7 +775,7 @@ function SharedMessagesView() {
               onChange={(e) => setText(e.target.value)}
               style={{ flex: 1, padding: "10px 12px", border: "1px solid #cbd5e1", borderRadius: "6px" }}
             />
-            <Button type="submit" variant="teal">
+            <Button type="submit" variant="primary">
               Send
             </Button>
           </form>

@@ -6,6 +6,7 @@ import {
   deleteAdminCandidate,
 } from "../../../services/adminService";
 import { registerApi } from "../../../services/authService";
+import { useLanguage } from "../../../context/LanguageContext";
 import "./Candidates.css";
 import "../../../styles/adminForms.css";
 
@@ -48,6 +49,7 @@ function Modal({ title, onClose, children }) {
 }
 
 export default function Candidates() {
+  const { t } = useLanguage();
   const [candidates, setCandidates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -193,11 +195,11 @@ export default function Candidates() {
     <section className="workspace-page">
       <div className="workspace-heading">
         <div>
-          <h1>Candidate Management</h1>
-          <p>View and manage student accounts on the platform.</p>
+          <h1>{t("admin.candidateManagement", "Candidate Management")}</h1>
+          <p>{t("admin.candidateManagementDesc", "Review and manage candidate profiles and verification.")}</p>
         </div>
         <button className="workspace-button workspace-button-primary" onClick={openCreate}>
-          + Add Candidate
+          {t("admin.addCandidate", "+ Add Candidate")}
         </button>
       </div>
 
@@ -221,14 +223,14 @@ export default function Candidates() {
         <input
           type="search"
           className="workspace-search"
-          placeholder="Search by name, email, university..."
+          placeholder={t("admin.searchCandidates", "Search by name, major or university...")}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
         <span className="workspace-muted">
           {loading
-            ? "Loading..."
-            : `${filtered.length} candidate${filtered.length !== 1 ? "s" : ""}`}
+            ? t("common.loading", "Loading...")
+            : `${filtered.length} ${t("admin.candidatesCount", "candidates")}`}
         </span>
       </div>
 
@@ -236,19 +238,19 @@ export default function Candidates() {
         <table className="workspace-table">
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>University</th>
-              <th>Major</th>
-              <th>Status</th>
-              <th style={{ textAlign: "right" }}>Actions</th>
+              <th>{t("common.name", "Name")}</th>
+              <th>{t("common.email", "Email")}</th>
+              <th>{t("candidate.education", "University")}</th>
+              <th>{t("candidate.headline", "Major")}</th>
+              <th>{t("common.status", "Status")}</th>
+              <th style={{ textAlign: "right" }}>{t("common.actions", "Actions")}</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
               <tr>
                 <td colSpan="6" className="workspace-empty">
-                  Loading candidates from database...
+                  {t("common.loading", "Loading...")}
                 </td>
               </tr>
             ) : (
@@ -269,7 +271,7 @@ export default function Candidates() {
                             : "workspace-status-danger"
                         }`}
                       >
-                        {c.status}
+                        {c.status === "Active" ? t("admin.active", "Active") : t("admin.suspended", "Suspended")}
                       </span>
                     </td>
                     <td>
@@ -279,21 +281,21 @@ export default function Candidates() {
                           className="workspace-button"
                           onClick={() => openEdit(c)}
                         >
-                          Edit
+                          {t("common.edit", "Edit")}
                         </button>
                         <button
                           type="button"
                           className="workspace-button"
                           onClick={() => toggleStatus(c)}
                         >
-                          {c.status === "Active" ? "Suspend" : "Activate"}
+                          {c.status === "Active" ? t("admin.suspend", "Suspend") : t("admin.activate", "Activate")}
                         </button>
                         <button
                           type="button"
                           className="workspace-button workspace-button-danger"
                           onClick={() => setDeleteTarget(c)}
                         >
-                          Delete
+                          {t("common.delete", "Delete")}
                         </button>
                       </div>
                     </td>
@@ -302,7 +304,7 @@ export default function Candidates() {
                 {filtered.length === 0 && (
                   <tr>
                     <td colSpan="6" className="workspace-empty">
-                      No candidates found.
+                      {t("common.noResults", "No candidates found.")}
                     </td>
                   </tr>
                 )}
@@ -314,7 +316,7 @@ export default function Candidates() {
 
       {modal !== null && (
         <Modal
-          title={modal.id ? "Edit Candidate" : "Add Candidate"}
+          title={modal.id ? t("admin.editCandidate", "Edit Candidate") : t("admin.addCandidate", "Add Candidate")}
           onClose={() => setModal(null)}
         >
           <CandidateForm
@@ -330,9 +332,9 @@ export default function Candidates() {
       )}
 
       {deleteTarget && (
-        <Modal title="Confirm Delete" onClose={() => setDeleteTarget(null)}>
+        <Modal title={t("admin.confirmDelete", "Confirm Delete")} onClose={() => setDeleteTarget(null)}>
           <p style={{ margin: "0 0 20px", color: "var(--color-text-secondary)" }}>
-            Delete <strong>{deleteTarget.name}</strong>? This cannot be undone.
+            {deleteTarget.name}?
           </p>
           <div className="workspace-actions">
             <button
@@ -340,14 +342,14 @@ export default function Candidates() {
               className="workspace-button"
               onClick={() => setDeleteTarget(null)}
             >
-              Cancel
+              {t("common.cancel", "Cancel")}
             </button>
             <button
               type="button"
               className="workspace-button workspace-button-danger"
               onClick={confirmDelete}
             >
-              Yes, Delete
+              {t("admin.yesDelete", "Yes, Delete")}
             </button>
           </div>
         </Modal>
@@ -358,6 +360,7 @@ export default function Candidates() {
 
 /* ─── Candidate Form ─── */
 function CandidateForm({ form, setForm, onSubmit, onCancel, isEdit, f }) {
+  const { t } = useLanguage();
   const [skillInput, setSkillInput] = useState("");
 
   const skills = form.skills || [];
@@ -388,12 +391,12 @@ function CandidateForm({ form, setForm, onSubmit, onCancel, isEdit, f }) {
   return (
     <form onSubmit={onSubmit} className="candidate-form">
 
-      <p className="candidate-section-label">Basic Information</p>
+      <p className="candidate-section-label">{t("admin.candidateInfo", "Basic Information")}</p>
 
       {/* Full Name */}
       <div className="candidate-field">
         <label className="candidate-label">
-          Full Name <span className="candidate-required">*</span>
+          {t("common.name", "Full Name")} <span className="candidate-required">*</span>
         </label>
         <input
           className="candidate-input"
@@ -407,7 +410,7 @@ function CandidateForm({ form, setForm, onSubmit, onCancel, isEdit, f }) {
       {/* Email */}
       <div className="candidate-field">
         <label className="candidate-label">
-          Email <span className="candidate-required">*</span>
+          {t("common.email", "Email")} <span className="candidate-required">*</span>
         </label>
         <input
           className="candidate-input"
@@ -422,7 +425,7 @@ function CandidateForm({ form, setForm, onSubmit, onCancel, isEdit, f }) {
       {/* University & Major */}
       <div className="candidate-form-grid">
         <div className="candidate-field">
-          <label className="candidate-label">University</label>
+          <label className="candidate-label">{t("candidate.education", "University")}</label>
           <input
             className="candidate-input"
             value={form.uni}
@@ -432,7 +435,7 @@ function CandidateForm({ form, setForm, onSubmit, onCancel, isEdit, f }) {
         </div>
 
         <div className="candidate-field">
-          <label className="candidate-label">Major</label>
+          <label className="candidate-label">{t("candidate.headline", "Major")}</label>
           <input
             className="candidate-input"
             value={form.major}
@@ -445,7 +448,7 @@ function CandidateForm({ form, setForm, onSubmit, onCancel, isEdit, f }) {
       {/* Graduation Year & Status */}
       <div className="candidate-form-grid">
         <div className="candidate-field">
-          <label className="candidate-label">Graduation Year</label>
+          <label className="candidate-label">{t("candidate.yearsOfExperience", "Graduation Year")}</label>
           <input
             className="candidate-input candidate-input-narrow"
             value={form.year}
@@ -455,21 +458,21 @@ function CandidateForm({ form, setForm, onSubmit, onCancel, isEdit, f }) {
         </div>
 
         <div className="candidate-field">
-          <label className="candidate-label">Status</label>
+          <label className="candidate-label">{t("common.status", "Status")}</label>
           <select
             className="candidate-input candidate-select"
             value={form.status}
             onChange={f("status")}
           >
-            <option>Active</option>
-            <option>Suspended</option>
+            <option value="Active">{t("admin.active", "Active")}</option>
+            <option value="Suspended">{t("admin.suspended", "Suspended")}</option>
           </select>
         </div>
       </div>
 
       {/* Skills */}
       <div className="candidate-field">
-        <label className="candidate-label">Skills</label>
+        <label className="candidate-label">{t("admin.skills", "Skills")}</label>
         <div className="candidate-skill-row">
           <input
             className="candidate-input candidate-skill-input"
@@ -483,9 +486,8 @@ function CandidateForm({ form, setForm, onSubmit, onCancel, isEdit, f }) {
             type="button"
             className="candidate-skill-btn"
             onClick={addSkill}
-            
           >
-            Add Skill
+            {t("candidate.addSkill", "Add Skill")}
           </button>
         </div>
         {skills.length > 0 && (
@@ -509,9 +511,9 @@ function CandidateForm({ form, setForm, onSubmit, onCancel, isEdit, f }) {
 
       {/* Actions */}
       <div className="candidate-form-actions">
-        <button type="button" className="workspace-button" onClick={onCancel}>Cancel</button>
+        <button type="button" className="workspace-button" onClick={onCancel}>{t("common.cancel", "Cancel")}</button>
         <button type="submit" className="workspace-button workspace-button-primary">
-          {isEdit ? "Save Changes" : "Create Candidate"}
+          {isEdit ? t("admin.saveChanges", "Save Changes") : t("admin.addCandidate", "Create Candidate")}
         </button>
       </div>
     </form>

@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useAuth } from "../../../hooks/useAuth";
+import { useLanguage } from "../../../context/LanguageContext";
 import {
   getMessages,
   sendMessageApi,
@@ -11,6 +12,7 @@ import "./Messages.css";
 
 export default function CandidateMessages() {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [messages, setMessages] = useState([]);
   const [contacts, setContacts] = useState([]);
   const [activeRecipientId, setActiveRecipientId] = useState(null);
@@ -113,14 +115,14 @@ export default function CandidateMessages() {
 
   return (
     <div className="messages-page">
-      <h1 className="messages-page__title">Messages</h1>
+      <h1 className="messages-page__title">{t("nav.messages", "Messages")}</h1>
 
       <div className="messages-container">
         {/* Left Column: Chat List */}
         <div className="messages-sidebar">
           {loading ? (
             <div style={{ padding: "16px", color: "#64748b", fontSize: "13px" }}>
-              Loading contacts...
+              {t("candidate.loadingContacts", "Loading contacts...")}
             </div>
           ) : contacts.length > 0 ? (
             contacts.map((chat) => (
@@ -136,7 +138,7 @@ export default function CandidateMessages() {
             ))
           ) : (
             <div style={{ padding: "16px", color: "#64748b", fontSize: "13px" }}>
-              No contacts available.
+              {t("candidate.noContacts", "No contacts available.")}
             </div>
           )}
         </div>
@@ -154,7 +156,7 @@ export default function CandidateMessages() {
                   marginTop: "60px",
                 }}
               >
-                Loading conversation...
+                {t("candidate.loadingConversation", "Loading conversation...")}
               </div>
             ) : activeThread.length === 0 ? (
               <div
@@ -166,7 +168,10 @@ export default function CandidateMessages() {
                   marginTop: "60px",
                 }}
               >
-                No messages in this conversation yet. Send a message below to start chatting.
+                {t(
+                  "candidate.noMessagesThread",
+                  "No messages in this conversation yet. Send a message below to start chatting."
+                )}
               </div>
             ) : (
               activeThread.map((msg) => {
@@ -210,7 +215,7 @@ export default function CandidateMessages() {
             <input
               type="text"
               className="messages-chat__input"
-              placeholder="Write a message"
+              placeholder={t("candidate.writeMessage", "Write a message")}
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
               disabled={!activeRecipientId || sending}
@@ -220,7 +225,7 @@ export default function CandidateMessages() {
               className="messages-chat__send-btn"
               disabled={!activeRecipientId || sending}
             >
-              {sending ? "Sending..." : "Send"}
+              {sending ? t("candidate.sending", "Sending...") : t("candidate.send", "Send")}
             </button>
           </form>
         </div>

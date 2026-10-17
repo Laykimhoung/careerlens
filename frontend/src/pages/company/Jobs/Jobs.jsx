@@ -8,10 +8,12 @@ import {
   deleteJob as deleteJobApi,
   normalizeJobRecord,
 } from "../../../services/jobService";
+import { useLanguage } from "../../../context/LanguageContext";
 import "./Jobs.css";
 
 export default function Jobs() {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -86,14 +88,14 @@ export default function Jobs() {
     <section className="workspace-page">
       <div className="workspace-heading">
         <div>
-          <h1>Job postings</h1>
-          <p>Create roles and manage your hiring pipeline.</p>
+          <h1>{t("company.jobPostings", "Job postings")}</h1>
+          <p>{t("company.jobPostingsSub", "Create roles and manage your hiring pipeline.")}</p>
         </div>
         <Link
           className="workspace-button workspace-button-primary"
           to="/company/jobs/create"
         >
-          + Create a job
+          {t("company.createJob", "+ Create a job")}
         </Link>
       </div>
 
@@ -119,7 +121,7 @@ export default function Jobs() {
           type="search"
           className="workspace-search"
           aria-label="Search jobs"
-          placeholder="Search roles, skills, or locations"
+          placeholder={t("company.searchJobsPlaceholder", "Search roles, skills, or locations")}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           style={{ marginBottom: 0 }}
@@ -131,10 +133,10 @@ export default function Jobs() {
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
         >
-          <option>All statuses</option>
-          <option>Published</option>
-          <option>Draft</option>
-          <option>Closed</option>
+          <option value="All statuses">{t("company.allStatuses", "All statuses")}</option>
+          <option value="Published">{t("company.published", "Published")}</option>
+          <option value="Draft">{t("company.draft", "Draft")}</option>
+          <option value="Closed">{t("company.closed", "Closed")}</option>
         </select>
       </div>
 
@@ -142,11 +144,11 @@ export default function Jobs() {
         <table className="workspace-table">
           <thead>
             <tr>
-              <th>Role</th>
-              <th>Location & Setup</th>
-              <th>Compensation</th>
-              <th>Status</th>
-              <th style={{ textAlign: "right" }}>Actions</th>
+              <th>{t("company.role", "Role")}</th>
+              <th>{t("company.locationSetup", "Location & Setup")}</th>
+              <th>{t("company.compensation", "Compensation")}</th>
+              <th>{t("common.status", "Status")}</th>
+              <th style={{ textAlign: "right" }}>{t("common.actions", "Actions")}</th>
             </tr>
           </thead>
           <tbody>
@@ -156,7 +158,7 @@ export default function Jobs() {
                   colSpan="5"
                   style={{ textAlign: "center", padding: "40px", color: "#666" }}
                 >
-                  Loading job postings...
+                  {t("company.loadingJobs", "Loading job postings...")}
                 </td>
               </tr>
             ) : filteredJobs.length > 0 ? (
@@ -183,7 +185,11 @@ export default function Jobs() {
                           : "rejected"
                       }`}
                     >
-                      {job.status}
+                      {job.rawStatus === "PUBLISHED"
+                        ? t("company.published", "Published")
+                        : job.rawStatus === "DRAFT"
+                        ? t("company.draft", "Draft")
+                        : t("company.closed", "Closed")}
                     </span>
                   </td>
                   <td>
@@ -192,7 +198,7 @@ export default function Jobs() {
                         className="workspace-button"
                         to={`/company/jobs/${job.id}/edit`}
                       >
-                        Edit
+                        {t("common.edit", "Edit")}
                       </Link>
                       {job.rawStatus === "PUBLISHED" ? (
                         <button
@@ -201,7 +207,7 @@ export default function Jobs() {
                           disabled={actionLoadingId === job.id}
                           onClick={() => handleToggleStatus(job, "CLOSED")}
                         >
-                          Close
+                          {t("company.closeJob", "Close")}
                         </button>
                       ) : (
                         <button
@@ -210,7 +216,7 @@ export default function Jobs() {
                           disabled={actionLoadingId === job.id}
                           onClick={() => handleToggleStatus(job, "PUBLISHED")}
                         >
-                          Publish
+                          {t("company.publishJob", "Publish")}
                         </button>
                       )}
                       <button
@@ -219,7 +225,7 @@ export default function Jobs() {
                         disabled={actionLoadingId === job.id}
                         onClick={() => handleRemoveJob(job)}
                       >
-                        Delete
+                        {t("common.delete", "Delete")}
                       </button>
                     </div>
                   </td>
@@ -231,7 +237,7 @@ export default function Jobs() {
                   colSpan="5"
                   style={{ textAlign: "center", padding: "40px", color: "#666" }}
                 >
-                  No roles found.
+                  {t("company.noJobs", "No roles found.")}
                 </td>
               </tr>
             )}
