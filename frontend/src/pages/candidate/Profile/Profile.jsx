@@ -8,10 +8,12 @@ import {
   updateCandidateProfile,
 } from "../../../services/candidateService";
 import { updateMeApi } from "../../../services/authService";
+import { useLanguage } from "../../../context/LanguageContext";
 import "./Profile.css";
 
 export default function CandidateProfile() {
   const { user, refreshUser } = useAuth();
+  const { t } = useLanguage();
 
   const [profileId, setProfileId] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -151,14 +153,14 @@ export default function CandidateProfile() {
 
         {fetching ? (
           <div style={{ padding: "24px", textAlign: "center", color: "#64748b" }}>
-            Loading profile from server...
+            {t("candidate.loadingProfile", "Loading profile from server...")}
           </div>
         ) : (
           <form className="profile-form" onSubmit={handleSubmit}>
             <div className="profile-form__grid">
               <Input
                 id="full_name"
-                label="Full Name"
+                label={t("candidate.firstName", "Full Name")}
                 value={values.full_name}
                 onChange={handleChange}
                 disabled={!isEditing}
@@ -166,7 +168,7 @@ export default function CandidateProfile() {
               />
               <Input
                 id="email"
-                label="Email Address"
+                label={t("common.email", "Email Address")}
                 value={values.email}
                 onChange={handleChange}
                 disabled
@@ -174,7 +176,7 @@ export default function CandidateProfile() {
               />
               <Input
                 id="major"
-                label="Major / Professional Field"
+                label={t("candidate.majorField", "Major / Professional Field")}
                 value={values.major}
                 onChange={handleChange}
                 disabled={!isEditing}
@@ -182,7 +184,7 @@ export default function CandidateProfile() {
               />
               <Input
                 id="phone"
-                label="Phone Number"
+                label={t("common.phone", "Phone Number")}
                 value={values.phone}
                 onChange={handleChange}
                 disabled={!isEditing}
@@ -190,7 +192,7 @@ export default function CandidateProfile() {
               />
               <Input
                 id="university"
-                label="University / Institution"
+                label={t("candidate.universityInstitution", "University / Institution")}
                 value={values.university}
                 onChange={handleChange}
                 disabled={!isEditing}
@@ -198,7 +200,7 @@ export default function CandidateProfile() {
               />
               <Input
                 id="graduation_year"
-                label="Graduation Year"
+                label={t("candidate.graduationYear", "Graduation Year")}
                 type="number"
                 value={values.graduation_year}
                 onChange={handleChange}
@@ -209,7 +211,7 @@ export default function CandidateProfile() {
 
             <Textarea
               id="bio"
-              label="About Me"
+              label={t("candidate.aboutMe", "About Me")}
               value={values.bio}
               onChange={handleChange}
               disabled={!isEditing}
@@ -227,7 +229,7 @@ export default function CandidateProfile() {
                     setIsEditing(true);
                   }}
                 >
-                  Edit Profile
+                  {t("candidate.editProfile", "Edit Profile")}
                 </Button>
               ) : (
                 <>
@@ -240,10 +242,10 @@ export default function CandidateProfile() {
                     }}
                     disabled={loading}
                   >
-                    Cancel
+                    {t("common.cancel", "Cancel")}
                   </Button>
                   <Button type="submit" variant="teal" loading={loading}>
-                    Save Changes
+                    {t("candidate.saveChanges", "Save Changes")}
                   </Button>
                 </>
               )}

@@ -1,22 +1,24 @@
-import { useAuth } from "../../hooks/useAuth";
-import { useLanguage } from "../../context/LanguageContext";
+import { Menu } from "lucide-react";
 import ThemeLanguageToggle from "../common/ThemeLanguageToggle";
 import "./CompanyHeader.css";
 
-export default function CompanyHeader() {
-  const { user } = useAuth();
-  const { t } = useLanguage();
-  const companyName = user?.company_name || user?.full_name || user?.username || "Company";
-
+export default function CompanyHeader({ onMenuClick }) {
   return (
     <header className="company-topbar">
-      <div className="company-topbar-info">
-        <strong>{companyName}</strong>
-        <small>{t("company.recruitmentWorkspace")}</small>
+      <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+        {onMenuClick && (
+          <button
+            type="button"
+            className="company-menu-btn"
+            onClick={onMenuClick}
+            aria-label="Open navigation menu"
+          >
+            <Menu size={20} />
+          </button>
+        )}
       </div>
       <div className="company-topbar-actions">
         <ThemeLanguageToggle />
-        <span className="workspace-status workspace-status-warning">{t("company.workspaceDemoLabel")}</span>
       </div>
     </header>
   );

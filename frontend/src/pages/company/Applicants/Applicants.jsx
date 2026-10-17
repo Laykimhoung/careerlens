@@ -6,8 +6,10 @@ import {
   toBackendApplicationStatus,
   normalizeApplicationRecord,
 } from "../../../services/applicationService";
+import { useLanguage } from "../../../context/LanguageContext";
 
 export default function Applicants() {
+  const { t } = useLanguage();
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -79,12 +81,22 @@ export default function Applicants() {
     return "rejected";
   };
 
+  const getStatusLabel = (s) => {
+    const v = String(s || "").toLowerCase();
+    if (v === "applied") return t("admin.applied", "Applied");
+    if (v === "screening" || v === "reviewing" || v === "review") return t("candidate.reviewing", "Reviewing");
+    if (v === "interviewing" || v === "interview") return t("admin.interview", "Interview");
+    if (v === "offered" || v === "offer") return t("candidate.offered", "Offered");
+    if (v === "rejected") return t("common.rejected", "Rejected");
+    return s;
+  };
+
   return (
     <section className="workspace-page">
       <div className="workspace-heading">
         <div>
-          <h1>Applicants</h1>
-          <p>Review candidates across your open roles.</p>
+          <h1>{t("company.applicantsHeading", "Applicants")}</h1>
+          <p>{t("company.applicantsSub", "Review candidates across your open roles.")}</p>
         </div>
       </div>
 
@@ -110,7 +122,7 @@ export default function Applicants() {
           type="search"
           className="workspace-search"
           aria-label="Search applicants"
-          placeholder="Search name, email, or role"
+          placeholder={t("company.searchApplicantsPlaceholder", "Search name, email, or role")}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           style={{ marginBottom: 0 }}
@@ -122,12 +134,12 @@ export default function Applicants() {
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
         >
-          <option>All statuses</option>
-          <option>Applied</option>
-          <option>Reviewing</option>
-          <option>Interview</option>
-          <option>Offered</option>
-          <option>Rejected</option>
+          <option value="All statuses">{t("company.allStatuses", "All statuses")}</option>
+          <option value="Applied">{t("admin.applied", "Applied")}</option>
+          <option value="Reviewing">{t("candidate.reviewing", "Reviewing")}</option>
+          <option value="Interview">{t("admin.interview", "Interview")}</option>
+          <option value="Offered">{t("candidate.offered", "Offered")}</option>
+          <option value="Rejected">{t("common.rejected", "Rejected")}</option>
         </select>
       </div>
 
@@ -135,11 +147,11 @@ export default function Applicants() {
         <table className="workspace-table">
           <thead>
             <tr>
-              <th>Applicant</th>
-              <th>Applied Role</th>
-              <th>Applied Date</th>
-              <th>Status</th>
-              <th style={{ textAlign: "right" }}>Actions</th>
+              <th>{t("company.applicant", "Applicant")}</th>
+              <th>{t("company.appliedRole", "Applied Role")}</th>
+              <th>{t("company.appliedDate", "Applied Date")}</th>
+              <th>{t("common.status", "Status")}</th>
+              <th style={{ textAlign: "right" }}>{t("common.actions", "Actions")}</th>
             </tr>
           </thead>
           <tbody>
@@ -149,7 +161,7 @@ export default function Applicants() {
                   colSpan="5"
                   style={{ textAlign: "center", padding: "40px", color: "#666" }}
                 >
-                  Loading applicants...
+                  {t("company.loadingApplicants", "Loading applicants...")}
                 </td>
               </tr>
             ) : filteredApps.length > 0 ? (
@@ -167,7 +179,7 @@ export default function Applicants() {
                     <td>{app.appliedDate}</td>
                     <td>
                       <span className={`status-badge ${badgeClass(displayStatus)}`}>
-                        {displayStatus}
+                        {getStatusLabel(displayStatus)}
                       </span>
                     </td>
                     <td>
@@ -184,17 +196,17 @@ export default function Applicants() {
                           disabled={updatingId === app.id}
                           onChange={(e) => handleUpdateStatus(app, e.target.value)}
                         >
-                          <option value="Applied">Applied</option>
-                          <option value="Reviewing">Reviewing</option>
-                          <option value="Interview">Interview</option>
-                          <option value="Offered">Offered</option>
-                          <option value="Rejected">Rejected</option>
+                          <option value="Applied">{t("admin.applied", "Applied")}</option>
+                          <option value="Reviewing">{t("candidate.reviewing", "Reviewing")}</option>
+                          <option value="Interview">{t("admin.interview", "Interview")}</option>
+                          <option value="Offered">{t("candidate.offered", "Offered")}</option>
+                          <option value="Rejected">{t("common.rejected", "Rejected")}</option>
                         </select>
                         <Link
                           className="workspace-button"
                           to={`/company/applicants/${app.id}`}
                         >
-                          View
+                          {t("common.view", "View")}
                         </Link>
                       </div>
                     </td>
@@ -207,7 +219,7 @@ export default function Applicants() {
                   colSpan="5"
                   style={{ textAlign: "center", padding: "40px", color: "#666" }}
                 >
-                  No applicants found.
+                  {t("company.noApplicantsFound", "No applicants found.")}
                 </td>
               </tr>
             )}

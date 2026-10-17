@@ -12,6 +12,7 @@ import {
   toBackendApplicationStatus,
   createApplicationNote,
 } from "../../../services/applicationService";
+import { useLanguage } from "../../../context/LanguageContext";
 import "./Applications.css";
 import "../../../styles/adminForms.css";
 
@@ -41,6 +42,7 @@ function Modal({ title, onClose, children }) {
 }
 
 export default function Applications() {
+  const { t } = useLanguage();
   const [apps, setApps] = useState([]);
   const [candidates, setCandidates] = useState([]);
   const [jobs, setJobs] = useState([]);
@@ -205,18 +207,27 @@ export default function Applications() {
 
   const f = (k) => (e) => setForm((p) => ({ ...p, [k]: e.target.value }));
 
+  const getStatusLabel = (s) => {
+    if (s === "Applied") return t("candidate.applicationStatus", "Applied");
+    if (s === "Reviewing") return t("candidate.reviewing", "Reviewing");
+    if (s === "Interviewing") return t("common.nav.interviews", "Interviewing");
+    if (s === "Offered") return t("candidate.offered", "Offered");
+    if (s === "Rejected") return t("admin.rejected", "Rejected");
+    return s;
+  };
+
   return (
     <section className="workspace-page">
       <div className="workspace-heading">
         <div>
-          <h1>All Applications</h1>
-          <p>Monitor and manage every application across the platform.</p>
+          <h1>{t("admin.applicationManagement", "All Applications")}</h1>
+          <p>{t("admin.applicationManagementDesc", "Monitor and manage every application across the platform.")}</p>
         </div>
         <button
           className="workspace-button workspace-button-primary"
           onClick={openCreate}
         >
-          + Add Application
+          {t("admin.addApplication", "+ Add Application")}
         </button>
       </div>
 
@@ -240,7 +251,7 @@ export default function Applications() {
         <input
           type="search"
           className="workspace-search"
-          placeholder="Search by candidate or job..."
+          placeholder={t("admin.searchApplications", "Search by candidate or job...")}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -249,15 +260,15 @@ export default function Applications() {
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
         >
-          <option value="all">All Statuses</option>
+          <option value="all">{t("admin.allStatuses", "All Statuses")}</option>
           {STATUS_FLOW.map((s) => (
-            <option key={s}>{s}</option>
+            <option key={s} value={s}>{getStatusLabel(s)}</option>
           ))}
         </select>
         <span className="workspace-muted">
           {loading
-            ? "Loading..."
-            : `${display.length} application${display.length !== 1 ? "s" : ""}`}
+            ? t("common.loading", "Loading...")
+            : `${display.length} ${t("admin.appsCount", "applications")}`}
         </span>
       </div>
 
@@ -265,19 +276,19 @@ export default function Applications() {
         <table className="workspace-table">
           <thead>
             <tr>
-              <th>Candidate</th>
-              <th>Job</th>
-              <th>Company</th>
-              <th>Status</th>
-              <th>Date</th>
-              <th style={{ textAlign: "right" }}>Actions</th>
+              <th>{t("candidate.title", "Candidate")}</th>
+              <th>{t("common.nav.jobs", "Job")}</th>
+              <th>{t("admin.companyName", "Company")}</th>
+              <th>{t("common.status", "Status")}</th>
+              <th>{t("common.date", "Date")}</th>
+              <th style={{ textAlign: "right" }}>{t("common.actions", "Actions")}</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
               <tr>
                 <td colSpan="6" className="workspace-empty">
-                  Loading applications from database...
+                  {t("common.loading", "Loading...")}
                 </td>
               </tr>
             ) : (
@@ -296,7 +307,7 @@ export default function Applications() {
                         onChange={(e) => changeStatus(a.id, e.target.value)}
                       >
                         {STATUS_FLOW.map((s) => (
-                          <option key={s}>{s}</option>
+                          <option key={s} value={s}>{getStatusLabel(s)}</option>
                         ))}
                       </select>
                     </td>
@@ -315,14 +326,14 @@ export default function Applications() {
                           className="workspace-button"
                           onClick={() => openEdit(a)}
                         >
-                          Edit
+                          {t("common.edit", "Edit")}
                         </button>
                         <button
                           type="button"
                           className="workspace-button workspace-button-danger"
                           onClick={() => setDeleteTarget(a)}
                         >
-                          Delete
+                          {t("common.delete", "Delete")}
                         </button>
                       </div>
                     </td>
@@ -331,7 +342,7 @@ export default function Applications() {
                 {display.length === 0 && (
                   <tr>
                     <td colSpan="6" className="workspace-empty">
-                      No applications found.
+                      {t("common.noResults", "No applications found.")}
                     </td>
                   </tr>
                 )}
@@ -343,15 +354,15 @@ export default function Applications() {
 
       {modal !== null && (
         <Modal
-          title={modal.id ? "Edit Application" : "Add Application"}
+          title={modal.id ? t("candidate.editApplication", "Edit Application") : t("admin.addApplication", "Add Application")}
           onClose={() => setModal(null)}
         >
           <form onSubmit={handleSave} className="admin-form">
-            <p className="admin-form-section">Application Details</p>
+            <p className="admin-form-section">{t("candidate.applicationDetails", "Application Details")}</p>
 
             <div className="admin-field">
               <label className="admin-label">
-                Candidate <span className="admin-required">*</span>
+                {t("candidate.title", "Candidate")} <span className="admin-required">*</span>
               </label>
               <select
                 className="admin-input admin-select"
@@ -360,7 +371,7 @@ export default function Applications() {
                 value={form.sid}
                 onChange={f("sid")}
               >
-                <option value="">Select candidate...</option>
+                <option value="">{t("selectCandidate", "Select candidate...")}</option>
                 {candidates.map((c) => (
                   <option key={c.id} value={c.id}>
                     {c.name}
@@ -371,7 +382,7 @@ export default function Applications() {
 
             <div className="admin-field">
               <label className="admin-label">
-                Job <span className="admin-required">*</span>
+                {t("common.nav.jobs", "Job")} <span className="admin-required">*</span>
               </label>
               <select
                 className="admin-input admin-select"
@@ -380,7 +391,7 @@ export default function Applications() {
                 value={form.jid}
                 onChange={f("jid")}
               >
-                <option value="">Select job...</option>
+                <option value="">{t("selectJob", "Select job...")}</option>
                 {jobs.map((j) => (
                   <option key={j.id} value={j.id}>
                     {j.title} — {j.co}
@@ -390,20 +401,20 @@ export default function Applications() {
             </div>
 
             <div className="admin-field">
-              <label className="admin-label">Status</label>
+              <label className="admin-label">{t("common.status", "Status")}</label>
               <select
                 className="admin-input admin-select"
                 value={form.status}
                 onChange={f("status")}
               >
                 {STATUS_FLOW.map((s) => (
-                  <option key={s}>{s}</option>
+                  <option key={s} value={s}>{getStatusLabel(s)}</option>
                 ))}
               </select>
             </div>
 
             <div className="admin-field">
-              <label className="admin-label">Reviewer Note (Optional)</label>
+              <label className="admin-label">{t("candidate.reviewerNote", "Reviewer Note (Optional)")}</label>
               <textarea
                 className="admin-input admin-textarea"
                 value={form.notes}
@@ -418,7 +429,7 @@ export default function Applications() {
                 className="workspace-button"
                 onClick={() => setModal(null)}
               >
-                Cancel
+                {t("common.cancel", "Cancel")}
               </button>
               <button
                 type="submit"
@@ -426,10 +437,10 @@ export default function Applications() {
                 disabled={saving}
               >
                 {saving
-                  ? "Saving..."
+                  ? t("common.loading", "Saving...")
                   : modal.id
-                  ? "Save Changes"
-                  : "Create Application"}
+                  ? t("admin.saveChanges", "Save Changes")
+                  : t("admin.addApplication", "Create Application")}
               </button>
             </div>
           </form>
@@ -437,10 +448,9 @@ export default function Applications() {
       )}
 
       {deleteTarget && (
-        <Modal title="Confirm Delete" onClose={() => setDeleteTarget(null)}>
+        <Modal title={t("admin.confirmDelete", "Confirm Delete")} onClose={() => setDeleteTarget(null)}>
           <p style={{ margin: "0 0 20px", color: "var(--color-text-secondary)" }}>
-            Delete application by <strong>{deleteTarget.studentName}</strong> for{" "}
-            <strong>{deleteTarget.jobTitle}</strong>?
+            {deleteTarget.studentName} — {deleteTarget.jobTitle}?
           </p>
           <div className="workspace-actions">
             <button
@@ -448,14 +458,14 @@ export default function Applications() {
               className="workspace-button"
               onClick={() => setDeleteTarget(null)}
             >
-              Cancel
+              {t("common.cancel", "Cancel")}
             </button>
             <button
               type="button"
               className="workspace-button workspace-button-danger"
               onClick={confirmDelete}
             >
-              Yes, Delete
+              {t("admin.yesDelete", "Yes, Delete")}
             </button>
           </div>
         </Modal>

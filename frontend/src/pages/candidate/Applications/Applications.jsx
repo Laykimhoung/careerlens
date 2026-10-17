@@ -1,11 +1,13 @@
 import { useState, useEffect, useCallback } from "react";
 import ApplicationCard from "../../../components/candidate/ApplicationCard";
 import { fetchNormalizedApplications } from "../../../services/applicationService";
+import { useLanguage } from "../../../context/LanguageContext";
 import "./Applications.css";
 
 export const MOCK_APPLICATIONS = [];
 
 export default function CandidateApplications() {
+  const { t } = useLanguage();
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -34,6 +36,25 @@ export default function CandidateApplications() {
     (app) => filter === "All" || app.status === filter
   );
 
+  const getStatusLabel = (s) => {
+    switch (s) {
+      case "All":
+        return t("common.all", "All");
+      case "Applied":
+        return t("candidate.applied", "Applied");
+      case "Review":
+        return t("candidate.reviewing", "Review");
+      case "Interview":
+        return t("admin.interview", "Interview");
+      case "Offer":
+        return t("candidate.offered", "Offer");
+      case "Rejected":
+        return t("common.rejected", "Rejected");
+      default:
+        return s;
+    }
+  };
+
   return (
     <div className="applications-page">
       {error && (
@@ -57,7 +78,7 @@ export default function CandidateApplications() {
             className={`app-filter-btn ${filter === status ? "app-filter-btn--active" : ""}`}
             onClick={() => setFilter(status)}
           >
-            {status}
+            {getStatusLabel(status)}
           </button>
         ))}
       </div>
@@ -65,8 +86,10 @@ export default function CandidateApplications() {
       <div className="applications-list">
         <div className="applications-list__header">
           {loading
-            ? "Loading applications..."
-            : `Showing ${filteredApps.length} application${filteredApps.length !== 1 ? "s" : ""}`}
+            ? t("candidate.loadingApplications", "Loading applications...")
+            : filteredApps.length === 1
+            ? t("candidate.showingApplications", { count: filteredApps.length })
+            : t("candidate.showingApplicationsPlural", { count: filteredApps.length })}
         </div>
 
         {loading ? (
@@ -79,7 +102,7 @@ export default function CandidateApplications() {
               borderRadius: "8px",
             }}
           >
-            Loading your applications from the server...
+            {t("candidate.loadingApplications", "Loading your applications from the server...")}
           </div>
         ) : filteredApps.length > 0 ? (
           filteredApps.map((app) => (
@@ -95,7 +118,7 @@ export default function CandidateApplications() {
               borderRadius: "8px",
             }}
           >
-            You don&apos;t have any applications with this status.
+            {t("candidate.noApplicationsStatus", "You don't have any applications with this status.")}
           </div>
         )}
       </div>

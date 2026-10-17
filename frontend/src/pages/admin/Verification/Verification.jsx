@@ -4,6 +4,7 @@ import {
   getAdminCompanies,
   updateAdminCompany,
 } from "../../../services/adminService";
+import { useLanguage } from "../../../context/LanguageContext";
 import "./Verification.css";
 import "../../../styles/adminForms.css";
 
@@ -24,6 +25,7 @@ function Modal({ title, onClose, children }) {
 }
 
 export default function Verification() {
+  const { t } = useLanguage();
   const [companies, setCompanies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -91,11 +93,11 @@ export default function Verification() {
     <section className="workspace-page">
       <div className="workspace-heading">
         <div>
-          <h1>Verification Queue</h1>
-          <p>Review and approve new company registrations.</p>
+          <h1>{t("admin.verificationQueue", "Verification Queue")}</h1>
+          <p>{t("admin.verificationDesc", "Review and approve new company registrations.")}</p>
         </div>
         <span className="workspace-status workspace-status-warning">
-          {pending.length} pending
+          {pending.length} {t("admin.pending", "pending")}
         </span>
       </div>
 
@@ -117,10 +119,10 @@ export default function Verification() {
 
       <div className="workspace-panel">
         {loading ? (
-          <div className="workspace-empty">Loading verification queue...</div>
+          <div className="workspace-empty">{t("common.loading", "Loading verification queue...")}</div>
         ) : pending.length === 0 ? (
           <div className="workspace-empty">
-            No companies pending verification.
+            {t("admin.noPendingVerification", "No companies pending verification.")}
           </div>
         ) : (
           <div className="workspace-grid verification-grid">
@@ -132,16 +134,16 @@ export default function Verification() {
                     <div className="workspace-muted">{c.email}</div>
                   </div>
                   <span className="workspace-status workspace-status-warning">
-                    Pending
+                    {t("admin.pending", "Pending")}
                   </span>
                 </div>
 
                 <div className="verification-card-meta">
                   <div>
-                    <strong>Industry:</strong> {c.ind}
+                    <strong>{t("admin.industry", "Industry")}:</strong> {c.ind}
                   </div>
                   <div>
-                    <strong>Location:</strong> {c.loc}
+                    <strong>{t("admin.location", "Location")}:</strong> {c.loc}
                   </div>
                 </div>
 
@@ -151,14 +153,14 @@ export default function Verification() {
                     className="workspace-button workspace-button-primary"
                     onClick={() => handleVerify(c)}
                   >
-                    Approve
+                    {t("admin.verify", "Approve")}
                   </button>
                   <button
                     type="button"
                     className="workspace-button workspace-button-danger"
                     onClick={() => setRejectModal(c)}
                   >
-                    Reject
+                    {t("admin.reject", "Reject")}
                   </button>
                 </div>
               </div>
@@ -168,7 +170,7 @@ export default function Verification() {
       </div>
 
       {rejectModal && (
-        <Modal title="Reject Company" onClose={() => setRejectModal(null)}>
+        <Modal title={t("admin.rejectCompany", "Reject Company")} onClose={() => setRejectModal(null)}>
           <form onSubmit={handleRejectConfirm}>
             <p
               style={{
@@ -177,11 +179,10 @@ export default function Verification() {
                 color: "var(--color-text-secondary)",
               }}
             >
-              Are you sure you want to reject the application for{" "}
-              <strong>{rejectModal.name}</strong>?
+              {rejectModal.name}?
             </p>
             <div className="workspace-field">
-              <label>Reason for rejection (Optional)</label>
+              <label>{t("rejectReason", "Reason for rejection (Optional)")}</label>
               <textarea
                 value={rejectReason}
                 onChange={(e) => setRejectReason(e.target.value)}
@@ -194,13 +195,13 @@ export default function Verification() {
                 className="workspace-button"
                 onClick={() => setRejectModal(null)}
               >
-                Cancel
+                {t("common.cancel", "Cancel")}
               </button>
               <button
                 type="submit"
                 className="workspace-button workspace-button-danger"
               >
-                Confirm Rejection
+                {t("admin.confirmRejection", "Confirm Rejection")}
               </button>
             </div>
           </form>

@@ -30,3 +30,25 @@
   align-items: center;
   gap: 16px;
 }
+
+.company-menu-btn {
+  display: none;
+  background: transparent;
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: 8px;
+  padding: 6px;
+  cursor: pointer;
+  color: var(--color-text-primary, #0f172a);
+  align-items: center;
+  justify-content: center;
+}
+
+.company-menu-btn:hover {
+  background: var(--color-surface-hover, #f1f5f9);
+}
+
+@media (max-width: 900px) {
+  .company-menu-btn {
+    display: inline-flex;
+  }
+}

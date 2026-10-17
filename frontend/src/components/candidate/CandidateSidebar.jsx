@@ -1,11 +1,21 @@
-import { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
-import { useAuth } from "../../hooks/useAuth";
-import { useLanguage } from "../../context/LanguageContext";
-import { getNotifications } from "../../services/candidateService";
-import { extractResults } from "../../services/api";
-import logoIcon from "../../assets/logo/logo.webp";
-import "./CandidateSidebar.css";
+import React, { useState, useEffect } from 'react';
+import {
+  LayoutDashboard,
+  Search,
+  FileText,
+  Bookmark,
+  CalendarCheck,
+  MessageSquare,
+  User,
+  FileUser,
+  Bell,
+  Settings,
+} from 'lucide-react';
+import CollapsibleSidebar from '../common/CollapsibleSidebar';
+import { useAuth } from '../../hooks/useAuth';
+import { useLanguage } from '../../context/LanguageContext';
+import { getNotifications } from '../../services/candidateService';
+import { extractResults } from '../../services/api';
 
 export default function CandidateSidebar({ isOpen, open, onClose }) {
   const isMenuOpen = Boolean(open || isOpen);
@@ -23,75 +33,33 @@ export default function CandidateSidebar({ isOpen, open, onClose }) {
   }, []);
 
   const items = [
-    ["/candidate", t("nav.dashboard"), true],
-    ["/candidate/jobs", t("nav.findJobs")],
-    ["/candidate/applications", t("nav.myApplications")],
-    ["/candidate/saved-jobs", t("nav.savedJobs")],
-    ["/candidate/interviews", t("nav.interviews")],
-    ["/candidate/messages", t("nav.messages")],
-    ["/candidate/profile", t("nav.myProfile")],
-    ["/candidate/resume", t("nav.resume")],
-    ["/candidate/notifications", t("nav.notifications"), false, unreadCount > 0 ? unreadCount : null],
-    ["/candidate/settings", t("nav.settings")],
+    { to: '/candidate', label: t('nav.dashboard') || 'Dashboard', icon: LayoutDashboard, end: true },
+    { to: '/candidate/jobs', label: t('nav.findJobs') || 'Find Jobs', icon: Search },
+    { to: '/candidate/applications', label: t('nav.myApplications') || 'My Applications', icon: FileText },
+    { to: '/candidate/saved-jobs', label: t('nav.savedJobs') || 'Saved Jobs', icon: Bookmark },
+    { to: '/candidate/interviews', label: t('nav.interviews') || 'Interviews', icon: CalendarCheck },
+    { to: '/candidate/messages', label: t('nav.messages') || 'Messages', icon: MessageSquare },
+    { to: '/candidate/profile', label: t('nav.myProfile') || 'My Profile', icon: User },
+    { to: '/candidate/resume', label: t('nav.resume') || 'Resume', icon: FileUser },
+    {
+      to: '/candidate/notifications',
+      label: t('nav.notifications') || 'Notifications',
+      icon: Bell,
+      badge: unreadCount > 0 ? unreadCount : null,
+    },
+    { to: '/candidate/settings', label: t('nav.settings') || 'Settings', icon: Settings },
   ];
 
   return (
-    <>
-      <button
-        type="button"
-        className={`candidate-overlay ${isMenuOpen ? "open" : ""}`}
-        onClick={onClose}
-        aria-label="Close navigation"
-      />
-      <aside className={`candidate-sidebar ${isMenuOpen ? "open" : ""}`}>
-        <a className="candidate-brand" href="/candidate">
-          <img src={logoIcon} alt="CareerLens Logo" className="brand-logo" />
-          <span className="brand-text">
-            <span className="brand-career">Career</span>
-            <span className="brand-lens">Lens</span>
-          </span>
-        </a>
-
-        <nav className="candidate-nav" aria-label="Candidate navigation">
-          {items.map(([to, label, end, badge]) => (
-            <NavLink
-              key={to}
-              to={to}
-              end={end}
-              onClick={onClose}
-              className={({ isActive }) => (isActive ? "active" : "")}
-            >
-              {label}
-              {badge && <span className="nav-badge">{badge}</span>}
-            </NavLink>
-          ))}
-        </nav>
-
-        <div className="candidate-sidebar-foot">
-          <div className="demo-mode-label">{t("common.roleSwitcher")}</div>
-          <select
-            className="role-selector"
-            value={user?.role || "candidate"}
-            onChange={(e) => switchRole(e.target.value)}
-          >
-            <option value="candidate">{t("auth.roleCandidate")}</option>
-            <option value="company">{t("auth.roleCompany")}</option>
-            <option value="admin">{t("common.platformAdmin")}</option>
-          </select>
-
-          <div className="user-info-row">
-            <div className="user-details">
-              <div className="user-name">
-                {user?.full_name || user?.username || "Candidate"}
-              </div>
-              <div className="user-role">{user?.role || "candidate"}</div>
-            </div>
-            <button type="button" className="logout-btn" onClick={logout}>
-              {t("common.logOut")}
-            </button>
-          </div>
-        </div>
-      </aside>
-    </>
+    <CollapsibleSidebar
+      brandHref="/candidate"
+      items={items}
+      isOpen={isMenuOpen}
+      onClose={onClose}
+      user={user}
+      onLogout={logout}
+      switchRole={switchRole}
+      currentRole="candidate"
+    />
   );
 }

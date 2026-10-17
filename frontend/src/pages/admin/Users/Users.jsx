@@ -6,6 +6,7 @@ import {
   updateUser,
   deleteUser,
 } from "../../../services/adminService";
+import { useLanguage } from "../../../context/LanguageContext";
 import "./Users.css";
 import "../../../styles/adminForms.css";
 
@@ -58,6 +59,7 @@ function Modal({ title, onClose, children }) {
 }
 
 export default function Users() {
+  const { t } = useLanguage();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -193,15 +195,27 @@ export default function Users() {
 
   const f = (k) => (e) => setForm((p) => ({ ...p, [k]: e.target.value }));
 
+  const getRoleLabel = (r) => {
+    if (r === "student") return t("common.nav.candidates", "Student");
+    if (r === "company") return t("common.nav.companies", "Company");
+    if (r === "admin") return t("platformAdmin", "Admin");
+    return r;
+  };
+
+  const getStatusLabel = (s) => {
+    if (s === "Active") return t("admin.active", "Active");
+    return t("admin.suspended", "Suspended");
+  };
+
   return (
     <section className="workspace-page">
       <div className="workspace-heading">
         <div>
-          <h1>User Management</h1>
-          <p>Create, edit and manage platform user accounts.</p>
+          <h1>{t("admin.userManagement", "User Management")}</h1>
+          <p>{t("admin.userManagementDesc", "Create, edit and manage platform user accounts.")}</p>
         </div>
         <button className="workspace-button workspace-button-primary" onClick={openCreate}>
-          + Add User
+          {t("admin.addUser", "+ Add User")}
         </button>
       </div>
 
@@ -225,7 +239,7 @@ export default function Users() {
         <input
           type="search"
           className="workspace-search"
-          placeholder="Search by name or email..."
+          placeholder={t("admin.searchUsers", "Search by name or email...")}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -234,15 +248,15 @@ export default function Users() {
           value={roleFilter}
           onChange={(e) => setRoleFilter(e.target.value)}
         >
-          <option value="all">All Roles</option>
+          <option value="all">{t("admin.allRoles", "All Roles")}</option>
           {ROLES.map((r) => (
             <option key={r} value={r}>
-              {r}
+              {getRoleLabel(r)}
             </option>
           ))}
         </select>
         <span className="workspace-muted">
-          {loading ? "Loading..." : `${filtered.length} user${filtered.length !== 1 ? "s" : ""}`}
+          {loading ? t("common.loading", "Loading...") : `${filtered.length} ${t("admin.usersCount", "users")}`}
         </span>
       </div>
 
@@ -250,18 +264,18 @@ export default function Users() {
         <table className="workspace-table">
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Role</th>
-              <th>Status</th>
-              <th style={{ textAlign: "right" }}>Actions</th>
+              <th>{t("common.name", "Name")}</th>
+              <th>{t("common.email", "Email")}</th>
+              <th>{t("role", "Role")}</th>
+              <th>{t("common.status", "Status")}</th>
+              <th style={{ textAlign: "right" }}>{t("common.actions", "Actions")}</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
               <tr>
                 <td colSpan="5" className="workspace-empty">
-                  Loading users from database...
+                  {t("common.loading", "Loading...")}
                 </td>
               </tr>
             ) : (
@@ -273,7 +287,7 @@ export default function Users() {
                     </td>
                     <td>{u.email}</td>
                     <td>
-                      <span className={`user-role-badge ${u.role}`}>{u.role}</span>
+                      <span className={`user-role-badge ${u.role}`}>{getRoleLabel(u.role)}</span>
                     </td>
                     <td>
                       <span
@@ -283,7 +297,7 @@ export default function Users() {
                             : "workspace-status-danger"
                         }`}
                       >
-                        {u.status}
+                        {getStatusLabel(u.status)}
                       </span>
                     </td>
                     <td>
@@ -293,7 +307,7 @@ export default function Users() {
                           className="workspace-button"
                           onClick={() => openEdit(u)}
                         >
-                          Edit
+                          {t("common.edit", "Edit")}
                         </button>
                         {u.role !== "admin" && (
                           <button
@@ -301,7 +315,7 @@ export default function Users() {
                             className="workspace-button"
                             onClick={() => toggleStatus(u)}
                           >
-                            {u.status === "Active" ? "Suspend" : "Activate"}
+                            {u.status === "Active" ? t("admin.suspend", "Suspend") : t("admin.activate", "Activate")}
                           </button>
                         )}
                         {u.role !== "admin" && (
@@ -310,7 +324,7 @@ export default function Users() {
                             className="workspace-button workspace-button-danger"
                             onClick={() => setDeleteTarget(u)}
                           >
-                            Delete
+                            {t("common.delete", "Delete")}
                           </button>
                         )}
                       </div>
@@ -320,7 +334,7 @@ export default function Users() {
                 {filtered.length === 0 && (
                   <tr>
                     <td colSpan="5" className="workspace-empty">
-                      No users found.
+                      {t("common.noResults", "No users found.")}
                     </td>
                   </tr>
                 )}
@@ -333,15 +347,15 @@ export default function Users() {
       {/* Create / Edit Modal */}
       {modalUser !== null && (
         <Modal
-          title={modalUser.id ? "Edit User" : "Add New User"}
+          title={modalUser.id ? t("admin.editUser", "Edit User") : t("admin.addUser", "Add New User")}
           onClose={() => setModalUser(null)}
         >
           <form onSubmit={handleSave} className="admin-form">
-            <p className="admin-form-section">Account Information</p>
+            <p className="admin-form-section">{t("admin.userInfo", "Account Information")}</p>
 
             <div className="admin-field">
               <label className="admin-label">
-                Full Name <span className="admin-required">*</span>
+                {t("common.name", "Full Name")} <span className="admin-required">*</span>
               </label>
               <input
                 className="admin-input"
@@ -354,7 +368,7 @@ export default function Users() {
 
             <div className="admin-field">
               <label className="admin-label">
-                Email <span className="admin-required">*</span>
+                {t("common.email", "Email")} <span className="admin-required">*</span>
               </label>
               <input
                 className="admin-input"
@@ -368,7 +382,7 @@ export default function Users() {
 
             <div className="admin-form-grid">
               <div className="admin-field">
-                <label className="admin-label">Role</label>
+                <label className="admin-label">{t("role", "Role")}</label>
                 <select
                   className="admin-input admin-select"
                   value={form.role}
@@ -376,28 +390,28 @@ export default function Users() {
                 >
                   {ROLES.map((r) => (
                     <option key={r} value={r}>
-                      {r}
+                      {getRoleLabel(r)}
                     </option>
                   ))}
                 </select>
               </div>
 
               <div className="admin-field">
-                <label className="admin-label">Status</label>
+                <label className="admin-label">{t("common.status", "Status")}</label>
                 <select
                   className="admin-input admin-select"
                   value={form.status}
                   onChange={f("status")}
                 >
-                  <option>Active</option>
-                  <option>Suspended</option>
+                  <option value="Active">{t("admin.active", "Active")}</option>
+                  <option value="Suspended">{t("admin.suspended", "Suspended")}</option>
                 </select>
               </div>
             </div>
 
             <div className="admin-field">
               <label className="admin-label">
-                {modalUser.id ? "New Password (optional)" : "Password"}
+                {modalUser.id ? t("newPasswordOptional", "New Password (optional)") : t("password", "Password")}
               </label>
               <input
                 className="admin-input"
@@ -413,14 +427,14 @@ export default function Users() {
                 className="workspace-button"
                 onClick={() => setModalUser(null)}
               >
-                Cancel
+                {t("common.cancel", "Cancel")}
               </button>
               <button
                 type="submit"
                 className="workspace-button workspace-button-primary"
                 disabled={saving}
               >
-                {saving ? "Saving..." : modalUser.id ? "Save Changes" : "Create User"}
+                {saving ? t("common.loading", "Saving...") : modalUser.id ? t("admin.saveChanges", "Save Changes") : t("admin.addUser", "Create User")}
               </button>
             </div>
           </form>
@@ -429,9 +443,9 @@ export default function Users() {
 
       {/* Delete Confirm Modal */}
       {deleteTarget && (
-        <Modal title="Confirm Delete" onClose={() => setDeleteTarget(null)}>
+        <Modal title={t("admin.confirmDelete", "Confirm Delete")} onClose={() => setDeleteTarget(null)}>
           <p style={{ margin: "0 0 20px", color: "var(--color-text-secondary)" }}>
-            Are you sure you want to delete <strong>{deleteTarget.name}</strong>? This cannot be undone.
+            {deleteTarget.name}?
           </p>
           <div className="workspace-actions">
             <button
@@ -439,14 +453,14 @@ export default function Users() {
               className="workspace-button"
               onClick={() => setDeleteTarget(null)}
             >
-              Cancel
+              {t("common.cancel", "Cancel")}
             </button>
             <button
               type="button"
               className="workspace-button workspace-button-danger"
               onClick={confirmDelete}
             >
-              Yes, Delete
+              {t("admin.yesDelete", "Yes, Delete")}
             </button>
           </div>
         </Modal>

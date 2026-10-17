@@ -2,14 +2,16 @@ import React from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import AdminSidebar from '../../components/admin/AdminSidebar';
 import { useAuth } from '../../hooks/useAuth';
+import { useLanguage } from "../../context/LanguageContext";
 import ThemeLanguageToggle from "../../components/common/ThemeLanguageToggle";
 import "./AdminLayout.css";
 
 export default function AdminLayout() {
 	const navigate = useNavigate();
 	const { user, logout } = useAuth();
+	const { t } = useLanguage();
 	const [menuOpen, setMenuOpen] = React.useState(false);
-	const adminName = user?.name || user?.username || "Platform Admin";
+	const adminName = user?.name || user?.username || t("platformAdmin", "Platform Admin");
 
 	const handleLogout = () => {
 		logout();
@@ -35,10 +37,6 @@ export default function AdminLayout() {
 						>
 							&#9776; Menu
 						</button>
-						<div>
-							<h1 style={{ margin: 0, fontSize: "16px", fontWeight: 700 }}>CareerLens Admin</h1>
-							<p style={{ margin: 0, fontSize: "12px", color: "var(--color-text-muted)" }}>Platform Operations</p>
-						</div>
 					</div>
 					<div className="admin-header-actions">
 						<ThemeLanguageToggle />

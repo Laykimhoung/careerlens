@@ -9,11 +9,13 @@ import {
   fetchSavedJobRecords,
   toggleSavedJobBackend,
 } from "../../../services/candidateService";
+import { useLanguage } from "../../../context/LanguageContext";
 import "./Jobs.css";
 
 export const MOCK_JOBS_DB = [];
 
 export default function CandidateJobs() {
+  const { t } = useLanguage();
   const [jobs, setJobs] = useState([]);
   const [applications, setApplications] = useState([]);
   const [savedRecords, setSavedRecords] = useState([]);
@@ -115,7 +117,7 @@ export default function CandidateJobs() {
 
   return (
     <div className="cj-page">
-      <h1 className="cj-title">Find Jobs</h1>
+      <h1 className="cj-title">{t("candidate.findJobsTitle", "Find Jobs")}</h1>
 
       {error && (
         <div
@@ -136,7 +138,7 @@ export default function CandidateJobs() {
         <input
           type="text"
           className="cj-search"
-          placeholder="Search title, company, skill or location"
+          placeholder={t("candidate.searchJobsFilterPlaceholder", "Search title, company, skill or location")}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
@@ -146,28 +148,28 @@ export default function CandidateJobs() {
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value)}
           >
-            <option value="">Job type</option>
-            <option value="Full-time">Full-time</option>
-            <option value="Part-time">Part-time</option>
-            <option value="Internship">Internship</option>
-            <option value="Contract">Contract</option>
+            <option value="">{t("candidate.jobTypeFilter", "Job type")}</option>
+            <option value="Full-time">{t("candidate.fullTime", "Full-time")}</option>
+            <option value="Part-time">{t("candidate.partTime", "Part-time")}</option>
+            <option value="Internship">{t("candidate.internship", "Internship")}</option>
+            <option value="Contract">{t("candidate.contract", "Contract")}</option>
           </select>
           <select
             className="cj-select"
             value={setupFilter}
             onChange={(e) => setSetupFilter(e.target.value)}
           >
-            <option value="">Workplace</option>
-            <option value="On-site">On-site</option>
-            <option value="Hybrid">Hybrid</option>
-            <option value="Remote">Remote</option>
+            <option value="">{t("candidate.workplaceFilter", "Workplace")}</option>
+            <option value="On-site">{t("candidate.onSite", "On-site")}</option>
+            <option value="Hybrid">{t("candidate.hybrid", "Hybrid")}</option>
+            <option value="Remote">{t("candidate.remote", "Remote")}</option>
           </select>
           <select
             className="cj-select"
             value={industryFilter}
             onChange={(e) => setIndustryFilter(e.target.value)}
           >
-            <option value="">Industry</option>
+            <option value="">{t("candidate.industryFilter", "Industry")}</option>
             {industries.map((ind) => (
               <option key={ind} value={ind}>
                 {ind}
@@ -190,7 +192,7 @@ export default function CandidateJobs() {
               borderRadius: "8px",
             }}
           >
-            Loading job postings...
+            {t("candidate.loadingJobs", "Loading job postings...")}
           </div>
         ) : filteredJobs.length > 0 ? (
           filteredJobs.map((job) => {
@@ -224,17 +226,17 @@ export default function CandidateJobs() {
                     onClick={() => toggleSave(job.id)}
                     disabled={savingId === job.id}
                   >
-                    {isSaved ? "Saved" : "Save"}
+                    {isSaved ? t("candidate.saved", "Saved") : t("candidate.save", "Save")}
                   </button>
                   {isApplied ? (
-                    <span className="cj-badge cj-badge--applied">Applied</span>
+                    <span className="cj-badge cj-badge--applied">{t("candidate.applied", "Applied")}</span>
                   ) : (
                     <button
                       className="cj-btn cj-btn--solid"
                       onClick={() => applyJob(job)}
                       disabled={applyingId === job.id}
                     >
-                      {applyingId === job.id ? "Applying..." : "Apply"}
+                      {applyingId === job.id ? t("candidate.applying", "Applying...") : t("candidate.apply", "Apply")}
                     </button>
                   )}
                 </div>
@@ -252,7 +254,7 @@ export default function CandidateJobs() {
               borderRadius: "8px",
             }}
           >
-            No jobs match your filters.
+            {t("candidate.noJobsMatch", "No jobs match your filters.")}
           </div>
         )}
       </div>
