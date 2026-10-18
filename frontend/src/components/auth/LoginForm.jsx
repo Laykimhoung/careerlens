@@ -12,8 +12,11 @@ export default function LoginForm({ onSubmit, loading, error, onClearError }) {
   const [showPassword, setShowPassword] = useState(false);
   const [buttonOffset, setButtonOffset] = useState({ x: 0, y: 0 });
 
-  const isEmailValid = values.email.trim() && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email);
-  const isPasswordValid = values.password && values.password.length >= 6; // Image says 8, but we'll use 6 to match existing validation
+  const isEmailValid = Boolean(
+    values.email.trim() &&
+    (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email.trim()) || values.email.trim().length >= 3)
+  );
+  const isPasswordValid = Boolean(values.password && values.password.length >= 6); // Image says 8, but we'll use 6 to match existing validation
   const filledCount = (isEmailValid ? 1 : 0) + (isPasswordValid ? 1 : 0);
   const isLocked = filledCount === 2;
 
@@ -57,9 +60,9 @@ export default function LoginForm({ onSubmit, loading, error, onClearError }) {
     <form onSubmit={handleSubmit} noValidate className="login-form">
       <ErrorMessage message={error} onDismiss={onClearError} />
 
-      {/* Email Field */}
+      {/* Email / Username Field */}
       <div className="tether-field">
-        <label className="tether-label" htmlFor="email">{t("common.email")}</label>
+        <label className="tether-label" htmlFor="email">{t("common.email")} / {t("auth.username")}</label>
         <div className={`tether-input-wrapper ${isEmailValid ? 'valid' : ''}`}>
           <span className="tether-icon-left">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -70,12 +73,13 @@ export default function LoginForm({ onSubmit, loading, error, onClearError }) {
           <input
             id="email"
             name="email"
-            type="email"
+            type="text"
             value={values.email}
             onChange={handleChange}
-            placeholder="ada@lumen.co"
+            placeholder="demo_admin or ada@lumen.co"
             className="tether-input"
             disabled={loading}
+            autoComplete="username"
           />
           {isEmailValid && (
             <span className="tether-icon-right check">
