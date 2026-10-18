@@ -1,66 +1,65 @@
-import { NavLink } from "react-router-dom";
-import "./CompanySidebar.css";
-import { useAuth } from "../../hooks/useAuth";
+import React, { useState, useEffect } from 'react';
+import {
+  LayoutDashboard,
+  Briefcase,
+  Users,
+  CalendarCheck,
+  MessageSquare,
+  Building2,
+  Compass,
+  BarChart3,
+  Bell,
+  Settings,
+} from 'lucide-react';
+import CollapsibleSidebar from '../common/CollapsibleSidebar';
+import { useAuth } from '../../hooks/useAuth';
+import { useLanguage } from '../../context/LanguageContext';
+import { getNotifications } from '../../services/candidateService';
+import { extractResults } from '../../services/api';
 
-const items = [
-  ["/company", "Dashboard", true],
-  ["/company/jobs", "Jobs"],
-  ["/company/applicants", "Applicants"],
-  ["/company/interviews", "Interviews"],
-  ["/company/messages", "Messages"],
-  ["/company/profile", "Company Profile"],
-  ["/company/talent-pool", "Talent Pool"],
-  ["/company/reports", "Reports"],
-  ["/company/notifications", "Notifications", false, 3], // 3 is the badge
-  ["/company/settings", "Settings"],
-];
-
-import logoIcon from "../../assets/logo/logo.webp";
-
-// ...
-
-export default function CompanySidebar() {
+export default function CompanySidebar({ isOpen = false, open, onClose }) {
+  const isMenuOpen = Boolean(open || isOpen);
   const { user, switchRole, logout } = useAuth();
+  const { t } = useLanguage();
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    getNotifications()
+      .then((res) => {
+        const list = extractResults(res);
+        setUnreadCount(list.filter((n) => !n.is_read).length);
+      })
+      .catch(() => {});
+  }, []);
+
+  const items = [
+    { to: '/company', label: t('nav.dashboard') || 'Dashboard', icon: LayoutDashboard, end: true },
+    { to: '/company/jobs', label: t('nav.jobs') || 'Jobs', icon: Briefcase },
+    { to: '/company/applicants', label: t('nav.applicants') || 'Applicants', icon: Users },
+    { to: '/company/interviews', label: t('nav.interviews') || 'Interviews', icon: CalendarCheck },
+    { to: '/company/messages', label: t('nav.messages') || 'Messages', icon: MessageSquare },
+    { to: '/company/profile', label: t('nav.companyProfile') || 'Company Profile', icon: Building2 },
+    { to: '/company/talent-pool', label: t('nav.talentPool') || 'Talent Pool', icon: Compass },
+    { to: '/company/reports', label: t('nav.reports') || 'Reports', icon: BarChart3 },
+    {
+      to: '/company/notifications',
+      label: t('nav.notifications') || 'Notifications',
+      icon: Bell,
+      badge: unreadCount > 0 ? unreadCount : null,
+    },
+    { to: '/company/settings', label: t('nav.settings') || 'Settings', icon: Settings },
+  ];
 
   return (
-    <aside className="company-sidebar">
-      <a className="company-brand" href="/company">
-        <img src={logoIcon} alt="CareerLens Logo" className="brand-logo" />
-        <span className="brand-text">
-          <span className="brand-career">Career</span>
-          <span className="brand-lens">Lens</span>
-        </span>
-      </a>
-      
-      <nav className="company-nav" aria-label="Company navigation">
-        {items.map(([to, label, end, badge]) => (
-          <NavLink key={to} to={to} end={end}>
-            {label}
-            {badge && <span className="nav-badge">{badge}</span>}
-          </NavLink>
-        ))}
-      </nav>
-
-      <div className="company-sidebar-foot">
-        <div className="demo-mode-label">DEMO MODE</div>
-        <select 
-          className="role-selector"
-          value={user?.role || "company"}
-          onChange={(e) => switchRole(e.target.value)}
-        >
-          <option value="candidate">candidate</option>
-          <option value="company">company</option>
-          <option value="admin">admin</option>
-        </select>
-        
-        <div className="user-info-row">
-          <div className="user-details">
-            <div className="user-name">{user?.full_name || "TechNova Cambodia"}</div>
-            <div className="user-role">{user?.role || "company"}</div>
-          </div>
-          <button className="logout-btn" onClick={logout}>Log out</button>
-        </div>
-      </div>
-    </aside>
+    <CollapsibleSidebar
+      brandHref="/company"
+      items={items}
+      isOpen={isMenuOpen}
+      onClose={onClose}
+      user={user}
+      onLogout={logout}
+      switchRole={switchRole}
+      currentRole="company"
+    />
   );
 }

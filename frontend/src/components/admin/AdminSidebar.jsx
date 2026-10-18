@@ -1,69 +1,70 @@
-import { NavLink } from "react-router-dom";
-import logoIcon from "../../assets/logo/logo.webp";
-import "./AdminSidebar.css";
-import { useAuth } from "../../hooks/useAuth";
-
-const items = [
-  ["/admin", "Dashboard", true],
-  ["/admin/users", "Users"],
-  ["/admin/candidates", "Candidates"],
-  ["/admin/companies", "Companies"],
-  ["/admin/verification", "Verification"],
-  ["/admin/jobs", "Jobs"],
-  ["/admin/applications", "Applications"],
-  ["/admin/reports", "Reports"],
-  ["/admin/categories", "Categories"],
-  ["/admin/skills", "Skills"],
-  ["/admin/audit-logs", "Audit Logs"],
-  ["/admin/notifications", "Notifications", false, 1],
-  ["/admin/settings", "Settings"],
-];
+import React, { useState, useEffect } from 'react';
+import {
+  LayoutDashboard,
+  Users,
+  GraduationCap,
+  Building2,
+  BadgeCheck,
+  Briefcase,
+  FileText,
+  BarChart3,
+  FolderTree,
+  Sparkles,
+  ScrollText,
+  Bell,
+  Settings,
+} from 'lucide-react';
+import CollapsibleSidebar from '../common/CollapsibleSidebar';
+import { useAuth } from '../../hooks/useAuth';
+import { useLanguage } from '../../context/LanguageContext';
+import { getNotifications } from '../../services/candidateService';
+import { extractResults } from '../../services/api';
 
 export default function AdminSidebar({ open, onClose, adminName, onLogout }) {
-  const { user, switchRole } = useAuth();
-  
-  return (
-    <>
-      <button className={`admin-overlay ${open ? "open" : ""}`} onClick={onClose} aria-label="Close navigation" />
-      <aside className={`admin-sidebar ${open ? "open" : ""}`}>
-        <a className="admin-brand" href="/admin">
-          <img src={logoIcon} alt="CareerLens Logo" className="brand-logo" />
-          <span className="brand-text">
-            <span className="brand-career">Career</span>
-            <span className="brand-lens">Lens</span>
-          </span>
-        </a>
-        
-        <nav className="admin-nav" aria-label="Admin navigation">
-          {items.map(([to, label, end, badge]) => (
-            <NavLink key={to} to={to} end={end} onClick={onClose} className={({ isActive }) => isActive ? "active" : ""}>
-              {label}
-              {badge && <span className="nav-badge">{badge}</span>}
-            </NavLink>
-          ))}
-        </nav>
+  const { user, switchRole, logout } = useAuth();
+  const { t } = useLanguage();
+  const [unreadCount, setUnreadCount] = useState(0);
 
-        <div className="admin-sidebar-foot">
-          <div className="demo-mode-label">DEMO MODE</div>
-          <select 
-            className="demo-select" 
-            value={user?.role || "admin"}
-            onChange={(e) => switchRole(e.target.value)}
-          >
-            <option value="candidate">candidate</option>
-            <option value="company">company</option>
-            <option value="admin">admin</option>
-          </select>
-          
-          <div className="user-profile">
-            <div className="user-info">
-              <strong>Platform Admin</strong>
-              <span>{user?.full_name || adminName || "admin"}</span>
-            </div>
-            <button type="button" className="logout-btn" onClick={onLogout}>Log out</button>
-          </div>
-        </div>
-      </aside>
-    </>
+  useEffect(() => {
+    getNotifications()
+      .then((res) => {
+        const list = extractResults(res);
+        setUnreadCount(list.filter((n) => !n.is_read).length);
+      })
+      .catch(() => {});
+  }, []);
+
+  const items = [
+    { to: '/admin', label: t('nav.dashboard') || 'Dashboard', icon: LayoutDashboard, end: true },
+    { to: '/admin/users', label: t('nav.users') || 'Users', icon: Users },
+    { to: '/admin/candidates', label: t('nav.candidates') || 'Candidates', icon: GraduationCap },
+    { to: '/admin/companies', label: t('nav.companies') || 'Companies', icon: Building2 },
+    { to: '/admin/verification', label: t('nav.verification') || 'Verification', icon: BadgeCheck },
+    { to: '/admin/jobs', label: t('nav.jobs') || 'Jobs', icon: Briefcase },
+    { to: '/admin/applications', label: t('nav.applications') || 'Applications', icon: FileText },
+    { to: '/admin/reports', label: t('nav.reports') || 'Reports', icon: BarChart3 },
+    { to: '/admin/categories', label: t('nav.categories') || 'Categories', icon: FolderTree },
+    { to: '/admin/skills', label: t('nav.skills') || 'Skills', icon: Sparkles },
+    { to: '/admin/audit-logs', label: t('nav.auditLogs') || 'Audit Logs', icon: ScrollText },
+    {
+      to: '/admin/notifications',
+      label: t('nav.notifications') || 'Notifications',
+      icon: Bell,
+      badge: unreadCount > 0 ? unreadCount : null,
+    },
+    { to: '/admin/settings', label: t('nav.settings') || 'Settings', icon: Settings },
+  ];
+
+  return (
+    <CollapsibleSidebar
+      brandHref="/admin"
+      items={items}
+      isOpen={open}
+      onClose={onClose}
+      user={user}
+      onLogout={onLogout || logout}
+      switchRole={switchRole}
+      currentRole="admin"
+    />
   );
 }

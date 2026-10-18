@@ -1,7 +1,26 @@
-import { useState } from "react";
-import { readStore, saveDemoCollection } from '../../../services/member3DemoStore';
-import './Categories.css';
-import '../../../styles/adminForms.css';
+import { useState, useEffect, useCallback } from "react";
+import { extractResults } from "../../../services/api";
+import {
+  getAdminJobs,
+  getAdminCompanies,
+} from "../../../services/adminService";
+import "./Categories.css";
+import "../../../styles/adminForms.css";
+
+const CUSTOM_CATS_KEY = "careerlens_admin_custom_categories";
+
+function loadCustomCategories() {
+  try {
+    const raw = localStorage.getItem(CUSTOM_CATS_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveCustomCategories(list) {
+  localStorage.setItem(CUSTOM_CATS_KEY, JSON.stringify(list));
+}
 
 function Modal({ title, onClose, children }) {
   return (
@@ -9,7 +28,9 @@ function Modal({ title, onClose, children }) {
       <div className="crud-modal" onClick={(e) => e.stopPropagation()}>
         <div className="crud-modal-header">
           <h2>{title}</h2>
-          <button type="button" className="crud-close" onClick={onClose}>&times;</button>
+          <button type="button" className="crud-close" onClick={onClose}>
+            &times;
+          </button>
         </div>
         {children}
       </div>
@@ -18,13 +39,48 @@ function Modal({ title, onClose, children }) {
 }
 
 function Categories() {
-  const [store, setStore] = useState(() => readStore());
+  const [categories, setCategories] = useState([]);
+  const [jobCounts, setJobCounts] = useState({});
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [modal, setModal] = useState(false);
   const [newCat, setNewCat] = useState("");
   const [deleteTarget, setDeleteTarget] = useState(null);
 
-  const categories = store.cats || [];
+  const loadCategories = useCallback(async () => {
+    setLoading(true);
+    try {
+      const [jobsRes, compsRes] = await Promise.all([
+        getAdminJobs(),
+        getAdminCompanies(),
+      ]);
+      const jobs = extractResults(jobsRes);
+      const companies = extractResults(compsRes);
+
+      const counts = {};
+      const catSet = new Set(loadCustomCategories());
+
+      companies.forEach((c) => {
+        if (c.industry) catSet.add(c.industry);
+      });
+      jobs.forEach((j) => {
+        const ind = j.company?.industry;
+        if (ind) {
+          catSet.add(ind);
+          counts[ind] = (counts[ind] || 0) + 1;
+        }
+      });
+
+      setJobCounts(counts);
+      setCategories(Array.from(catSet).sort());
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadCategories();
+  }, [loadCategories]);
 
   const handleAdd = (e) => {
     e.preventDefault();
@@ -32,31 +88,39 @@ function Categories() {
     if (!trimmed) return;
 
     if (!categories.map((c) => c.toLowerCase()).includes(trimmed.toLowerCase())) {
-      const updated = [...categories, trimmed];
-      saveDemoCollection("cats", updated);
-      setStore((s) => ({ ...s, cats: updated }));
+      const custom = loadCustomCategories();
+      saveCustomCategories([...custom, trimmed]);
+      setCategories((prev) => [...prev, trimmed].sort());
     }
     setModal(false);
     setNewCat("");
   };
 
   const confirmDelete = () => {
-    const updated = categories.filter((c) => c !== deleteTarget);
-    saveDemoCollection("cats", updated);
-    setStore((s) => ({ ...s, cats: updated }));
+    const custom = loadCustomCategories().filter((c) => c !== deleteTarget);
+    saveCustomCategories(custom);
+    setCategories((prev) => prev.filter((c) => c !== deleteTarget));
     setDeleteTarget(null);
   };
 
-  const filtered = categories.filter((c) => c.toLowerCase().includes(search.toLowerCase()));
+  const filtered = categories.filter((c) =>
+    c.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
     <section className="workspace-page">
       <div className="workspace-heading">
         <div>
           <h1>Job Categories</h1>
-          <p>Manage the predefined job categories used by companies.</p>
+          <p>Manage industry categories used across companies and job listings.</p>
         </div>
-        <button className="workspace-button workspace-button-primary" onClick={() => { setNewCat(""); setModal(true); }}>
+        <button
+          className="workspace-button workspace-button-primary"
+          onClick={() => {
+            setNewCat("");
+            setModal(true);
+          }}
+        >
           + Add Category
         </button>
       </div>
@@ -68,37 +132,59 @@ function Categories() {
           placeholder="Search categories..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          style={{ marginBottom: 0, width: 280 }}
         />
-        <span className="workspace-muted">{filtered.length} categor{filtered.length !== 1 ? "ies" : "y"}</span>
+        <span className="workspace-muted">
+          {loading
+            ? "Loading..."
+            : `${filtered.length} categor${filtered.length !== 1 ? "ies" : "y"}`}
+        </span>
       </div>
 
       <div className="workspace-table-wrap">
         <table className="workspace-table">
           <thead>
             <tr>
-              <th>Category Name</th>
+              <th>Category / Industry Name</th>
+              <th>Active Jobs</th>
               <th style={{ textAlign: "right" }}>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {filtered.map((cat) => (
-              <tr key={cat}>
-                <td><strong>{cat}</strong></td>
-                <td style={{ textAlign: "right" }}>
-                  <button
-                    type="button"
-                    className="workspace-button workspace-button-danger"
-                    onClick={() => setDeleteTarget(cat)}
-                    style={{ padding: "4px 8px", minHeight: "auto", fontSize: "11px" }}
-                  >
-                    Delete
-                  </button>
+            {loading ? (
+              <tr>
+                <td colSpan="3" className="workspace-empty">
+                  Loading categories...
                 </td>
               </tr>
-            ))}
-            {filtered.length === 0 && (
-              <tr><td colSpan="2" className="workspace-empty">No categories found.</td></tr>
+            ) : (
+              <>
+                {filtered.map((cat) => (
+                  <tr key={cat}>
+                    <td>
+                      <strong>{cat}</strong>
+                    </td>
+                    <td>{jobCounts[cat] || 0}</td>
+                    <td style={{ textAlign: "right" }}>
+                      <div className="workspace-table-actions">
+                        <button
+                          type="button"
+                          className="workspace-button workspace-button-danger"
+                          onClick={() => setDeleteTarget(cat)}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+                {filtered.length === 0 && (
+                  <tr>
+                    <td colSpan="3" className="workspace-empty">
+                      No categories found.
+                    </td>
+                  </tr>
+                )}
+              </>
             )}
           </tbody>
         </table>
@@ -110,7 +196,9 @@ function Categories() {
           <form onSubmit={handleAdd} className="admin-form">
             <p className="admin-form-section">Category Details</p>
             <div className="admin-field">
-              <label className="admin-label">Category Name <span className="admin-required">*</span></label>
+              <label className="admin-label">
+                Category Name <span className="admin-required">*</span>
+              </label>
               <input
                 className="admin-input"
                 required
@@ -121,8 +209,19 @@ function Categories() {
               />
             </div>
             <div className="admin-form-actions">
-              <button type="button" className="workspace-button" onClick={() => setModal(false)}>Cancel</button>
-              <button type="submit" className="workspace-button workspace-button-primary">Create Category</button>
+              <button
+                type="button"
+                className="workspace-button"
+                onClick={() => setModal(false)}
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="workspace-button workspace-button-primary"
+              >
+                Create Category
+              </button>
             </div>
           </form>
         </Modal>
@@ -131,10 +230,24 @@ function Categories() {
       {/* Delete Confirm Modal */}
       {deleteTarget && (
         <Modal title="Confirm Delete" onClose={() => setDeleteTarget(null)}>
-          <p style={{ margin: "0 0 20px", color: "#374151" }}>Delete <strong>{deleteTarget}</strong>? This cannot be undone.</p>
+          <p style={{ margin: "0 0 20px", color: "var(--color-text-secondary)" }}>
+            Delete <strong>{deleteTarget}</strong>? This cannot be undone.
+          </p>
           <div className="workspace-actions">
-            <button type="button" className="workspace-button workspace-button-danger" onClick={confirmDelete}>Yes, Delete</button>
-            <button type="button" className="workspace-button" onClick={() => setDeleteTarget(null)}>Cancel</button>
+            <button
+              type="button"
+              className="workspace-button"
+              onClick={() => setDeleteTarget(null)}
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              className="workspace-button workspace-button-danger"
+              onClick={confirmDelete}
+            >
+              Yes, Delete
+            </button>
           </div>
         </Modal>
       )}

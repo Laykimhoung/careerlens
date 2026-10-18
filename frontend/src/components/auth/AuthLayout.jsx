@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import ThemeLanguageToggle from "../common/ThemeLanguageToggle";
 import "./AuthLayout.css";
 
 export default function AuthLayout({ children }) {
@@ -68,6 +69,10 @@ export default function AuthLayout({ children }) {
 
       {/* ── Right form panel ──────────────────────────────────────────────── */}
       <div className="auth-layout__form-panel">
+        <div style={{ position: "absolute", top: "20px", right: "24px" }}>
+          <ThemeLanguageToggle />
+        </div>
+
         {/* Mobile logo */}
         <Link to="/" className="auth-layout__mobile-logo">
           <div className="auth-layout__mobile-logo-icon">

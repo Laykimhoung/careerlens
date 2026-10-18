@@ -1,72 +1,142 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { readStore, saveDemoCollection } from '../../../services/member3DemoStore';
 import { useAuth } from "../../../hooks/useAuth";
-import './Jobs.css';
+import { getCurrentCompanyProfile } from "../../../services/companyService";
+import {
+  fetchNormalizedJobs,
+  updateJob as updateJobApi,
+  deleteJob as deleteJobApi,
+  normalizeJobRecord,
+} from "../../../services/jobService";
+import { useLanguage } from "../../../context/LanguageContext";
+import "./Jobs.css";
 
 export default function Jobs() {
   const { user } = useAuth();
-  const [store, setStore] = useState(() => readStore());
+  const { t } = useLanguage();
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("All statuses");
+  const [actionLoadingId, setActionLoadingId] = useState(null);
 
-  const companyId = user?.id === 2 ? "usr-c1" : user?.id;
-  const companyName = user?.full_name || "TechNova Cambodia";
+  const loadJobs = useCallback(async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const [compProf, allJobs] = await Promise.all([
+        getCurrentCompanyProfile(user?.id).catch(() => null),
+        fetchNormalizedJobs(),
+      ]);
+      const ownJobs = allJobs.filter(
+        (j) =>
+          (compProf?.id && Number(j.companyId) === Number(compProf.id)) ||
+          (user?.id && Number(j.companyUserId) === Number(user.id))
+      );
+      setJobs(ownJobs);
+    } catch (err) {
+      setError(err.response?.data?.detail || "Failed to load job postings.");
+    } finally {
+      setLoading(false);
+    }
+  }, [user?.id]);
 
-  // Filter jobs for this company
-  const companyJobs = (store.jobs || []).filter(j => j.cid === companyId || j.co === companyName || companyId === "usr-c1");
+  useEffect(() => {
+    loadJobs();
+  }, [loadJobs]);
 
-  const filteredJobs = companyJobs.filter((job) => {
-    const matchQ = `${job.title} ${job.dept} ${job.loc}`.toLowerCase().includes(query.toLowerCase());
-    return matchQ && (statusFilter === "All statuses" || job.status === statusFilter);
-  });
+  const filteredJobs = useMemo(() => {
+    return jobs.filter((job) => {
+      const matchQ = `${job.title} ${job.industry} ${job.location} ${(job.tags || []).join(" ")}`
+        .toLowerCase()
+        .includes(query.toLowerCase());
+      return (
+        matchQ &&
+        (statusFilter === "All statuses" || job.status === statusFilter)
+      );
+    });
+  }, [jobs, query, statusFilter]);
 
-  const updateJob = (job, changes) => {
-    const nextJobs = store.jobs.map(item => item.id === job.id ? { ...item, ...changes } : item);
-    saveDemoCollection("jobs", nextJobs);
-    setStore(s => ({ ...s, jobs: nextJobs }));
+  const handleToggleStatus = async (job, nextBackendStatus) => {
+    setActionLoadingId(job.id);
+    try {
+      const res = await updateJobApi(job.id, { status: nextBackendStatus });
+      const updated = normalizeJobRecord(res.data);
+      setJobs((prev) => prev.map((item) => (item.id === job.id ? updated : item)));
+    } catch (err) {
+      alert(err.response?.data?.detail || "Failed to update job status.");
+    } finally {
+      setActionLoadingId(null);
+    }
   };
 
-  const removeJob = (job) => {
-    const nextJobs = store.jobs.filter(item => item.id !== job.id);
-    saveDemoCollection("jobs", nextJobs);
-    setStore(s => ({ ...s, jobs: nextJobs }));
+  const handleRemoveJob = async (job) => {
+    if (!window.confirm(`Delete job posting "${job.title}"?`)) return;
+    setActionLoadingId(job.id);
+    try {
+      await deleteJobApi(job.id);
+      setJobs((prev) => prev.filter((item) => item.id !== job.id));
+    } catch (err) {
+      alert(err.response?.data?.detail || "Failed to delete job posting.");
+    } finally {
+      setActionLoadingId(null);
+    }
   };
 
   return (
     <section className="workspace-page">
       <div className="workspace-heading">
         <div>
-          <h1>Job postings</h1>
-          <p>Create roles and manage your hiring pipeline.</p>
+          <h1>{t("company.jobPostings", "Job postings")}</h1>
+          <p>{t("company.jobPostingsSub", "Create roles and manage your hiring pipeline.")}</p>
         </div>
-        <Link className="workspace-button workspace-button-primary" to="/company/jobs/create">
-          + Create a job
+        <Link
+          className="workspace-button workspace-button-primary"
+          to="/company/jobs/create"
+        >
+          {t("company.createJob", "+ Create a job")}
         </Link>
       </div>
 
-      <div className="workspace-toolbar" style={{ display: 'flex', gap: '12px', marginBottom: '20px' }}>
-        <input 
+      {error && (
+        <div
+          style={{
+            padding: "12px 16px",
+            backgroundColor: "#fef2f2",
+            color: "#b91c1c",
+            borderRadius: "8px",
+            marginBottom: "16px",
+          }}
+        >
+          {error}
+        </div>
+      )}
+
+      <div
+        className="workspace-toolbar"
+        style={{ display: "flex", gap: "12px", marginBottom: "20px" }}
+      >
+        <input
           type="search"
           className="workspace-search"
-          aria-label="Search jobs" 
-          placeholder="Search roles" 
-          value={query} 
-          onChange={(e) => setQuery(e.target.value)} 
+          aria-label="Search jobs"
+          placeholder={t("company.searchJobsPlaceholder", "Search roles, skills, or locations")}
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
           style={{ marginBottom: 0 }}
         />
-        <select 
-          className="workspace-search" 
-          style={{ width: 'auto', marginBottom: 0, paddingRight: '36px' }}
-          aria-label="Filter by status" 
-          value={statusFilter} 
+        <select
+          className="workspace-search"
+          style={{ width: "auto", marginBottom: 0, paddingRight: "36px" }}
+          aria-label="Filter by status"
+          value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
         >
-          <option>All statuses</option>
-          <option>Published</option>
-          <option>Draft</option>
-          <option>Paused</option>
-          <option>Closed</option>
+          <option value="All statuses">{t("company.allStatuses", "All statuses")}</option>
+          <option value="Published">{t("company.published", "Published")}</option>
+          <option value="Draft">{t("company.draft", "Draft")}</option>
+          <option value="Closed">{t("company.closed", "Closed")}</option>
         </select>
       </div>
 
@@ -74,54 +144,106 @@ export default function Jobs() {
         <table className="workspace-table">
           <thead>
             <tr>
-              <th>Role</th>
-              <th>Location</th>
-              <th>Status</th>
-              <th style={{ textAlign: "right" }}>Actions</th>
+              <th>{t("company.role", "Role")}</th>
+              <th>{t("company.locationSetup", "Location & Setup")}</th>
+              <th>{t("company.compensation", "Compensation")}</th>
+              <th>{t("common.status", "Status")}</th>
+              <th style={{ textAlign: "right" }}>{t("common.actions", "Actions")}</th>
             </tr>
           </thead>
           <tbody>
-            {filteredJobs.map((job) => (
-              <tr key={job.id}>
-                <td>
-                  <strong>{job.title}</strong>
-                  <div style={{ color: "#666", fontSize: "12px", marginTop: "4px" }}>
-                    {job.dept} &middot; {job.type}
-                  </div>
-                </td>
-                <td>{job.loc}</td>
-                <td>
-                  <span className={`status-badge ${job.status === "Published" ? "hired" : "rejected"}`}>
-                    {job.status}
-                  </span>
-                </td>
-                <td>
-                  <div className="workspace-table-actions">
-                    <Link className="workspace-button" to={`/company/jobs/${job.id}/edit`}>Edit</Link>
-                    <button 
-                      className="workspace-button" 
-                      type="button" 
-                      onClick={() => updateJob(job, { status: job.status === "Published" ? "Paused" : "Published" })}
-                    >
-                      {job.status === "Published" ? "Pause" : "Publish"}
-                    </button>
-                    <button 
-                      className="workspace-button workspace-button-danger" 
-                      type="button" 
-                      onClick={() => removeJob(job)}
-                    >
-                      Delete
-                    </button>
-                  </div>
+            {loading ? (
+              <tr>
+                <td
+                  colSpan="5"
+                  style={{ textAlign: "center", padding: "40px", color: "#666" }}
+                >
+                  {t("company.loadingJobs", "Loading job postings...")}
                 </td>
               </tr>
-            ))}
-            {!filteredJobs.length && (
-              <tr><td colSpan="4" style={{ textAlign: "center", padding: "40px", color: "#666" }}>No roles found.</td></tr>
+            ) : filteredJobs.length > 0 ? (
+              filteredJobs.map((job) => (
+                <tr key={job.id}>
+                  <td>
+                    <strong>{job.title}</strong>
+                    <div style={{ color: "#666", fontSize: "12px", marginTop: "4px" }}>
+                      {job.type}
+                      {job.tags?.length ? ` · ${job.tags.slice(0, 3).join(", ")}` : ""}
+                    </div>
+                  </td>
+                  <td>
+                    {job.location} &middot; {job.setup}
+                  </td>
+                  <td>{job.salary}</td>
+                  <td>
+                    <span
+                      className={`status-badge ${
+                        job.rawStatus === "PUBLISHED"
+                          ? "hired"
+                          : job.rawStatus === "DRAFT"
+                          ? "screening"
+                          : "rejected"
+                      }`}
+                    >
+                      {job.rawStatus === "PUBLISHED"
+                        ? t("company.published", "Published")
+                        : job.rawStatus === "DRAFT"
+                        ? t("company.draft", "Draft")
+                        : t("company.closed", "Closed")}
+                    </span>
+                  </td>
+                  <td>
+                    <div className="workspace-table-actions">
+                      <Link
+                        className="workspace-button"
+                        to={`/company/jobs/${job.id}/edit`}
+                      >
+                        {t("common.edit", "Edit")}
+                      </Link>
+                      {job.rawStatus === "PUBLISHED" ? (
+                        <button
+                          className="workspace-button"
+                          type="button"
+                          disabled={actionLoadingId === job.id}
+                          onClick={() => handleToggleStatus(job, "CLOSED")}
+                        >
+                          {t("company.closeJob", "Close")}
+                        </button>
+                      ) : (
+                        <button
+                          className="workspace-button"
+                          type="button"
+                          disabled={actionLoadingId === job.id}
+                          onClick={() => handleToggleStatus(job, "PUBLISHED")}
+                        >
+                          {t("company.publishJob", "Publish")}
+                        </button>
+                      )}
+                      <button
+                        className="workspace-button workspace-button-danger"
+                        type="button"
+                        disabled={actionLoadingId === job.id}
+                        onClick={() => handleRemoveJob(job)}
+                      >
+                        {t("common.delete", "Delete")}
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td
+                  colSpan="5"
+                  style={{ textAlign: "center", padding: "40px", color: "#666" }}
+                >
+                  {t("company.noJobs", "No roles found.")}
+                </td>
+              </tr>
             )}
           </tbody>
         </table>
       </div>
     </section>
   );
-}
+}

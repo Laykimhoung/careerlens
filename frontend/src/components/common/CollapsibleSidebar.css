@@ -1,0 +1,517 @@
+/* ==========================================================================
+   CollapsibleSidebar.css — Modern Hover-Expanding Icon-Only Sidebar
+   Inspired by the reference image.
+   ========================================================================== */
+
+:root {
+  --sidebar-collapsed-w: 72px;
+  --sidebar-expanded-w: 256px;
+  --sidebar-width: var(--sidebar-collapsed-w, 72px);
+  --sidebar-bg: #0F172A;
+  --sidebar-border: #1E293B;
+  --sidebar-text-muted: #94A3B8;
+  --sidebar-text-bright: #F8FAFC;
+  --sidebar-active-bg: rgba(1, 107, 251, 0.18);
+  --sidebar-active-color: #38BDF8;
+}
+
+/* ── Responsive Layout: Smoothly shift page content when sidebar expands on hover ── */
+@media (min-width: 901px) {
+  html.sidebar-is-hovered,
+  body.sidebar-is-hovered,
+  :root:has(.collapsible-sidebar:hover),
+  :root:has(.collapsible-sidebar.is-hovered) {
+    --sidebar-width: var(--sidebar-expanded-w, 256px);
+  }
+
+  html.sidebar-is-hovered .admin-main,
+  body.sidebar-is-hovered .admin-main,
+  .admin-layout:has(.collapsible-sidebar:hover) .admin-main,
+  .admin-layout:has(.collapsible-sidebar.is-hovered) .admin-main,
+  html.sidebar-is-hovered .candidate-layout__main,
+  body.sidebar-is-hovered .candidate-layout__main,
+  .candidate-layout:has(.collapsible-sidebar:hover) .candidate-layout__main,
+  .candidate-layout:has(.collapsible-sidebar.is-hovered) .candidate-layout__main,
+  html.sidebar-is-hovered .company-main,
+  body.sidebar-is-hovered .company-main,
+  .company-shell:has(.collapsible-sidebar:hover) .company-main,
+  .company-shell:has(.collapsible-sidebar.is-hovered) .company-main {
+    margin-left: var(--sidebar-expanded-w, 256px);
+  }
+}
+
+/* ── Mobile Backdrop Overlay ─────────────────────────────────────────────── */
+
+.collapsible-sidebar-overlay {
+  display: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(2px);
+  z-index: 45;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.collapsible-sidebar-overlay.is-visible {
+  display: block;
+  opacity: 1;
+}
+
+/* ── Main Sidebar Shell ──────────────────────────────────────────────────── */
+
+.collapsible-sidebar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 50;
+  width: var(--sidebar-collapsed-w, 72px);
+  height: 100vh;
+  background: var(--sidebar-bg, #0F172A);
+  border-right: 1px solid var(--sidebar-border, #1E293B);
+  display: flex;
+  flex-direction: column;
+  padding: 16px 12px;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  overflow-y: auto;
+  transition: width 0.28s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.28s ease;
+  user-select: none;
+}
+
+/* Smooth Scrollbar for Navigation */
+.collapsible-sidebar::-webkit-scrollbar {
+  width: 4px;
+}
+.collapsible-sidebar::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.2);
+  border-radius: 4px;
+}
+
+/* Hover Expansion State */
+.collapsible-sidebar:hover,
+.collapsible-sidebar.is-hovered,
+.collapsible-sidebar.is-open {
+  width: var(--sidebar-expanded-w, 256px);
+  box-shadow: 12px 0 36px -4px rgba(0, 0, 0, 0.35);
+}
+
+/* ── Brand / Logo ────────────────────────────────────────────────────────── */
+
+.collapsible-sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 4px 18px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid var(--sidebar-border, #1E293B);
+  text-decoration: none;
+  flex-shrink: 0;
+  min-height: 44px;
+}
+
+.brand-icon-wrapper {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.collapsible-sidebar-brand:hover .brand-icon-wrapper {
+  background: rgba(1, 107, 251, 0.15);
+  transform: scale(1.04);
+}
+
+.brand-icon-img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.brand-text-wrapper {
+  font-size: 1.125rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: opacity 0.2s ease 0.05s, transform 0.2s ease 0.05s;
+  pointer-events: none;
+}
+
+.brand-career {
+  color: #F8FAFC;
+}
+
+.brand-lens {
+  color: #016BFB;
+}
+
+.collapsible-sidebar:hover .brand-text-wrapper,
+.collapsible-sidebar.is-hovered .brand-text-wrapper,
+.collapsible-sidebar.is-open .brand-text-wrapper {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+/* ── Navigation Items ────────────────────────────────────────────────────── */
+
+.collapsible-sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  padding: 8px 0;
+}
+
+.nav-item-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.nav-item-link {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 44px;
+  padding: 0 4px;
+  border-radius: 12px;
+  color: var(--sidebar-text-muted, #94A3B8);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease;
+  overflow: hidden;
+}
+
+.nav-item-link:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--sidebar-text-bright, #F8FAFC);
+}
+
+/* Active Highlight — Rounded Accent Container matching reference */
+.nav-item-link.is-active {
+  background: var(--sidebar-active-bg, rgba(1, 107, 251, 0.18));
+  color: var(--sidebar-active-color, #38BDF8);
+  font-weight: 600;
+}
+
+.nav-icon-box {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 10px;
+  transition: transform 0.2s ease;
+}
+
+.nav-item-link:hover .nav-icon-box {
+  transform: scale(1.08);
+}
+
+.nav-icon-svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Label text smoothly fades in during hover expansion */
+.nav-label-text {
+  margin-left: 8px;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: opacity 0.2s ease 0.05s, transform 0.2s ease 0.05s;
+  pointer-events: none;
+}
+
+.collapsible-sidebar:hover .nav-label-text,
+.collapsible-sidebar.is-hovered .nav-label-text,
+.collapsible-sidebar.is-open .nav-label-text {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+/* Notification Badge */
+.nav-badge-pill {
+  margin-left: auto;
+  margin-right: 8px;
+  background: #EF4444;
+  color: #FFFFFF;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 999px;
+  line-height: 1.2;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.collapsible-sidebar:hover .nav-badge-pill,
+.collapsible-sidebar.is-hovered .nav-badge-pill,
+.collapsible-sidebar.is-open .nav-badge-pill {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ── Floating Tooltip (shown on desktop when collapsed) ──────────────────── */
+
+.nav-floating-tooltip {
+  position: absolute;
+  left: calc(100% + 12px);
+  top: 50%;
+  transform: translateY(-50%) translateX(-4px);
+  background: #020617;
+  color: #F8FAFC;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  border: 1px solid #1E293B;
+  transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s ease;
+  z-index: 100;
+}
+
+.nav-floating-tooltip::before {
+  content: '';
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent #020617 transparent transparent;
+}
+
+.nav-item-wrapper:hover .nav-floating-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(-50%) translateX(0);
+}
+
+/* Hide floating tooltips when the sidebar is expanded */
+.collapsible-sidebar:hover .nav-floating-tooltip,
+.collapsible-sidebar.is-hovered .nav-floating-tooltip,
+.collapsible-sidebar.is-open .nav-floating-tooltip {
+  display: none !important;
+}
+
+/* ── Footer Section ──────────────────────────────────────────────────────── */
+
+.collapsible-sidebar-foot {
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid var(--sidebar-border, #1E293B);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+/* Role Switcher Box */
+.sidebar-role-box {
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: opacity 0.2s ease, max-height 0.2s ease;
+}
+
+.collapsible-sidebar:hover .sidebar-role-box,
+.collapsible-sidebar.is-hovered .sidebar-role-box,
+.collapsible-sidebar.is-open .sidebar-role-box {
+  opacity: 1;
+  max-height: 60px;
+}
+
+.sidebar-role-label {
+  display: block;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748B;
+  margin-bottom: 4px;
+}
+
+.sidebar-role-select {
+  width: 100%;
+  height: 34px;
+  padding: 0 10px;
+  border-radius: 8px;
+  background: #1E293B;
+  border: 1px solid #334155;
+  color: #F8FAFC;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  outline: none;
+}
+
+.sidebar-role-select:focus {
+  border-color: #016BFB;
+}
+
+/* User Row */
+.sidebar-user-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+}
+
+.sidebar-user-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #016BFB 0%, #38BDF8 100%);
+  color: #FFFFFF;
+  font-weight: 700;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.sidebar-status-dot {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #10B981;
+  border: 2px solid #0F172A;
+}
+
+.sidebar-user-meta {
+  display: flex;
+  flex-direction: column;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity 0.2s ease 0.05s, transform 0.2s ease 0.05s;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.collapsible-sidebar:hover .sidebar-user-meta,
+.collapsible-sidebar.is-hovered .sidebar-user-meta,
+.collapsible-sidebar.is-open .sidebar-user-meta {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+.sidebar-user-name {
+  font-size: 0.8125rem;
+  color: #F8FAFC;
+  font-weight: 600;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.sidebar-user-role {
+  font-size: 0.6875rem;
+  color: #64748B;
+  text-transform: capitalize;
+}
+
+.sidebar-logout-btn {
+  margin-left: auto;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: #94A3B8;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+  flex-shrink: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sidebar-logout-btn:hover {
+  background: rgba(239, 68, 68, 0.15);
+  color: #EF4444;
+}
+
+.collapsible-sidebar:hover .sidebar-logout-btn,
+.collapsible-sidebar.is-hovered .sidebar-logout-btn,
+.collapsible-sidebar.is-open .sidebar-logout-btn {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ── Responsive Mobile Drawer ────────────────────────────────────────────── */
+
+@media (max-width: 900px) {
+  .collapsible-sidebar {
+    width: var(--sidebar-expanded-w, 256px);
+    transform: translateX(-100%);
+    box-shadow: none;
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .collapsible-sidebar.is-open {
+    transform: translateX(0);
+    box-shadow: 16px 0 40px rgba(0, 0, 0, 0.45);
+  }
+
+  /* Always show labels in mobile drawer */
+  .collapsible-sidebar .brand-text-wrapper,
+  .collapsible-sidebar .nav-label-text,
+  .collapsible-sidebar .sidebar-role-box,
+  .collapsible-sidebar .sidebar-user-meta,
+  .collapsible-sidebar .sidebar-logout-btn,
+  .collapsible-sidebar .nav-badge-pill {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+    max-height: none;
+  }
+
+  .nav-floating-tooltip {
+    display: none !important;
+  }
+}
+
+/* ── Reduced Motion Accessibility ────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .collapsible-sidebar,
+  .brand-text-wrapper,
+  .nav-label-text,
+  .sidebar-user-meta,
+  .sidebar-logout-btn,
+  .sidebar-role-box {
+    transition: none !important;
+  }
+}

@@ -48,8 +48,11 @@
   --color-info-bg: #e0f2fe;
 
   /* Typography */
-  --font-primary: "Plus Jakarta Sans", "Kantumruy Pro", system-ui, -apple-system, sans-serif;
-  --font-body: "Plus Jakarta Sans", "Aptos", "Segoe UI", system-ui, sans-serif;
+  --font-family-en: "Inter", "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  --font-family-kh: "Kantumruy Pro", system-ui, sans-serif;
+  --font-primary: var(--font-family-en);
+  --font-body: var(--font-family-en);
+  --font-khmer: var(--font-family-kh);
   
   --fs-body: 1rem;
   --fs-small: 0.875rem;
@@ -67,7 +70,7 @@
   --space-xl: 2rem;
   
   --container-width: 80rem; /* 1280px */
-  --sidebar-width: 248px;
+  --sidebar-width: 72px;
 
   /* Radius */
   --radius-sm: 4px;
@@ -126,4 +129,26 @@
   
   --color-info: #38bdf8;
   --color-info-bg: #082f49;
+}
+
+/* Khmer language typography — Kantumruy Pro with appropriate line-height for diacritics */
+html[lang="km"],
+:root:lang(km),
+[lang="km"] {
+  --font-primary: var(--font-family-kh);
+  --font-body: var(--font-family-kh);
+}
+
+html[lang="km"] body,
+[lang="km"] body {
+  font-family: var(--font-family-kh);
+  line-height: 1.6;
+}
+
+html[lang="km"] button,
+html[lang="km"] input,
+html[lang="km"] select,
+html[lang="km"] textarea,
+html[lang="km"] optgroup {
+  font-family: var(--font-family-kh);
 }

@@ -2,7 +2,10 @@ import axios from "axios";
 import { getToken, removeToken, removeUser } from "../utils/storage";
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL:
+    import.meta.env.VITE_API_URL ||
+    import.meta.env.VITE_API_BASE_URL ||
+    "http://127.0.0.1:8000/api",
   headers: {
     "Content-Type": "application/json",
   },
@@ -15,6 +18,9 @@ api.interceptors.request.use(
     const token = getToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+    }
+    if (typeof FormData !== "undefined" && config.data instanceof FormData) {
+      delete config.headers["Content-Type"];
     }
     return config;
   },
@@ -40,5 +46,12 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+export function extractResults(response) {
+  const data = response?.data ?? response;
+  if (Array.isArray(data)) return data;
+  if (Array.isArray(data?.results)) return data.results;
+  return [];
+}
 
 export default api;

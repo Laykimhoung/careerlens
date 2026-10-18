@@ -1,105 +1,766 @@
-.dashboard {
-  max-width: 1000px;
-  margin: 0 auto;
-}
+/* ==========================================================================
+   Candidate Dashboard.css — Modern Animated UI Inspired by Reference Image
+   ========================================================================== */
 
-.dashboard__welcome {
-  font-size: 26px;
-  font-weight: var(--fw-bold, 700);
-  color: var(--color-text-primary);
-  margin-bottom: 24px;
-  margin-top: 0;
-}
-
-/* ── Stats Grid ──────────────────────────────────────────────────────────── */
-.dashboard__stats {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-  margin-bottom: 24px;
-}
-
-@media (max-width: 1024px) {
-  .dashboard__stats {
-    grid-template-columns: repeat(2, 1fr);
+@keyframes candFadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-@media (max-width: 640px) {
-  .dashboard__stats {
-    grid-template-columns: 1fr;
+@keyframes candFloatSlow {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
   }
 }
 
-.dashboard__stat-card {
-  background-color: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  padding: 20px;
+.cand-dash-container {
   display: flex;
   flex-direction: column;
+  gap: 22px;
+  width: 100%;
+  animation: candFadeInUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-.dashboard__stat-number {
-  font-size: 24px;
+/* ── Top Header Bar ──────────────────────────────────────────────────────── */
+
+.cand-dash-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding-bottom: 4px;
+}
+
+.cand-header-user {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.cand-avatar-circle {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #016BFB 0%, #38BDF8 100%);
+  color: #FFFFFF;
+  font-size: 1.125rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(1, 107, 251, 0.28);
+  flex-shrink: 0;
+}
+
+.cand-greeting-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--color-text-primary, #0F172A);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.cand-greeting-sub {
+  margin: 3px 0 0;
+  font-size: 0.84375rem;
+  color: var(--color-text-muted, #64748B);
+}
+
+.cand-header-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cand-search-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 250px;
+}
+
+.cand-search-icon {
+  position: absolute;
+  left: 14px;
+  color: #94A3B8;
+  pointer-events: none;
+}
+
+.cand-search-input {
+  width: 100%;
+  height: 42px;
+  padding: 0 16px 0 40px;
+  border-radius: 999px;
+  background: var(--color-surface, #FFFFFF);
+  border: 1px solid var(--color-border, #E2E8F0);
+  font-family: inherit;
+  font-size: 0.84375rem;
+  color: var(--color-text-primary, #0F172A);
+  outline: none;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.cand-search-input:focus {
+  border-color: #016BFB;
+  box-shadow: 0 0 0 3px rgba(1, 107, 251, 0.14);
+}
+
+.cand-notif-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--color-surface, #FFFFFF);
+  border: 1px solid var(--color-border, #E2E8F0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748B;
+  text-decoration: none;
+  position: relative;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.cand-notif-btn:hover {
+  background: #F8FAFC;
+  transform: scale(1.05);
+  color: #0F172A;
+}
+
+.cand-notif-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #EF4444;
+  color: #FFFFFF;
+  font-size: 0.65rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #FFFFFF;
+}
+
+/* ── Error Banner ────────────────────────────────────────────────────────── */
+
+.cand-error-banner {
+  padding: 12px 18px;
+  border-radius: 12px;
+  background: #FEF2F2;
+  border: 1px solid #FECACA;
+  color: #991B1B;
+  font-size: 0.875rem;
+}
+
+/* ── Workspace 2-Column Grid ─────────────────────────────────────────────── */
+
+.cand-main-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.85fr) minmax(320px, 1fr);
+  gap: 22px;
+  align-items: flex-start;
+}
+
+.cand-left-column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+
+.cand-right-column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+
+/* ── Top 3 Cards Row ─────────────────────────────────────────────────────── */
+
+.cand-top-cards-row {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr) 195px;
+  gap: 16px;
+}
+
+/* 1. Feature Spotlight Card */
+.cand-spotlight-card {
+  background: #FFFFFF;
+  border: 1px solid var(--color-border, #E2E8F0);
+  border-radius: 18px;
+  padding: 18px 16px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 8px -2px rgba(15, 23, 42, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cand-spotlight-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px -4px rgba(15, 23, 42, 0.1);
+}
+
+.cand-spotlight-pill {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: 0.6875rem;
   font-weight: 700;
-  color: #111827;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #EFF6FF;
+  color: #0284C7;
+  border: 1px solid #DBEAFE;
+  margin-bottom: 6px;
 }
 
-.dashboard__stat-label {
-  font-size: 13px;
-  color: #6b7280;
-  margin-top: 4px;
+.cand-spotlight-illu {
+  width: 100%;
+  animation: candFloatSlow 5s ease-in-out infinite;
 }
 
-/* ── Profile Completion Bar ──────────────────────────────────────────────── */
-.dashboard__progress-card {
-  background-color: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  padding: 20px;
-  margin-bottom: 32px;
+.cand-spotlight-meta {
+  margin-top: auto;
+  padding-top: 8px;
 }
 
-.dashboard__progress-label {
-  font-size: 14px;
+.cand-stars-row {
+  display: flex;
+  gap: 3px;
+  margin-bottom: 4px;
+}
+
+.cand-spotlight-title {
+  margin: 0;
+  font-size: 1.0625rem;
+  font-weight: 800;
+  color: #0F172A;
+  line-height: 1.25;
+}
+
+.cand-spotlight-desc {
+  margin: 2px 0 10px;
+  font-size: 0.75rem;
+  color: #64748B;
+}
+
+.cand-spotlight-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 34px;
+  border-radius: 999px;
+  background: #0F172A;
+  color: #FFFFFF;
+  text-decoration: none;
+  font-size: 0.78125rem;
   font-weight: 600;
-  color: #111827;
+  transition: background 0.18s ease;
+}
+
+.cand-spotlight-btn:hover {
+  background: #016BFB;
+}
+
+/* 2. Center Overviews Bar Chart Card */
+.cand-overview-card {
+  background: #FFFFFF;
+  border: 1px solid var(--color-border, #E2E8F0);
+  border-radius: 18px;
+  padding: 20px 20px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 2px 8px -2px rgba(15, 23, 42, 0.05);
+}
+
+.cand-overview-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.cand-overview-title {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 800;
+  color: #0F172A;
+  letter-spacing: -0.01em;
+}
+
+.cand-overview-sub {
+  margin: 2px 0 0;
+  font-size: 0.75rem;
+  color: #64748B;
+}
+
+.cand-overview-badge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #FFF7ED;
+  color: #EA580C;
+  font-size: 0.71875rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.cand-overview-chart {
+  width: 100%;
+  margin-top: auto;
+}
+
+/* Tooltip */
+.candidate-dash-tooltip {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.12);
+}
+
+.candidate-dash-tooltip-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.candidate-dash-tooltip-label {
+  color: #64748B;
+}
+
+.candidate-dash-tooltip-val {
+  color: #0F172A;
+  font-weight: 700;
+}
+
+/* 3. Right Score Highlight Card */
+.cand-performer-card {
+  background: #FFFFFF;
+  border: 1px solid var(--color-border, #E2E8F0);
+  border-radius: 18px;
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 2px 8px -2px rgba(15, 23, 42, 0.05);
+  transition: transform 0.2s ease;
+}
+
+.cand-performer-card:hover {
+  transform: translateY(-3px);
+}
+
+.cand-performer-badge {
+  margin-bottom: 8px;
+}
+
+.cand-performer-name {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 800;
+  color: #0F172A;
+  line-height: 1.25;
+}
+
+.cand-performer-role {
+  font-size: 0.71875rem;
+  color: #64748B;
   margin-bottom: 12px;
 }
 
-.dashboard__progress-track {
+.cand-dual-stats {
+  display: flex;
   width: 100%;
-  height: 8px;
-  background-color: #e5e7eb;
-  border-radius: 4px;
-  overflow: hidden;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  padding: 8px 6px;
+  margin-bottom: 12px;
+  gap: 4px;
 }
 
-.dashboard__progress-fill {
-  height: 100%;
-  background-color: #0f766e; /* Teal */
-  border-radius: 4px;
+.cand-dual-stat-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* ── Sections ────────────────────────────────────────────────────────────── */
-.dashboard__section {
-  margin-bottom: 32px;
+.cand-dual-stat-item:first-child {
+  border-right: 1px solid #E2E8F0;
 }
 
-.dashboard__section-title {
-  font-size: 16px;
+.cand-dual-stat-item strong {
+  font-size: 0.9375rem;
+  font-weight: 800;
+  color: #0F172A;
+  line-height: 1.15;
+}
+
+.cand-dual-stat-item span {
+  font-size: 0.65625rem;
+  color: #64748B;
+  margin-top: 2px;
+}
+
+.cand-performer-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 34px;
+  border-radius: 999px;
+  background: #016BFB;
+  color: #FFFFFF;
+  text-decoration: none;
+  font-size: 0.78125rem;
+  font-weight: 600;
+  transition: background 0.18s ease;
+}
+
+.cand-performer-btn:hover {
+  background: #0256CA;
+}
+
+/* ── Lower Section: Recommended Jobs ─────────────────────────────────────── */
+
+.cand-jobs-panel {
+  background: #FFFFFF;
+  border: 1px solid var(--color-border, #E2E8F0);
+  border-radius: 18px;
+  padding: 22px 24px;
+  box-shadow: 0 2px 8px -2px rgba(15, 23, 42, 0.05);
+}
+
+.cand-panel-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.cand-panel-title {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 800;
+  color: #0F172A;
+}
+
+.cand-panel-sub {
+  margin: 2px 0 0;
+  font-size: 0.78125rem;
+  color: #64748B;
+}
+
+.cand-see-all {
+  font-size: 0.8125rem;
   font-weight: 700;
-  color: #111827;
-  margin-bottom: 16px;
+  color: #016BFB;
+  text-decoration: none;
 }
 
-.dashboard__empty-state {
-  background-color: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  padding: 48px 20px;
+.cand-see-all:hover {
+  text-decoration: underline;
+}
+
+.cand-job-cards-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.cand-empty-box {
+  padding: 28px 16px;
   text-align: center;
-  color: #6b7280;
-  font-size: 14px;
+  color: #64748B;
+  font-size: 0.84375rem;
+}
+
+/* ── RIGHT COLUMN: Scenic Banner & "On Process" ──────────────────────────── */
+
+.cand-banner-card {
+  box-shadow: 0 4px 16px rgba(249, 115, 22, 0.18);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: transform 0.25s ease;
+}
+
+.cand-banner-card:hover {
+  transform: translateY(-2px);
+}
+
+.cand-process-card {
+  background: #FFFFFF;
+  border: 1px solid var(--color-border, #E2E8F0);
+  border-radius: 18px;
+  padding: 22px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 0 2px 8px -2px rgba(15, 23, 42, 0.05);
+}
+
+.cand-process-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.cand-process-title {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 800;
+  color: #0F172A;
+}
+
+.cand-process-date {
+  font-size: 0.75rem;
+  color: #64748B;
+  display: block;
+  margin-top: 2px;
+}
+
+.cand-process-pill {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #F1F5F9;
+  color: #475569;
+  font-size: 0.71875rem;
+  font-weight: 700;
+}
+
+.cand-process-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cand-process-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-left: 4px solid #016BFB;
+  text-decoration: none;
+  transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.cand-process-item:hover {
+  transform: translateX(3px);
+  background: #FFFFFF;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.07);
+}
+
+.cand-process-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.cand-process-job {
+  font-size: 0.84375rem;
+  font-weight: 700;
+  color: #0F172A;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cand-process-co {
+  font-size: 0.71875rem;
+  color: #64748B;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cand-process-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.cand-status-pill {
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #0F172A;
+  white-space: nowrap;
+}
+
+.cand-arrow-icon {
+  color: #94A3B8;
+  transition: transform 0.15s ease;
+}
+
+.cand-process-item:hover .cand-arrow-icon {
+  transform: translate(2px, -2px);
+  color: #016BFB;
+}
+
+.cand-empty-process {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 12px;
+  text-align: center;
+  gap: 8px;
+  color: #64748B;
+  font-size: 0.8125rem;
+}
+
+.cand-explore-link {
+  font-size: 0.78125rem;
+  font-weight: 700;
+  color: #016BFB;
+  text-decoration: none;
+}
+
+/* Interview schedule card inside right column */
+.cand-interviews-box {
+  background: #F0FDF4;
+  border: 1px solid #BBF7D0;
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+.cand-interviews-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #166534;
+  margin-bottom: 8px;
+}
+
+.cand-interview-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.cand-interview-row strong {
+  display: block;
+  font-size: 0.8125rem;
+  color: #14532D;
+}
+
+.cand-interview-row small {
+  display: block;
+  font-size: 0.6875rem;
+  color: #16A34A;
+}
+
+.cand-time-chip {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  background: #FFFFFF;
+  padding: 3px 8px;
+  border-radius: 999px;
+  color: #15803D;
+  border: 1px solid #86EFAC;
+  white-space: nowrap;
+}
+
+.cand-process-foot {
+  border-top: 1px solid #F1F5F9;
+  padding-top: 12px;
+}
+
+.cand-view-all-apps {
+  font-size: 0.78125rem;
+  font-weight: 700;
+  color: #016BFB;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.cand-view-all-apps:hover {
+  text-decoration: underline;
+}
+
+/* ── Responsive Breakpoints ──────────────────────────────────────────────── */
+
+@media (max-width: 1280px) {
+  .cand-main-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cand-top-cards-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .cand-top-cards-row {
+    grid-template-columns: 1fr;
+  }
+
+  .cand-search-bar {
+    width: 100%;
+  }
+
+  .cand-dash-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .cand-header-controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+/* ── Reduced Motion Accessibility ────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .cand-dash-container,
+  .cand-spotlight-illu,
+  .cand-avatar-circle,
+  .cand-spotlight-card,
+  .cand-performer-card,
+  .cand-process-item {
+    animation: none !important;
+    transition: none !important;
+  }
 }

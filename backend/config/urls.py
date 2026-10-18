@@ -18,8 +18,29 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.http import JsonResponse
+
+
+def api_root_view(request):
+    return JsonResponse({
+        "project": "CareerLens REST API",
+        "status": "online",
+        "message": "Welcome to CareerLens API. The React frontend is running at http://localhost:5173/",
+        "endpoints": {
+            "admin": "/admin/",
+            "auth": "/api/auth/",
+            "jobs": "/api/jobs/",
+            "skills": "/api/skills/",
+            "saved_jobs": "/api/saved-jobs/",
+            "applications": "/api/applications/",
+            "messages": "/api/messages/",
+            "notifications": "/api/notifications/",
+        }
+    })
+
 
 urlpatterns = [
+    path('', api_root_view, name='api-root'),
     path('admin/', admin.site.urls),
     path('api/auth/', include('apps.accounts.urls')),
     path('api/', include('apps.jobs.urls')),
