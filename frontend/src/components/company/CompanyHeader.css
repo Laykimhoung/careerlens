@@ -10,6 +10,7 @@
   background: var(--color-surface, #ffffff);
   border-bottom: 1px solid var(--color-border, #dfe7e1);
   color: var(--color-text-primary, #0f172a);
+  transition: background-color 0.25s ease, border-color 0.25s ease;
 }
 
 .company-topbar-info strong {
@@ -45,6 +46,26 @@
 
 .company-menu-btn:hover {
   background: var(--color-surface-hover, #f1f5f9);
+}
+
+/* ── Dark Mode Overrides ── */
+[data-theme="dark"] .company-topbar {
+  background: rgba(9, 14, 34, 0.92) !important;
+  backdrop-filter: blur(16px) !important;
+  border-bottom-color: rgba(99, 142, 203, 0.25) !important;
+}
+
+[data-theme="dark"] .company-topbar-info strong {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .company-topbar-info small {
+  color: #f1f5f9 !important;
+}
+
+[data-theme="dark"] .company-menu-btn {
+  color: #ffffff !important;
+  border-color: rgba(99, 142, 203, 0.35) !important;
 }
 
 @media (max-width: 900px) {

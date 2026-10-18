@@ -1,1 +1,23 @@
-/* CSS for JobCard */
+/* CSS for JobCard in Company */
+
+.company-jobs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+[data-theme="dark"] .workspace-card h3 {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .workspace-card p {
+  color: #f1f5f9 !important;
+}
+
+[data-theme="dark"] .workspace-card .workspace-row span {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .workspace-card .workspace-row .workspace-muted {
+  color: #cbd5e1 !important;
+}

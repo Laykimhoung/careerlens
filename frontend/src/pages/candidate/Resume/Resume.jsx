@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useAuth } from "../../../hooks/useAuth";
+import { useLanguage } from "../../../context/LanguageContext";
 import Button from "../../../components/common/Button";
 import {
   getCurrentCandidateProfile,
@@ -11,6 +12,7 @@ import "./Resume.css";
 
 export default function CandidateResume() {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const fileInputRef = useRef(null);
 
   const [profile, setProfile] = useState(null);
@@ -184,8 +186,9 @@ export default function CandidateResume() {
           style={{
             padding: "12px 16px",
             borderRadius: "8px",
-            backgroundColor: statusMsg.type === "error" ? "#fef2f2" : "#f0fdf4",
-            color: statusMsg.type === "error" ? "#b91c1c" : "#15803d",
+            backgroundColor: statusMsg.type === "error" ? "rgba(239, 68, 68, 0.15)" : "rgba(16, 185, 129, 0.15)",
+            color: statusMsg.type === "error" ? "#ef4444" : "#10b981",
+            border: `1px solid ${statusMsg.type === "error" ? "rgba(239, 68, 68, 0.3)" : "rgba(16, 185, 129, 0.3)"}`,
             fontSize: "14px",
           }}
         >
@@ -196,7 +199,7 @@ export default function CandidateResume() {
       {/* Upload Section */}
       <div className="resume-section">
         <h2 className="resume-section__title" style={{ marginBottom: "24px" }}>
-          CV / Resume
+          {t("candidate.resumeBuilder")}
         </h2>
 
         <input
@@ -208,7 +211,7 @@ export default function CandidateResume() {
         />
 
         {loading ? (
-          <p style={{ color: "#64748b" }}>Loading resume status...</p>
+          <p style={{ color: "var(--color-text-secondary, #64748b)" }}>{t("common.loading")}</p>
         ) : resumeUrl ? (
           <div className="resume-file">
             <div className="resume-file__info">
@@ -228,13 +231,13 @@ export default function CandidateResume() {
               </svg>
               <div className="resume-file__details">
                 <p>{resumeFileName}</p>
-                <span>Stored in your candidate profile</span>
+                <span>{t("candidate.currentResumeDoc")}</span>
               </div>
             </div>
             <div className="resume-file__actions">
               <a href={resumeUrl} target="_blank" rel="noreferrer">
                 <Button variant="outline" size="sm" type="button">
-                  View / Download
+                  {t("candidate.downloadResume")}
                 </Button>
               </a>
               <Button
@@ -244,7 +247,7 @@ export default function CandidateResume() {
                 onClick={() => fileInputRef.current?.click()}
                 disabled={uploading}
               >
-                Replace
+                {t("candidate.updateResume")}
               </Button>
               <Button
                 variant="danger"
@@ -253,7 +256,7 @@ export default function CandidateResume() {
                 onClick={handleDeleteResume}
                 disabled={uploading}
               >
-                Delete
+                {t("candidate.deleteResume")}
               </Button>
             </div>
           </div>
@@ -277,7 +280,7 @@ export default function CandidateResume() {
               />
             </svg>
             <p className="resume-upload__text">
-              <strong>{uploading ? "Uploading..." : "Click to upload"}</strong> or drag and drop
+              <strong>{uploading ? t("common.loading") : t("candidate.uploadNewResume")}</strong>
             </p>
             <p className="resume-upload__hint">PDF, DOC, DOCX up to 5MB</p>
           </div>
@@ -287,7 +290,7 @@ export default function CandidateResume() {
       {/* Skills & Competencies Section */}
       <div className="resume-section">
         <div className="resume-section__header">
-          <h2 className="resume-section__title">Skills & Proficiencies</h2>
+          <h2 className="resume-section__title">{t("candidate.skillsLabel")} & {t("candidate.proficiency")}</h2>
         </div>
 
         <form
@@ -296,13 +299,15 @@ export default function CandidateResume() {
         >
           <input
             type="text"
-            placeholder="Add skill (e.g. React, Python, SQL)"
+            placeholder={t("candidate.addSkill") + " (e.g. React, Python, SQL)"}
             value={newSkillName}
             onChange={(e) => setNewSkillName(e.target.value)}
             style={{
               flex: "1 1 220px",
               padding: "9px 12px",
-              border: "1px solid #cbd5e1",
+              border: "1px solid var(--color-border, #cbd5e1)",
+              backgroundColor: "var(--color-surface, #fff)",
+              color: "var(--color-text, #0f172a)",
               borderRadius: "6px",
               fontSize: "14px",
             }}
@@ -312,19 +317,20 @@ export default function CandidateResume() {
             onChange={(e) => setNewSkillProficiency(e.target.value)}
             style={{
               padding: "9px 12px",
-              border: "1px solid #cbd5e1",
+              border: "1px solid var(--color-border, #cbd5e1)",
               borderRadius: "6px",
               fontSize: "14px",
-              background: "#fff",
+              background: "var(--color-surface, #fff)",
+              color: "var(--color-text, #0f172a)",
             }}
           >
-            <option value="BEGINNER">Beginner</option>
-            <option value="INTERMEDIATE">Intermediate</option>
+            <option value="BEGINNER">{t("candidate.beginner")}</option>
+            <option value="INTERMEDIATE">{t("candidate.intermediate")}</option>
             <option value="ADVANCED">Advanced</option>
-            <option value="EXPERT">Expert</option>
+            <option value="EXPERT">{t("candidate.expert")}</option>
           </select>
-          <Button type="submit" variant="teal" size="sm" disabled={savingSkills}>
-            + Add Skill
+          <Button type="submit" variant="primary" size="sm" disabled={savingSkills}>
+            + {t("candidate.addSkill")}
           </Button>
         </form>
 
@@ -338,15 +344,15 @@ export default function CandidateResume() {
                   alignItems: "center",
                   gap: "8px",
                   padding: "6px 12px",
-                  backgroundColor: "#f1f5f9",
-                  border: "1px solid #e2e8f0",
+                  backgroundColor: "var(--color-surface-hover, #f1f5f9)",
+                  border: "1px solid var(--color-border, #e2e8f0)",
                   borderRadius: "999px",
                   fontSize: "13px",
-                  color: "#0f172a",
+                  color: "var(--color-text, #0f172a)",
                 }}
               >
                 <strong>{s.name}</strong>
-                <span style={{ color: "#64748b", fontSize: "11px" }}>({s.proficiency})</span>
+                <span style={{ color: "var(--color-text-secondary, #64748b)", fontSize: "11px" }}>({s.proficiency})</span>
                 <button
                   type="button"
                   onClick={() => handleRemoveSkill(s.name)}
@@ -368,8 +374,8 @@ export default function CandidateResume() {
             ))}
           </div>
         ) : (
-          <p style={{ color: "#64748b", fontSize: "14px" }}>
-            No skills added yet. Add your technical and soft skills above.
+          <p style={{ color: "var(--color-text-secondary, #64748b)", fontSize: "14px" }}>
+            {t("common.noData")}
           </p>
         )}
       </div>
@@ -377,10 +383,10 @@ export default function CandidateResume() {
       {/* Education & Summary Section */}
       <div className="resume-section">
         <div className="resume-section__header">
-          <h2 className="resume-section__title">Education & Professional Summary</h2>
+          <h2 className="resume-section__title">{t("candidate.educationSummary")}</h2>
           {!editingEdu && (
             <Button variant="outline" size="sm" onClick={() => setEditingEdu(true)}>
-              Edit Education
+              {t("candidate.addEducation")} / {t("common.edit")}
             </Button>
           )}
         </div>
@@ -390,59 +396,59 @@ export default function CandidateResume() {
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "12px" }}>
               <div>
                 <label style={{ display: "block", fontSize: "13px", fontWeight: 600, marginBottom: "4px" }}>
-                  Degree / Major
+                  {t("candidate.majorField")}
                 </label>
                 <input
                   type="text"
                   value={eduForm.major}
                   onChange={(e) => setEduForm({ ...eduForm, major: e.target.value })}
                   placeholder="e.g. Bachelor of Computer Science"
-                  style={{ width: "100%", padding: "9px 12px", border: "1px solid #cbd5e1", borderRadius: "6px" }}
+                  style={{ width: "100%", padding: "9px 12px", border: "1px solid var(--color-border, #cbd5e1)", backgroundColor: "var(--color-surface, #fff)", color: "var(--color-text, #0f172a)", borderRadius: "6px" }}
                 />
               </div>
               <div>
                 <label style={{ display: "block", fontSize: "13px", fontWeight: 600, marginBottom: "4px" }}>
-                  University / School
+                  {t("candidate.universityInstitution")}
                 </label>
                 <input
                   type="text"
                   value={eduForm.university}
                   onChange={(e) => setEduForm({ ...eduForm, university: e.target.value })}
                   placeholder="e.g. Royal University of Phnom Penh"
-                  style={{ width: "100%", padding: "9px 12px", border: "1px solid #cbd5e1", borderRadius: "6px" }}
+                  style={{ width: "100%", padding: "9px 12px", border: "1px solid var(--color-border, #cbd5e1)", backgroundColor: "var(--color-surface, #fff)", color: "var(--color-text, #0f172a)", borderRadius: "6px" }}
                 />
               </div>
               <div>
                 <label style={{ display: "block", fontSize: "13px", fontWeight: 600, marginBottom: "4px" }}>
-                  Graduation Year
+                  {t("candidate.graduationYear")}
                 </label>
                 <input
                   type="number"
                   value={eduForm.graduation_year}
                   onChange={(e) => setEduForm({ ...eduForm, graduation_year: e.target.value })}
                   placeholder="e.g. 2026"
-                  style={{ width: "100%", padding: "9px 12px", border: "1px solid #cbd5e1", borderRadius: "6px" }}
+                  style={{ width: "100%", padding: "9px 12px", border: "1px solid var(--color-border, #cbd5e1)", backgroundColor: "var(--color-surface, #fff)", color: "var(--color-text, #0f172a)", borderRadius: "6px" }}
                 />
               </div>
             </div>
             <div>
               <label style={{ display: "block", fontSize: "13px", fontWeight: 600, marginBottom: "4px" }}>
-                Experience & Academic Summary
+                {t("candidate.experience")} & {t("candidate.aboutMe")}
               </label>
               <textarea
                 rows={4}
                 value={eduForm.bio}
                 onChange={(e) => setEduForm({ ...eduForm, bio: e.target.value })}
                 placeholder="Summarize your work experience, projects, and academic achievements..."
-                style={{ width: "100%", padding: "9px 12px", border: "1px solid #cbd5e1", borderRadius: "6px" }}
+                style={{ width: "100%", padding: "9px 12px", border: "1px solid var(--color-border, #cbd5e1)", backgroundColor: "var(--color-surface, #fff)", color: "var(--color-text, #0f172a)", borderRadius: "6px" }}
               />
             </div>
             <div style={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}>
               <Button type="button" variant="outline" size="sm" onClick={() => setEditingEdu(false)}>
-                Cancel
+                {t("common.cancel")}
               </Button>
-              <Button type="submit" variant="teal" size="sm" loading={savingEdu}>
-                Save Education
+              <Button type="submit" variant="primary" size="sm" loading={savingEdu}>
+                {t("common.save")}
               </Button>
             </div>
           </form>
@@ -452,18 +458,18 @@ export default function CandidateResume() {
               <div className="timeline-item__header">
                 <div>
                   <h3 className="timeline-item__title">
-                    {profile?.major || "Major / Degree not specified"}
+                    {profile?.major || t("common.noData")}
                   </h3>
                   <p className="timeline-item__subtitle">
-                    {profile?.university || "University not specified"}
+                    {profile?.university || t("candidate.institution")}
                   </p>
                 </div>
                 <span className="timeline-item__date">
-                  {profile?.graduation_year ? `Class of ${profile.graduation_year}` : "Ongoing"}
+                  {profile?.graduation_year ? `${profile.graduation_year}` : ""}
                 </span>
               </div>
               <p className="timeline-item__desc">
-                {profile?.bio || "No professional summary added yet. Click 'Edit Education' to add your academic and work experience summary."}
+                {profile?.bio || t("common.noData")}
               </p>
             </div>
           </div>

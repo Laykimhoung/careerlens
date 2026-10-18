@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { useLanguage } from "../../../context/LanguageContext";
 import { extractResults } from "../../../services/api";
 import {
   getAdminNotifications,
@@ -8,6 +9,7 @@ import {
 import "./Notifications.css";
 
 function Notifications() {
+  const { t } = useLanguage();
   const [notifs, setNotifs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -83,8 +85,8 @@ function Notifications() {
     <section className="workspace-page">
       <div className="workspace-heading">
         <div>
-          <h1>Notifications</h1>
-          <p>System-wide alerts for users across all roles.</p>
+          <h1>{t("nav.notifications", "Notifications")}</h1>
+          <p>{t("admin.notificationsDesc", "System-wide alerts for users across all roles.")}</p>
         </div>
         <div
           style={{
@@ -96,7 +98,7 @@ function Notifications() {
         >
           {unreadCount > 0 && (
             <span className="workspace-status workspace-status-danger">
-              {unreadCount} unread
+              {unreadCount} {t("admin.unread", "unread")}
             </span>
           )}
           {unreadCount > 0 && (
@@ -105,7 +107,7 @@ function Notifications() {
               className="workspace-button"
               onClick={markAllRead}
             >
-              Mark all read
+              {t("admin.markAllAsRead", "Mark All as Read")}
             </button>
           )}
         </div>
@@ -129,10 +131,12 @@ function Notifications() {
 
       {loading ? (
         <div className="workspace-panel workspace-empty">
-          Loading notifications from database...
+          {t("admin.loadingNotifications", "Loading notifications from database...")}
         </div>
       ) : notifs.length === 0 ? (
-        <div className="workspace-panel workspace-empty">No notifications.</div>
+        <div className="workspace-panel workspace-empty">
+          {t("admin.noNotifications", "No system notifications logged yet.")}
+        </div>
       ) : (
         <div className="workspace-list">
           {notifs.map((notif) => (
@@ -151,7 +155,7 @@ function Notifications() {
                 <div>
                   <p className="notif-message">{notif.text}</p>
                   <p className="notif-meta">
-                    Recipient: <strong>{notif.recipientName}</strong>
+                    {t("admin.recipient", "Recipient")}: <strong>{notif.recipientName}</strong>
                     {" • "}
                     {notif.t}
                   </p>
@@ -164,7 +168,7 @@ function Notifications() {
                     className="workspace-button"
                     onClick={() => markRead(notif.id)}
                   >
-                    Mark read
+                    {t("admin.markRead", "Mark Read")}
                   </button>
                 )}
                 <button
@@ -172,7 +176,7 @@ function Notifications() {
                   className="workspace-button workspace-button-danger"
                   onClick={() => deleteNotif(notif.id)}
                 >
-                  Delete
+                  {t("common.delete", "Delete")}
                 </button>
               </div>
             </div>

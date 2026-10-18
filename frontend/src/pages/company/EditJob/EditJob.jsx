@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { useLanguage } from "../../../context/LanguageContext";
 import JobForm from "../../../components/company/JobForm";
 import {
   getJobById,
@@ -14,6 +15,7 @@ import "./EditJob.css";
 export default function EditJob() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -76,22 +78,23 @@ export default function EditJob() {
     <section className="workspace-page">
       {loading ? (
         <div className="workspace-panel">
-          <p className="workspace-muted">Loading job details...</p>
+          <p className="workspace-muted">{t("common.loading")}</p>
         </div>
       ) : job ? (
         <>
           <div className="workspace-heading">
             <div>
-              <h1>Edit job</h1>
-              <p>Update the role description and posting details.</p>
+              <h1>{t("company.editJobTitle")}</h1>
+              <p>{t("company.editJobSub")}</p>
             </div>
           </div>
           {error && (
             <div
               style={{
                 padding: "12px 16px",
-                backgroundColor: "#fef2f2",
-                color: "#b91c1c",
+                backgroundColor: "rgba(239, 68, 68, 0.15)",
+                color: "#ef4444",
+                border: "1px solid rgba(239, 68, 68, 0.3)",
                 borderRadius: "8px",
                 marginBottom: "16px",
               }}
@@ -102,18 +105,18 @@ export default function EditJob() {
           <JobForm
             initialJob={job}
             onSubmit={handleUpdateJob}
-            submitLabel="Save changes"
+            submitLabel={t("company.updateJobPostingBtn")}
             loading={saving}
           />
         </>
       ) : (
         <div className="workspace-panel">
-          <h1>Job not found</h1>
+          <h1>{t("candidate.jobNotFound")}</h1>
           <p className="workspace-muted">
-            {error || "This role may have been removed."}
+            {error || t("candidate.jobNotFoundDesc")}
           </p>
           <Link className="workspace-button" to="/company/jobs">
-            Back to jobs
+            {t("company.manageJobs")}
           </Link>
         </div>
       )}

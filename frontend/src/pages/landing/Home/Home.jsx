@@ -1,9 +1,12 @@
 import { Link } from "react-router-dom";
+import { useLanguage } from "../../../context/LanguageContext";
 import GhostFibers from "../../../components/ui/GhostFibers";
 import ThemeLanguageToggle from "../../../components/common/ThemeLanguageToggle";
 import "./Home.css";
 
 export default function Home() {
+  const { t } = useLanguage();
+
   return (
     <div className="landing-wrapper">
       {/* Background Animated Fibers (Fixed Full Page) */}
@@ -29,16 +32,16 @@ export default function Home() {
             </Link>
             
             <nav className="landing-nav">
-              <Link to="/login">Find Jobs</Link>
-              <a href="#companies">For Companies</a>
-              <a href="#how">How It Works</a>
-              <a href="#about">About</a>
+              <Link to="/login">{t("common.nav.findJobs")}</Link>
+              <a href="#companies">{t("common.forCompanies")}</a>
+              <a href="#how">{t("common.howItWorks")}</a>
+              <a href="#about">{t("common.about")}</a>
             </nav>
 
             <div className="landing-actions">
               <ThemeLanguageToggle />
-              <Link to="/login" className="landing-btn b2">Log In</Link>
-              <Link to="/register" className="landing-btn">Get Started</Link>
+              <Link to="/login" className="landing-btn b2">{t("auth.signIn")}</Link>
+              <Link to="/register" className="landing-btn">{t("common.getStarted")}</Link>
             </div>
           </div>
         </header>
@@ -47,41 +50,41 @@ export default function Home() {
           {/* Hero Section */}
           <section className="landing-hero">
             <div>
-              <p className="landing-hero__tag">Connect. Apply. Get Hired.</p>
-              <h1 className="landing-hero__title">Your next opportunity starts here.</h1>
+              <p className="landing-hero__tag">{t("common.landingHeroTag")}</p>
+              <h1 className="landing-hero__title">{t("common.landingHeroTitle")}</h1>
               <p className="landing-hero__desc">
-                CareerLens connects students and job seekers with companies while making the entire recruitment journey easier to manage.
+                {t("common.landingHeroDesc")}
               </p>
               <div className="landing-hero__cta">
-                <Link to="/register" className="landing-btn">Find a Job</Link>
-                <Link to="/register" className="landing-btn b2">Hire Talent</Link>
+                <Link to="/register" className="landing-btn">{t("common.browseJobs")}</Link>
+                <Link to="/register" className="landing-btn b2">{t("common.hireTalent")}</Link>
               </div>
             </div>
 
             <div className="landing-card">
-              <p className="landing-journey__title">THE RECRUITMENT JOURNEY</p>
+              <p className="landing-journey__title">{t("common.recruitmentJourney")}</p>
               
               <div className="landing-journey__step">
                 <span className="landing-journey__num">1</span>
-                <span className="landing-journey__text">Student</span>
+                <span className="landing-journey__text">{t("common.student")}</span>
               </div>
               <div className="landing-journey__line"></div>
               
               <div className="landing-journey__step">
                 <span className="landing-journey__num">2</span>
-                <span className="landing-journey__text">Application</span>
+                <span className="landing-journey__text">{t("common.application")}</span>
               </div>
               <div className="landing-journey__line"></div>
 
               <div className="landing-journey__step">
                 <span className="landing-journey__num">3</span>
-                <span className="landing-journey__text">Interview</span>
+                <span className="landing-journey__text">{t("common.interview")}</span>
               </div>
               <div className="landing-journey__line"></div>
 
               <div className="landing-journey__step">
                 <span className="landing-journey__num">4</span>
-                <span className="landing-journey__text">Job</span>
+                <span className="landing-journey__text">{t("candidate.jobTitle")}</span>
               </div>
             </div>
           </section>
@@ -89,19 +92,19 @@ export default function Home() {
           {/* Features Section */}
           <section className="landing-section">
             <div className="landing-section__inner">
-              <h2 className="landing-section__title">One platform for the entire hiring journey.</h2>
+              <h2 className="landing-section__title">{t("common.landingPlatformTitle")}</h2>
               <div className="landing-grid-3">
                 <div className="landing-card">
-                  <h3 className="landing-feat__title">For Students</h3>
-                  <p className="landing-feat__desc">Discover opportunities, build your profile, apply for jobs and track your recruitment journey.</p>
+                  <h3 className="landing-feat__title">{t("common.nav.candidates")}</h3>
+                  <p className="landing-feat__desc">{t("common.forStudentsDesc")}</p>
                 </div>
                 <div className="landing-card">
-                  <h3 className="landing-feat__title">For Companies</h3>
-                  <p className="landing-feat__desc">Post jobs, manage applicants, schedule interviews and hire talent through a complete ATS workflow.</p>
+                  <h3 className="landing-feat__title">{t("common.forCompanies")}</h3>
+                  <p className="landing-feat__desc">{t("common.forCompaniesDesc")}</p>
                 </div>
                 <div className="landing-card">
-                  <h3 className="landing-feat__title">For Administrators</h3>
-                  <p className="landing-feat__desc">Manage the platform, users, companies, jobs and recruitment activity.</p>
+                  <h3 className="landing-feat__title">{t("common.platformAdmin")}</h3>
+                  <p className="landing-feat__desc">{t("common.forAdminsDesc")}</p>
                 </div>
               </div>
             </div>
@@ -110,26 +113,26 @@ export default function Home() {
           {/* How it works Section */}
           <section className="landing-section landing-section--gray" id="how">
             <div className="landing-section__inner">
-              <h2 className="landing-section__title">How it works</h2>
+              <h2 className="landing-section__title">{t("common.howItWorks")}</h2>
               <div className="landing-grid-4">
                 <div className="landing-card">
                   <div className="landing-step__num">01</div>
-                  <h3 className="landing-feat__title">Build Your Profile</h3>
+                  <h3 className="landing-feat__title">{t("candidate.completeProfile")}</h3>
                   <p className="landing-feat__desc">Create your professional profile and showcase your skills.</p>
                 </div>
                 <div className="landing-card">
                   <div className="landing-step__num">02</div>
-                  <h3 className="landing-feat__title">Discover Opportunities</h3>
+                  <h3 className="landing-feat__title">{t("candidate.exploreCareer")}</h3>
                   <p className="landing-feat__desc">Find jobs that match your interests and experience.</p>
                 </div>
                 <div className="landing-card">
                   <div className="landing-step__num">03</div>
-                  <h3 className="landing-feat__title">Apply & Connect</h3>
+                  <h3 className="landing-feat__title">{t("candidate.applyJob")}</h3>
                   <p className="landing-feat__desc">Submit applications and communicate with recruiters.</p>
                 </div>
                 <div className="landing-card">
                   <div className="landing-step__num">04</div>
-                  <h3 className="landing-feat__title">Get Hired</h3>
+                  <h3 className="landing-feat__title">{t("candidate.upcomingInterviews")}</h3>
                   <p className="landing-feat__desc">Track interviews, offers and your path to employment.</p>
                 </div>
               </div>
@@ -144,22 +147,22 @@ export default function Home() {
                 <p className="text-muted" style={{ marginBottom: "24px", fontSize: "15px" }}>Job posting, applicant tracking, interview scheduling, messaging and offers in one ATS pipeline.</p>
                 
                 <div className="landing-pipeline">
-                  <span className="landing-pipeline__step">Applied</span>
+                  <span className="landing-pipeline__step">{t("common.applied")}</span>
                   <span className="landing-pipeline__arrow">&rarr;</span>
-                  <span className="landing-pipeline__step">Screening</span>
+                  <span className="landing-pipeline__step">{t("company.inReview")}</span>
                   <span className="landing-pipeline__arrow">&rarr;</span>
-                  <span className="landing-pipeline__step">Shortlisted</span>
+                  <span className="landing-pipeline__step">{t("company.shortlistApplication")}</span>
                   <span className="landing-pipeline__arrow">&rarr;</span>
-                  <span className="landing-pipeline__step">Interview</span>
+                  <span className="landing-pipeline__step">{t("common.interview")}</span>
                   <span className="landing-pipeline__arrow">&rarr;</span>
-                  <span className="landing-pipeline__step">Offer</span>
+                  <span className="landing-pipeline__step">{t("common.offer")}</span>
                   <span className="landing-pipeline__arrow">&rarr;</span>
-                  <span className="landing-pipeline__step">Hired</span>
+                  <span className="landing-pipeline__step">{t("company.totalHired")}</span>
                 </div>
 
                 <div style={{ display: "flex", gap: "12px", marginTop: "32px" }}>
-                  <Link to="/register" className="landing-btn">Start Hiring</Link>
-                  <Link to="/login" className="landing-btn b2">Start Finding Jobs</Link>
+                  <Link to="/register" className="landing-btn">{t("common.hireTalent")}</Link>
+                  <Link to="/login" className="landing-btn b2">{t("common.browseJobs")}</Link>
                 </div>
               </div>
 
@@ -167,36 +170,36 @@ export default function Home() {
               <div className="landing-grid-4" style={{ marginBottom: "16px" }}>
                 <div className="landing-card" style={{ textAlign: "center", padding: "32px 16px" }}>
                   <h3 className="text-primary" style={{ fontSize: "32px", fontWeight: "800", marginBottom: "8px" }}>10K+</h3>
-                  <p className="text-muted" style={{ fontSize: "14px" }}>Students</p>
+                  <p className="text-muted" style={{ fontSize: "14px" }}>{t("common.nav.candidates")}</p>
                 </div>
                 <div className="landing-card" style={{ textAlign: "center", padding: "32px 16px" }}>
                   <h3 className="text-primary" style={{ fontSize: "32px", fontWeight: "800", marginBottom: "8px" }}>500+</h3>
-                  <p className="text-muted" style={{ fontSize: "14px" }}>Companies</p>
+                  <p className="text-muted" style={{ fontSize: "14px" }}>{t("common.nav.companies")}</p>
                 </div>
                 <div className="landing-card" style={{ textAlign: "center", padding: "32px 16px" }}>
                   <h3 className="text-primary" style={{ fontSize: "32px", fontWeight: "800", marginBottom: "8px" }}>2K+</h3>
-                  <p className="text-muted" style={{ fontSize: "14px" }}>Jobs</p>
+                  <p className="text-muted" style={{ fontSize: "14px" }}>{t("common.nav.jobs")}</p>
                 </div>
                 <div className="landing-card" style={{ textAlign: "center", padding: "32px 16px" }}>
                   <h3 className="text-primary" style={{ fontSize: "32px", fontWeight: "800", marginBottom: "8px" }}>1K+</h3>
-                  <p className="text-muted" style={{ fontSize: "14px" }}>Successful Connections</p>
+                  <p className="text-muted" style={{ fontSize: "14px" }}>{t("company.totalHired")}</p>
                 </div>
               </div>
               <p className="text-muted" style={{ textAlign: "center", fontSize: "12px", marginBottom: "64px" }}>Demo figures only.</p>
 
               {/* Testimonials */}
-              <p style={{ fontSize: "12px", color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "16px", fontWeight: "600" }}>Demonstration testimonials</p>
+              <p style={{ fontSize: "12px", color: "var(--color-text-secondary, #64748b)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "16px", fontWeight: "600" }}>Demonstration testimonials</p>
               <div className="landing-grid-3">
                 <div className="landing-card" style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-                  <p style={{ fontSize: "15px", lineHeight: "1.5", marginBottom: "24px" }}>"CareerLens made it much easier to keep track of my applications and interviews."</p>
+                  <p style={{ fontSize: "15px", lineHeight: "1.5", marginBottom: "24px" }}>&quot;CareerLens made it much easier to keep track of my applications and interviews.&quot;</p>
                   <p className="text-muted" style={{ fontSize: "14px", fontWeight: "500" }}>Student (demo)</p>
                 </div>
                 <div className="landing-card" style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-                  <p style={{ fontSize: "15px", lineHeight: "1.5", marginBottom: "24px" }}>"We can manage the entire candidate pipeline from one place."</p>
+                  <p style={{ fontSize: "15px", lineHeight: "1.5", marginBottom: "24px" }}>&quot;We can manage the entire candidate pipeline from one place.&quot;</p>
                   <p className="text-muted" style={{ fontSize: "14px", fontWeight: "500" }}>Recruiter (demo)</p>
                 </div>
                 <div className="landing-card" style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-                  <p style={{ fontSize: "15px", lineHeight: "1.5", marginBottom: "24px" }}>"It provides a clear view of recruitment activity across the platform."</p>
+                  <p style={{ fontSize: "15px", lineHeight: "1.5", marginBottom: "24px" }}>&quot;It provides a clear view of recruitment activity across the platform.&quot;</p>
                   <p className="text-muted" style={{ fontSize: "14px", fontWeight: "500" }}>University Admin (demo)</p>
                 </div>
               </div>
@@ -205,11 +208,11 @@ export default function Home() {
 
           <section className="landing-footer-cta">
             <div className="landing-footer-cta__inner">
-              <h2 style={{ fontSize: "32px", fontWeight: "700", marginBottom: "12px" }}>Ready for your next opportunity?</h2>
-              <p className="text-muted" style={{ fontSize: "16px", marginBottom: "32px" }}>Connect. Apply. Get Hired.</p>
+              <h2 style={{ fontSize: "32px", fontWeight: "700", marginBottom: "12px" }}>{t("common.readyNextOpp")}</h2>
+              <p className="text-muted" style={{ fontSize: "16px", marginBottom: "32px" }}>{t("common.landingHeroTag")}</p>
               <div className="landing-footer-cta__actions">
-                <Link to="/register" className="landing-btn b-white">Find a Job</Link>
-                <Link to="/register" className="landing-btn b-white">Hire Talent</Link>
+                <Link to="/register" className="landing-btn b-white">{t("common.browseJobs")}</Link>
+                <Link to="/register" className="landing-btn b-white">{t("common.hireTalent")}</Link>
               </div>
             </div>
           </section>
@@ -221,17 +224,17 @@ export default function Home() {
               <Link to="/" className="landing-logo">
                 Career<span>Lens</span>
               </Link>
-              <p>Connect. Apply. Get Hired.</p>
+              <p>{t("common.landingHeroTag")}</p>
             </div>
             <div className="landing-footer__links">
               <div className="landing-footer__col">
                 <h4>Product</h4>
-                <Link to="/login">Find Jobs</Link>
-                <Link to="/login">For Companies</Link>
+                <Link to="/login">{t("common.nav.findJobs")}</Link>
+                <Link to="/login">{t("common.forCompanies")}</Link>
               </div>
               <div className="landing-footer__col">
                 <h4>Company</h4>
-                <Link to="/">About</Link>
+                <Link to="/">{t("common.about")}</Link>
                 <Link to="/">Contact</Link>
               </div>
               <div className="landing-footer__col">
