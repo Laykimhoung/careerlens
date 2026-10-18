@@ -23,28 +23,63 @@ export const LanguageProvider = ({ children }) => {
   }, [language]);
 
   /**
-   * t(key) — translates a key.
+   * t(key, fallbackOrParams, maybeParams) — translates a key.
    * Supports:
-   *  - Dot-notation: "admin.title", "nav.dashboard", "common.save"
+   *  - Dot-notation: "admin.title", "nav.dashboard", "common.interview"
    *  - Direct key: "welcome", "save", "title"
-   * Falls back to English, then to the key string.
+   *  - Parameter interpolation: { count: 5 } replaces {{count}}
+   *  - Fallback string if key not found
    */
-  const t = useCallback((key) => {
+  const t = useCallback((key, fallbackOrParams, maybeParams) => {
     if (!key) return '';
-    const currentDict = dictionaries[language] || dictionaries.en;
-    if (currentDict && currentDict[key] !== undefined) {
-      return currentDict[key];
+
+    const fallback = typeof fallbackOrParams === 'string' ? fallbackOrParams : '';
+    const params = typeof fallbackOrParams === 'object' && fallbackOrParams !== null
+      ? fallbackOrParams
+      : (typeof maybeParams === 'object' && maybeParams !== null ? maybeParams : null);
+
+    const lookup = (dict) => {
+      if (!dict) return undefined;
+      if (dict[key] !== undefined) return dict[key];
+      if (key.includes('.')) {
+        const parts = key.split('.');
+        let cur = dict;
+        for (const p of parts) {
+          if (cur && cur[p] !== undefined) {
+            cur = cur[p];
+          } else {
+            cur = undefined;
+            break;
+          }
+        }
+        if (cur !== undefined && typeof cur === 'string') return cur;
+      }
+      return undefined;
+    };
+
+    let result = lookup(dictionaries[language]);
+    if (result === undefined) {
+      result = lookup(dictionaries.en);
     }
-    // Fallback to English dictionary
-    if (dictionaries.en && dictionaries.en[key] !== undefined) {
-      return dictionaries.en[key];
+    if (result === undefined && i18n && typeof i18n.t === 'function') {
+      const translated = i18n.t(key, params || {});
+      if (translated && translated !== key) {
+        result = translated;
+      }
     }
-    // Fallback to i18n if available
-    if (i18n && typeof i18n.t === 'function') {
-      const translated = i18n.t(key);
-      if (translated && translated !== key) return translated;
+    if (result === undefined) {
+      result = fallback || key;
     }
-    return key;
+
+    if (typeof result === 'string' && params) {
+      Object.entries(params).forEach(([paramKey, paramVal]) => {
+        result = result
+          .replace(new RegExp(`\\{\\{\\s*${paramKey}\\s*\\}\\}`, 'g'), String(paramVal))
+          .replace(new RegExp(`\\{\\s*${paramKey}\\s*\\}`, 'g'), String(paramVal));
+      });
+    }
+
+    return result;
   }, [language]);
 
   return (

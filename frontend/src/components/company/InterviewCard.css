@@ -1,1 +1,17 @@
 /* CSS for InterviewCard */
+
+[data-theme="dark"] .workspace-card h3 {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .workspace-card p {
+  color: #f1f5f9 !important;
+}
+
+[data-theme="dark"] .workspace-card .workspace-row span {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .workspace-card .workspace-row .workspace-muted {
+  color: #cbd5e1 !important;
+}

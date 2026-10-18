@@ -1,11 +1,11 @@
 /* root.css */
 :root {
-  /* Brand Colors - Blue Theme (from Youe) */
-  --color-primary: #638ECB;
-  --color-primary-hover: #4e73a8;
-  --color-primary-light: #a3c1e8;
-  --color-primary-soft: #ebf1fa;
-  --color-primary-active: #1e40af; /* Kept from new structure */
+  /* Brand Colors - Vivid Electric Blue Theme (#016BFB) */
+  --color-primary: #016BFB;
+  --color-primary-hover: #0058d4;
+  --color-primary-light: #60a5fa;
+  --color-primary-soft: #ebf3ff;
+  --color-primary-active: #004ecc;
   
   /* Sidebar Colors for Admin/Company */
   --color-sidebar-bg: #1b2b44;
@@ -29,7 +29,7 @@
   /* Borders and Focus */
   --color-border: #e2e8f0;
   --color-border-strong: #cbd5e1;
-  --color-focus-ring: #638ECB;
+  --color-focus-ring: #016BFB;
 
   /* Semantic Colors */
   --color-success: #16a34a;
@@ -87,48 +87,70 @@
   --transition-normal: 0.25s ease;
 }
 
-/* Dark Mode */
+/* Galaxy Dark Mode */
 [data-theme="dark"] {
-  --color-primary: #3b82f6;
-  --color-primary-hover: #60a5fa;
-  --color-primary-light: #2563eb;
-  --color-primary-soft: #1e3a8a;
-  --color-primary-active: #93c5fd;
+  /* Brand Accents — CareerLens signature vivid blue #016BFB */
+  --color-primary: #016BFB;
+  --color-primary-hover: #257bfd;
+  --color-primary-light: #60a5fa;
+  --color-primary-soft: rgba(1, 107, 251, 0.2);
+  --color-primary-active: #0058d4;
+  --color-primary-glow: rgba(1, 107, 251, 0.45);
+
+  /* Galaxy Cosmic Palette */
+  --galaxy-space-deep: #050814;
+  --galaxy-space-mid: #070c1e;
+  --galaxy-space-nebula: #0e1638;
+  --galaxy-nebula-purple: rgba(139, 92, 246, 0.22);
+  --galaxy-nebula-blue: rgba(1, 107, 251, 0.25);
+  --galaxy-starlight: #ffffff;
+
+  /* Backgrounds — deep space midnight navy */
+  --color-background: #060a19;
+  --color-bg-primary: #060a19;
   
-  --color-sidebar-bg: #0f172a;
-  --color-sidebar-text: #f8fafc;
-  --color-sidebar-muted: #94a3b8;
-  --color-sidebar-active: #1e293b;
-  --color-sidebar-border: #334155;
+  /* Glassmorphism & Surface Cards — luminous translucent deep cosmic navy */
+  --color-surface: rgba(12, 19, 44, 0.78);
+  --color-surface-solid: #0d152e;
+  --color-surface-hover: rgba(22, 35, 74, 0.88);
+  --color-surface-active: rgba(30, 48, 98, 0.95);
+
+  /* Sidebar — deep cosmos translucent panel */
+  --color-sidebar-bg: rgba(7, 11, 26, 0.96);
+  --color-sidebar-text: #ffffff;
+  --color-sidebar-muted: #cbd5e1;
+  --color-sidebar-active: rgba(1, 107, 251, 0.25);
+  --color-sidebar-border: rgba(1, 107, 251, 0.25);
+
+  /* Text — bright, crisp, high-contrast readable stars against dark space */
+  --color-text: #ffffff;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #f1f5f9;
+  --color-text-muted: #e2e8f0;
+
+  /* Borders & Glows */
+  --color-border: rgba(99, 142, 203, 0.28);
+  --color-border-strong: rgba(147, 197, 253, 0.5);
+  --color-focus-ring: #016BFB;
+  --galaxy-glow: 0 0 24px rgba(1, 107, 251, 0.35);
+  --galaxy-border-glow: 0 0 14px rgba(1, 107, 251, 0.3);
+  --galaxy-card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45), 0 0 1px 1px rgba(1, 107, 251, 0.15);
+
+  /* Semantic Cosmic Tones */
+  --color-success: #34d399;
+  --color-success-bg: rgba(16, 185, 129, 0.18);
   
-  --color-background: #0f172a;
-  --color-bg-primary: #0f172a;
-  --color-surface: #1e293b;
-  --color-surface-hover: #334155;
+  --color-warning: #fbbf24;
+  --color-warning-bg: rgba(245, 158, 11, 0.18);
   
-  --color-text: #f8fafc;
-  --color-text-primary: #f8fafc;
-  --color-text-secondary: #cbd5e1;
-  --color-text-muted: #94a3b8;
+  --color-danger: #f87171;
+  --color-danger-border: rgba(239, 68, 68, 0.4);
+  --color-danger-bg: rgba(239, 68, 68, 0.18);
+  --color-error: #f87171;
+  --color-error-bg: rgba(239, 68, 68, 0.18);
   
-  --color-border: #334155;
-  --color-border-strong: #475569;
-  --color-focus-ring: #3b82f6;
-  
-  --color-success: #22c55e;
-  --color-success-bg: #052e16;
-  
-  --color-warning: #f59e0b;
-  --color-warning-bg: #451a03;
-  
-  --color-danger: #ef4444;
-  --color-danger-border: #991b1b;
-  --color-danger-bg: #450a0a;
-  --color-error: #ef4444;
-  --color-error-bg: #450a0a;
-  
-  --color-info: #38bdf8;
-  --color-info-bg: #082f49;
+  --color-info: #016BFB;
+  --color-info-bg: rgba(1, 107, 251, 0.22);
 }
 
 /* Khmer language typography — Kantumruy Pro with appropriate line-height for diacritics */
@@ -142,7 +164,11 @@ html[lang="km"],
 html[lang="km"] body,
 [lang="km"] body {
   font-family: var(--font-family-kh);
-  line-height: 1.6;
+  line-height: 1.65;
+}
+
+html[lang="km"] * {
+  font-family: var(--font-family-kh) !important;
 }
 
 html[lang="km"] button,
@@ -150,5 +176,5 @@ html[lang="km"] input,
 html[lang="km"] select,
 html[lang="km"] textarea,
 html[lang="km"] optgroup {
-  font-family: var(--font-family-kh);
+  font-family: var(--font-family-kh) !important;
 }

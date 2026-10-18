@@ -5,7 +5,7 @@
 
 .applications-filters {
   display: flex;
-  gap: 8px;
+  gap: 10px;
   margin-bottom: 24px;
   overflow-x: auto;
   padding-bottom: 8px; /* Room for scrollbar on mobile */
@@ -15,41 +15,67 @@
   height: 4px;
 }
 .applications-filters::-webkit-scrollbar-thumb {
-  background: #d1d5db;
+  background: var(--color-border, #d1d5db);
   border-radius: 4px;
 }
 
 .app-filter-btn {
-  padding: 8px 16px;
-  border-radius: 20px;
-  border: 1px solid #d1d5db;
-  background-color: #ffffff;
-  color: #4b5563;
+  padding: 8px 18px;
+  border-radius: 999px;
+  border: 1px solid var(--color-border, #d1d5db);
+  background-color: var(--color-surface, #ffffff);
+  color: var(--color-text-primary, #4b5563);
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
-  transition: all 0.15s;
+  transition: all 0.2s ease;
 }
 
 .app-filter-btn:hover {
-  background-color: #f3f4f6;
+  background-color: var(--color-surface-hover, #f3f4f6);
+  border-color: var(--color-border-strong, #9ca3af);
 }
 
 .app-filter-btn--active {
-  background-color: #111827;
+  background-color: var(--color-primary, #016BFB);
   color: #ffffff;
-  border-color: #111827;
+  border-color: var(--color-primary, #016BFB);
+  box-shadow: 0 4px 12px rgba(1, 107, 251, 0.3);
 }
 
 .app-filter-btn--active:hover {
-  background-color: #374151;
-  border-color: #374151;
+  background-color: var(--color-primary-hover, #0058d4);
+  border-color: var(--color-primary-hover, #0058d4);
 }
 
 .applications-list__header {
   margin-bottom: 16px;
-  font-size: 14px;
-  color: #4b5563;
-  font-weight: 500;
+  font-size: 15px;
+  color: var(--color-text-secondary, #4b5563);
+  font-weight: 600;
+}
+
+/* ── Dark Mode Overrides for Applications Page ───────────────────────────── */
+[data-theme="dark"] .applications-list__header {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .app-filter-btn {
+  background: rgba(14, 22, 50, 0.75) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(99, 142, 203, 0.35) !important;
+  backdrop-filter: blur(8px);
+}
+
+[data-theme="dark"] .app-filter-btn:hover {
+  background: rgba(26, 38, 80, 0.85) !important;
+  border-color: rgba(147, 197, 253, 0.6) !important;
+}
+
+[data-theme="dark"] .app-filter-btn--active {
+  background: var(--color-primary, #016BFB) !important;
+  color: #ffffff !important;
+  border-color: var(--color-primary, #016BFB) !important;
+  box-shadow: 0 0 16px rgba(1, 107, 251, 0.5) !important;
 }

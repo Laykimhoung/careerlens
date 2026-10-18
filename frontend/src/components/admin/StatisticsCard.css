@@ -1,1 +1,64 @@
 /* CSS for StatisticsCard */
+
+.stats-card-box {
+  background: var(--color-surface, #ffffff);
+  border: 1px solid var(--color-border, #e3e8e5);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: var(--shadow-sm, 0 1px 2px rgba(0, 0, 0, 0.05));
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stats-card-box:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md, 0 4px 6px -1px rgba(0, 0, 0, 0.08));
+}
+
+.stats-card-val {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--color-primary, #016BFB);
+}
+
+.stats-card-lbl {
+  font-size: 13px;
+  color: var(--color-text-muted, #5b6b65);
+  margin-top: 4px;
+}
+
+.stats-card-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: var(--color-primary-soft, #ebf1fa);
+  color: var(--color-primary, #016BFB);
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+}
+
+/* ── Galaxy Dark Mode ── */
+[data-theme="dark"] .stats-card-box {
+  background: rgba(13, 21, 48, 0.82) !important;
+  border: 1px solid rgba(99, 142, 203, 0.32) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35) !important;
+}
+
+[data-theme="dark"] .stats-card-box:hover {
+  background: rgba(20, 32, 72, 0.92) !important;
+  border-color: rgba(99, 142, 203, 0.55) !important;
+}
+
+[data-theme="dark"] .stats-card-val {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .stats-card-lbl {
+  color: #f1f5f9 !important;
+}
+
+[data-theme="dark"] .stats-card-icon {
+  background: rgba(99, 142, 203, 0.25) !important;
+  color: #93c5fd !important;
+  border: 1px solid rgba(99, 142, 203, 0.35) !important;
+}

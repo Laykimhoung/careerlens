@@ -13,6 +13,17 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Kantumruy+Pro:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
+    <script>
+      (function() {
+        try {
+          var savedTheme = localStorage.getItem('theme') || 'light';
+          document.documentElement.setAttribute('data-theme', savedTheme);
+          var savedLang = localStorage.getItem('cl_language') || localStorage.getItem('language') || 'en';
+          document.documentElement.setAttribute('lang', savedLang);
+          document.documentElement.lang = savedLang;
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

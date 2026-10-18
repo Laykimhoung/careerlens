@@ -45,7 +45,7 @@ export default function CandidateApplications() {
       case "Review":
         return t("candidate.reviewing", "Review");
       case "Interview":
-        return t("admin.interview", "Interview");
+        return t("common.interview", "Interview");
       case "Offer":
         return t("candidate.offered", "Offer");
       case "Rejected":

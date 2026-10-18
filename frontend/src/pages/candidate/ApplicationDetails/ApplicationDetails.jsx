@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
+import { useLanguage } from "../../../context/LanguageContext";
 import Button from "../../../components/common/Button";
 import {
   getApplicationById,
@@ -16,6 +17,7 @@ import "./ApplicationDetails.css";
 export default function CandidateApplicationDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   const [app, setApp] = useState(null);
   const [history, setHistory] = useState([]);
@@ -203,7 +205,7 @@ export default function CandidateApplicationDetails() {
               d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
             />
           </svg>
-          Back to Applications
+          {t("candidate.backToApplications", "Back to Applications")}
         </Link>
 
         <Button
@@ -212,7 +214,7 @@ export default function CandidateApplicationDetails() {
           onClick={handleWithdraw}
           disabled={actionLoading}
         >
-          Withdraw Application
+          {t("candidate.withdrawApplication", "Withdraw Application")}
         </Button>
       </div>
 
@@ -235,16 +237,16 @@ export default function CandidateApplicationDetails() {
       <div className="app-details__hero">
         <h1>{app.jobTitle}</h1>
         <p>
-          {app.company} &middot; Applied on {app.appliedDate}
+          {app.company} &middot; {t("candidate.appliedOn", "Applied on")} {app.appliedDate}
         </p>
         <span className={`app-badge-large ${badgeClass}`}>
-          Current Status: {app.status}
+          {t("candidate.currentStatus", "Current Status")}: {app.status}
         </span>
       </div>
 
       {/* Progress Tracker */}
       <div className="app-details__section">
-        <h2 className="app-details__section-title">Application Progress</h2>
+        <h2 className="app-details__section-title">{t("candidate.applicationProgress", "Application Progress")}</h2>
 
         <div className="progress-tracker">
           {timeline.map((step, index) => {
@@ -298,17 +300,17 @@ export default function CandidateApplicationDetails() {
       {/* Offer Section (if extended) */}
       {offer && (
         <div className="app-details__section">
-          <h2 className="app-details__section-title">Job Offer Details</h2>
+          <h2 className="app-details__section-title">{t("candidate.jobOfferDetails", "Job Offer Details")}</h2>
           <div
             style={{
-              backgroundColor: "#f0fdf4",
-              border: "1px solid #bbf7d0",
+              backgroundColor: "rgba(16, 185, 129, 0.12)",
+              border: "1px solid rgba(16, 185, 129, 0.28)",
               borderRadius: "8px",
               padding: "16px",
             }}
           >
             <p style={{ margin: "0 0 8px 0", fontWeight: 600, color: "#166534" }}>
-              Offered Compensation: {offer.currency || "USD"}{" "}
+              {t("candidate.offeredCompensation", "Offered Compensation")}: {offer.currency || "USD"}{" "}
               {Number(offer.salary || 0).toLocaleString()} / month
             </p>
             {offer.message && (
@@ -316,18 +318,18 @@ export default function CandidateApplicationDetails() {
                 {offer.message}
               </p>
             )}
-            <p style={{ margin: "0 0 12px 0", fontSize: "13px", color: "#475569" }}>
-              Offer Status: <strong>{offer.status}</strong>
+            <p style={{ margin: "0 0 12px 0", fontSize: "13px", color: "var(--color-text-secondary)" }}>
+              {t("common.status", "Status")}: <strong>{offer.status}</strong>
             </p>
             {offer.status === "PENDING" && (
               <div style={{ display: "flex", gap: "10px" }}>
                 <Button
-                  variant="teal"
+                  variant="primary"
                   size="sm"
                   onClick={() => handleOfferResponse("ACCEPTED")}
                   disabled={actionLoading}
                 >
-                  Accept Offer
+                  {t("candidate.acceptOffer", "Accept Offer")}
                 </Button>
                 <Button
                   variant="danger"
@@ -335,7 +337,7 @@ export default function CandidateApplicationDetails() {
                   onClick={() => handleOfferResponse("DECLINED")}
                   disabled={actionLoading}
                 >
-                  Decline Offer
+                  {t("candidate.declineOffer", "Decline Offer")}
                 </Button>
               </div>
             )}
@@ -346,7 +348,7 @@ export default function CandidateApplicationDetails() {
       {/* Scheduled Interviews Section */}
       {interviews.length > 0 && (
         <div className="app-details__section">
-          <h2 className="app-details__section-title">Scheduled Interviews</h2>
+          <h2 className="app-details__section-title">{t("candidate.scheduledInterviews", "Scheduled Interviews")}</h2>
           <div style={{ display: "grid", gap: "12px" }}>
             {interviews.map((iv) => (
               <div

@@ -41,6 +41,31 @@ export default function CollapsibleSidebar({
     };
   }, []);
 
+  const getCustomImage = () => {
+    if (typeof window === "undefined") return "";
+    if (currentRole === 'candidate') {
+      return (user?.id ? localStorage.getItem(`careerlens_avatar_${user.id}`) : null) || localStorage.getItem("careerlens_avatar") || "";
+    }
+    if (currentRole === 'company') {
+      return (user?.id ? localStorage.getItem(`careerlens_company_logo_${user.id}`) : null) || localStorage.getItem("careerlens_company_logo") || "";
+    }
+    if (currentRole === 'admin') {
+      return (user?.id ? localStorage.getItem(`careerlens_admin_avatar_${user.id}`) : null) || localStorage.getItem("careerlens_admin_avatar") || "";
+    }
+    return "";
+  };
+
+  const [customPhoto, setCustomPhoto] = useState(getCustomImage);
+
+  useEffect(() => {
+    const handleUpdate = () => {
+      setCustomPhoto(getCustomImage());
+    };
+    handleUpdate();
+    window.addEventListener("careerlens_profile_image_updated", handleUpdate);
+    return () => window.removeEventListener("careerlens_profile_image_updated", handleUpdate);
+  }, [user, currentRole]);
+
   const displayName =
     user?.full_name ||
     user?.first_name ||
@@ -144,8 +169,16 @@ export default function CollapsibleSidebar({
 
           {/* User Profile Info & Logout */}
           <div className="sidebar-user-row">
-            <div className="sidebar-user-avatar" title={displayName}>
-              {avatarInitial}
+            <div className="sidebar-user-avatar" title={displayName} style={{ overflow: "hidden" }}>
+              {customPhoto ? (
+                <img
+                  src={customPhoto}
+                  alt={displayName}
+                  style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%" }}
+                />
+              ) : (
+                avatarInitial
+              )}
               <span className="sidebar-status-dot" aria-hidden="true" />
             </div>
 

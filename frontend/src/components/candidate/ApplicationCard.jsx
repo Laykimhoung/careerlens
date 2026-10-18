@@ -15,7 +15,7 @@ export default function ApplicationCard({ application }) {
       case "Review":
         return t("candidate.reviewing", "Reviewing");
       case "Interview":
-        return t("admin.interview", "Interview");
+        return t("common.interview", "Interview");
       case "Offered":
       case "Offer":
         return t("candidate.offered", "Offered");
