@@ -52,9 +52,12 @@ export default function Profile() {
       setCompanyLogo(dataUrl);
       if (user?.id) {
         localStorage.setItem(`careerlens_company_logo_${user.id}`, dataUrl);
+        localStorage.setItem(`careerlens_avatar_${user.id}`, dataUrl);
       }
       localStorage.setItem("careerlens_company_logo", dataUrl);
-      window.dispatchEvent(new CustomEvent("careerlens_profile_image_updated"));
+      localStorage.setItem("careerlens_avatar", dataUrl);
+      window.dispatchEvent(new CustomEvent("careerlens_profile_image_updated", { detail: { avatar: dataUrl } }));
+      window.dispatchEvent(new Event("storage"));
       setStatusMsg({ type: "success", text: t("company.logoUpdated", "Company logo uploaded successfully.") });
     };
     reader.readAsDataURL(file);
@@ -64,9 +67,12 @@ export default function Profile() {
     setCompanyLogo("");
     if (user?.id) {
       localStorage.removeItem(`careerlens_company_logo_${user.id}`);
+      localStorage.removeItem(`careerlens_avatar_${user.id}`);
     }
     localStorage.removeItem("careerlens_company_logo");
-    window.dispatchEvent(new CustomEvent("careerlens_profile_image_updated"));
+    localStorage.removeItem("careerlens_avatar");
+    window.dispatchEvent(new CustomEvent("careerlens_profile_image_updated", { detail: { avatar: "" } }));
+    window.dispatchEvent(new Event("storage"));
     setStatusMsg({ type: "success", text: t("company.logoRemoved", "Company logo removed.") });
   };
 
