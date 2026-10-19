@@ -78,6 +78,36 @@ export default function CandidateDashboard() {
   const [savedRecords, setSavedRecords] = useState([]);
   const [applyingJobId, setApplyingJobId] = useState(null);
 
+  const [avatar, setAvatar] = useState(() => {
+    return (
+      (user?.id ? localStorage.getItem(`careerlens_avatar_${user.id}`) : null) ||
+      localStorage.getItem("careerlens_avatar") ||
+      user?.avatar ||
+      ""
+    );
+  });
+
+  useEffect(() => {
+    const handleUpdate = (e) => {
+      if (e?.detail?.avatar !== undefined) {
+        setAvatar(e.detail.avatar);
+      } else {
+        setAvatar(
+          (user?.id ? localStorage.getItem(`careerlens_avatar_${user.id}`) : null) ||
+          localStorage.getItem("careerlens_avatar") ||
+          user?.avatar ||
+          ""
+        );
+      }
+    };
+    window.addEventListener("careerlens_profile_image_updated", handleUpdate);
+    window.addEventListener("storage", handleUpdate);
+    return () => {
+      window.removeEventListener("careerlens_profile_image_updated", handleUpdate);
+      window.removeEventListener("storage", handleUpdate);
+    };
+  }, [user]);
+
   const loadDashboard = useCallback(async () => {
     setLoading(true);
     setError("");
@@ -147,11 +177,15 @@ export default function CandidateDashboard() {
     });
 
     const filtered = searchFilter.trim()
-      ? sorted.filter(
-          (j) =>
-            j.title.toLowerCase().includes(searchFilter.toLowerCase()) ||
-            (j.company && j.company.toLowerCase().includes(searchFilter.toLowerCase()))
-        )
+      ? sorted.filter((j) => {
+          const q = searchFilter.toLowerCase();
+          const titleMatch = j.title && j.title.toLowerCase().includes(q);
+          const companyMatch = j.company && j.company.toLowerCase().includes(q);
+          const locationMatch = j.location && j.location.toLowerCase().includes(q);
+          const tagsMatch = Array.isArray(j.tags) && j.tags.some((t) => t.toLowerCase().includes(q));
+          const skillsMatch = Array.isArray(j.skills) && j.skills.some((s) => s.toLowerCase().includes(q));
+          return titleMatch || companyMatch || locationMatch || tagsMatch || skillsMatch;
+        })
       : sorted;
 
     return filtered.slice(0, 4);
@@ -239,24 +273,50 @@ export default function CandidateDashboard() {
     <div className="cand-dash-container">
       {/* ── Top Header Bar (Matching Reference) ─────────────────────────────── */}
       <header className="cand-dash-header">
-        <div className="cand-header-user">
-          <div className="cand-avatar-circle" aria-hidden="true">
-            {firstName.charAt(0).toUpperCase()}
+        <Link
+          to="/candidate/profile"
+          className="cand-header-user-link"
+          title={t("candidate.viewEditProfile", "View and Edit Profile")}
+        >
+          <div className="cand-avatar-circle" aria-hidden="true" style={{ overflow: "hidden" }}>
+            {avatar ? (
+              <img
+                src={avatar}
+                alt={firstName}
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              />
+            ) : (
+              firstName.charAt(0).toUpperCase()
+            )}
           </div>
           <div>
-            <h1 className="cand-greeting-title">{t("admin.hi", "Hi")}, {firstName}</h1>
-            <p className="cand-greeting-sub">{t("candidate.exploreCareer", "Explore your tailored career opportunities")}</p>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <h1 className="cand-greeting-title">
+                {t("admin.hi", "Hi")}, {firstName}
+              </h1>
+              <span className="cand-greeting-edit-pill">
+                {t("candidate.editProfile", "Edit Profile")} &rarr;
+              </span>
+            </div>
+            <p className="cand-greeting-sub">
+              {t("candidate.exploreCareer", "Explore your tailored career opportunities")}
+            </p>
           </div>
-        </div>
+        </Link>
 
         <div className="cand-header-controls">
           <div className="cand-search-bar">
             <Search size={18} className="cand-search-icon" />
             <input
               type="search"
-              placeholder={t("candidate.searchPlaceholder", "Search jobs, skills...")}
+              placeholder={t("candidate.searchPlaceholder", "Search jobs, skills, companies...")}
               value={searchFilter}
               onChange={(e) => setSearchFilter(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && searchFilter.trim()) {
+                  navigate(`/candidate/jobs?q=${encodeURIComponent(searchFilter.trim())}`);
+                }
+              }}
               className="cand-search-input"
             />
           </div>

@@ -41,10 +41,38 @@
   padding-bottom: 4px;
 }
 
-.cand-header-user {
+.cand-header-user,
+.cand-header-user-link {
   display: flex;
   align-items: center;
   gap: 14px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.cand-header-user-link:hover {
+  transform: translateY(-2px);
+}
+
+.cand-header-user-link:hover .cand-greeting-title {
+  color: #016BFB;
+}
+
+.cand-greeting-edit-pill {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #016BFB;
+  background: #EFF6FF;
+  border: 1px solid #DBEAFE;
+  padding: 2px 8px;
+  border-radius: 999px;
+  transition: all 0.15s ease;
+}
+
+.cand-header-user-link:hover .cand-greeting-edit-pill {
+  background: #016BFB;
+  color: #FFFFFF;
 }
 
 .cand-avatar-circle {
@@ -60,6 +88,7 @@
   justify-content: center;
   box-shadow: 0 4px 14px rgba(1, 107, 251, 0.28);
   flex-shrink: 0;
+  overflow: hidden;
 }
 
 .cand-greeting-title {
@@ -764,3 +793,15 @@
     transition: none !important;
   }
 }
+
+[data-theme="dark"] .cand-greeting-edit-pill {
+  background: rgba(1, 107, 251, 0.2);
+  border-color: rgba(99, 142, 203, 0.35);
+  color: #93C5FD;
+}
+
+[data-theme="dark"] .cand-header-user-link:hover .cand-greeting-edit-pill {
+  background: #016BFB;
+  color: #FFFFFF;
+}
+

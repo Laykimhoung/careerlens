@@ -362,6 +362,13 @@ html[data-theme="dark"] body::after {
 [data-theme="dark"] .modern-action-card,
 [data-theme="dark"] .modern-panel,
 [data-theme="dark"] .modern-card,
+[data-theme="dark"] .modern-overview-chart-card,
+[data-theme="dark"] .modern-quick-stats-panel,
+[data-theme="dark"] .modern-audit-box,
+[data-theme="dark"] .scenic-banner-card,
+[data-theme="dark"] .modern-process-card,
+[data-theme="dark"] .crud-modal,
+[data-theme="dark"] .profile-form-card,
 [data-theme="dark"] .saved-jobs__empty,
 [data-theme="dark"] .applicant-row {
   background: rgba(13, 21, 48, 0.82) !important;
@@ -380,65 +387,110 @@ html[data-theme="dark"] body::after {
 [data-theme="dark"] .saved-job-card:hover,
 [data-theme="dark"] .app-card:hover,
 [data-theme="dark"] .workspace-card:hover,
+[data-theme="dark"] .workspace-panel:hover,
 [data-theme="dark"] .admin-card:hover,
 [data-theme="dark"] .cand-stat-card:hover,
 [data-theme="dark"] .comp-stat-card:hover,
 [data-theme="dark"] .cand-spotlight-card:hover,
 [data-theme="dark"] .comp-spotlight-card:hover,
+[data-theme="dark"] .modern-spotlight-card:hover,
 [data-theme="dark"] .cand-overview-card:hover,
-[data-theme="dark"] .comp-overview-card:hover {
+[data-theme="dark"] .comp-overview-card:hover,
+[data-theme="dark"] .modern-overview-chart-card:hover,
+[data-theme="dark"] .modern-quick-stats-panel:hover,
+[data-theme="dark"] .modern-audit-box:hover,
+[data-theme="dark"] .modern-process-card:hover,
+[data-theme="dark"] .comp-jobs-panel:hover,
+[data-theme="dark"] .comp-process-card:hover {
   border-color: rgba(147, 197, 253, 0.55) !important;
   box-shadow: 0 12px 36px 0 rgba(0, 0, 0, 0.55), 0 0 20px rgba(99, 142, 203, 0.35) !important;
 }
 
-/* Sub-elements inside cards & boxes */
+/* Sub-elements inside cards & boxes across all roles */
 [data-theme="dark"] .cand-dual-stats,
 [data-theme="dark"] .comp-dual-stats,
 [data-theme="dark"] .modern-dual-stats,
+[data-theme="dark"] .performer-dual-stats,
 [data-theme="dark"] .cand-interviews-box,
-[data-theme="dark"] .comp-interviews-box {
+[data-theme="dark"] .comp-interviews-box,
+[data-theme="dark"] .overview-chart-box,
+[data-theme="dark"] .comp-chart-box,
+[data-theme="dark"] .metric-chip,
+[data-theme="dark"] .comp-stat-box {
   background: rgba(18, 30, 68, 0.72) !important;
   border: 1px solid rgba(99, 142, 203, 0.28) !important;
+  color: #ffffff !important;
 }
 
 [data-theme="dark"] .cand-dual-stat-item strong,
 [data-theme="dark"] .comp-dual-stat-item strong,
-[data-theme="dark"] .modern-dual-stat-item strong {
+[data-theme="dark"] .modern-dual-stat-item strong,
+[data-theme="dark"] .dual-stat-item strong,
+[data-theme="dark"] .metric-chip-value,
+[data-theme="dark"] .comp-stat-val {
   color: #ffffff !important;
 }
 
 [data-theme="dark"] .cand-dual-stat-item span,
 [data-theme="dark"] .comp-dual-stat-item span,
-[data-theme="dark"] .modern-dual-stat-item span {
+[data-theme="dark"] .modern-dual-stat-item span,
+[data-theme="dark"] .dual-stat-item span,
+[data-theme="dark"] .metric-chip-label,
+[data-theme="dark"] .comp-stat-lbl {
   color: #f1f5f9 !important;
 }
 
+/* Process rows, audit rows, job rows & activity items */
 [data-theme="dark"] .cand-process-item,
-[data-theme="dark"] .comp-process-item {
+[data-theme="dark"] .comp-process-item,
+[data-theme="dark"] .process-item-card,
+[data-theme="dark"] .audit-item-row,
+[data-theme="dark"] .quick-stat-row,
+[data-theme="dark"] .comp-job-row-card {
   background: rgba(16, 26, 60, 0.78) !important;
   border: 1px solid rgba(99, 142, 203, 0.25) !important;
   border-left: 4px solid var(--color-primary, #016BFB) !important;
+  color: #ffffff !important;
 }
 
 [data-theme="dark"] .cand-process-item:hover,
-[data-theme="dark"] .comp-process-item:hover {
+[data-theme="dark"] .comp-process-item:hover,
+[data-theme="dark"] .process-item-card:hover,
+[data-theme="dark"] .audit-item-row:hover,
+[data-theme="dark"] .quick-stat-row:hover,
+[data-theme="dark"] .comp-job-row-card:hover {
   background: rgba(24, 38, 86, 0.92) !important;
   border-color: rgba(99, 142, 203, 0.5) !important;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35) !important;
 }
 
 [data-theme="dark"] .cand-process-job,
-[data-theme="dark"] .comp-process-job {
+[data-theme="dark"] .comp-process-job,
+[data-theme="dark"] .comp-process-cand,
+[data-theme="dark"] .process-item-title,
+[data-theme="dark"] .audit-name,
+[data-theme="dark"] .comp-job-role-title,
+[data-theme="dark"] .quick-stat-label {
   color: #ffffff !important;
 }
 
 [data-theme="dark"] .cand-process-co,
-[data-theme="dark"] .comp-process-co {
+[data-theme="dark"] .comp-process-co,
+[data-theme="dark"] .comp-process-role,
+[data-theme="dark"] .process-item-sub,
+[data-theme="dark"] .audit-time,
+[data-theme="dark"] .comp-job-row-meta,
+[data-theme="dark"] .quick-stat-val {
   color: #f1f5f9 !important;
 }
 
+/* Luminous Status Pills across all roles */
 [data-theme="dark"] .cand-status-pill,
-[data-theme="dark"] .comp-status-pill {
+[data-theme="dark"] .comp-status-pill,
+[data-theme="dark"] .process-time-pill,
+[data-theme="dark"] .comp-job-status-pill,
+[data-theme="dark"] .audit-badge,
+[data-theme="dark"] .metric-chip-trend {
   background: rgba(99, 142, 203, 0.25) !important;
   border: 1px solid rgba(99, 142, 203, 0.4) !important;
   color: #ffffff !important;
@@ -478,6 +530,15 @@ html[data-theme="dark"] body::after {
 [data-theme="dark"] .comp-app-title,
 [data-theme="dark"] .modern-overview-title,
 [data-theme="dark"] .modern-stat-title,
+[data-theme="dark"] .overview-title,
+[data-theme="dark"] .quick-stats-header h3,
+[data-theme="dark"] .audit-title,
+[data-theme="dark"] .scenic-banner-title,
+[data-theme="dark"] .process-title,
+[data-theme="dark"] .performer-title,
+[data-theme="dark"] .admin-header-title,
+[data-theme="dark"] .admin-mobile-title,
+[data-theme="dark"] .crud-modal-header h2,
 [data-theme="dark"] .applicant-name,
 [data-theme="dark"] .applications-list__header,
 [data-theme="dark"] .saved-jobs__count,
@@ -510,8 +571,20 @@ html[data-theme="dark"] body::after {
 [data-theme="dark"] .comp-overview-sub,
 [data-theme="dark"] .comp-panel-sub,
 [data-theme="dark"] .modern-overview-sub,
+[data-theme="dark"] .overview-sub,
+[data-theme="dark"] .audit-sub,
+[data-theme="dark"] .process-sub,
+[data-theme="dark"] .scenic-banner-desc,
+[data-theme="dark"] .legend-item,
+[data-theme="dark"] .process-empty-box,
+[data-theme="dark"] .comp-empty-process,
+[data-theme="dark"] .comp-empty-box,
 [data-theme="dark"] .applicant-title {
   color: #f1f5f9 !important;
+}
+
+[data-theme="dark"] .admin-breadcrumb {
+  color: #a78bfa !important;
 }
 
 /* Spotlight action buttons & badges */
@@ -535,7 +608,8 @@ html[data-theme="dark"] body::after {
 }
 
 [data-theme="dark"] .cand-overview-badge,
-[data-theme="dark"] .comp-overview-badge {
+[data-theme="dark"] .comp-overview-badge,
+[data-theme="dark"] .performer-tag {
   background: rgba(99, 142, 203, 0.22) !important;
   color: #93c5fd !important;
   border: 1px solid rgba(99, 142, 203, 0.35) !important;
@@ -595,41 +669,135 @@ html[data-theme="dark"] body::after {
   border: 1px solid rgba(99, 142, 203, 0.35) !important;
 }
 
+[data-theme="dark"] .workspace-status-success {
+  background: rgba(34, 197, 94, 0.22) !important;
+  color: #86efac !important;
+  border: 1px solid rgba(34, 197, 94, 0.4) !important;
+}
+
+[data-theme="dark"] .workspace-status-warning {
+  background: rgba(245, 158, 11, 0.22) !important;
+  color: #fde68a !important;
+  border: 1px solid rgba(245, 158, 11, 0.4) !important;
+}
+
+[data-theme="dark"] .workspace-status-danger {
+  background: rgba(239, 68, 68, 0.22) !important;
+  color: #fca5a5 !important;
+  border: 1px solid rgba(239, 68, 68, 0.4) !important;
+}
+
+/* ── Status badges in Dark Mode across Company & Admin ───────────────────── */
+[data-theme="dark"] .status-badge.applied { background: rgba(59, 130, 246, 0.22) !important; color: #93c5fd !important; border: 1px solid rgba(59, 130, 246, 0.4) !important; }
+[data-theme="dark"] .status-badge.screening,
+[data-theme="dark"] .status-badge.reviewing { background: rgba(99, 102, 241, 0.22) !important; color: #c7d2fe !important; border: 1px solid rgba(99, 102, 241, 0.4) !important; }
+[data-theme="dark"] .status-badge.shortlisted { background: rgba(192, 38, 211, 0.22) !important; color: #f5d0fe !important; border: 1px solid rgba(192, 38, 211, 0.4) !important; }
+[data-theme="dark"] .status-badge.interview { background: rgba(245, 158, 11, 0.22) !important; color: #fde68a !important; border: 1px solid rgba(245, 158, 11, 0.4) !important; }
+[data-theme="dark"] .status-badge.offer,
+[data-theme="dark"] .status-badge.offered,
+[data-theme="dark"] .status-badge.hired { background: rgba(34, 197, 94, 0.22) !important; color: #86efac !important; border: 1px solid rgba(34, 197, 94, 0.4) !important; }
+[data-theme="dark"] .status-badge.rejected { background: rgba(239, 68, 68, 0.22) !important; color: #fca5a5 !important; border: 1px solid rgba(239, 68, 68, 0.4) !important; }
+
+/* ── User Role Badges in Admin Layout ────────────────────────────────────── */
+[data-theme="dark"] .admin-layout .user-role-badge {
+  background: rgba(99, 142, 203, 0.22) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(99, 142, 203, 0.35) !important;
+}
+
+[data-theme="dark"] .admin-layout .user-role-badge.student,
+[data-theme="dark"] .admin-layout .user-role-badge.candidate {
+  background: rgba(59, 130, 246, 0.22) !important;
+  color: #93c5fd !important;
+  border: 1px solid rgba(59, 130, 246, 0.4) !important;
+}
+
+[data-theme="dark"] .admin-layout .user-role-badge.company {
+  background: rgba(1, 107, 251, 0.25) !important;
+  color: #93c5fd !important;
+  border: 1px solid rgba(1, 107, 251, 0.45) !important;
+}
+
+[data-theme="dark"] .admin-layout .user-role-badge.admin {
+  background: rgba(168, 85, 247, 0.22) !important;
+  color: #d8b4fe !important;
+  border: 1px solid rgba(168, 85, 247, 0.4) !important;
+}
+
 /* ── Dark Mode Inputs, Selects, and Textareas ────────────────────────────── */
 [data-theme="dark"] input,
 [data-theme="dark"] select,
-[data-theme="dark"] textarea {
+[data-theme="dark"] textarea,
+[data-theme="dark"] .workspace-search,
+[data-theme="dark"] .modern-search-input,
+[data-theme="dark"] .comp-search-input,
+[data-theme="dark"] .modern-range-select,
+[data-theme="dark"] .admin-input,
+[data-theme="dark"] .admin-select,
+[data-theme="dark"] .admin-textarea,
+[data-theme="dark"] .admin-layout .workspace-toolbar select {
   background-color: rgba(10, 16, 38, 0.88) !important;
-  border-color: rgba(99, 142, 203, 0.3) !important;
+  border: 1px solid rgba(99, 142, 203, 0.3) !important;
   color: #ffffff !important;
 }
 
 [data-theme="dark"] input:focus,
 [data-theme="dark"] select:focus,
-[data-theme="dark"] textarea:focus {
-  border-color: var(--color-primary) !important;
+[data-theme="dark"] textarea:focus,
+[data-theme="dark"] .workspace-search:focus,
+[data-theme="dark"] .modern-search-input:focus,
+[data-theme="dark"] .comp-search-input:focus,
+[data-theme="dark"] .admin-input:focus,
+[data-theme="dark"] .admin-select:focus,
+[data-theme="dark"] .admin-textarea:focus {
+  border-color: var(--color-primary, #016BFB) !important;
   box-shadow: 0 0 0 3px rgba(99, 142, 203, 0.35) !important;
 }
 
-/* ── Dark Mode Table headers and rows ────────────────────────────────────── */
-[data-theme="dark"] table thead th {
+/* ── Dark Mode Table headers and rows with High Specificity Overrides ────── */
+[data-theme="dark"] table thead th,
+[data-theme="dark"] .admin-layout .workspace-table th,
+[data-theme="dark"] .company-shell .workspace-table th,
+[data-theme="dark"] .workspace-table th {
   background-color: rgba(18, 28, 64, 0.95) !important;
   color: #ffffff !important;
-  border-bottom: 1px solid var(--color-border) !important;
+  border-bottom: 1px solid rgba(99, 142, 203, 0.3) !important;
 }
 
-[data-theme="dark"] table tbody tr {
+[data-theme="dark"] table tbody tr,
+[data-theme="dark"] .admin-layout .workspace-table tbody tr,
+[data-theme="dark"] .company-shell .workspace-table tbody tr,
+[data-theme="dark"] .workspace-table tbody tr {
   background-color: transparent !important;
-  border-bottom: 1px solid var(--color-border) !important;
+  border-bottom: 1px solid rgba(99, 142, 203, 0.2) !important;
 }
 
-[data-theme="dark"] table tbody tr:hover {
-  background-color: rgba(99, 142, 203, 0.12) !important;
+[data-theme="dark"] table tbody td,
+[data-theme="dark"] .admin-layout .workspace-table td,
+[data-theme="dark"] .company-shell .workspace-table td,
+[data-theme="dark"] .workspace-table td {
+  color: #ffffff !important;
+  border-top: 1px solid rgba(99, 142, 203, 0.2) !important;
+}
+
+[data-theme="dark"] table tbody tr:hover,
+[data-theme="dark"] .admin-layout .workspace-table tbody tr:hover,
+[data-theme="dark"] .company-shell .workspace-table tbody tr:hover,
+[data-theme="dark"] .workspace-table tbody tr:hover {
+  background-color: rgba(99, 142, 203, 0.16) !important;
+}
+
+[data-theme="dark"] .admin-layout .workspace-table-wrap,
+[data-theme="dark"] .company-shell .workspace-table-wrap,
+[data-theme="dark"] .workspace-table-wrap {
+  background: rgba(13, 21, 48, 0.82) !important;
+  border: 1px solid rgba(99, 142, 203, 0.32) !important;
 }
 
 /* ── Modals & Dialogs ────────────────────────────────────────────────────── */
 [data-theme="dark"] .modal,
-[data-theme="dark"] .modal-overlay {
+[data-theme="dark"] .modal-overlay,
+[data-theme="dark"] .crud-overlay {
   background-color: rgba(4, 7, 18, 0.8) !important;
   backdrop-filter: blur(10px) !important;
 }
@@ -638,10 +806,15 @@ html[data-theme="dark"] body::after {
 [data-theme="dark"] .admin-header,
 [data-theme="dark"] .header,
 [data-theme="dark"] .company-header,
-[data-theme="dark"] .navbar {
+[data-theme="dark"] .company-topbar,
+[data-theme="dark"] .navbar,
+[data-theme="dark"] .admin-mobile-bar,
+[data-theme="dark"] .company-mobile-bar {
   background: rgba(9, 14, 34, 0.92) !important;
   backdrop-filter: blur(16px) !important;
-  border-color: var(--color-border) !important;
+  border-color: rgba(99, 142, 203, 0.28) !important;
+  position: relative !important;
+  z-index: 100 !important;
 }
 
 /* ── Tag / Badge items in Dark Mode ──────────────────────────────────────── */

@@ -60,6 +60,36 @@ export default function AdminDashboard() {
     analytics: null,
   });
 
+  const getAdminAvatar = (usr) => {
+    const uid = usr?.id;
+    return (
+      (uid ? localStorage.getItem(`careerlens_admin_avatar_${uid}`) : null) ||
+      (uid ? localStorage.getItem(`careerlens_avatar_${uid}`) : null) ||
+      localStorage.getItem("careerlens_admin_avatar") ||
+      localStorage.getItem("careerlens_avatar") ||
+      usr?.avatar ||
+      ""
+    );
+  };
+
+  const [avatar, setAvatar] = useState(() => getAdminAvatar(user));
+
+  useEffect(() => {
+    const handleAvatarUpdate = (e) => {
+      if (e?.detail?.avatar !== undefined) {
+        setAvatar(e.detail.avatar);
+      } else {
+        setAvatar(getAdminAvatar(user));
+      }
+    };
+    window.addEventListener("careerlens_profile_image_updated", handleAvatarUpdate);
+    window.addEventListener("storage", handleAvatarUpdate);
+    return () => {
+      window.removeEventListener("careerlens_profile_image_updated", handleAvatarUpdate);
+      window.removeEventListener("storage", handleAvatarUpdate);
+    };
+  }, [user]);
+
   const loadData = useCallback(async () => {
     try {
       const result = await fetchAdminDashboardData({ dateRange });
@@ -172,8 +202,16 @@ export default function AdminDashboard() {
       {/* ── Top Header: User Greeting, Search, and Action Controls ─────────── */}
       <header className="modern-dash-header">
         <div className="modern-header-user">
-          <div className="modern-avatar-badge" aria-hidden="true">
-            {adminGreetingName.charAt(0).toUpperCase()}
+          <div className="modern-avatar-badge" aria-hidden="true" style={{ overflow: "hidden" }}>
+            {avatar ? (
+              <img
+                src={avatar}
+                alt={adminGreetingName}
+                style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%" }}
+              />
+            ) : (
+              adminGreetingName.charAt(0).toUpperCase()
+            )}
           </div>
           <div>
             <h1 className="modern-greeting-title">{t("admin.hi", "Hi")}, {adminGreetingName}</h1>

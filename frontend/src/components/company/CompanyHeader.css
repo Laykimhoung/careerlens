@@ -2,7 +2,7 @@
 
 .company-topbar {
   min-height: 64px;
-  padding: 12px 30px;
+  padding: 0 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -11,25 +11,56 @@
   border-bottom: 1px solid var(--color-border, #dfe7e1);
   color: var(--color-text-primary, #0f172a);
   transition: background-color 0.25s ease, border-color 0.25s ease;
+  position: relative;
+  z-index: 100;
 }
 
-.company-topbar-info strong {
-  font-size: 15px;
-  font-weight: var(--fw-semibold, 600);
+.company-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+
+.company-page-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.company-breadcrumb {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #059669;
+}
+
+.company-topbar-title {
+  font-size: 16px;
+  font-weight: var(--fw-bold, 700);
   color: var(--color-text-primary, #0f172a);
-  display: block;
+  margin: 0;
+  line-height: 1.2;
 }
 
-.company-topbar-info small {
-  display: block;
-  color: var(--color-text-muted, #66766d);
-  font-size: 12px;
+@media (max-width: 640px) {
+  .company-page-meta {
+    display: none;
+  }
+}
+
+.company-topbar-center {
+  flex: 1;
+  max-width: 480px;
+  display: flex;
+  justify-content: center;
 }
 
 .company-topbar-actions {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
+  flex-shrink: 0;
 }
 
 .company-menu-btn {
@@ -48,6 +79,12 @@
   background: var(--color-surface-hover, #f1f5f9);
 }
 
+@media (max-width: 1024px) {
+  .company-menu-btn {
+    display: flex;
+  }
+}
+
 /* ── Dark Mode Overrides ── */
 [data-theme="dark"] .company-topbar {
   background: rgba(9, 14, 34, 0.92) !important;
@@ -55,21 +92,20 @@
   border-bottom-color: rgba(99, 142, 203, 0.25) !important;
 }
 
-[data-theme="dark"] .company-topbar-info strong {
-  color: #ffffff !important;
+[data-theme="dark"] .company-breadcrumb {
+  color: #34d399;
 }
 
-[data-theme="dark"] .company-topbar-info small {
-  color: #f1f5f9 !important;
+[data-theme="dark"] .company-topbar-title {
+  color: #ffffff;
 }
 
 [data-theme="dark"] .company-menu-btn {
-  color: #ffffff !important;
-  border-color: rgba(99, 142, 203, 0.35) !important;
+  color: #cbd5e1;
+  border-color: rgba(99, 142, 203, 0.3);
 }
 
-@media (max-width: 900px) {
-  .company-menu-btn {
-    display: inline-flex;
-  }
+[data-theme="dark"] .company-menu-btn:hover {
+  background: rgba(99, 142, 203, 0.15);
+  color: #ffffff;
 }
