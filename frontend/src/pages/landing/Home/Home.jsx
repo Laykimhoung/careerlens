@@ -67,6 +67,20 @@ export default function Home() {
   const { theme } = useTheme();
   const { t } = useLanguage();
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" ? window.innerWidth < 768 : false
+  );
+
+  // Responsive mobile screen tracking
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const [stats, setStats] = useState({
     students: 0,
     companies: 0,
@@ -148,21 +162,22 @@ export default function Home() {
       {/* Background Animated Radar (Fixed Full Page) */}
       <div className="landing-radar-bg">
         <Radar
-          key={theme}
+          key={`${theme}-${isMobile ? "mob" : "desk"}`}
           color={theme === "dark" ? "#1e40af" : "#638ECB"}
           lightMode={theme === "light"}
           mode="sweep"
           speed={1.5}
           trail={theme === "dark" ? 0.5 : 0.45}
-          scale={0.6}
-          ringCount={8}
-          spokeCount={8}
-          targets={11}
-          clutter={0.6}
+          scale={isMobile ? 0.46 : 0.6}
+          centerY={isMobile ? 0.36 : 0.5}
+          ringCount={isMobile ? 6 : 8}
+          spokeCount={isMobile ? 6 : 8}
+          targets={isMobile ? 6 : 11}
+          clutter={isMobile ? 0.4 : 0.6}
           mouseInteraction={true}
-          brightness={theme === "dark" ? 1.1 : 1.3}
-          gridOpacity={1.8}
-          lineWidth={1.5}
+          brightness={isMobile ? (theme === "dark" ? 0.85 : 1.05) : (theme === "dark" ? 1.1 : 1.3)}
+          gridOpacity={isMobile ? 1.1 : 1.8}
+          lineWidth={isMobile ? 1.1 : 1.5}
         />
       </div>
 
@@ -189,10 +204,61 @@ export default function Home() {
 
             <div className="landing-actions">
               <ThemeLanguageToggle />
-              <Link to="/login" className="landing-btn b2">{t("auth.signIn")}</Link>
-              <Link to="/register" className="landing-btn">{t("common.getStarted")}</Link>
+              <Link to="/login" className="landing-btn b2 landing-btn--desktop">{t("auth.signIn")}</Link>
+              <Link to="/register" className="landing-btn landing-btn--desktop">{t("common.getStarted")}</Link>
+
+              {/* Mobile menu hamburger toggle button */}
+              <button 
+                type="button" 
+                className="landing-mobile-menu-btn"
+                onClick={() => setMobileMenuOpen((prev) => !prev)}
+                aria-label="Toggle navigation menu"
+                aria-expanded={mobileMenuOpen}
+              >
+                {mobileMenuOpen ? (
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                ) : (
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                  </svg>
+                )}
+              </button>
             </div>
           </div>
+
+          {/* Mobile Navigation Drawer */}
+          {mobileMenuOpen && (
+            <div className="landing-mobile-menu">
+              <nav className="landing-mobile-nav">
+                <Link to="/login" onClick={() => setMobileMenuOpen(false)}>
+                  {t("common.nav.findJobs")}
+                </Link>
+                <a href="#companies" onClick={() => setMobileMenuOpen(false)}>
+                  {t("common.forCompanies")}
+                </a>
+                <a href="#how" onClick={() => setMobileMenuOpen(false)}>
+                  {t("common.howItWorks")}
+                </a>
+                <a href="#about" onClick={() => setMobileMenuOpen(false)}>
+                  {t("common.about")}
+                </a>
+              </nav>
+
+              <div className="landing-mobile-actions">
+                <Link to="/login" className="landing-btn b2" onClick={() => setMobileMenuOpen(false)}>
+                  {t("auth.signIn")}
+                </Link>
+                <Link to="/register" className="landing-btn" onClick={() => setMobileMenuOpen(false)}>
+                  {t("common.getStarted")}
+                </Link>
+              </div>
+            </div>
+          )}
         </header>
 
         <main>
@@ -316,7 +382,7 @@ export default function Home() {
               </div>
 
               {/* Stats Grid (Real-time from Database) */}
-              <div className="landing-grid-4" style={{ marginBottom: "16px" }}>
+              <div className="landing-grid-4 landing-stats-grid" style={{ marginBottom: "16px" }}>
                 <div className="landing-card landing-animate-on-scroll landing-stagger-1" style={{ textAlign: "center", padding: "32px 16px" }}>
                   <h3 className="text-primary" style={{ fontSize: "32px", fontWeight: "800", marginBottom: "8px" }}>
                     <AnimatedCounter value={stats.students} />
@@ -398,17 +464,17 @@ export default function Home() {
                 <OrbitImages
                   images={ABOUT_ORBIT_IMAGES}
                   shape="ellipse"
-                  radiusX={460}
-                  radiusY={85}
+                  radiusX={isMobile ? 240 : 460}
+                  radiusY={isMobile ? 75 : 85}
                   rotation={-4}
                   duration={24}
-                  itemSize={135}
+                  itemSize={isMobile ? 85 : 135}
                   depth={0.85}
                   showPath={true}
                   pathColor={theme === "dark" ? "rgba(99, 142, 203, 0.35)" : "rgba(1, 107, 251, 0.25)"}
-                  pathWidth={2}
+                  pathWidth={isMobile ? 1.5 : 2}
                   pathDash={8}
-                  itemRadius={24}
+                  itemRadius={isMobile ? 16 : 24}
                   hoverScale={1.16}
                   hoverSpeed={0.25}
                   draggable={true}
