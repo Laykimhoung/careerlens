@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../../hooks/useAuth";
 import SideRays from "../../../components/ui/SideRays";
+import RunawayButton from "../../../components/auth/RunawayButton";
 import { useLanguage } from "../../../context/LanguageContext";
 import "./AuthPage.css";
 
@@ -43,6 +44,10 @@ export default function AuthPage() {
     company_name: "", work_email: "", industry: "Software", company_size: "1-10", location: "", website: "",
     terms: false
   });
+
+  // Settigation Component 95: tracked field completion
+  const completedLoginFields =
+    (loginForm.email.trim() ? 1 : 0) + (loginForm.password.trim() ? 1 : 0);
 
   useEffect(() => {
     if (isAuthenticated && user?.role) {
@@ -182,9 +187,14 @@ export default function AuthPage() {
               <Link to="/forgot-password" className="auth-link">{t("auth.forgotPassword")}</Link>
             </div>
 
-            <button type="submit" className="auth-submit-btn" disabled={loading}>
+            <RunawayButton
+              type="submit"
+              completedFields={completedLoginFields}
+              requiredFields={2}
+              loading={loading}
+            >
               {loading ? t("auth.signingIn") : t("auth.signIn")}
-            </button>
+            </RunawayButton>
 
             <p style={{ textAlign: 'center', fontSize: '11px', color: '#888', marginBottom: '16px', lineHeight: 1.5 }}>
               Accounts: <strong>demo_cand_sreymom</strong> · <strong>demo_comp_mekong</strong> · <strong>demo_admin</strong><br />
