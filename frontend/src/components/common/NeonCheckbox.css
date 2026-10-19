@@ -1,0 +1,327 @@
+/* ═════════════════════════════════════════════════════════════════════
+   NEON CHECKBOX COMPONENT (00Kubi "hot-dragonfly-56" CYBERPUNK STYLE)
+   Adapted to CareerLens #016BFB Electric Royal Blue Palette
+   ═════════════════════════════════════════════════════════════════════ */
+
+.neon-checkbox-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+}
+
+.neon-checkbox-wrapper.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.neon-checkbox__label-text {
+  font-size: 13px;
+  color: #8fa2c0;
+  transition: color 0.2s ease;
+  line-height: 1;
+}
+
+.neon-checkbox-wrapper:hover .neon-checkbox__label-text {
+  color: #c9d8ee;
+}
+
+.neon-checkbox {
+  --primary: #016BFB;
+  --primary-dark: #072e70;
+  --primary-light: #5298ff;
+  --size: 20px;
+  position: relative;
+  width: var(--size);
+  height: var(--size);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  flex-shrink: 0;
+}
+
+.neon-checkbox input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 10;
+  margin: 0;
+}
+
+.neon-checkbox__frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.neon-checkbox__box {
+  position: absolute;
+  inset: 0;
+  background: rgba(7, 12, 22, 0.95);
+  border-radius: 5px;
+  border: 1.5px solid #1a2744;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-sizing: border-box;
+}
+
+.neon-checkbox__check-container {
+  position: absolute;
+  inset: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.neon-checkbox__check {
+  width: 76%;
+  height: 76%;
+  fill: none;
+  stroke: #ffffff;
+  stroke-width: 3.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 40;
+  stroke-dashoffset: 40;
+  transform-origin: center;
+  filter: drop-shadow(0 0 3px #016BFB);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.neon-checkbox__glow {
+  position: absolute;
+  inset: -2px;
+  border-radius: 7px;
+  background: var(--primary);
+  opacity: 0;
+  filter: blur(8px);
+  transform: scale(1.1);
+  transition: all 0.4s ease;
+  pointer-events: none;
+}
+
+.neon-checkbox__borders {
+  position: absolute;
+  inset: 0;
+  border-radius: 5px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.neon-checkbox__borders span {
+  position: absolute;
+  width: 35px;
+  height: 1.5px;
+  background: linear-gradient(90deg, transparent, var(--primary-light), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.neon-checkbox__borders span:nth-child(1) {
+  top: 0;
+  left: -100%;
+  animation: neonBorderFlow1 1.8s linear infinite;
+}
+
+.neon-checkbox__borders span:nth-child(2) {
+  top: -100%;
+  right: 0;
+  width: 1.5px;
+  height: 35px;
+  background: linear-gradient(180deg, transparent, var(--primary-light), transparent);
+  animation: neonBorderFlow2 1.8s linear infinite;
+}
+
+.neon-checkbox__borders span:nth-child(3) {
+  bottom: 0;
+  right: -100%;
+  animation: neonBorderFlow3 1.8s linear infinite;
+}
+
+.neon-checkbox__borders span:nth-child(4) {
+  bottom: -100%;
+  left: 0;
+  width: 1.5px;
+  height: 35px;
+  background: linear-gradient(0deg, transparent, var(--primary-light), transparent);
+  animation: neonBorderFlow4 1.8s linear infinite;
+}
+
+.neon-checkbox__particles span {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: var(--primary-light);
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+  top: 50%;
+  left: 50%;
+  box-shadow: 0 0 6px var(--primary);
+}
+
+.neon-checkbox__rings {
+  position: absolute;
+  inset: -14px;
+  pointer-events: none;
+}
+
+.neon-checkbox__rings .ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid var(--primary);
+  opacity: 0;
+  transform: scale(0);
+}
+
+.neon-checkbox__sparks span {
+  position: absolute;
+  width: 14px;
+  height: 1.5px;
+  background: linear-gradient(90deg, var(--primary-light), transparent);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Hover Effects */
+.neon-checkbox:hover .neon-checkbox__box,
+.neon-checkbox-wrapper:hover .neon-checkbox__box {
+  border-color: rgba(1, 107, 251, 0.6);
+  box-shadow: 0 0 10px rgba(1, 107, 251, 0.25);
+  transform: scale(1.04);
+}
+
+/* Focus Visible */
+.neon-checkbox input:focus-visible ~ .neon-checkbox__frame .neon-checkbox__box {
+  outline: 2px solid #016BFB;
+  outline-offset: 2px;
+}
+
+/* Checked State */
+.neon-checkbox input:checked ~ .neon-checkbox__frame .neon-checkbox__box {
+  border-color: var(--primary);
+  background: rgba(1, 107, 251, 0.18);
+  box-shadow: 
+    0 0 12px rgba(1, 107, 251, 0.45),
+    inset 0 0 8px rgba(1, 107, 251, 0.2);
+}
+
+.neon-checkbox input:checked ~ .neon-checkbox__frame .neon-checkbox__check {
+  stroke-dashoffset: 0;
+  transform: scale(1.08);
+}
+
+.neon-checkbox input:checked ~ .neon-checkbox__frame .neon-checkbox__glow {
+  opacity: 0.35;
+}
+
+.neon-checkbox input:checked ~ .neon-checkbox__frame .neon-checkbox__borders span {
+  opacity: 1;
+}
+
+/* Checked Particle Animations */
+.neon-checkbox input:checked ~ .neon-checkbox__frame .neon-checkbox__particles span {
+  animation: neonParticleExplosion 0.6s ease-out forwards;
+}
+
+.neon-checkbox input:checked ~ .neon-checkbox__frame .neon-checkbox__rings .ring {
+  animation: neonRingPulse 0.6s ease-out forwards;
+}
+
+.neon-checkbox input:checked ~ .neon-checkbox__frame .neon-checkbox__sparks span {
+  animation: neonSparkFlash 0.6s ease-out forwards;
+}
+
+/* Border Flow Keyframes */
+@keyframes neonBorderFlow1 {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(200%); }
+}
+
+@keyframes neonBorderFlow2 {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(200%); }
+}
+
+@keyframes neonBorderFlow3 {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-200%); }
+}
+
+@keyframes neonBorderFlow4 {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-200%); }
+}
+
+/* Particle Explosion Keyframes */
+@keyframes neonParticleExplosion {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(
+      calc(-50% + var(--x, 16px)),
+      calc(-50% + var(--y, 16px))
+    ) scale(0);
+    opacity: 0;
+  }
+}
+
+/* Ring Pulse Keyframes */
+@keyframes neonRingPulse {
+  0% {
+    transform: scale(0);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+/* Spark Flash Keyframes */
+@keyframes neonSparkFlash {
+  0% {
+    transform: rotate(var(--r, 0deg)) translateX(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(var(--r, 0deg)) translateX(20px) scale(0);
+    opacity: 0;
+  }
+}
+
+/* Particle Coordinates */
+.neon-checkbox__particles span:nth-child(1) { --x: 16px; --y: -16px; }
+.neon-checkbox__particles span:nth-child(2) { --x: -16px; --y: -16px; }
+.neon-checkbox__particles span:nth-child(3) { --x: 16px; --y: 16px; }
+.neon-checkbox__particles span:nth-child(4) { --x: -16px; --y: 16px; }
+.neon-checkbox__particles span:nth-child(5) { --x: 20px; --y: 0px; }
+.neon-checkbox__particles span:nth-child(6) { --x: -20px; --y: 0px; }
+.neon-checkbox__particles span:nth-child(7) { --x: 0px; --y: 20px; }
+.neon-checkbox__particles span:nth-child(8) { --x: 0px; --y: -20px; }
+.neon-checkbox__particles span:nth-child(9) { --x: 12px; --y: -18px; }
+.neon-checkbox__particles span:nth-child(10) { --x: -12px; --y: 18px; }
+.neon-checkbox__particles span:nth-child(11) { --x: 18px; --y: 12px; }
+.neon-checkbox__particles span:nth-child(12) { --x: -18px; --y: -12px; }
+
+/* Spark Rotations */
+.neon-checkbox__sparks span:nth-child(1) { --r: 0deg; top: 50%; left: 50%; }
+.neon-checkbox__sparks span:nth-child(2) { --r: 90deg; top: 50%; left: 50%; }
+.neon-checkbox__sparks span:nth-child(3) { --r: 180deg; top: 50%; left: 50%; }
+.neon-checkbox__sparks span:nth-child(4) { --r: 270deg; top: 50%; left: 50%; }
+
+/* Ring Delays */
+.neon-checkbox__rings .ring:nth-child(1) { animation-delay: 0s; }
+.neon-checkbox__rings .ring:nth-child(2) { animation-delay: 0.08s; }
+.neon-checkbox__rings .ring:nth-child(3) { animation-delay: 0.16s; }

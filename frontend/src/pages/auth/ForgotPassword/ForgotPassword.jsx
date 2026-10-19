@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { forgotPasswordApi } from "../../../services/authService";
 import SideRays from "../../../components/ui/SideRays";
-import ThemeLanguageToggle from "../../../components/common/ThemeLanguageToggle";
+import CurvyInput from "../../../components/common/CurvyInput";
 import { useLanguage } from "../../../context/LanguageContext";
 import "../AuthPage/AuthPage.css";
 
@@ -44,8 +44,8 @@ export default function ForgotPassword() {
       <div className="auth-rays-bg">
         <SideRays
           origin="top-left"
-          rayColor1="#1fd5a8"
-          rayColor2="#016BFB"
+          rayColor1="#016BFB"
+          rayColor2="#388bfd"
           speed={2.2}
           intensity={1.8}
           spread={2}
@@ -54,8 +54,8 @@ export default function ForgotPassword() {
         />
         <SideRays
           origin="top-right"
-          rayColor1="#1fd5a8"
-          rayColor2="#016BFB"
+          rayColor1="#016BFB"
+          rayColor2="#388bfd"
           speed={2.5}
           intensity={1.8}
           spread={2}
@@ -68,16 +68,6 @@ export default function ForgotPassword() {
       <div className="tether-card">
         {/* Top Header */}
         <div className="tether-header">
-          <div className="tether-brand-row">
-            <Link to="/" className="tether-brand-badge" title="CareerLens">
-              <div className="tether-brand-ring">
-                <div className="tether-brand-dot" />
-              </div>
-              <span className="tether-brand-text">CAREERLENS</span>
-            </Link>
-            <ThemeLanguageToggle />
-          </div>
-
           <h1 className="tether-title">
             {submitted ? "Check your inbox" : t("auth.forgotPassword", "Forgot password?")}
           </h1>
@@ -134,7 +124,7 @@ export default function ForgotPassword() {
           <form className="tether-form" onSubmit={handleSubmit}>
             <div className="tether-field">
               <label className="tether-label">{t("common.email", "Email Address")}</label>
-              <div className={`tether-input-wrapper ${isEmailValid ? "valid" : ""}`}>
+              <CurvyInput isValid={isEmailValid}>
                 <span className="tether-icon-left">
                   <svg
                     width="18"
@@ -168,7 +158,7 @@ export default function ForgotPassword() {
                     </svg>
                   </span>
                 )}
-              </div>
+              </CurvyInput>
             </div>
 
             <button

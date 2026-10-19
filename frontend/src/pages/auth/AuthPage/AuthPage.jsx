@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../../hooks/useAuth";
 import SideRays from "../../../components/ui/SideRays";
-import ThemeLanguageToggle from "../../../components/common/ThemeLanguageToggle";
+import CurvyInput from "../../../components/common/CurvyInput";
+import NeonCheckbox from "../../../components/common/NeonCheckbox";
 import { useLanguage } from "../../../context/LanguageContext";
 import "./AuthPage.css";
 
@@ -194,8 +195,8 @@ export default function AuthPage() {
       <div className="auth-rays-bg">
         <SideRays
           origin="top-left"
-          rayColor1="#1fd5a8"
-          rayColor2="#016BFB"
+          rayColor1="#016BFB"
+          rayColor2="#388bfd"
           speed={2.2}
           intensity={1.8}
           spread={2}
@@ -204,8 +205,8 @@ export default function AuthPage() {
         />
         <SideRays
           origin="top-right"
-          rayColor1="#1fd5a8"
-          rayColor2="#016BFB"
+          rayColor1="#016BFB"
+          rayColor2="#388bfd"
           speed={2.5}
           intensity={1.8}
           spread={2}
@@ -218,16 +219,6 @@ export default function AuthPage() {
       <div className="tether-card">
         {/* Top Header */}
         <div className="tether-header">
-          <div className="tether-brand-row">
-            <Link to="/" className="tether-brand-badge" title="CareerLens">
-              <div className="tether-brand-ring">
-                <div className="tether-brand-dot" />
-              </div>
-              <span className="tether-brand-text">TETHER</span>
-            </Link>
-            <ThemeLanguageToggle />
-          </div>
-
           <h1 className="tether-title">
             {isLogin ? t("auth.signIn") : t("auth.createAccount")}
           </h1>
@@ -248,7 +239,7 @@ export default function AuthPage() {
               <label className="tether-label">
                 {t("common.email")} / {t("auth.username")}
               </label>
-              <div className={`tether-input-wrapper ${isEmailValid ? "valid" : ""}`}>
+              <CurvyInput isValid={isEmailValid}>
                 <span className="tether-icon-left">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
@@ -272,7 +263,7 @@ export default function AuthPage() {
                     </svg>
                   </span>
                 )}
-              </div>
+              </CurvyInput>
             </div>
 
             {/* Password Field */}
@@ -283,7 +274,7 @@ export default function AuthPage() {
                   {t("auth.forgotPassword")}
                 </Link>
               </div>
-              <div className={`tether-input-wrapper ${isPasswordValid ? "valid" : ""}`}>
+              <CurvyInput isValid={isPasswordValid}>
                 <span className="tether-icon-left">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
@@ -314,20 +305,17 @@ export default function AuthPage() {
                     </svg>
                   </span>
                 )}
-              </div>
+              </CurvyInput>
             </div>
 
             {/* Remember Me Toggle */}
             <div className="tether-remember-row">
-              <label className="tether-checkbox">
-                <input
-                  type="checkbox"
-                  checked={loginForm.remember}
-                  onChange={(e) => setLoginForm({ ...loginForm, remember: e.target.checked })}
-                  disabled={loading}
-                />
-                <span>{t("auth.rememberMe")}</span>
-              </label>
+              <NeonCheckbox
+                checked={loginForm.remember}
+                onChange={(e) => setLoginForm({ ...loginForm, remember: e.target.checked })}
+                disabled={loading}
+                label={t("auth.rememberMe")}
+              />
             </div>
 
             {/* ── Animated Button & Tether Track (Settigation Component 95) ── */}
@@ -453,7 +441,7 @@ export default function AuthPage() {
 
             <div className="tether-field">
               <label className="tether-label">{t("auth.fullName")}</label>
-              <div className="tether-input-wrapper">
+              <CurvyInput isValid={Boolean(registerForm.full_name.trim())}>
                 <input
                   type="text"
                   placeholder="Full name"
@@ -463,12 +451,12 @@ export default function AuthPage() {
                   className="tether-input"
                   required
                 />
-              </div>
+              </CurvyInput>
             </div>
 
             <div className="tether-field">
               <label className="tether-label">{t("common.email")}</label>
-              <div className="tether-input-wrapper">
+              <CurvyInput isValid={Boolean(registerForm.email.trim())}>
                 <input
                   type="email"
                   placeholder="name@example.com"
@@ -478,12 +466,12 @@ export default function AuthPage() {
                   className="tether-input"
                   required
                 />
-              </div>
+              </CurvyInput>
             </div>
 
             <div className="tether-field">
               <label className="tether-label">{t("auth.password")}</label>
-              <div className="tether-input-wrapper">
+              <CurvyInput isValid={Boolean(registerForm.password.trim())}>
                 <input
                   type={showRegisterPassword ? "text" : "password"}
                   placeholder="At least 8 characters"
@@ -499,12 +487,12 @@ export default function AuthPage() {
                 >
                   {showRegisterPassword ? <EyeOffIcon /> : <EyeIcon />}
                 </span>
-              </div>
+              </CurvyInput>
             </div>
 
             <div className="tether-field">
               <label className="tether-label">{t("auth.confirmPassword")}</label>
-              <div className="tether-input-wrapper">
+              <CurvyInput isValid={Boolean(registerForm.confirm_password.trim() && registerForm.confirm_password === registerForm.password)}>
                 <input
                   type={showRegisterConfirmPassword ? "text" : "password"}
                   placeholder="Confirm your password"
@@ -522,13 +510,13 @@ export default function AuthPage() {
                 >
                   {showRegisterConfirmPassword ? <EyeOffIcon /> : <EyeIcon />}
                 </span>
-              </div>
+              </CurvyInput>
             </div>
 
             {registerRole === "candidate" ? (
               <div className="tether-field">
                 <label className="tether-label">{t("auth.universityCollege")}</label>
-                <div className="tether-input-wrapper">
+                <CurvyInput isValid={Boolean(registerForm.university.trim())}>
                   <input
                     type="text"
                     placeholder="e.g. Royal University of Phnom Penh"
@@ -537,12 +525,12 @@ export default function AuthPage() {
                     disabled={loading}
                     className="tether-input"
                   />
-                </div>
+                </CurvyInput>
               </div>
             ) : (
               <div className="tether-field">
                 <label className="tether-label">{t("auth.companyName")}</label>
-                <div className="tether-input-wrapper">
+                <CurvyInput isValid={Boolean(registerForm.company_name.trim())}>
                   <input
                     type="text"
                     placeholder="Company name"
@@ -552,21 +540,18 @@ export default function AuthPage() {
                     className="tether-input"
                     required
                   />
-                </div>
+                </CurvyInput>
               </div>
             )}
 
             <div className="tether-remember-row">
-              <label className="tether-checkbox">
-                <input
-                  type="checkbox"
-                  checked={registerForm.terms}
-                  onChange={(e) => setRegisterForm({ ...registerForm, terms: e.target.checked })}
-                  disabled={loading}
-                  required
-                />
-                <span>{t("auth.agreeTerms")}</span>
-              </label>
+              <NeonCheckbox
+                checked={registerForm.terms}
+                onChange={(e) => setRegisterForm({ ...registerForm, terms: e.target.checked })}
+                disabled={loading}
+                required
+                label={t("auth.agreeTerms")}
+              />
             </div>
 
             <button type="submit" className="tether-btn locked" disabled={loading} style={{ height: "54px" }}>
