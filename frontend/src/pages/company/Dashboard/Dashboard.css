@@ -795,3 +795,128 @@
     transition: none !important;
   }
 }
+
+/* ── Galaxy Dark Mode Scoped Overrides for Company Dashboard ──────────────── */
+[data-theme="dark"] .comp-greeting-title {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .comp-greeting-sub {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .comp-search-input {
+  background: rgba(10, 16, 38, 0.88);
+  border-color: rgba(99, 142, 203, 0.3);
+  color: #ffffff;
+}
+
+[data-theme="dark"] .comp-search-icon {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .comp-notif-btn {
+  background: rgba(13, 21, 48, 0.82);
+  border-color: rgba(99, 142, 203, 0.32);
+  color: #ffffff;
+}
+
+[data-theme="dark"] .comp-notif-btn:hover {
+  background: rgba(99, 142, 203, 0.22);
+  color: #93c5fd;
+}
+
+[data-theme="dark"] .comp-stat-box {
+  background: rgba(16, 26, 60, 0.78);
+  border-color: rgba(99, 142, 203, 0.28);
+}
+
+[data-theme="dark"] .comp-stat-box:hover {
+  background: rgba(24, 38, 86, 0.92);
+  border-color: rgba(99, 142, 203, 0.5);
+}
+
+[data-theme="dark"] .comp-stat-val {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .comp-stat-lbl {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .comp-dual-stats,
+[data-theme="dark"] .comp-dual-stat-item {
+  background: rgba(18, 30, 68, 0.72);
+  border-color: rgba(99, 142, 203, 0.28);
+}
+
+[data-theme="dark"] .comp-dual-stat-item strong {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .comp-dual-stat-item span {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .comp-chart-box {
+  background: rgba(16, 26, 60, 0.6);
+  border-color: rgba(99, 142, 203, 0.25);
+}
+
+[data-theme="dark"] .comp-job-row-card {
+  background: rgba(16, 26, 60, 0.78);
+  border-color: rgba(99, 142, 203, 0.25);
+}
+
+[data-theme="dark"] .comp-job-row-card:hover {
+  background: rgba(24, 38, 86, 0.92);
+  border-color: rgba(99, 142, 203, 0.5);
+}
+
+[data-theme="dark"] .comp-job-role-title {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .comp-job-row-meta {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .comp-job-status-pill {
+  background: rgba(99, 142, 203, 0.25);
+  border-color: rgba(99, 142, 203, 0.4);
+  color: #ffffff;
+}
+
+[data-theme="dark"] .comp-process-item {
+  background: rgba(16, 26, 60, 0.78);
+  border-color: rgba(99, 142, 203, 0.25);
+}
+
+[data-theme="dark"] .comp-process-item:hover {
+  background: rgba(24, 38, 86, 0.92);
+  border-color: rgba(99, 142, 203, 0.5);
+}
+
+[data-theme="dark"] .comp-process-cand {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .comp-process-role {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .comp-status-pill {
+  background: rgba(99, 142, 203, 0.25);
+  border-color: rgba(99, 142, 203, 0.4);
+  color: #ffffff;
+}
+
+[data-theme="dark"] .comp-process-foot {
+  border-top-color: rgba(99, 142, 203, 0.22);
+}
+
+[data-theme="dark"] .comp-empty-process,
+[data-theme="dark"] .comp-empty-box {
+  color: #94a3b8;
+}
+

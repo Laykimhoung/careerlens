@@ -1,11 +1,14 @@
+import React from "react";
 import { Menu } from "lucide-react";
 import ThemeLanguageToggle from "../common/ThemeLanguageToggle";
+import HeaderUserMenu from "../common/HeaderUserMenu";
+import ModuleBackButton from "../common/ModuleBackButton";
 import "./CompanyHeader.css";
 
 export default function CompanyHeader({ onMenuClick }) {
   return (
     <header className="company-topbar">
-      <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+      <div className="company-topbar-left">
         {onMenuClick && (
           <button
             type="button"
@@ -16,9 +19,12 @@ export default function CompanyHeader({ onMenuClick }) {
             <Menu size={20} />
           </button>
         )}
+        <ModuleBackButton role="company" />
       </div>
+
       <div className="company-topbar-actions">
         <ThemeLanguageToggle />
+        <HeaderUserMenu role="company" />
       </div>
     </header>
   );

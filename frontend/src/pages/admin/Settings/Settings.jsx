@@ -39,9 +39,12 @@ function Settings() {
       setAdminAvatar(dataUrl);
       if (user?.id) {
         localStorage.setItem(`careerlens_admin_avatar_${user.id}`, dataUrl);
+        localStorage.setItem(`careerlens_avatar_${user.id}`, dataUrl);
       }
       localStorage.setItem("careerlens_admin_avatar", dataUrl);
-      window.dispatchEvent(new CustomEvent("careerlens_profile_image_updated"));
+      localStorage.setItem("careerlens_avatar", dataUrl);
+      window.dispatchEvent(new CustomEvent("careerlens_profile_image_updated", { detail: { avatar: dataUrl } }));
+      window.dispatchEvent(new Event("storage"));
     };
     reader.readAsDataURL(file);
   };
@@ -50,9 +53,12 @@ function Settings() {
     setAdminAvatar("");
     if (user?.id) {
       localStorage.removeItem(`careerlens_admin_avatar_${user.id}`);
+      localStorage.removeItem(`careerlens_avatar_${user.id}`);
     }
     localStorage.removeItem("careerlens_admin_avatar");
-    window.dispatchEvent(new CustomEvent("careerlens_profile_image_updated"));
+    localStorage.removeItem("careerlens_avatar");
+    window.dispatchEvent(new CustomEvent("careerlens_profile_image_updated", { detail: { avatar: "" } }));
+    window.dispatchEvent(new Event("storage"));
   };
   const [counts, setCounts] = useState({
     users: 0,

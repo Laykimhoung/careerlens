@@ -60,6 +60,37 @@ export default function CompanyDashboard() {
   const [error, setError] = useState("");
   const [searchFilter, setSearchFilter] = useState("");
 
+  const getCompanyLogo = (usr) => {
+    const uid = usr?.id;
+    return (
+      (uid ? localStorage.getItem(`careerlens_company_logo_${uid}`) : null) ||
+      (uid ? localStorage.getItem(`careerlens_avatar_${uid}`) : null) ||
+      localStorage.getItem("careerlens_company_logo") ||
+      localStorage.getItem("careerlens_avatar") ||
+      usr?.avatar ||
+      usr?.logo ||
+      ""
+    );
+  };
+
+  const [companyLogo, setCompanyLogo] = useState(() => getCompanyLogo(user));
+
+  useEffect(() => {
+    const handleLogoUpdate = (e) => {
+      if (e?.detail?.avatar !== undefined) {
+        setCompanyLogo(e.detail.avatar);
+      } else {
+        setCompanyLogo(getCompanyLogo(user));
+      }
+    };
+    window.addEventListener("careerlens_profile_image_updated", handleLogoUpdate);
+    window.addEventListener("storage", handleLogoUpdate);
+    return () => {
+      window.removeEventListener("careerlens_profile_image_updated", handleLogoUpdate);
+      window.removeEventListener("storage", handleLogoUpdate);
+    };
+  }, [user]);
+
   const loadDashboard = useCallback(async () => {
     setLoading(true);
     setError("");
@@ -151,8 +182,16 @@ export default function CompanyDashboard() {
       {/* ── Top Header Bar ──────────────────────────────────────────────────── */}
       <header className="comp-dash-header">
         <div className="comp-header-user">
-          <div className="comp-avatar-circle" aria-hidden="true">
-            {companyName.charAt(0).toUpperCase()}
+          <div className="comp-avatar-circle" aria-hidden="true" style={{ overflow: "hidden" }}>
+            {companyLogo ? (
+              <img
+                src={companyLogo}
+                alt={companyName}
+                style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%" }}
+              />
+            ) : (
+              companyName.charAt(0).toUpperCase()
+            )}
           </div>
           <div>
             <h1 className="comp-greeting-title">{t("admin.hi", "Hi")}, {companyName}</h1>

@@ -43,27 +43,36 @@ export default function CollapsibleSidebar({
 
   const getCustomImage = () => {
     if (typeof window === "undefined") return "";
-    if (currentRole === 'candidate') {
-      return (user?.id ? localStorage.getItem(`careerlens_avatar_${user.id}`) : null) || localStorage.getItem("careerlens_avatar") || "";
-    }
-    if (currentRole === 'company') {
-      return (user?.id ? localStorage.getItem(`careerlens_company_logo_${user.id}`) : null) || localStorage.getItem("careerlens_company_logo") || "";
-    }
-    if (currentRole === 'admin') {
-      return (user?.id ? localStorage.getItem(`careerlens_admin_avatar_${user.id}`) : null) || localStorage.getItem("careerlens_admin_avatar") || "";
-    }
-    return "";
+    const uid = user?.id;
+    return (
+      (uid ? localStorage.getItem(`careerlens_avatar_${uid}`) : null) ||
+      (uid ? localStorage.getItem(`careerlens_admin_avatar_${uid}`) : null) ||
+      (uid ? localStorage.getItem(`careerlens_company_logo_${uid}`) : null) ||
+      localStorage.getItem("careerlens_avatar") ||
+      localStorage.getItem("careerlens_admin_avatar") ||
+      localStorage.getItem("careerlens_company_logo") ||
+      user?.avatar ||
+      ""
+    );
   };
 
   const [customPhoto, setCustomPhoto] = useState(getCustomImage);
 
   useEffect(() => {
-    const handleUpdate = () => {
-      setCustomPhoto(getCustomImage());
+    const handleUpdate = (e) => {
+      if (e?.detail?.avatar !== undefined) {
+        setCustomPhoto(e.detail.avatar);
+      } else {
+        setCustomPhoto(getCustomImage());
+      }
     };
     handleUpdate();
     window.addEventListener("careerlens_profile_image_updated", handleUpdate);
-    return () => window.removeEventListener("careerlens_profile_image_updated", handleUpdate);
+    window.addEventListener("storage", handleUpdate);
+    return () => {
+      window.removeEventListener("careerlens_profile_image_updated", handleUpdate);
+      window.removeEventListener("storage", handleUpdate);
+    };
   }, [user, currentRole]);
 
   const displayName =

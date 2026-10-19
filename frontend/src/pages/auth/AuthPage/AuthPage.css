@@ -1,18 +1,30 @@
-/* Overall background */
+/* ═════════════════════════════════════════════════════════════════════
+   SETTIGATION COMPONENT 95: TETHER (100% STYLE FIDELITY)
+   Dark cybernetic aesthetic with mint #1fd5a8 accents & vector evasion
+   ═════════════════════════════════════════════════════════════════════ */
+
+/* Full Viewport Background */
 .auth-page-bg {
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #0b1313; /* Matches the dark background outside the floating box */
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: #070b0b;
+  background-image: 
+    radial-gradient(circle at 50% 20%, rgba(31, 213, 168, 0.08) 0%, transparent 60%),
+    radial-gradient(circle at 80% 80%, rgba(1, 107, 251, 0.06) 0%, transparent 50%),
+    radial-gradient(circle at 10% 70%, rgba(31, 213, 168, 0.05) 0%, transparent 50%);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
+  padding: 40px 16px;
+  box-sizing: border-box;
 }
 
+/* Ambient Ray Background */
 .auth-rays-bg {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
@@ -22,366 +34,758 @@
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
+  opacity: 0.85;
 }
 
-/* Floating Card Container */
-.auth-container {
+/* ── 100% Settigation Tether Card ── */
+.tether-card {
   position: relative;
-  z-index: 1;
-  width: 100%;
-  max-width: 960px;
-  height: 720px; /* Slightly taller than original 600px to fit new fields, but still floating */
-  background-color: #f7f6f1; /* Cream background */
-  border-radius: 32px; /* Very rounded premium corners */
-  overflow: hidden;
-  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.4);
-  display: flex;
-}
-
-/* 50% sides for the actual forms */
-.auth-side {
-  width: 50%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  top: 0;
-}
-.auth-side-left { left: 0; }
-.auth-side-right { right: 0; }
-
-/* The animated Blade (Dark Green Overlay) */
-.auth-blade {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 50%;
-  background-color: #0c2d25; /* Dark forest green */
   z-index: 10;
-  transition: transform 0.6s cubic-bezier(0.7, 0, 0.2, 1);
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.15);
-  display: flex;
-  align-items: center;
-  padding: 60px;
-}
-
-.blade-on-left {
-  transform: translateX(0%);
-}
-
-.blade-on-right {
-  transform: translateX(100%);
-}
-
-/* Inner blade content cross-fade */
-.blade-content {
-  position: absolute;
-  left: 60px;
-  right: 60px;
-  transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
-}
-.show-content {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
-  transition-delay: 0.2s; /* Wait for blade to start moving */
-}
-.hide-content {
-  opacity: 0;
-  transform: translateY(20px);
-  pointer-events: none;
-  transition-delay: 0s;
-}
-
-.blade-brand {
-  color: #c9b183; /* Gold/tan */
-  font-size: 11px;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  margin-bottom: 30px;
-  font-weight: 600;
-}
-
-.blade-title {
-  color: #f7f6f1;
-  font-size: 46px;
-  line-height: 1.1;
-  font-weight: 400;
-  margin-bottom: 24px;
-  font-family: "Georgia", "Times New Roman", serif; /* Serif font matching screenshot */
-}
-.blade-title em {
-  font-style: italic;
-}
-
-.blade-desc {
-  color: #92a39f;
-  font-size: 14px;
-  line-height: 1.6;
-  max-width: 280px;
-}
-
-/* Form Styles */
-.auth-form {
   width: 100%;
-  max-width: 320px;
-  display: flex;
-  flex-direction: column;
+  max-width: 460px;
+  background: rgba(12, 19, 19, 0.94);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(31, 213, 168, 0.22);
+  border-radius: 24px;
+  box-shadow: 
+    0 30px 80px rgba(0, 0, 0, 0.8),
+    0 0 50px rgba(31, 213, 168, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  padding: 38px 34px 34px;
+  box-sizing: border-box;
+  animation: tetherFadeIn 0.5s ease-out;
 }
 
-.auth-form h2 {
-  font-size: 26px;
-  font-weight: 700;
-  color: #111;
-  margin-bottom: 40px;
-  letter-spacing: -0.5px;
+@keyframes tetherFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
-.auth-input-group {
-  margin-bottom: 28px;
-  position: relative;
+/* Header & Brand Row */
+.tether-header {
+  margin-bottom: 26px;
 }
 
-.auth-input-group label {
-  display: block;
-  font-size: 11px;
-  font-weight: 500;
-  color: #777;
-  margin-bottom: 4px;
-}
-
-.auth-input-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.auth-input-wrapper input {
-  width: 100%;
-  border: none;
-  background: transparent;
-  border-bottom: 2px solid #e5e0d8;
-  padding: 8px 30px 8px 0;
-  font-size: 15px;
-  color: #111;
-  outline: none;
-  transition: border-bottom-color 0.2s;
-}
-
-.auth-input-wrapper input:focus {
-  border-bottom-color: #c9b183; /* Gold focus underline */
-}
-
-.auth-icon {
-  position: absolute;
-  right: 0;
-  color: #a39f96;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-button.auth-icon,
-.auth-icon-btn {
-  background: none;
-  border: none;
-  padding: 0;
-  margin: 0;
-  cursor: pointer;
-  outline: none;
-  transition: color 0.15s ease, transform 0.1s ease;
-}
-
-button.auth-icon:hover,
-.auth-icon-btn:hover {
-  color: #111;
-}
-
-button.auth-icon:active,
-.auth-icon-btn:active {
-  transform: scale(0.92);
-}
-
-.auth-hint {
-  font-size: 11px;
-  color: #888;
-  text-align: right;
-  margin-top: 8px;
-}
-
-.auth-form-actions {
+.tether-brand-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 32px;
+  margin-bottom: 22px;
 }
 
-.auth-checkbox {
+/* Brand Badge with concentric rings & pulsing dot */
+.tether-brand-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.tether-brand-ring {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(31, 213, 168, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: rgba(31, 213, 168, 0.05);
+  box-shadow: 0 0 12px rgba(31, 213, 168, 0.2);
+}
+
+.tether-brand-ring::before {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1px solid rgba(31, 213, 168, 0.3);
+}
+
+.tether-brand-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #1fd5a8;
+  box-shadow: 0 0 8px #1fd5a8;
+  animation: tetherPulse 2.4s ease-in-out infinite;
+}
+
+@keyframes tetherPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+    box-shadow: 0 0 8px #1fd5a8;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.8;
+    box-shadow: 0 0 14px #1fd5a8;
+  }
+}
+
+.tether-brand-text {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 3.5px;
+  color: #1fd5a8;
+  text-transform: uppercase;
+  user-select: none;
+}
+
+.tether-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 8px 0;
+  letter-spacing: -0.6px;
+  line-height: 1.2;
+}
+
+.tether-subtitle {
+  font-size: 13.5px;
+  color: #818b8b;
+  line-height: 1.5;
+  margin: 0;
+  font-weight: 400;
+}
+
+/* Error Notification */
+.tether-error {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: #fca5a5;
+  padding: 11px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  margin-bottom: 18px;
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 12px;
-  color: #666;
-  cursor: pointer;
-}
-.auth-checkbox input {
-  accent-color: #0c2d25;
+  animation: tetherShake 0.4s ease;
 }
 
-.auth-link {
+@keyframes tetherShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+/* Form Container */
+.tether-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Field & Inputs */
+.tether-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.tether-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tether-label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #99b3ae;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.tether-forgot {
   font-size: 12px;
+  color: #1fd5a8;
+  text-decoration: none;
   font-weight: 500;
-  color: #111;
+  transition: color 0.2s, text-shadow 0.2s;
+}
+
+.tether-forgot:hover {
+  color: #3de8be;
+  text-shadow: 0 0 8px rgba(31, 213, 168, 0.4);
   text-decoration: underline;
 }
 
-.auth-submit-btn {
-  background-color: #0c2d25;
-  color: white;
+.tether-input-wrapper {
+  display: flex;
+  align-items: center;
+  background-color: #090c0c;
+  border: 1px solid #1f2a2a;
+  border-radius: 12px;
+  padding: 0 15px;
+  height: 50px;
+  transition: all 0.22s ease;
+  position: relative;
+}
+
+.tether-input-wrapper:focus-within {
+  border-color: #1fd5a8;
+  box-shadow: 0 0 0 3px rgba(31, 213, 168, 0.15), 0 0 14px rgba(31, 213, 168, 0.12);
+  background-color: #0c1212;
+}
+
+.tether-input-wrapper.valid {
+  border-color: rgba(31, 213, 168, 0.55);
+}
+
+.tether-icon-left {
+  color: #556f6a;
+  display: flex;
+  align-items: center;
+  margin-right: 12px;
+  transition: color 0.2s;
+}
+
+.tether-input-wrapper:focus-within .tether-icon-left,
+.tether-input-wrapper.valid .tether-icon-left {
+  color: #1fd5a8;
+}
+
+.tether-input {
+  flex: 1;
+  background: transparent;
   border: none;
-  border-radius: 30px;
-  padding: 14px 0;
+  outline: none;
+  color: #ffffff;
+  font-size: 14.5px;
+  font-family: inherit;
   width: 100%;
-  font-size: 15px;
-  font-weight: 500;
+}
+
+.tether-input::placeholder {
+  color: #3f5551;
+}
+
+.tether-icon-right {
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+  color: #556f6a;
+  user-select: none;
+}
+
+.tether-icon-right.check {
+  color: #1fd5a8;
+  background-color: rgba(31, 213, 168, 0.12);
+  border-radius: 50%;
+  padding: 3px;
+  display: flex;
+  animation: checkPop 0.25s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+
+@keyframes checkPop {
+  0% { transform: scale(0.5); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.tether-icon-right.eye {
   cursor: pointer;
-  transition: background-color 0.2s, transform 0.1s;
-  margin-bottom: 24px;
+  padding: 4px;
+  border-radius: 4px;
+  transition: color 0.18s, background 0.18s;
 }
 
-.auth-submit-btn:hover {
-  background-color: #081e18;
-}
-.auth-submit-btn:active {
-  transform: scale(0.98);
+.tether-icon-right.eye:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.05);
 }
 
-.auth-submit-btn:disabled {
+/* Remember Me Checkbox */
+.tether-remember-row {
+  display: flex;
+  align-items: center;
+  margin-top: -2px;
+}
+
+.tether-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 13px;
+  color: #818b8b;
+  cursor: pointer;
+  user-select: none;
+}
+
+.tether-checkbox input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 17px;
+  height: 17px;
+  border: 1.5px solid #283737;
+  border-radius: 5px;
+  background: #090c0c;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+  margin: 0;
+}
+
+.tether-checkbox input[type="checkbox"]:checked {
+  background: #1fd5a8;
+  border-color: #1fd5a8;
+  box-shadow: 0 0 8px rgba(31, 213, 168, 0.4);
+}
+
+.tether-checkbox input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 2px;
+  width: 4px;
+  height: 8px;
+  border: solid #050a0a;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+/* ═════════════════════════════════════════════════════════════════════
+   THE TETHER DOCKING TRACK & RUNAWAY BUTTON PHYSICS (COMPONENT 95)
+   ═════════════════════════════════════════════════════════════════════ */
+
+.tether-track-container {
+  margin-top: 10px;
+  position: relative;
+  height: 52px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* The Dashed Home Socket */
+.tether-track {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 1.5px dashed rgba(31, 213, 168, 0.35);
+  border-radius: 26px;
+  background: rgba(31, 213, 168, 0.02);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  pointer-events: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tether-track::before {
+  content: "";
+  width: 18px;
+  height: 18px;
+  background-color: transparent;
+  border: 1.5px solid rgba(31, 213, 168, 0.3);
+  border-radius: 50%;
+  position: absolute;
+}
+
+.tether-track.locked {
+  border: 1.5px solid rgba(31, 213, 168, 0.6);
+  background: rgba(31, 213, 168, 0.06);
+  box-shadow: 0 0 20px rgba(31, 213, 168, 0.2);
+}
+
+.tether-track.locked::before {
+  display: none;
+}
+
+/* Dynamic Glowing Laser Cable */
+.tether-cable {
+  position: absolute;
+  top: calc(50% - 2px);
+  left: 50%;
+  height: 4px;
+  background: linear-gradient(90deg, rgba(31, 213, 168, 0.4), #1fd5a8);
+  box-shadow: 
+    0 0 10px rgba(31, 213, 168, 0.9),
+    0 0 4px rgba(255, 255, 255, 0.7);
+  transform-origin: 0 50%;
+  z-index: 2;
+  border-radius: 2px;
+  pointer-events: none;
+  transition: width 0.06s linear;
+}
+
+/* Runaway Button Wrapper */
+.tether-btn-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.22s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+  will-change: transform;
+}
+
+/* The Button */
+.tether-btn {
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 26px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  user-select: none;
+  outline: none;
+}
+
+/* Unlocked (Runs away / empty form: dark matte, no neon color) */
+.tether-btn.unlocked {
+  background-color: #1f2727;
+  color: #ffffff;
+  border: 1px solid #283737;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.tether-btn.unlocked:hover:not(:disabled) {
+  background-color: #263232;
+  border-color: #384c48;
+  color: #ffffff;
+}
+
+.tether-btn.unlocked:focus-visible {
+  border-color: #1fd5a8;
+  box-shadow: 0 0 0 3px rgba(31, 213, 168, 0.25);
+}
+
+/* Locked (Snaps home, mint neon glow) */
+.tether-btn.locked {
+  background: linear-gradient(135deg, #3de8be 0%, #1fd5a8 100%);
+  color: #050a0a;
+  font-weight: 800;
+  box-shadow: 
+    0 0 25px rgba(31, 213, 168, 0.45),
+    0 6px 20px rgba(31, 213, 168, 0.35);
+}
+
+.tether-btn.locked:hover {
+  filter: brightness(1.07);
+  box-shadow: 
+    0 0 30px rgba(31, 213, 168, 0.6),
+    0 8px 25px rgba(31, 213, 168, 0.45);
+  transform: translateY(-1px);
+}
+
+.tether-btn.locked:active {
+  transform: translateY(1px);
+}
+
+.tether-btn:disabled {
   opacity: 0.7;
   cursor: not-allowed;
 }
 
-.auth-switch-text {
-  font-size: 13px;
-  color: #777;
-  text-align: left;
+.tether-btn__lock-icon {
+  font-size: 14px;
 }
 
-.auth-switch-text a {
-  color: #111;
-  font-weight: 600;
-  text-decoration: underline;
-  margin-left: 4px;
-}
+/* ═════════════════════════════════════════════════════════════════════
+   STATUS FEEDBACK & KEYBOARD ESCAPE HATCHES
+   ═════════════════════════════════════════════════════════════════════ */
 
-.auth-error {
-  background-color: #fef2f2;
-  color: #991b1b;
-  padding: 12px;
-  border-radius: 6px;
-  font-size: 13px;
-  margin-bottom: 24px;
-}
-
-/* Tiny dev shortcut hidden bottom left */
-.dev-shortcut {
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.1);
-  cursor: pointer;
-  z-index: 100;
-}
-.dev-shortcut:hover {
-  color: #ccc;
-}
-
-/* Mobile responsive fallback */
-@media (max-width: 768px) {
-  .auth-blade {
-    display: none; /* Hide blade on small screens */
-  }
-  .auth-side {
-    width: 100%;
-    background-color: #f7f6f1;
-    z-index: 1;
-  }
-  /* On mobile, whichever route we are on is active */
-  .auth-side-left {
-    display: var(--show-login, flex);
-  }
-  .auth-side-right {
-    display: var(--show-register, flex);
-  }
-}
-
-/* Additional classes for the new comprehensive registration forms */
-.auth-role-toggle {
+.tether-status {
+  text-align: center;
+  margin-top: 6px;
   display: flex;
-  gap: 8px;
-  margin-bottom: 24px;
-}
-.auth-role-btn {
-  padding: 6px 16px;
-  border-radius: 6px;
-  font-size: 13px;
-  font-weight: 600;
-  border: 1px solid #d1d5db;
-  background: transparent;
-  color: #4b5563;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.auth-role-btn.active {
-  background: #0f5a4a;
-  color: #fff;
-  border-color: #0f5a4a;
-}
-.auth-input-row {
-  display: flex;
-  gap: 16px;
-  width: 100%;
-}
-.auth-input-row .auth-input-group {
-  flex: 1;
-}
-.auth-side-right {
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 40px 60px; /* Adjust padding for scrollbar */
-}
-/* Ensure form wrapper adapts */
-.auth-form.auth-form--register {
-  max-width: 440px; /* Wider to accommodate split fields */
-  margin: 0 auto;
-}
-.auth-form-scroll-wrapper {
-  width: 100%;
-  padding-bottom: 24px;
-}
-.auth-side-right {
-  display: block; /* override flex centering for scrollable content */
-}
-.auth-side-right .auth-form {
-  padding-top: 20px;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
 }
 
-/* Update scrollable flex behavior so it centers when small, but scrolls when big without cutting top */
-.auth-side-right {
-  display: flex !important;
+.tether-status-text {
+  display: flex;
   align-items: center;
   justify-content: center;
-  overflow-y: auto;
-  overflow-x: hidden;
+  gap: 8px;
 }
-.auth-side-right::before,
-.auth-side-right::after {
-  content: '';
-  margin: auto;
+
+.tether-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #ffaa44;
+  box-shadow: 0 0 8px rgba(255, 170, 68, 0.6);
+  transition: all 0.3s ease;
 }
-.auth-form.auth-form--register {
-  margin: auto;
-  padding: 40px 0;
+
+.tether-status-dot.locked {
+  background-color: #1fd5a8;
+  box-shadow: 0 0 10px #1fd5a8;
+}
+
+.tether-status-msg {
+  font-size: 13px;
+  color: #818b8b;
+  font-style: italic;
+  transition: color 0.3s ease;
+}
+
+.tether-status-msg.locked {
+  color: #1fd5a8;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.tether-keyboard-hints {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-size: 11.5px;
+  color: #556f6a;
+}
+
+.tether-key {
+  background-color: #1f2a2a;
+  color: #99b3ae;
+  border: 1px solid rgba(31, 213, 168, 0.2);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-weight: 600;
+}
+
+/* ═════════════════════════════════════════════════════════════════════
+   QUICK DEMO ACCOUNTS BOX
+   ═════════════════════════════════════════════════════════════════════ */
+
+.tether-demo-box {
+  margin-top: 14px;
+  padding: 13px 14px;
+  background: rgba(9, 14, 14, 0.7);
+  border: 1px solid rgba(31, 213, 168, 0.16);
+  border-radius: 12px;
+  text-align: center;
+}
+
+.tether-demo-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #67827d;
+  margin: 0 0 9px 0;
+  font-weight: 700;
+}
+
+.tether-demo-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.tether-demo-btn {
+  background: #101a1a;
+  border: 1px solid rgba(31, 213, 168, 0.22);
+  color: #b0c9c4;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.tether-demo-btn:hover:not(:disabled) {
+  background: rgba(31, 213, 168, 0.16);
+  border-color: #1fd5a8;
+  color: #ffffff;
+  box-shadow: 0 0 10px rgba(31, 213, 168, 0.2);
+}
+
+.tether-demo-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.tether-demo-pw {
+  font-size: 11px;
+  color: #556f6a;
+  margin: 9px 0 0 0;
+}
+
+.tether-demo-pw code {
+  color: #1fd5a8;
+  background: rgba(31, 213, 168, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+/* Switch between Sign In / Register */
+.tether-switch {
+  text-align: center;
+  margin-top: 14px;
+  font-size: 13px;
+  color: #818b8b;
+}
+
+.tether-switch a {
+  color: #1fd5a8;
+  text-decoration: none;
+  font-weight: 600;
+  margin-left: 4px;
+  transition: color 0.2s, text-shadow 0.2s;
+}
+
+.tether-switch a:hover {
+  color: #3de8be;
+  text-shadow: 0 0 8px rgba(31, 213, 168, 0.4);
+  text-decoration: underline;
+}
+
+/* ═════════════════════════════════════════════════════════════════════
+   REGISTRATION MODE STYLING
+   ═════════════════════════════════════════════════════════════════════ */
+
+.tether-role-toggle {
+  display: flex;
+  background: #090c0c;
+  border: 1px solid #1f2a2a;
+  border-radius: 12px;
+  padding: 4px;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.tether-role-btn {
+  flex: 1;
+  padding: 9px 12px;
+  border: none;
+  background: transparent;
+  color: #718581;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.tether-role-btn.active {
+  background: linear-gradient(135deg, rgba(31, 213, 168, 0.25), rgba(31, 213, 168, 0.12));
+  color: #1fd5a8;
+  border: 1px solid rgba(31, 213, 168, 0.35);
+  box-shadow: 0 0 10px rgba(31, 213, 168, 0.15);
+}
+
+/* ═════════════════════════════════════════════════════════════════════
+   SUCCESS STATE & UTILITY ANIMATIONS
+   ═════════════════════════════════════════════════════════════════════ */
+
+.tether-success-content {
+  text-align: center;
+  padding: 8px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.tether-success-icon {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: rgba(31, 213, 168, 0.1);
+  border: 1.5px solid rgba(31, 213, 168, 0.45);
+  box-shadow: 0 0 25px rgba(31, 213, 168, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1fd5a8;
+  margin: 6px auto 18px auto;
+  animation: checkPop 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+
+.tether-success-note {
+  font-size: 13px;
+  color: #818b8b;
+  line-height: 1.6;
+  margin: 0 0 18px 0;
+  max-width: 360px;
+}
+
+.tether-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(5, 10, 10, 0.35);
+  border-top-color: #050a0a;
+  border-radius: 50%;
+  animation: tetherSpin 0.6s linear infinite;
+  display: inline-block;
+  margin-right: 8px;
+}
+
+@keyframes tetherSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* ═════════════════════════════════════════════════════════════════════
+   RESPONSIVE DESIGN FOR MOBILE SCREENS
+   ═════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 520px) {
+  .auth-page-bg {
+    padding: 24px 12px;
+    align-items: flex-start;
+  }
+
+  .tether-card {
+    padding: 28px 20px 24px;
+    border-radius: 20px;
+    margin-top: 10px;
+  }
+
+  .tether-title {
+    font-size: 24px;
+  }
+
+  .tether-subtitle {
+    font-size: 12.5px;
+  }
+
+  .tether-input-wrapper {
+    height: 48px;
+    padding: 0 12px;
+  }
+
+  .tether-demo-buttons {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .tether-demo-btn {
+    width: 100%;
+    padding: 8px 12px;
+  }
 }

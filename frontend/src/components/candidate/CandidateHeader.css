@@ -7,8 +7,11 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 24px;
+  gap: 16px;
   flex-shrink: 0;
   transition: background-color 0.25s ease, border-color 0.25s ease;
+  position: relative;
+  z-index: 100;
 }
 
 @media (max-width: 1024px) {
@@ -20,7 +23,8 @@
 .header__left {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
+  flex-shrink: 0;
 }
 
 .header__menu-btn {
@@ -42,55 +46,45 @@
   }
 }
 
-.header__title {
-  font-size: 26px;
-  font-weight: var(--fw-bold, 700);
-  color: var(--color-text-primary);
-  margin: 0;
+.header__page-meta {
+  display: flex;
+  flex-direction: column;
 }
 
-@media (max-width: 1024px) {
-  .header__title {
-    font-size: 20px;
+.header__breadcrumb {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #016BFB;
+}
+
+.header__title {
+  font-size: 16px;
+  font-weight: var(--fw-bold, 700);
+  color: var(--color-text-primary, #0f172a);
+  margin: 0;
+  line-height: 1.2;
+}
+
+@media (max-width: 640px) {
+  .header__page-meta {
+    display: none;
   }
+}
+
+.header__center {
+  flex: 1;
+  max-width: 480px;
+  display: flex;
+  justify-content: center;
 }
 
 .header__right {
   display: flex;
   align-items: center;
-  gap: 16px;
-}
-
-.header__user {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.header__user-name {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--color-text-primary, #374151);
-}
-
-@media (max-width: 640px) {
-  .header__user-name {
-    display: none;
-  }
-}
-
-.header__avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background-color: var(--color-primary-soft, #bfdbfe);
-  color: var(--color-primary, #1e3a8a);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 14px;
-  text-transform: uppercase;
+  gap: 12px;
+  flex-shrink: 0;
 }
 
 /* ── Galaxy Dark Mode Overrides ── */
@@ -100,17 +94,18 @@
   border-bottom-color: rgba(99, 142, 203, 0.25) !important;
 }
 
-[data-theme="dark"] .header__title,
-[data-theme="dark"] .header__user-name {
-  color: #ffffff !important;
+[data-theme="dark"] .header__breadcrumb {
+  color: #638ECB;
+}
+
+[data-theme="dark"] .header__title {
+  color: #ffffff;
 }
 
 [data-theme="dark"] .header__menu-btn {
-  color: #ffffff !important;
+  color: #cbd5e1;
 }
 
-[data-theme="dark"] .header__avatar {
-  background: rgba(99, 142, 203, 0.3) !important;
-  color: #ffffff !important;
-  border: 1px solid rgba(99, 142, 203, 0.45) !important;
+[data-theme="dark"] .header__menu-btn:hover {
+  color: #ffffff;
 }

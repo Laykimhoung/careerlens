@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../../hooks/useAuth";
 import SideRays from "../../../components/ui/SideRays";
+import ThemeLanguageToggle from "../../../components/common/ThemeLanguageToggle";
 import { useLanguage } from "../../../context/LanguageContext";
 import "./AuthPage.css";
 
@@ -26,7 +27,7 @@ export default function AuthPage() {
   const navigate = useNavigate();
   const { t } = useLanguage();
   const { login, register, loading, error, clearError, isAuthenticated, user } = useAuth();
-  
+
   const isLogin = location.pathname === "/login";
 
   // Password visibility states
@@ -37,12 +38,108 @@ export default function AuthPage() {
   // Form states
   const [loginForm, setLoginForm] = useState({ email: "", password: "", remember: false });
   const [registerRole, setRegisterRole] = useState("candidate");
-  const [registerForm, setRegisterForm] = useState({ 
-    full_name: "", email: "", password: "", confirm_password: "",
-    university: "", major: "", graduation_year: "2029",
-    company_name: "", work_email: "", industry: "Software", company_size: "1-10", location: "", website: "",
-    terms: false
+  const [registerForm, setRegisterForm] = useState({
+    full_name: "",
+    email: "",
+    password: "",
+    confirm_password: "",
+    university: "",
+    major: "",
+    graduation_year: "2029",
+    company_name: "",
+    work_email: "",
+    industry: "Software",
+    company_size: "1-10",
+    location: "",
+    website: "",
+    terms: false,
   });
+
+  // Settigation Component 95: Tether button physics state
+  const [buttonOffset, setButtonOffset] = useState({ x: 0, y: 0 });
+  const [isFocused, setIsFocused] = useState(false);
+  const trackRef = useRef(null);
+
+  const isEmailValid = Boolean(loginForm.email.trim());
+  const isPasswordValid = Boolean(loginForm.password.trim());
+  const filledCount = (isEmailValid ? 1 : 0) + (isPasswordValid ? 1 : 0);
+  const isLocked = filledCount === 2;
+
+  // Snaps home and resets when form requirements are met or keyboard focus is active
+  useEffect(() => {
+    if (isLocked || isFocused) {
+      setButtonOffset({ x: 0, y: 0 });
+    }
+  }, [isLocked, isFocused]);
+
+  // Continuous mouse proximity tracking with vector evasion
+  useEffect(() => {
+    if (!isLogin || isLocked || isFocused) return;
+
+    const handleMouseMove = (e) => {
+      if (e.pointerType === "touch") return;
+      if (!trackRef.current) return;
+
+      const trackRect = trackRef.current.getBoundingClientRect();
+      const trackCenterX = trackRect.left + trackRect.width / 2;
+      const trackCenterY = trackRect.top + trackRect.height / 2;
+
+      // Current center of the button in viewport
+      const btnCenterX = trackCenterX + buttonOffset.x;
+      const btnCenterY = trackCenterY + buttonOffset.y;
+
+      const distX = e.clientX - btnCenterX;
+      const distY = e.clientY - btnCenterY;
+      const distToMouse = Math.hypot(distX, distY);
+
+      // Trigger proximity radius: 110px on empty form, 75px on half-filled
+      const triggerRadius = filledCount === 1 ? 75 : 110;
+
+      if (distToMouse < triggerRadius) {
+        // Component 95 logic:
+        // Empty form: bolts full travel (95px)
+        // 1 field filled: slows to half the travel (45px)
+        const travel = filledCount === 1 ? 45 : 95;
+        const maxBoundX = 135;
+        const maxBoundY = 60;
+
+        let angle = Math.atan2(-distY, -distX);
+        const jitter = (Math.random() - 0.5) * 0.4;
+        angle += jitter;
+
+        let nextX = buttonOffset.x + Math.cos(angle) * travel;
+        let nextY = buttonOffset.y + Math.sin(angle) * travel;
+
+        // Bounce back if hitting boundaries
+        if (Math.abs(nextX) > maxBoundX) {
+          nextX = -Math.sign(nextX) * (maxBoundX * 0.75);
+        }
+        if (Math.abs(nextY) > maxBoundY) {
+          nextY = -Math.sign(nextY) * (maxBoundY * 0.75);
+        }
+
+        setButtonOffset({ x: nextX, y: nextY });
+      }
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, [isLogin, isLocked, isFocused, filledCount, buttonOffset]);
+
+  const handleButtonHover = (e) => {
+    if (isLocked || isFocused) return;
+    const travel = filledCount === 1 ? 45 : 95;
+    const maxBoundX = 135;
+    const maxBoundY = 60;
+
+    const dirX = e.clientX > window.innerWidth / 2 ? -1 : 1;
+    const dirY = (Math.random() > 0.5 ? 1 : -1);
+
+    setButtonOffset({
+      x: dirX * Math.min(travel, maxBoundX),
+      y: dirY * Math.min(travel * 0.6, maxBoundY),
+    });
+  };
 
   useEffect(() => {
     if (isAuthenticated && user?.role) {
@@ -56,13 +153,12 @@ export default function AuthPage() {
   }, [isLogin, clearError]);
 
   const handleLoginSubmit = async (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     const result = await login(loginForm);
     if (result.success) {
       const roleBase = ROLE_DASHBOARD[result.role] || "/";
       const fromPath = location.state?.from?.pathname;
-      const target =
-        fromPath && fromPath.startsWith(roleBase) ? fromPath : roleBase;
+      const target = fromPath && fromPath.startsWith(roleBase) ? fromPath : roleBase;
       navigate(target, { replace: true });
     }
   };
@@ -79,409 +175,393 @@ export default function AuthPage() {
     }
   };
 
+  // Quick Demo fill handler
+  const fillDemo = (username, password) => {
+    setLoginForm((prev) => ({
+      ...prev,
+      email: username,
+      password: password,
+    }));
+  };
+
+  // Dynamic tether cable geometry
+  const cableLength = Math.hypot(buttonOffset.x, buttonOffset.y);
+  const cableAngle = Math.atan2(buttonOffset.y, buttonOffset.x) * (180 / Math.PI);
+
   return (
     <div className="auth-page-bg">
+      {/* Sci-Fi Ambient Light Rays */}
       <div className="auth-rays-bg">
         <SideRays
           origin="top-left"
-          rayColor1="#FFC46B"
+          rayColor1="#1fd5a8"
           rayColor2="#016BFB"
           speed={2.2}
-          intensity={2}
+          intensity={1.8}
           spread={2}
           density={5}
           followMouse={true}
         />
         <SideRays
           origin="top-right"
-          rayColor1="#FFC46B"
+          rayColor1="#1fd5a8"
           rayColor2="#016BFB"
           speed={2.5}
-          intensity={2}
+          intensity={1.8}
           spread={2}
           density={5}
           followMouse={true}
         />
       </div>
 
-      <div className="auth-container">
-        {/* The Blade (Dark Green Overlay) */}
-        <div className={`auth-blade ${isLogin ? "blade-on-right" : "blade-on-left"}`}>
-          {/* Blade Content for Register */}
-          <div className={`blade-content ${isLogin ? "hide-content" : "show-content"}`}>
-            <h4 className="blade-brand">CareerLens</h4>
-            <h1 className="blade-title">Start the<br/><em>next chapter.</em></h1>
-            <p className="blade-desc">One platform to connect talent with opportunity across the globe.</p>
+      {/* ── 100% Settigation Tether Card ── */}
+      <div className="tether-card">
+        {/* Top Header */}
+        <div className="tether-header">
+          <div className="tether-brand-row">
+            <Link to="/" className="tether-brand-badge" title="CareerLens">
+              <div className="tether-brand-ring">
+                <div className="tether-brand-dot" />
+              </div>
+              <span className="tether-brand-text">TETHER</span>
+            </Link>
+            <ThemeLanguageToggle />
           </div>
 
-          {/* Blade Content for Login */}
-          <div className={`blade-content ${isLogin ? "show-content" : "hide-content"}`}>
-            <h4 className="blade-brand">CareerLens</h4>
-            <h1 className="blade-title">{t("auth.welcomeBack")}<br/><em>CareerLens</em></h1>
-            <p className="blade-desc">{t("auth.loginSubtitle")}</p>
-          </div>
+          <h1 className="tether-title">
+            {isLogin ? t("auth.signIn") : t("auth.createAccount")}
+          </h1>
+          <p className="tether-subtitle">
+            {isLogin
+              ? "Welcome back. Two fields stand between you and that button."
+              : "Join CareerLens to connect with opportunities across Cambodia."}
+          </p>
         </div>
 
-        {/* LOGIN FORM SECTION (Fixed on LEFT) */}
-        <div className="auth-side auth-side-left">
-          <form className="auth-form" onSubmit={handleLoginSubmit}>
-            <h2>{t("auth.signIn")}</h2>
-            
-            {error && isLogin && <div className="auth-error">{error}</div>}
+        {error && <div className="tether-error">{error}</div>}
 
-            <div className="auth-input-group">
-              <label>{t("auth.username")}</label>
-              <div className="auth-input-wrapper">
-                <input 
-                  type="text" 
+        {/* ── SIGN IN MODE ── */}
+        {isLogin ? (
+          <form className="tether-form" onSubmit={handleLoginSubmit}>
+            {/* Username / Email Field */}
+            <div className="tether-field">
+              <label className="tether-label">
+                {t("common.email")} / {t("auth.username")}
+              </label>
+              <div className={`tether-input-wrapper ${isEmailValid ? "valid" : ""}`}>
+                <span className="tether-icon-left">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
+                </span>
+                <input
+                  type="text"
                   autoComplete="username"
+                  placeholder="Enter email or username"
                   value={loginForm.email}
-                  onChange={e => setLoginForm({...loginForm, email: e.target.value})}
+                  onChange={(e) => setLoginForm({ ...loginForm, email: e.target.value })}
                   disabled={loading}
+                  className="tether-input"
                   required
                 />
-                <span className="auth-icon">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                </span>
+                {isEmailValid && (
+                  <span className="tether-icon-right check">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                    </svg>
+                  </span>
+                )}
               </div>
             </div>
 
-            <div className="auth-input-group">
-              <label>{t("auth.password")}</label>
-              <div className="auth-input-wrapper">
-                <input 
-                  type={showLoginPassword ? "text" : "password"} 
+            {/* Password Field */}
+            <div className="tether-field">
+              <div className="tether-label-row">
+                <label className="tether-label">{t("auth.password")}</label>
+                <Link to="/forgot-password" className="tether-forgot">
+                  {t("auth.forgotPassword")}
+                </Link>
+              </div>
+              <div className={`tether-input-wrapper ${isPasswordValid ? "valid" : ""}`}>
+                <span className="tether-icon-left">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                  </svg>
+                </span>
+                <input
+                  type={showLoginPassword ? "text" : "password"}
                   autoComplete="current-password"
+                  placeholder="Enter your password"
                   value={loginForm.password}
-                  onChange={e => setLoginForm({...loginForm, password: e.target.value})}
+                  onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
                   disabled={loading}
+                  className="tether-input"
                   required
                 />
-                <button
-                  type="button"
-                  className="auth-icon auth-icon-btn"
-                  onClick={() => setShowLoginPassword((prev) => !prev)}
-                  aria-label={showLoginPassword ? "Hide password" : "Show password"}
+                <span
+                  className="tether-icon-right eye"
+                  onClick={() => setShowLoginPassword(!showLoginPassword)}
                   title={showLoginPassword ? "Hide password" : "Show password"}
                 >
                   {showLoginPassword ? <EyeOffIcon /> : <EyeIcon />}
-                </button>
+                </span>
+                {isPasswordValid && (
+                  <span className="tether-icon-right check">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                    </svg>
+                  </span>
+                )}
               </div>
             </div>
 
-            <div className="auth-form-actions">
-              <label className="auth-checkbox">
-                <input 
-                  type="checkbox" 
+            {/* Remember Me Toggle */}
+            <div className="tether-remember-row">
+              <label className="tether-checkbox">
+                <input
+                  type="checkbox"
                   checked={loginForm.remember}
-                  onChange={e => setLoginForm({...loginForm, remember: e.target.checked})}
+                  onChange={(e) => setLoginForm({ ...loginForm, remember: e.target.checked })}
                   disabled={loading}
                 />
                 <span>{t("auth.rememberMe")}</span>
               </label>
-              <Link to="/forgot-password" className="auth-link">{t("auth.forgotPassword")}</Link>
             </div>
 
-            <button type="submit" className="auth-submit-btn" disabled={loading}>
-              {loading ? t("auth.signingIn") : t("auth.signIn")}
-            </button>
+            {/* ── Animated Button & Tether Track (Settigation Component 95) ── */}
+            <div className="tether-track-container" ref={trackRef}>
+              <div className={`tether-track ${isLocked ? "locked" : ""}`} />
 
-            <p style={{ textAlign: 'center', fontSize: '11px', color: '#888', marginBottom: '16px', lineHeight: 1.5 }}>
-              Accounts: <strong>demo_cand_sreymom</strong> · <strong>demo_comp_mekong</strong> · <strong>demo_admin</strong><br />
-              Password: <strong>CareerLens2026!Demo</strong>
-            </p>
+              {/* Dynamic Glowing Laser Cable */}
+              {!isLocked && cableLength > 2 && (
+                <div
+                  className="tether-cable"
+                  style={{
+                    width: `${cableLength}px`,
+                    transform: `rotate(${cableAngle}deg)`,
+                  }}
+                />
+              )}
 
-            <p className="auth-switch-text">
+              <div
+                className="tether-btn-wrapper"
+                style={{
+                  transform: `translate(${buttonOffset.x.toFixed(1)}px, ${buttonOffset.y.toFixed(1)}px)`,
+                }}
+              >
+                <button
+                  type="submit"
+                  className={`tether-btn ${isLocked ? "locked" : "unlocked"}`}
+                  onMouseEnter={handleButtonHover}
+                  onFocus={() => {
+                    setIsFocused(true);
+                    setButtonOffset({ x: 0, y: 0 }); // Tab reaches it and it stops!
+                  }}
+                  onBlur={() => setIsFocused(false)}
+                  disabled={loading}
+                >
+                  {loading ? (
+                    t("auth.signingIn")
+                  ) : (
+                    <>
+                      <span>{t("auth.signIn")}</span>
+                      {isLocked && <span className="tether-btn__lock-icon">🔒</span>}
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* Status Feedback & Keyboard Accessibility */}
+            <div className="tether-status">
+              <div className="tether-status-text">
+                <div className={`tether-status-dot ${isLocked ? "locked" : ""}`} />
+                <span className={`tether-status-msg ${isLocked ? "locked" : ""}`}>
+                  {isLocked
+                    ? "Locked in. Go on then."
+                    : filledCount === 1
+                    ? "One down. Still got legs."
+                    : "Two fields to fill before it stands still."}
+                </span>
+              </div>
+              <div className="tether-keyboard-hints">
+                <span className="tether-key">Tab</span> reaches it.{" "}
+                <span className="tether-key">Enter</span> submits.
+              </div>
+            </div>
+
+            {/* Quick Demo Login Pills */}
+            <div className="tether-demo-box">
+              <p className="tether-demo-title">Quick Demo Login</p>
+              <div className="tether-demo-buttons">
+                <button
+                  type="button"
+                  disabled={loading}
+                  onClick={() => fillDemo("demo_cand_sreymom", "CareerLens2026!Demo")}
+                  className="tether-demo-btn"
+                >
+                  🎓 Candidate
+                </button>
+                <button
+                  type="button"
+                  disabled={loading}
+                  onClick={() => fillDemo("demo_comp_mekong", "CareerLens2026!Demo")}
+                  className="tether-demo-btn"
+                >
+                  🏢 Company
+                </button>
+                <button
+                  type="button"
+                  disabled={loading}
+                  onClick={() => fillDemo("demo_admin", "CareerLens2026!Demo")}
+                  className="tether-demo-btn"
+                >
+                  🛡️ Admin
+                </button>
+              </div>
+              <p className="tether-demo-pw">
+                Password: <code>CareerLens2026!Demo</code>
+              </p>
+            </div>
+
+            {/* Switch to Register */}
+            <div className="tether-switch">
               {t("auth.noAccount")} <Link to="/register">{t("auth.signUp")}</Link>
-            </p>
+            </div>
           </form>
-        </div>
-
-
-        {/* REGISTER FORM SECTION (Fixed on RIGHT) */}
-        <div className="auth-side auth-side-right">
-          <form className="auth-form auth-form--register" onSubmit={handleRegisterSubmit}>
-            <h2>{t("auth.createAccount")}</h2>
-            
-            <div className="auth-role-toggle">
-              <button 
-                type="button" 
-                className={`auth-role-btn ${registerRole === 'candidate' ? 'active' : ''}`}
-                onClick={() => setRegisterRole('candidate')}
+        ) : (
+          /* ── REGISTER MODE ── */
+          <form className="tether-form" onSubmit={handleRegisterSubmit}>
+            <div className="tether-role-toggle">
+              <button
+                type="button"
+                className={`tether-role-btn ${registerRole === "candidate" ? "active" : ""}`}
+                onClick={() => setRegisterRole("candidate")}
               >
                 {t("auth.roleCandidate")}
               </button>
-              <button 
-                type="button" 
-                className={`auth-role-btn ${registerRole === 'company' ? 'active' : ''}`}
-                onClick={() => setRegisterRole('company')}
+              <button
+                type="button"
+                className={`tether-role-btn ${registerRole === "company" ? "active" : ""}`}
+                onClick={() => setRegisterRole("company")}
               >
                 {t("auth.roleCompany")}
               </button>
             </div>
 
-            {error && !isLogin && <div className="auth-error">{error}</div>}
+            <div className="tether-field">
+              <label className="tether-label">{t("auth.fullName")}</label>
+              <div className="tether-input-wrapper">
+                <input
+                  type="text"
+                  placeholder="Full name"
+                  value={registerForm.full_name}
+                  onChange={(e) => setRegisterForm({ ...registerForm, full_name: e.target.value })}
+                  disabled={loading}
+                  className="tether-input"
+                  required
+                />
+              </div>
+            </div>
 
-            {registerRole === 'candidate' ? (
-              <>
-                <div className="auth-input-group">
-                  <label>{t("auth.fullName")}</label>
-                  <div className="auth-input-wrapper">
-                    <input 
-                      type="text" 
-                      value={registerForm.full_name}
-                      onChange={e => setRegisterForm({...registerForm, full_name: e.target.value})}
-                      disabled={loading}
-                      required
-                    />
-                  </div>
-                </div>
+            <div className="tether-field">
+              <label className="tether-label">{t("common.email")}</label>
+              <div className="tether-input-wrapper">
+                <input
+                  type="email"
+                  placeholder="name@example.com"
+                  value={registerForm.email}
+                  onChange={(e) => setRegisterForm({ ...registerForm, email: e.target.value })}
+                  disabled={loading}
+                  className="tether-input"
+                  required
+                />
+              </div>
+            </div>
 
-                <div className="auth-input-group">
-                  <label>Email</label>
-                  <div className="auth-input-wrapper">
-                    <input 
-                      type="email" 
-                      value={registerForm.email}
-                      onChange={e => setRegisterForm({...registerForm, email: e.target.value})}
-                      disabled={loading}
-                      required
-                    />
-                  </div>
-                </div>
+            <div className="tether-field">
+              <label className="tether-label">{t("auth.password")}</label>
+              <div className="tether-input-wrapper">
+                <input
+                  type={showRegisterPassword ? "text" : "password"}
+                  placeholder="At least 8 characters"
+                  value={registerForm.password}
+                  onChange={(e) => setRegisterForm({ ...registerForm, password: e.target.value })}
+                  disabled={loading}
+                  className="tether-input"
+                  required
+                />
+                <span
+                  className="tether-icon-right eye"
+                  onClick={() => setShowRegisterPassword(!showRegisterPassword)}
+                >
+                  {showRegisterPassword ? <EyeOffIcon /> : <EyeIcon />}
+                </span>
+              </div>
+            </div>
 
-                <div className="auth-input-row">
-                  <div className="auth-input-group">
-                    <label>{t("auth.password")}</label>
-                    <div className="auth-input-wrapper">
-                      <input 
-                        type={showRegisterPassword ? "text" : "password"} 
-                        value={registerForm.password}
-                        onChange={e => setRegisterForm({...registerForm, password: e.target.value})}
-                        disabled={loading}
-                        required
-                      />
-                      <button
-                        type="button"
-                        className="auth-icon auth-icon-btn"
-                        onClick={() => setShowRegisterPassword((prev) => !prev)}
-                        aria-label={showRegisterPassword ? "Hide password" : "Show password"}
-                        title={showRegisterPassword ? "Hide password" : "Show password"}
-                      >
-                        {showRegisterPassword ? <EyeOffIcon /> : <EyeIcon />}
-                      </button>
-                    </div>
-                  </div>
-                  <div className="auth-input-group">
-                    <label>{t("auth.confirmPassword")}</label>
-                    <div className="auth-input-wrapper">
-                      <input 
-                        type={showRegisterConfirmPassword ? "text" : "password"} 
-                        value={registerForm.confirm_password}
-                        onChange={e => setRegisterForm({...registerForm, confirm_password: e.target.value})}
-                        disabled={loading}
-                        required
-                      />
-                      <button
-                        type="button"
-                        className="auth-icon auth-icon-btn"
-                        onClick={() => setShowRegisterConfirmPassword((prev) => !prev)}
-                        aria-label={showRegisterConfirmPassword ? "Hide password" : "Show password"}
-                        title={showRegisterConfirmPassword ? "Hide password" : "Show password"}
-                      >
-                        {showRegisterConfirmPassword ? <EyeOffIcon /> : <EyeIcon />}
-                      </button>
-                    </div>
-                  </div>
-                </div>
+            <div className="tether-field">
+              <label className="tether-label">{t("auth.confirmPassword")}</label>
+              <div className="tether-input-wrapper">
+                <input
+                  type={showRegisterConfirmPassword ? "text" : "password"}
+                  placeholder="Confirm your password"
+                  value={registerForm.confirm_password}
+                  onChange={(e) =>
+                    setRegisterForm({ ...registerForm, confirm_password: e.target.value })
+                  }
+                  disabled={loading}
+                  className="tether-input"
+                  required
+                />
+                <span
+                  className="tether-icon-right eye"
+                  onClick={() => setShowRegisterConfirmPassword(!showRegisterConfirmPassword)}
+                >
+                  {showRegisterConfirmPassword ? <EyeOffIcon /> : <EyeIcon />}
+                </span>
+              </div>
+            </div>
 
-                <div className="auth-input-group">
-                  <label>{t("auth.universityCollege")}</label>
-                  <div className="auth-input-wrapper">
-                    <input 
-                      type="text" 
-                      value={registerForm.university}
-                      onChange={e => setRegisterForm({...registerForm, university: e.target.value})}
-                      disabled={loading}
-                      required
-                    />
-                  </div>
+            {registerRole === "candidate" ? (
+              <div className="tether-field">
+                <label className="tether-label">{t("auth.universityCollege")}</label>
+                <div className="tether-input-wrapper">
+                  <input
+                    type="text"
+                    placeholder="e.g. Royal University of Phnom Penh"
+                    value={registerForm.university}
+                    onChange={(e) => setRegisterForm({ ...registerForm, university: e.target.value })}
+                    disabled={loading}
+                    className="tether-input"
+                  />
                 </div>
-
-                <div className="auth-input-group">
-                  <label>{t("auth.majorStudyField")}</label>
-                  <div className="auth-input-wrapper">
-                    <input 
-                      type="text" 
-                      value={registerForm.major}
-                      onChange={e => setRegisterForm({...registerForm, major: e.target.value})}
-                      disabled={loading}
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div className="auth-input-group">
-                  <label>{t("auth.graduationYear")}</label>
-                  <div className="auth-input-wrapper">
-                    <select 
-                      style={{ width: '100%', padding: '10px', border: 'none', background: 'transparent', outline: 'none' }}
-                      value={registerForm.graduation_year}
-                      onChange={e => setRegisterForm({...registerForm, graduation_year: e.target.value})}
-                      disabled={loading}
-                    >
-                      <option value="2026">2026</option>
-                      <option value="2027">2027</option>
-                      <option value="2028">2028</option>
-                      <option value="2029">2029</option>
-                      <option value="2030">2030</option>
-                    </select>
-                  </div>
-                </div>
-              </>
+              </div>
             ) : (
-              <>
-                <div className="auth-input-group">
-                  <label>{t("auth.companyName")}</label>
-                  <div className="auth-input-wrapper">
-                    <input 
-                      type="text" 
-                      value={registerForm.company_name}
-                      onChange={e => setRegisterForm({...registerForm, company_name: e.target.value})}
-                      disabled={loading}
-                      required
-                    />
-                  </div>
+              <div className="tether-field">
+                <label className="tether-label">{t("auth.companyName")}</label>
+                <div className="tether-input-wrapper">
+                  <input
+                    type="text"
+                    placeholder="Company name"
+                    value={registerForm.company_name}
+                    onChange={(e) => setRegisterForm({ ...registerForm, company_name: e.target.value })}
+                    disabled={loading}
+                    className="tether-input"
+                    required
+                  />
                 </div>
-
-                <div className="auth-input-group">
-                  <label>{t("auth.workEmail")}</label>
-                  <div className="auth-input-wrapper">
-                    <input 
-                      type="email" 
-                      value={registerForm.work_email}
-                      onChange={e => setRegisterForm({...registerForm, work_email: e.target.value})}
-                      disabled={loading}
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div className="auth-input-row">
-                  <div className="auth-input-group">
-                    <label>{t("auth.password")}</label>
-                    <div className="auth-input-wrapper">
-                      <input 
-                        type={showRegisterPassword ? "text" : "password"} 
-                        value={registerForm.password}
-                        onChange={e => setRegisterForm({...registerForm, password: e.target.value})}
-                        disabled={loading}
-                        required
-                      />
-                      <button
-                        type="button"
-                        className="auth-icon auth-icon-btn"
-                        onClick={() => setShowRegisterPassword((prev) => !prev)}
-                        aria-label={showRegisterPassword ? "Hide password" : "Show password"}
-                        title={showRegisterPassword ? "Hide password" : "Show password"}
-                      >
-                        {showRegisterPassword ? <EyeOffIcon /> : <EyeIcon />}
-                      </button>
-                    </div>
-                  </div>
-                  <div className="auth-input-group">
-                    <label>{t("auth.confirmPassword")}</label>
-                    <div className="auth-input-wrapper">
-                      <input 
-                        type={showRegisterConfirmPassword ? "text" : "password"} 
-                        value={registerForm.confirm_password}
-                        onChange={e => setRegisterForm({...registerForm, confirm_password: e.target.value})}
-                        disabled={loading}
-                        required
-                      />
-                      <button
-                        type="button"
-                        className="auth-icon auth-icon-btn"
-                        onClick={() => setShowRegisterConfirmPassword((prev) => !prev)}
-                        aria-label={showRegisterConfirmPassword ? "Hide password" : "Show password"}
-                        title={showRegisterConfirmPassword ? "Hide password" : "Show password"}
-                      >
-                        {showRegisterConfirmPassword ? <EyeOffIcon /> : <EyeIcon />}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="auth-input-group">
-                  <label>{t("company.industry")}</label>
-                  <div className="auth-input-wrapper">
-                    <select 
-                      style={{ width: '100%', padding: '10px', border: 'none', background: 'transparent', outline: 'none' }}
-                      value={registerForm.industry}
-                      onChange={e => setRegisterForm({...registerForm, industry: e.target.value})}
-                      disabled={loading}
-                    >
-                      <option value="Software">Software</option>
-                      <option value="Finance">Finance</option>
-                      <option value="Healthcare">Healthcare</option>
-                      <option value="Education">Education</option>
-                      <option value="Retail">Retail</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className="auth-input-group">
-                  <label>{t("auth.companySize")}</label>
-                  <div className="auth-input-wrapper">
-                    <select 
-                      style={{ width: '100%', padding: '10px', border: 'none', background: 'transparent', outline: 'none' }}
-                      value={registerForm.company_size}
-                      onChange={e => setRegisterForm({...registerForm, company_size: e.target.value})}
-                      disabled={loading}
-                    >
-                      <option value="1-10">1-10</option>
-                      <option value="11-50">11-50</option>
-                      <option value="51-200">51-200</option>
-                      <option value="201-500">201-500</option>
-                      <option value="500+">500+</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className="auth-input-group">
-                  <label>{t("candidate.location")}</label>
-                  <div className="auth-input-wrapper">
-                    <input 
-                      type="text" 
-                      value={registerForm.location}
-                      onChange={e => setRegisterForm({...registerForm, location: e.target.value})}
-                      disabled={loading}
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div className="auth-input-group">
-                  <label>{t("auth.website")}</label>
-                  <div className="auth-input-wrapper">
-                    <input 
-                      type="text" 
-                      placeholder="https://"
-                      value={registerForm.website}
-                      onChange={e => setRegisterForm({...registerForm, website: e.target.value})}
-                      disabled={loading}
-                    />
-                  </div>
-                </div>
-              </>
+              </div>
             )}
 
-            <div className="auth-form-actions" style={{ justifyContent: 'flex-start', marginTop: '8px', marginBottom: '16px' }}>
-              <label className="auth-checkbox">
-                <input 
-                  type="checkbox" 
+            <div className="tether-remember-row">
+              <label className="tether-checkbox">
+                <input
+                  type="checkbox"
                   checked={registerForm.terms}
-                  onChange={e => setRegisterForm({...registerForm, terms: e.target.checked})}
+                  onChange={(e) => setRegisterForm({ ...registerForm, terms: e.target.checked })}
                   disabled={loading}
                   required
                 />
@@ -489,15 +569,15 @@ export default function AuthPage() {
               </label>
             </div>
 
-            <button type="submit" className="auth-submit-btn" disabled={loading}>
+            <button type="submit" className="tether-btn locked" disabled={loading} style={{ height: "54px" }}>
               {loading ? t("auth.creatingAccount") : t("auth.signUp")}
             </button>
 
-            <p className="auth-switch-text" style={{ marginTop: '16px' }}>
+            <div className="tether-switch">
               {t("auth.hasAccount")} <Link to="/login">{t("auth.signIn")}</Link>
-            </p>
+            </div>
           </form>
-        </div>
+        )}
       </div>
     </div>
   );

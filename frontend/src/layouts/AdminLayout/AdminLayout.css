@@ -58,23 +58,49 @@
   gap: 16px;
   background: var(--color-surface);
   border-bottom: 1px solid var(--color-border);
+  position: relative;
+  z-index: 100;
 }
 
-.admin-header h1 {
+.admin-header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+
+.admin-page-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-breadcrumb {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #7c3aed;
+}
+
+.admin-header-title {
   margin: 0;
   font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
 }
 
-.admin-header p {
-  margin: 3px 0 0;
-  color: var(--color-text-muted);
-  font-size: 12px;
+.admin-header-center {
+  flex: 1;
+  max-width: 480px;
+  display: flex;
+  justify-content: center;
 }
 
 .admin-header-actions {
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-shrink: 0;
 }
 
 .admin-content {
@@ -568,7 +594,7 @@
 }
 
 .admin-layout .workspace-table tbody tr:hover {
-  background-color: rgba(241, 245, 249, 0.55);
+  background-color: var(--color-surface-hover, rgba(241, 245, 249, 0.55));
 }
 
 .admin-layout .workspace-table-actions {
@@ -708,3 +734,43 @@
     padding: 18px;
   }
 }
+
+/* ── Galaxy Dark Mode Scoped Overrides for Admin Layout ────────────────────── */
+[data-theme="dark"] .admin-layout {
+  background: transparent;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .admin-layout .workspace-panel,
+[data-theme="dark"] .admin-layout .workspace-card,
+[data-theme="dark"] .admin-layout .workspace-stat {
+  background: rgba(13, 21, 48, 0.82) !important;
+  border-color: rgba(99, 142, 203, 0.32) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .admin-layout .workspace-table th {
+  background: rgba(18, 28, 64, 0.95) !important;
+  color: #ffffff !important;
+  border-bottom: 1px solid rgba(99, 142, 203, 0.3) !important;
+}
+
+[data-theme="dark"] .admin-layout .workspace-table td {
+  color: #ffffff !important;
+  border-top: 1px solid rgba(99, 142, 203, 0.2) !important;
+}
+
+[data-theme="dark"] .admin-layout .workspace-table tbody tr:hover {
+  background-color: rgba(99, 142, 203, 0.16) !important;
+}
+
+[data-theme="dark"] .admin-layout .workspace-table-wrap {
+  background: rgba(13, 21, 48, 0.82) !important;
+  border: 1px solid rgba(99, 142, 203, 0.32) !important;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45) !important;
+}
+
+[data-theme="dark"] .admin-layout .workspace-empty {
+  color: #94a3b8 !important;
+}
+
