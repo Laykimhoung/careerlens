@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../../../hooks/useAuth";
+import { useLanguage } from "../../../context/LanguageContext";
 import CompanyProfileCard from "../../../components/company/CompanyProfileCard";
 import Input from "../../../components/common/Input";
 import Select from "../../../components/common/Select";
@@ -13,6 +14,7 @@ import "./Profile.css";
 
 export default function Profile() {
   const { user, refreshUser } = useAuth();
+  const { t } = useLanguage();
   const [companyId, setCompanyId] = useState(null);
   const [isVerified, setIsVerified] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -28,6 +30,45 @@ export default function Profile() {
     contactEmail: user?.email || "",
     description: "",
   });
+
+  const [companyLogo, setCompanyLogo] = useState(() => {
+    return (
+      (user?.id ? localStorage.getItem(`careerlens_company_logo_${user.id}`) : null) ||
+      localStorage.getItem("careerlens_company_logo") ||
+      ""
+    );
+  });
+
+  const handleLogoChange = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 3 * 1024 * 1024) {
+      setStatusMsg({ type: "error", text: "Logo image file size must be less than 3MB." });
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = reader.result;
+      setCompanyLogo(dataUrl);
+      if (user?.id) {
+        localStorage.setItem(`careerlens_company_logo_${user.id}`, dataUrl);
+      }
+      localStorage.setItem("careerlens_company_logo", dataUrl);
+      window.dispatchEvent(new CustomEvent("careerlens_profile_image_updated"));
+      setStatusMsg({ type: "success", text: t("company.logoUpdated", "Company logo uploaded successfully.") });
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleRemoveLogo = () => {
+    setCompanyLogo("");
+    if (user?.id) {
+      localStorage.removeItem(`careerlens_company_logo_${user.id}`);
+    }
+    localStorage.removeItem("careerlens_company_logo");
+    window.dispatchEvent(new CustomEvent("careerlens_profile_image_updated"));
+    setStatusMsg({ type: "success", text: t("company.logoRemoved", "Company logo removed.") });
+  };
 
   const loadProfile = useCallback(async () => {
     setLoading(true);
@@ -99,13 +140,13 @@ export default function Profile() {
       if (refreshUser) await refreshUser();
       setStatusMsg({
         type: "success",
-        text: "Company profile saved to database successfully.",
+        text: t("company.profileSaved"),
       });
     } catch (err) {
       const detail =
         err.response?.data?.detail ||
         Object.values(err.response?.data || {})?.[0] ||
-        "Failed to save company profile.";
+        t("common.error");
       setStatusMsg({ type: "error", text: String(detail) });
     } finally {
       setSaving(false);
@@ -116,9 +157,9 @@ export default function Profile() {
     <section className="workspace-page">
       <div className="workspace-heading">
         <div>
-          <h1>Company profile</h1>
+          <h1>{t("company.companyProfileTitle")}</h1>
           <p>
-            Manage the information candidates see about your organization.{" "}
+            {t("company.companyProfileSub")}{" "}
             {companyId !== null && (
               <span
                 style={{
@@ -126,7 +167,7 @@ export default function Profile() {
                   color: isVerified ? "#16a34a" : "#d97706",
                 }}
               >
-                ({isVerified ? "Verified Employer ✓" : "Pending Admin Verification"})
+                ({isVerified ? `✓ ${t("company.verified")}` : t("company.unverified")})
               </span>
             )}
           </p>
@@ -137,8 +178,9 @@ export default function Profile() {
         <div
           style={{
             padding: "12px 16px",
-            background: statusMsg.type === "error" ? "#fef2f2" : "#dcfce7",
-            color: statusMsg.type === "error" ? "#b91c1c" : "#15803d",
+            background: statusMsg.type === "error" ? "rgba(239, 68, 68, 0.15)" : "rgba(16, 185, 129, 0.15)",
+            color: statusMsg.type === "error" ? "#ef4444" : "#10b981",
+            border: `1px solid ${statusMsg.type === "error" ? "rgba(239, 68, 68, 0.3)" : "rgba(16, 185, 129, 0.3)"}`,
             borderRadius: "8px",
             marginBottom: "20px",
             fontSize: "14px",
@@ -150,17 +192,104 @@ export default function Profile() {
       )}
 
       {loading ? (
-        <div className="dashboard-panel" style={{ padding: "32px", textAlign: "center", color: "#64748b" }}>
-          Loading company profile...
+        <div className="dashboard-panel" style={{ padding: "32px", textAlign: "center", color: "var(--color-text-secondary, #64748b)" }}>
+          {t("common.loading")}
         </div>
       ) : (
         <div className="workspace-split">
           <form className="dashboard-panel" onSubmit={saveProfile}>
+            {/* Company Logo Upload Header */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "20px",
+                marginBottom: "24px",
+                paddingBottom: "20px",
+                borderBottom: "1px solid var(--color-border)",
+              }}
+            >
+              <div
+                style={{
+                  width: "80px",
+                  height: "80px",
+                  borderRadius: "14px",
+                  border: "2px dashed var(--color-border-strong)",
+                  backgroundColor: "var(--color-surface)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  overflow: "hidden",
+                  flexShrink: 0,
+                }}
+              >
+                {companyLogo ? (
+                  <img
+                    src={companyLogo}
+                    alt="Company Logo"
+                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                  />
+                ) : (
+                  <span style={{ fontSize: "28px", fontWeight: 700, color: "var(--color-primary, #016BFB)" }}>
+                    {profile.companyName ? profile.companyName.charAt(0).toUpperCase() : "C"}
+                  </span>
+                )}
+              </div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontWeight: 700, fontSize: "15px", color: "var(--color-text-primary)" }}>
+                  {t("company.companyLogo", "Company Logo / Brand Asset")}
+                </div>
+                <div style={{ fontSize: "13px", color: "var(--color-text-secondary)", marginTop: "2px" }}>
+                  {t("company.logoSpecs", "PNG, JPG, or SVG recommended. Maximum 3MB.")}
+                </div>
+                <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
+                  <label
+                    htmlFor="company-logo-file-input"
+                    className="workspace-button"
+                    style={{
+                      fontSize: "12px",
+                      padding: "5px 14px",
+                      minHeight: "32px",
+                      cursor: "pointer",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "6px",
+                    }}
+                  >
+                    <span>🖼️</span> {t("company.uploadLogo", "Upload Logo")}
+                  </label>
+                  <input
+                    id="company-logo-file-input"
+                    type="file"
+                    accept="image/*"
+                    style={{ display: "none" }}
+                    onChange={handleLogoChange}
+                  />
+                  {companyLogo && (
+                    <button
+                      type="button"
+                      onClick={handleRemoveLogo}
+                      className="workspace-button"
+                      style={{
+                        fontSize: "12px",
+                        padding: "5px 12px",
+                        minHeight: "32px",
+                        color: "#ef4444",
+                        borderColor: "rgba(239, 68, 68, 0.3)",
+                      }}
+                    >
+                      {t("common.remove", "Remove")}
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+
             <div className="company-profile-grid">
               <Input
                 id="companyName"
                 name="companyName"
-                label="Company name"
+                label={t("company.companyName")}
                 value={profile.companyName || ""}
                 onChange={updateField}
                 required
@@ -168,7 +297,7 @@ export default function Profile() {
               <Input
                 id="industry"
                 name="industry"
-                label="Industry"
+                label={t("company.industry")}
                 value={profile.industry || ""}
                 onChange={updateField}
                 required
@@ -177,7 +306,7 @@ export default function Profile() {
               <Select
                 id="size"
                 name="size"
-                label="Company size"
+                label={t("company.companySize")}
                 value={profile.size || ""}
                 onChange={updateField}
                 options={[
@@ -196,7 +325,7 @@ export default function Profile() {
               <Input
                 id="location"
                 name="location"
-                label="Location"
+                label={t("candidate.location")}
                 value={profile.location || ""}
                 onChange={updateField}
               />
@@ -205,7 +334,7 @@ export default function Profile() {
                 id="website"
                 name="website"
                 type="url"
-                label="Website"
+                label={t("company.website")}
                 value={profile.website || ""}
                 onChange={updateField}
               />
@@ -213,7 +342,7 @@ export default function Profile() {
                 id="contactEmail"
                 name="contactEmail"
                 type="email"
-                label="Recruitment email"
+                label="Email"
                 value={profile.contactEmail || ""}
                 onChange={updateField}
                 required
@@ -223,7 +352,7 @@ export default function Profile() {
             <Textarea
               id="description"
               name="description"
-              label="About the company"
+              label={t("company.companyDescription")}
               value={profile.description || ""}
               onChange={updateField}
               required
@@ -234,12 +363,12 @@ export default function Profile() {
               style={{ justifyContent: "flex-end", marginTop: "10px" }}
             >
               <Button type="submit" variant="primary" loading={saving}>
-                Save profile
+                {t("company.saveCompanyProfile")}
               </Button>
             </div>
           </form>
 
-          <CompanyProfileCard profile={profile} />
+          <CompanyProfileCard profile={profile} logo={companyLogo} />
         </div>
       )}
     </section>

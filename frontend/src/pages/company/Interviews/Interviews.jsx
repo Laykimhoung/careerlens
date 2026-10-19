@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
+import { useLanguage } from "../../../context/LanguageContext";
 import InterviewCard from "../../../components/company/InterviewCard";
 import Input from "../../../components/common/Input";
 import Select from "../../../components/common/Select";
@@ -15,6 +16,7 @@ import {
 import "./Interviews.css";
 
 export default function Interviews() {
+  const { t } = useLanguage();
   const [applicants, setApplicants] = useState([]);
   const [interviews, setInterviews] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -70,13 +72,13 @@ export default function Interviews() {
         time: dt
           ? dt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
           : "",
-        format: iv.location || (iv.meeting_link ? "Video call" : "On-site"),
+        format: iv.location || (iv.meeting_link ? t("company.videoCall") : t("company.onSite")),
         meetingLink: iv.meeting_link || "",
         status: statusDisplay,
         rawStatus: iv.status,
       };
     });
-  }, [interviews, applicants]);
+  }, [interviews, applicants, t]);
 
   const handleScheduleInterview = async (event) => {
     event.preventDefault();
@@ -108,13 +110,13 @@ export default function Interviews() {
       formEl.reset();
       setStatusMsg({
         type: "success",
-        text: "Interview scheduled and candidate notified.",
+        text: t("common.success"),
       });
     } catch (err) {
       const detail =
         err.response?.data?.detail ||
         Object.values(err.response?.data || {})?.[0] ||
-        "Failed to schedule interview.";
+        t("common.error");
       setStatusMsg({ type: "error", text: String(detail) });
     } finally {
       setSubmitting(false);
@@ -126,7 +128,7 @@ export default function Interviews() {
       await updateInterview(interview.id, { status: "CANCELED" });
       await loadData();
     } catch (err) {
-      alert(err.response?.data?.detail || "Failed to cancel interview.");
+      alert(err.response?.data?.detail || t("common.error"));
     }
   };
 
@@ -135,7 +137,7 @@ export default function Interviews() {
       await updateInterview(interview.id, { status: "COMPLETED" });
       await loadData();
     } catch (err) {
-      alert(err.response?.data?.detail || "Failed to update interview status.");
+      alert(err.response?.data?.detail || t("common.error"));
     }
   };
 
@@ -143,8 +145,8 @@ export default function Interviews() {
     <section className="workspace-page">
       <div className="workspace-heading">
         <div>
-          <h1>Interviews</h1>
-          <p>Coordinate candidate conversations and interview times.</p>
+          <h1>{t("company.interviewsTitle")}</h1>
+          <p>{t("company.interviewsSub")}</p>
         </div>
       </div>
 
@@ -154,8 +156,9 @@ export default function Interviews() {
             padding: "12px 16px",
             borderRadius: "8px",
             marginBottom: "16px",
-            backgroundColor: statusMsg.type === "error" ? "#fef2f2" : "#f0fdf4",
-            color: statusMsg.type === "error" ? "#b91c1c" : "#15803d",
+            backgroundColor: statusMsg.type === "error" ? "rgba(239, 68, 68, 0.15)" : "rgba(16, 185, 129, 0.15)",
+            color: statusMsg.type === "error" ? "#ef4444" : "#10b981",
+            border: `1px solid ${statusMsg.type === "error" ? "rgba(239, 68, 68, 0.3)" : "rgba(16, 185, 129, 0.3)"}`,
             fontSize: "14px",
           }}
         >
@@ -165,15 +168,15 @@ export default function Interviews() {
 
       <div className="workspace-split">
         <section className="dashboard-panel">
-          <h2>Schedule an interview</h2>
+          <h2>{t("company.scheduleNewInterview")}</h2>
           <form onSubmit={handleScheduleInterview}>
             <Select
               id="appId"
               name="appId"
-              label="Candidate"
+              label={t("company.candidateApplicant")}
               required
               options={[
-                { value: "", label: "Select a candidate" },
+                { value: "", label: t("company.candidateApplicant") },
                 ...applicants.map((app) => ({
                   value: String(app.id),
                   label: `${app.candidateName} · ${app.jobTitle}`,
@@ -186,14 +189,14 @@ export default function Interviews() {
                 id="date"
                 name="date"
                 type="date"
-                label="Date"
+                label={t("company.interviewDate")}
                 required
               />
               <Input
                 id="time"
                 name="time"
                 type="time"
-                label="Time"
+                label={t("company.interviewTime")}
                 required
               />
             </div>
@@ -201,14 +204,14 @@ export default function Interviews() {
             <Select
               id="format"
               name="format"
-              label="Format"
+              label={t("company.interviewFormat")}
               options={["Video call", "On-site", "Phone call"]}
             />
 
             <Input
               id="location"
               name="location"
-              label="Location / Room (optional)"
+              label={t("company.locationLabel")}
               placeholder="e.g. Phnom Penh HQ or Google Meet"
             />
 
@@ -216,7 +219,7 @@ export default function Interviews() {
               id="meeting_link"
               name="meeting_link"
               type="url"
-              label="Video Meeting URL (optional)"
+              label={t("company.meetingLink")}
               placeholder="https://meet.google.com/..."
             />
 
@@ -225,21 +228,21 @@ export default function Interviews() {
               style={{ justifyContent: "flex-start", marginTop: "10px" }}
             >
               <Button type="submit" variant="primary" loading={submitting}>
-                Schedule interview
+                {t("company.scheduleInterviewBtn")}
               </Button>
             </div>
           </form>
         </section>
 
         <section className="dashboard-panel">
-          <h2>Interview schedule</h2>
+          <h2>{t("candidate.scheduledInterviews")}</h2>
           <div
             className="workspace-list"
             style={{ display: "flex", flexDirection: "column", gap: "12px" }}
           >
             {loading ? (
-              <p style={{ textAlign: "center", padding: "30px", color: "#666" }}>
-                Loading scheduled interviews...
+              <p style={{ textAlign: "center", padding: "30px", color: "var(--color-text-secondary, #666)" }}>
+                {t("common.loading")}
               </p>
             ) : enrichedInterviews.length > 0 ? (
               enrichedInterviews.map((interview) => (
@@ -251,8 +254,8 @@ export default function Interviews() {
                 />
               ))
             ) : (
-              <p style={{ textAlign: "center", padding: "30px", color: "#666" }}>
-                No interviews have been scheduled.
+              <p style={{ textAlign: "center", padding: "30px", color: "var(--color-text-secondary, #666)" }}>
+                {t("company.noInterviews")}
               </p>
             )}
           </div>
