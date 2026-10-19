@@ -19,6 +19,7 @@ import {
 } from "../../services/applicationService";
 import { fetchNormalizedJobs } from "../../services/jobService";
 import { extractResults } from "../../services/api";
+import "./PlaceholderPage.css";
 
 function NotificationsView() {
   const [items, setItems] = useState([]);
@@ -58,11 +59,11 @@ function NotificationsView() {
   };
 
   return (
-    <div style={{ backgroundColor: "#fff", borderRadius: "10px", border: "1px solid #e2e8f0", padding: "24px" }}>
+    <div className="ph-card">
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px", flexWrap: "wrap", gap: "12px" }}>
         <div>
-          <h2 style={{ fontSize: "22px", color: "#0f172a", margin: 0 }}>Notifications</h2>
-          <p style={{ color: "#64748b", fontSize: "14px", margin: "4px 0 0 0" }}>
+          <h2 className="ph-title">Notifications</h2>
+          <p className="ph-desc" style={{ margin: "4px 0 0 0" }}>
             Real-time updates on your applications, interviews, and account activity.
           </p>
         </div>
@@ -218,11 +219,11 @@ function AccountSettingsView() {
   };
 
   return (
-    <div style={{ backgroundColor: "#fff", borderRadius: "10px", border: "1px solid #e2e8f0", padding: "32px", width: "100%", maxWidth: "1000px", margin: "0 auto" }}>
-      <h2 style={{ fontSize: "24px", color: "#0f172a", marginBottom: "6px" }}>
+    <div className="ph-card" style={{ maxWidth: "1000px", margin: "0 auto" }}>
+      <h2 className="ph-title">
         {t("candidate.accountSettings", "Account Settings")}
       </h2>
-      <p style={{ color: "#64748b", fontSize: "14px", marginBottom: "24px" }}>
+      <p className="ph-desc">
         {t("candidate.updateAccountSettings", "Update your account contact details and security credentials")} ({user?.username}).
       </p>
 
@@ -319,39 +320,27 @@ function CandidateInterviewsView() {
   }, [interviews, applications]);
 
   return (
-    <div style={{ backgroundColor: "#fff", borderRadius: "10px", border: "1px solid #e2e8f0", padding: "24px" }}>
-      <h2 style={{ fontSize: "22px", color: "#0f172a", marginBottom: "6px" }}>My Interviews</h2>
-      <p style={{ color: "#64748b", fontSize: "14px", marginBottom: "20px" }}>
+    <div className="ph-card">
+      <h2 className="ph-title">My Interviews</h2>
+      <p className="ph-desc">
         View your scheduled and completed interviews with employers.
       </p>
 
       {loading ? (
-        <p style={{ color: "#64748b" }}>Loading interviews...</p>
+        <p style={{ color: "var(--color-text-muted)" }}>Loading interviews...</p>
       ) : enriched.length === 0 ? (
-        <div style={{ padding: "32px", textAlign: "center", color: "#64748b", border: "1px dashed #cbd5e1", borderRadius: "8px" }}>
+        <div className="ph-empty">
           No interviews scheduled yet.
         </div>
       ) : (
-        <div style={{ display: "grid", gap: "12px" }}>
+        <div className="ph-grid">
           {enriched.map((iv) => (
-            <div
-              key={iv.id}
-              style={{
-                padding: "16px",
-                borderRadius: "8px",
-                border: "1px solid #e2e8f0",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                flexWrap: "wrap",
-                gap: "12px",
-              }}
-            >
+            <div key={iv.id} className="ph-item">
               <div>
-                <div style={{ fontWeight: 700, fontSize: "16px", color: "#0f172a" }}>
+                <div className="ph-item-title">
                   {iv.jobTitle} — {iv.company}
                 </div>
-                <div style={{ fontSize: "13px", color: "#475569", marginTop: "4px" }}>
+                <div className="ph-item-meta">
                   Date & Time:{" "}
                   <strong>
                     {iv.scheduled_at
@@ -367,19 +356,19 @@ function CandidateInterviewsView() {
                   &middot; Status: <strong>{iv.status}</strong>
                 </div>
                 {iv.location && (
-                  <div style={{ fontSize: "13px", color: "#475569", marginTop: "2px" }}>
+                  <div className="ph-item-meta">
                     Location: {iv.location}
                   </div>
                 )}
                 {iv.feedback && (
-                  <div style={{ fontSize: "13px", color: "#334155", marginTop: "4px" }}>
+                  <div className="ph-item-notes">
                     Notes / Feedback: {iv.feedback}
                   </div>
                 )}
               </div>
               {iv.meeting_link && (
                 <a href={iv.meeting_link} target="_blank" rel="noreferrer">
-                  <Button variant="teal" size="sm">
+                  <Button variant="primary" size="sm">
                     Join Video Call
                   </Button>
                 </a>
@@ -417,11 +406,11 @@ function CompanyTalentPoolView() {
   }, [candidates, search]);
 
   return (
-    <div style={{ backgroundColor: "#fff", borderRadius: "10px", border: "1px solid #e2e8f0", padding: "24px" }}>
+    <div className="ph-card">
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px", flexWrap: "wrap", gap: "12px" }}>
         <div>
-          <h2 style={{ fontSize: "22px", color: "#0f172a", margin: 0 }}>Candidate Talent Pool</h2>
-          <p style={{ color: "#64748b", fontSize: "14px", margin: "4px 0 0 0" }}>
+          <h2 className="ph-title">Candidate Talent Pool</h2>
+          <p className="ph-desc" style={{ margin: "4px 0 0 0" }}>
             Browse registered candidates, academic backgrounds, and verified skills.
           </p>
         </div>
@@ -554,11 +543,11 @@ function CompanyReportsView() {
   }, [applications]);
 
   return (
-    <div style={{ backgroundColor: "#fff", borderRadius: "10px", border: "1px solid #e2e8f0", padding: "24px" }}>
-      <h2 style={{ fontSize: "22px", color: "#0f172a", marginBottom: "6px" }}>
+    <div className="ph-card">
+      <h2 className="ph-title">
         Recruitment Analytics & Reports
       </h2>
-      <p style={{ color: "#64748b", fontSize: "14px", marginBottom: "24px" }}>
+      <p className="ph-desc">
         Live recruitment metrics aggregated from your job postings and applicant pipeline.
       </p>
 
@@ -699,8 +688,8 @@ function SharedMessagesView() {
   };
 
   return (
-    <div style={{ backgroundColor: "#fff", borderRadius: "10px", border: "1px solid #e2e8f0", padding: "24px" }}>
-      <h2 style={{ fontSize: "22px", color: "#0f172a", marginBottom: "16px" }}>Messages</h2>
+    <div className="ph-card">
+      <h2 className="ph-title">Messages</h2>
       <div style={{ display: "grid", gridTemplateColumns: "240px 1fr", gap: "16px", minHeight: "380px" }}>
         <div style={{ borderRight: "1px solid #e2e8f0", paddingRight: "12px", overflowY: "auto" }}>
           {loading ? (

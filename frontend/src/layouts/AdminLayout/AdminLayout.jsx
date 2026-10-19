@@ -28,15 +28,7 @@ export default function AdminLayout() {
 			/>
 			<div className="admin-main">
 				<header className="admin-header">
-					<div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-						<button
-							type="button"
-							className="workspace-button admin-menu-button"
-							onClick={() => setMenuOpen(true)}
-							aria-label="Open navigation"
-						>
-							&#9776; Menu
-						</button>
+					<div className="admin-header-title">
 					</div>
 					<div className="admin-header-actions">
 						<ThemeLanguageToggle />

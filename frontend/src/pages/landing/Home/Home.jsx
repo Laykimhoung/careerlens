@@ -5,6 +5,7 @@ import Radar from "../../../components/ui/Radar";
 import OrbitImages from "../../../components/ui/OrbitImages";
 import ThemeLanguageToggle from "../../../components/common/ThemeLanguageToggle";
 import { useTheme } from "../../../context/ThemeContext";
+import { useLanguage } from "../../../context/LanguageContext";
 import logoImg from "../../../assets/logo/logo.webp";
 import coachImg from "../../../assets/images/Coach.webp";
 import enImg from "../../../assets/images/En.webp";
@@ -64,6 +65,7 @@ function AnimatedCounter({ value, suffix = "" }) {
 
 export default function Home() {
   const { theme } = useTheme();
+  const { t } = useLanguage();
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [stats, setStats] = useState({
     students: 0,
@@ -93,7 +95,6 @@ export default function Home() {
     };
 
     fetchStats();
-    // Poll every 10 seconds to keep stats synchronized with backend in real time
     const interval = setInterval(fetchStats, 10000);
 
     return () => {
@@ -118,7 +119,7 @@ export default function Home() {
   };
 
   useEffect(() => {
-    // 1. Scroll Reveal Observer (RUPP-style fade-in-up)
+    // Scroll Reveal Observer (RUPP-style fade-in-up)
     const animObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -137,47 +138,8 @@ export default function Home() {
     const animatedEls = document.querySelectorAll(".landing-animate-on-scroll");
     animatedEls.forEach((el) => animObserver.observe(el));
 
-    // 2. Animated Number Counters on Scroll (RUPP-style)
-    const counterObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const target = entry.target;
-            const countTo = parseInt(target.getAttribute("data-target"), 10);
-            const suffix = target.getAttribute("data-suffix") || "";
-            const duration = 1800; // 1.8s smooth count-up
-            const startTime = performance.now();
-
-            const updateCount = (currentTime) => {
-              const elapsed = currentTime - startTime;
-              const progress = Math.min(elapsed / duration, 1);
-              // Ease-out quad easing for smooth landing
-              const easeProgress = progress * (2 - progress);
-              const currentCount = Math.floor(easeProgress * countTo);
-
-              target.innerText = currentCount.toLocaleString() + suffix;
-
-              if (progress < 1) {
-                requestAnimationFrame(updateCount);
-              } else {
-                target.innerText = countTo.toLocaleString() + suffix;
-              }
-            };
-
-            requestAnimationFrame(updateCount);
-            counterObserver.unobserve(target);
-          }
-        });
-      },
-      { threshold: 0.2 }
-    );
-
-    const counters = document.querySelectorAll(".landing-counter");
-    counters.forEach((c) => counterObserver.observe(c));
-
     return () => {
       animObserver.disconnect();
-      counterObserver.disconnect();
     };
   }, []);
 
@@ -219,16 +181,16 @@ export default function Home() {
             </Link>
             
             <nav className="landing-nav">
-              <Link to="/login">Find Jobs</Link>
-              <a href="#companies">For Companies</a>
-              <a href="#how">How It Works</a>
-              <a href="#about">About</a>
+              <Link to="/login">{t("common.nav.findJobs")}</Link>
+              <a href="#companies">{t("common.forCompanies")}</a>
+              <a href="#how">{t("common.howItWorks")}</a>
+              <a href="#about">{t("common.about")}</a>
             </nav>
 
             <div className="landing-actions">
               <ThemeLanguageToggle />
-              <Link to="/login" className="landing-btn b2">Log In</Link>
-              <Link to="/register" className="landing-btn">Get Started</Link>
+              <Link to="/login" className="landing-btn b2">{t("auth.signIn")}</Link>
+              <Link to="/register" className="landing-btn">{t("common.getStarted")}</Link>
             </div>
           </div>
         </header>
@@ -237,41 +199,41 @@ export default function Home() {
           {/* Hero Section */}
           <section className="landing-hero">
             <div className="landing-animate-on-scroll">
-              <p className="landing-hero__tag">Connect. Apply. Get Hired.</p>
-              <h1 className="landing-hero__title">Your next opportunity starts here.</h1>
+              <p className="landing-hero__tag">{t("common.landingHeroTag")}</p>
+              <h1 className="landing-hero__title">{t("common.landingHeroTitle")}</h1>
               <p className="landing-hero__desc">
-                CareerLens connects students and job seekers with companies while making the entire recruitment journey easier to manage.
+                {t("common.landingHeroDesc")}
               </p>
               <div className="landing-hero__cta">
-                <Link to="/register" className="landing-btn">Find a Job</Link>
-                <Link to="/register" className="landing-btn b2">Hire Talent</Link>
+                <Link to="/register" className="landing-btn">{t("common.browseJobs")}</Link>
+                <Link to="/register" className="landing-btn b2">{t("common.hireTalent")}</Link>
               </div>
             </div>
 
             <div className="landing-card landing-animate-on-scroll landing-stagger-2">
-              <p className="landing-journey__title">THE RECRUITMENT JOURNEY</p>
+              <p className="landing-journey__title">{t("common.recruitmentJourney")}</p>
               
               <div className="landing-journey__step">
                 <span className="landing-journey__num">1</span>
-                <span className="landing-journey__text">Student</span>
+                <span className="landing-journey__text">{t("common.student")}</span>
               </div>
               <div className="landing-journey__line"></div>
               
               <div className="landing-journey__step">
                 <span className="landing-journey__num">2</span>
-                <span className="landing-journey__text">Application</span>
+                <span className="landing-journey__text">{t("common.application")}</span>
               </div>
               <div className="landing-journey__line"></div>
 
               <div className="landing-journey__step">
                 <span className="landing-journey__num">3</span>
-                <span className="landing-journey__text">Interview</span>
+                <span className="landing-journey__text">{t("common.interview")}</span>
               </div>
               <div className="landing-journey__line"></div>
 
               <div className="landing-journey__step">
                 <span className="landing-journey__num">4</span>
-                <span className="landing-journey__text">Job</span>
+                <span className="landing-journey__text">{t("common.job")}</span>
               </div>
             </div>
           </section>
@@ -279,19 +241,19 @@ export default function Home() {
           {/* Features Section */}
           <section className="landing-section">
             <div className="landing-section__inner">
-              <h2 className="landing-section__title landing-animate-on-scroll">One platform for the entire hiring journey.</h2>
+              <h2 className="landing-section__title landing-animate-on-scroll">{t("common.landingPlatformTitle")}</h2>
               <div className="landing-grid-3">
                 <div className="landing-card landing-animate-on-scroll landing-stagger-1">
-                  <h3 className="landing-feat__title">For Students</h3>
-                  <p className="landing-feat__desc">Discover opportunities, build your profile, apply for jobs and track your recruitment journey.</p>
+                  <h3 className="landing-feat__title">{t("common.nav.candidates")}</h3>
+                  <p className="landing-feat__desc">{t("common.forStudentsDesc")}</p>
                 </div>
                 <div className="landing-card landing-animate-on-scroll landing-stagger-2">
-                  <h3 className="landing-feat__title">For Companies</h3>
-                  <p className="landing-feat__desc">Post jobs, manage applicants, schedule interviews and hire talent through a complete ATS workflow.</p>
+                  <h3 className="landing-feat__title">{t("common.forCompanies")}</h3>
+                  <p className="landing-feat__desc">{t("common.forCompaniesDesc")}</p>
                 </div>
                 <div className="landing-card landing-animate-on-scroll landing-stagger-3">
-                  <h3 className="landing-feat__title">For Administrators</h3>
-                  <p className="landing-feat__desc">Manage the platform, users, companies, jobs and recruitment activity.</p>
+                  <h3 className="landing-feat__title">{t("common.platformAdmin")}</h3>
+                  <p className="landing-feat__desc">{t("common.forAdminsDesc")}</p>
                 </div>
               </div>
             </div>
@@ -300,26 +262,26 @@ export default function Home() {
           {/* How it works Section */}
           <section className="landing-section landing-section--gray" id="how">
             <div className="landing-section__inner">
-              <h2 className="landing-section__title landing-animate-on-scroll">How it works</h2>
+              <h2 className="landing-section__title landing-animate-on-scroll">{t("common.howItWorks")}</h2>
               <div className="landing-grid-4">
                 <div className="landing-card landing-animate-on-scroll landing-stagger-1">
                   <div className="landing-step__num">01</div>
-                  <h3 className="landing-feat__title">Build Your Profile</h3>
+                  <h3 className="landing-feat__title">{t("candidate.completeProfile")}</h3>
                   <p className="landing-feat__desc">Create your professional profile and showcase your skills.</p>
                 </div>
                 <div className="landing-card landing-animate-on-scroll landing-stagger-2">
                   <div className="landing-step__num">02</div>
-                  <h3 className="landing-feat__title">Discover Opportunities</h3>
+                  <h3 className="landing-feat__title">{t("common.browseJobs")}</h3>
                   <p className="landing-feat__desc">Find jobs that match your interests and experience.</p>
                 </div>
                 <div className="landing-card landing-animate-on-scroll landing-stagger-3">
                   <div className="landing-step__num">03</div>
-                  <h3 className="landing-feat__title">Apply & Connect</h3>
+                  <h3 className="landing-feat__title">{t("common.apply")}</h3>
                   <p className="landing-feat__desc">Submit applications and communicate with recruiters.</p>
                 </div>
                 <div className="landing-card landing-animate-on-scroll landing-stagger-4">
                   <div className="landing-step__num">04</div>
-                  <h3 className="landing-feat__title">Get Hired</h3>
+                  <h3 className="landing-feat__title">{t("common.getHired")}</h3>
                   <p className="landing-feat__desc">Track interviews, offers and your path to employment.</p>
                 </div>
               </div>
@@ -334,22 +296,22 @@ export default function Home() {
                 <p className="text-muted landing-animate-on-scroll landing-stagger-1" style={{ marginBottom: "24px", fontSize: "15px" }}>Job posting, applicant tracking, interview scheduling, messaging and offers in one ATS pipeline.</p>
                 
                 <div className="landing-pipeline">
-                  <span className="landing-pipeline__step landing-animate-on-scroll landing-stagger-1">Applied</span>
+                  <span className="landing-pipeline__step landing-animate-on-scroll landing-stagger-1">{t("common.applied")}</span>
                   <span className="landing-pipeline__arrow">&rarr;</span>
-                  <span className="landing-pipeline__step landing-animate-on-scroll landing-stagger-2">Screening</span>
+                  <span className="landing-pipeline__step landing-animate-on-scroll landing-stagger-2">{t("company.inReview")}</span>
                   <span className="landing-pipeline__arrow">&rarr;</span>
-                  <span className="landing-pipeline__step landing-animate-on-scroll landing-stagger-3">Shortlisted</span>
+                  <span className="landing-pipeline__step landing-animate-on-scroll landing-stagger-3">{t("company.shortlistApplication")}</span>
                   <span className="landing-pipeline__arrow">&rarr;</span>
-                  <span className="landing-pipeline__step landing-animate-on-scroll landing-stagger-4">Interview</span>
+                  <span className="landing-pipeline__step landing-animate-on-scroll landing-stagger-4">{t("common.interview")}</span>
                   <span className="landing-pipeline__arrow">&rarr;</span>
-                  <span className="landing-pipeline__step landing-animate-on-scroll landing-stagger-5">Offer</span>
+                  <span className="landing-pipeline__step landing-animate-on-scroll landing-stagger-5">{t("common.offer")}</span>
                   <span className="landing-pipeline__arrow">&rarr;</span>
-                  <span className="landing-pipeline__step landing-animate-on-scroll landing-stagger-6">Hired</span>
+                  <span className="landing-pipeline__step landing-animate-on-scroll landing-stagger-6">{t("company.totalHired")}</span>
                 </div>
 
                 <div className="landing-animate-on-scroll landing-stagger-3" style={{ display: "flex", gap: "12px", marginTop: "32px" }}>
-                  <Link to="/register" className="landing-btn">Start Hiring</Link>
-                  <Link to="/login" className="landing-btn b2">Start Finding Jobs</Link>
+                  <Link to="/register" className="landing-btn">{t("common.hireTalent")}</Link>
+                  <Link to="/login" className="landing-btn b2">{t("common.browseJobs")}</Link>
                 </div>
               </div>
 
@@ -359,25 +321,25 @@ export default function Home() {
                   <h3 className="text-primary" style={{ fontSize: "32px", fontWeight: "800", marginBottom: "8px" }}>
                     <AnimatedCounter value={stats.students} />
                   </h3>
-                  <p className="text-muted" style={{ fontSize: "14px" }}>Students</p>
+                  <p className="text-muted" style={{ fontSize: "14px" }}>{t("common.nav.candidates")}</p>
                 </div>
                 <div className="landing-card landing-animate-on-scroll landing-stagger-2" style={{ textAlign: "center", padding: "32px 16px" }}>
                   <h3 className="text-primary" style={{ fontSize: "32px", fontWeight: "800", marginBottom: "8px" }}>
                     <AnimatedCounter value={stats.companies} />
                   </h3>
-                  <p className="text-muted" style={{ fontSize: "14px" }}>Companies</p>
+                  <p className="text-muted" style={{ fontSize: "14px" }}>{t("common.nav.companies")}</p>
                 </div>
                 <div className="landing-card landing-animate-on-scroll landing-stagger-3" style={{ textAlign: "center", padding: "32px 16px" }}>
                   <h3 className="text-primary" style={{ fontSize: "32px", fontWeight: "800", marginBottom: "8px" }}>
                     <AnimatedCounter value={stats.jobs} />
                   </h3>
-                  <p className="text-muted" style={{ fontSize: "14px" }}>Jobs</p>
+                  <p className="text-muted" style={{ fontSize: "14px" }}>{t("common.nav.jobs")}</p>
                 </div>
                 <div className="landing-card landing-animate-on-scroll landing-stagger-4" style={{ textAlign: "center", padding: "32px 16px" }}>
                   <h3 className="text-primary" style={{ fontSize: "32px", fontWeight: "800", marginBottom: "8px" }}>
                     <AnimatedCounter value={stats.connections} />
                   </h3>
-                  <p className="text-muted" style={{ fontSize: "14px" }}>Successful Connections</p>
+                  <p className="text-muted" style={{ fontSize: "14px" }}>{t("company.totalHired")}</p>
                 </div>
               </div>
 
@@ -401,15 +363,15 @@ export default function Home() {
               <p className="landing-animate-on-scroll" style={{ fontSize: "12px", color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "16px", fontWeight: "600" }}>Demonstration testimonials</p>
               <div className="landing-grid-3">
                 <div className="landing-card landing-animate-on-scroll landing-stagger-1" style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-                  <p style={{ fontSize: "15px", lineHeight: "1.5", marginBottom: "24px" }}>"CareerLens made it much easier to keep track of my applications and interviews."</p>
+                  <p style={{ fontSize: "15px", lineHeight: "1.5", marginBottom: "24px" }}>&quot;CareerLens made it much easier to keep track of my applications and interviews.&quot;</p>
                   <p className="text-muted" style={{ fontSize: "14px", fontWeight: "500" }}>Student (demo)</p>
                 </div>
                 <div className="landing-card landing-animate-on-scroll landing-stagger-2" style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-                  <p style={{ fontSize: "15px", lineHeight: "1.5", marginBottom: "24px" }}>"We can manage the entire candidate pipeline from one place."</p>
+                  <p style={{ fontSize: "15px", lineHeight: "1.5", marginBottom: "24px" }}>&quot;We can manage the entire candidate pipeline from one place.&quot;</p>
                   <p className="text-muted" style={{ fontSize: "14px", fontWeight: "500" }}>Recruiter (demo)</p>
                 </div>
                 <div className="landing-card landing-animate-on-scroll landing-stagger-3" style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-                  <p style={{ fontSize: "15px", lineHeight: "1.5", marginBottom: "24px" }}>"It provides a clear view of recruitment activity across the platform."</p>
+                  <p style={{ fontSize: "15px", lineHeight: "1.5", marginBottom: "24px" }}>&quot;It provides a clear view of recruitment activity across the platform.&quot;</p>
                   <p className="text-muted" style={{ fontSize: "14px", fontWeight: "500" }}>University Admin (demo)</p>
                 </div>
               </div>
@@ -424,7 +386,7 @@ export default function Home() {
                   About CareerLens
                 </p>
                 <h2 className="landing-section__title landing-animate-on-scroll landing-stagger-1" style={{ marginBottom: "12px" }}>
-                  Empowering Cambodia's Next Generation of Talent.
+                  Empowering Cambodia&apos;s Next Generation of Talent.
                 </h2>
                 <p className="text-muted landing-animate-on-scroll landing-stagger-2" style={{ maxWidth: "680px", margin: "0 auto", fontSize: "15px", lineHeight: "1.6" }}>
                   CareerLens connects motivated students and graduates with forward-thinking employers through a seamless, transparent recruitment journey.
@@ -489,11 +451,11 @@ export default function Home() {
 
           <section className="landing-footer-cta">
             <div className="landing-footer-cta__inner landing-animate-on-scroll">
-              <h2 style={{ fontSize: "32px", fontWeight: "700", marginBottom: "12px" }}>Ready for your next opportunity?</h2>
-              <p className="text-muted" style={{ fontSize: "16px", marginBottom: "32px" }}>Connect. Apply. Get Hired.</p>
+              <h2 style={{ fontSize: "32px", fontWeight: "700", marginBottom: "12px" }}>{t("common.readyNextOpp")}</h2>
+              <p className="text-muted" style={{ fontSize: "16px", marginBottom: "32px" }}>{t("common.landingHeroTag")}</p>
               <div className="landing-footer-cta__actions">
-                <Link to="/register" className="landing-btn b-white">Find a Job</Link>
-                <Link to="/register" className="landing-btn b-white">Hire Talent</Link>
+                <Link to="/register" className="landing-btn b-white">{t("common.browseJobs")}</Link>
+                <Link to="/register" className="landing-btn b-white">{t("common.hireTalent")}</Link>
               </div>
             </div>
           </section>
@@ -512,7 +474,7 @@ export default function Home() {
                     <span className="brand-lens">Lens</span>
                   </span>
                 </Link>
-                <p>Connect. Apply. Get Hired.</p>
+                <p>{t("common.landingHeroTag")}</p>
                 <p className="landing-footer__tagline">
                   Empowering university students and graduates to bridge the gap between academic education and career success.
                 </p>
@@ -521,20 +483,20 @@ export default function Home() {
               <div className="landing-footer__links">
                 <div className="landing-footer__col">
                   <h4>Product</h4>
-                  <Link to="/login">Find Jobs</Link>
-                  <Link to="/login">For Companies</Link>
-                  <a href="#how">How It Works</a>
+                  <Link to="/login">{t("common.nav.findJobs")}</Link>
+                  <Link to="/login">{t("common.forCompanies")}</Link>
+                  <a href="#how">{t("common.howItWorks")}</a>
                 </div>
                 <div className="landing-footer__col">
                   <h4>Company</h4>
-                  <a href="#about">About Us</a>
+                  <a href="#about">{t("common.about")}</a>
                   <a href="#companies">Recruitment Pipeline</a>
                   <a href="mailto:contact@careerlens.edu.kh">Contact</a>
                 </div>
                 <div className="landing-footer__col">
                   <h4>Legal</h4>
-                  <Link to="/">Privacy Policy</Link>
-                  <Link to="/">Terms of Service</Link>
+                  <Link to="/">Privacy</Link>
+                  <Link to="/">Terms</Link>
                   <Link to="/">Security</Link>
                 </div>
               </div>

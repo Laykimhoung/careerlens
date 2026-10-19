@@ -1,18 +1,20 @@
 from rest_framework import serializers
 from .models import Application, ApplicationStatusHistory, Interview, Offer, ApplicationNote
 from apps.jobs.serializers import JobSerializer
+from apps.accounts.serializers import CandidateProfileSerializer
 
 class ApplicationSerializer(serializers.ModelSerializer):
     job_details = JobSerializer(source='job', read_only=True)
+    candidate_details = CandidateProfileSerializer(source='candidate', read_only=True)
     job_id = serializers.IntegerField(write_only=True)
     
     class Meta:
         model = Application
         fields = (
-            'id', 'candidate', 'job_id', 'job_details', 'status', 
+            'id', 'candidate', 'candidate_details', 'job_id', 'job_details', 'status', 
             'resume_file', 'cover_letter', 'applied_at', 'updated_at'
         )
-        read_only_fields = ('candidate', 'applied_at', 'updated_at', 'status')
+        read_only_fields = ('candidate', 'candidate_details', 'applied_at', 'updated_at', 'status')
 
 class ApplicationUpdateSerializer(serializers.ModelSerializer):
     class Meta:

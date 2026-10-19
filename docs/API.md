@@ -39,6 +39,19 @@
   - Fields updatable via PATCH: `company_name`, `industry`, `size`, `location`, `website`
 
 ### Administrative
+*(Requires Admin role)*
+
+- **GET** `/api/auth/admin/dashboard/`
+  - Query parameters: `range` (`7d`, `30d`, `90d`, `all`)
+  - Description: Aggregates real-time KPIs, status distributions, applicant trends, candidate registration trends, and recent audit activity.
+
+- **GET, POST** `/api/auth/users/`
+  - Description: Lists or creates user accounts across roles (Admin only).
+  - Body for POST: `{"username": "...", "email": "...", "password": "...", "first_name": "...", "last_name": "...", "role": "CANDIDATE|COMPANY|ADMIN"}`
+
+- **GET, PATCH, DELETE** `/api/auth/users/{id}/`
+  - Description: Retrieves, updates, or deletes a specific user account.
+
 - **GET** `/api/auth/audit-logs/`
   - Description: Lists audit logs. Regular users only see their own actions; administrators see all actions in the system.
 - **GET** `/api/auth/audit-logs/{id}/`

@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { useLanguage } from "../../context/LanguageContext";
@@ -28,6 +29,26 @@ export default function CandidateHeader({ onMenuClick }) {
   // Get first letter of full name for avatar
   const initial = user?.full_name ? user.full_name.charAt(0) : "U";
 
+  const [avatar, setAvatar] = useState(() => {
+    return (
+      (user?.id ? localStorage.getItem(`careerlens_avatar_${user.id}`) : null) ||
+      localStorage.getItem("careerlens_avatar") ||
+      ""
+    );
+  });
+
+  useEffect(() => {
+    const handleUpdate = () => {
+      setAvatar(
+        (user?.id ? localStorage.getItem(`careerlens_avatar_${user.id}`) : null) ||
+        localStorage.getItem("careerlens_avatar") ||
+        ""
+      );
+    };
+    window.addEventListener("careerlens_profile_image_updated", handleUpdate);
+    return () => window.removeEventListener("careerlens_profile_image_updated", handleUpdate);
+  }, [user]);
+
   return (
     <header className="header">
       <div className="header__left">
@@ -46,7 +67,13 @@ export default function CandidateHeader({ onMenuClick }) {
         <ThemeLanguageToggle />
         <div className="header__user">
           <span className="header__user-name">{user?.full_name || "User"}</span>
-          <div className="header__avatar">{initial}</div>
+          <div className="header__avatar" style={{ overflow: "hidden" }}>
+            {avatar ? (
+              <img src={avatar} alt="Avatar" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            ) : (
+              initial
+            )}
+          </div>
         </div>
       </div>
     </header>

@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { useLanguage } from "../../../context/LanguageContext";
 import { extractResults } from "../../../services/api";
 import {
   getAdminJobs,
@@ -39,6 +40,7 @@ function Modal({ title, onClose, children }) {
 }
 
 function Categories() {
+  const { t } = useLanguage();
   const [categories, setCategories] = useState([]);
   const [jobCounts, setJobCounts] = useState({});
   const [loading, setLoading] = useState(true);
@@ -111,8 +113,8 @@ function Categories() {
     <section className="workspace-page">
       <div className="workspace-heading">
         <div>
-          <h1>Job Categories</h1>
-          <p>Manage industry categories used across companies and job listings.</p>
+          <h1>{t("admin.jobCategories", "Job Categories")}</h1>
+          <p>{t("admin.jobCategoriesDesc", "Manage industry categories used across companies and job listings.")}</p>
         </div>
         <button
           className="workspace-button workspace-button-primary"
@@ -121,7 +123,7 @@ function Categories() {
             setModal(true);
           }}
         >
-          + Add Category
+          {t("admin.addNewCategory", "+ Add Category")}
         </button>
       </div>
 
@@ -129,14 +131,14 @@ function Categories() {
         <input
           type="search"
           className="workspace-search"
-          placeholder="Search categories..."
+          placeholder={t("admin.searchCategories", "Search categories...")}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
         <span className="workspace-muted">
           {loading
-            ? "Loading..."
-            : `${filtered.length} categor${filtered.length !== 1 ? "ies" : "y"}`}
+            ? t("common.loading", "Loading...")
+            : `${filtered.length} ${t("admin.entries", "entries")}`}
         </span>
       </div>
 
@@ -144,16 +146,16 @@ function Categories() {
         <table className="workspace-table">
           <thead>
             <tr>
-              <th>Category / Industry Name</th>
-              <th>Active Jobs</th>
-              <th style={{ textAlign: "right" }}>Actions</th>
+              <th>{t("admin.categoryIndustryName", "Category / Industry Name")}</th>
+              <th>{t("admin.activeJobs", "Active Jobs")}</th>
+              <th style={{ textAlign: "right" }}>{t("common.actions", "Actions")}</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
               <tr>
                 <td colSpan="3" className="workspace-empty">
-                  Loading categories...
+                  {t("admin.loadingCategories", "Loading categories...")}
                 </td>
               </tr>
             ) : (
@@ -171,7 +173,7 @@ function Categories() {
                           className="workspace-button workspace-button-danger"
                           onClick={() => setDeleteTarget(cat)}
                         >
-                          Delete
+                          {t("common.delete", "Delete")}
                         </button>
                       </div>
                     </td>
@@ -180,7 +182,7 @@ function Categories() {
                 {filtered.length === 0 && (
                   <tr>
                     <td colSpan="3" className="workspace-empty">
-                      No categories found.
+                      {t("admin.noCategories", "No categories found.")}
                     </td>
                   </tr>
                 )}
@@ -192,19 +194,19 @@ function Categories() {
 
       {/* Create Modal */}
       {modal && (
-        <Modal title="Add New Category" onClose={() => setModal(false)}>
+        <Modal title={t("admin.addNewCategory", "Add New Category")} onClose={() => setModal(false)}>
           <form onSubmit={handleAdd} className="admin-form">
-            <p className="admin-form-section">Category Details</p>
+            <p className="admin-form-section">{t("admin.categoryDetails", "Category Details")}</p>
             <div className="admin-field">
               <label className="admin-label">
-                Category Name <span className="admin-required">*</span>
+                {t("admin.categoryName", "Category Name")} <span className="admin-required">*</span>
               </label>
               <input
                 className="admin-input"
                 required
                 value={newCat}
                 onChange={(e) => setNewCat(e.target.value)}
-                placeholder="e.g. Engineering, Marketing, Sales"
+                placeholder={t("admin.categoryPlaceholder", "e.g. Fintech, Healthcare, AI & ML")}
                 autoFocus
               />
             </div>
@@ -214,13 +216,13 @@ function Categories() {
                 className="workspace-button"
                 onClick={() => setModal(false)}
               >
-                Cancel
+                {t("common.cancel", "Cancel")}
               </button>
               <button
                 type="submit"
                 className="workspace-button workspace-button-primary"
               >
-                Create Category
+                {t("admin.createCategory", "Create Category")}
               </button>
             </div>
           </form>
@@ -229,9 +231,9 @@ function Categories() {
 
       {/* Delete Confirm Modal */}
       {deleteTarget && (
-        <Modal title="Confirm Delete" onClose={() => setDeleteTarget(null)}>
+        <Modal title={t("admin.confirmDelete", "Confirm Delete")} onClose={() => setDeleteTarget(null)}>
           <p style={{ margin: "0 0 20px", color: "var(--color-text-secondary)" }}>
-            Delete <strong>{deleteTarget}</strong>? This cannot be undone.
+            {t("admin.deleteCategoryConfirm", "Are you sure you want to delete this category?")} <strong>{deleteTarget}</strong>?
           </p>
           <div className="workspace-actions">
             <button
@@ -239,14 +241,14 @@ function Categories() {
               className="workspace-button"
               onClick={() => setDeleteTarget(null)}
             >
-              Cancel
+              {t("common.cancel", "Cancel")}
             </button>
             <button
               type="button"
               className="workspace-button workspace-button-danger"
               onClick={confirmDelete}
             >
-              Yes, Delete
+              {t("admin.yesDelete", "Yes, Delete")}
             </button>
           </div>
         </Modal>

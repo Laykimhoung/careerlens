@@ -1,6 +1,45 @@
 /* CSS for AdminHeader */
 
-.admin-header { min-height: 64px; padding: 12px 26px; display: flex; align-items: center; justify-content: space-between; gap: 15px; background: #fff; border-bottom: 1px solid #dfe7e1; }
-.admin-header h1 { margin: 0; font-size: 16px; }
-.admin-header p { margin: 3px 0 0; color: #68776f; font-size: 12px; }
-.admin-header-actions { display: flex; align-items: center; gap: 12px; }
+.admin-header {
+  min-height: 64px;
+  padding: 12px 26px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  background: var(--color-surface, #ffffff);
+  border-bottom: 1px solid var(--color-border, #dfe7e1);
+  transition: background-color 0.25s ease, border-color 0.25s ease;
+}
+
+.admin-header h1 {
+  margin: 0;
+  font-size: 16px;
+  color: var(--color-text-primary, #0f172a);
+}
+
+.admin-header p {
+  margin: 3px 0 0;
+  color: var(--color-text-muted, #68776f);
+  font-size: 12px;
+}
+
+.admin-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+[data-theme="dark"] .admin-header {
+  background: rgba(9, 14, 34, 0.92) !important;
+  backdrop-filter: blur(16px) !important;
+  border-bottom-color: rgba(99, 142, 203, 0.25) !important;
+}
+
+[data-theme="dark"] .admin-header h1 {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .admin-header p {
+  color: #f1f5f9 !important;
+}

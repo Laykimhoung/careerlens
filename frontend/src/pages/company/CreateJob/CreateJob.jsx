@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useLanguage } from "../../../context/LanguageContext";
 import JobForm from "../../../components/company/JobForm";
 import {
   createJob as createJobApi,
@@ -11,6 +12,7 @@ import "./CreateJob.css";
 
 export default function CreateJob() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -53,16 +55,17 @@ export default function CreateJob() {
     <section className="workspace-page">
       <div className="workspace-heading">
         <div>
-          <h1>Create a job</h1>
-          <p>Configure role requirements, compensation, and status to publish to candidates.</p>
+          <h1>{t("company.createJobTitle")}</h1>
+          <p>{t("company.createJobSub")}</p>
         </div>
       </div>
       {error && (
         <div
           style={{
             padding: "12px 16px",
-            backgroundColor: "#fef2f2",
-            color: "#b91c1c",
+            backgroundColor: "rgba(239, 68, 68, 0.15)",
+            color: "#ef4444",
+            border: "1px solid rgba(239, 68, 68, 0.3)",
             borderRadius: "8px",
             marginBottom: "16px",
           }}
@@ -72,7 +75,7 @@ export default function CreateJob() {
       )}
       <JobForm
         onSubmit={handleCreateJob}
-        submitLabel="Create job posting"
+        submitLabel={t("company.createJobPostingBtn")}
         loading={loading}
       />
     </section>

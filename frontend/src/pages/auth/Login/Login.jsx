@@ -38,22 +38,83 @@ export default function Login() {
       </div>
       <LoginForm onSubmit={handleSubmit} loading={loading} error={error} onClearError={clearError} />
       
-      {/* DEV BYPASS - Remove when backend is ready */}
-      <div style={{ marginTop: "24px", padding: "16px", backgroundColor: "#f0fdf4", border: "1px dashed #4ade80", borderRadius: "8px", textAlign: "center" }}>
-        <p style={{ fontSize: "12px", color: "#166534", marginBottom: "8px", fontWeight: "500" }}>
-          Backend not running? Use this to preview the UI:
+      {/* Demo Accounts Quick Login */}
+      <div style={{
+        marginTop: "24px",
+        padding: "16px",
+        backgroundColor: "rgba(31, 213, 168, 0.05)",
+        border: "1px solid rgba(31, 213, 168, 0.2)",
+        borderRadius: "12px",
+        textAlign: "center"
+      }}>
+        <p style={{ fontSize: "12px", color: "#1fd5a8", marginBottom: "12px", fontWeight: "600", textTransform: "uppercase", letterSpacing: "1px" }}>
+          Quick Demo Login
         </p>
-        <button 
-          type="button"
-          onClick={() => {
-            localStorage.setItem("access_token", "fake-jwt-token");
-            localStorage.setItem("user", JSON.stringify({ id: 1, full_name: "En (Candidate)", email: "en@test.com", role: "candidate" }));
-            window.location.reload();
-          }}
-          style={{ fontSize: "13px", padding: "8px 16px", backgroundColor: "#16a34a", color: "white", borderRadius: "6px", cursor: "pointer", border: "none", fontWeight: "500" }}
-        >
-          Simulate Login as Candidate
-        </button>
+        <div style={{ display: "flex", gap: "8px", justifyContent: "center", flexWrap: "wrap" }}>
+          <button
+            type="button"
+            disabled={loading}
+            onClick={() => handleSubmit({ username: "demo_admin", password: "CareerLens2026!Demo" })}
+            style={{
+              fontSize: "12px",
+              padding: "8px 14px",
+              backgroundColor: "#232b2b",
+              color: "#ffffff",
+              border: "1px solid #1f2a2a",
+              borderRadius: "8px",
+              cursor: "pointer",
+              fontWeight: "600",
+              transition: "all 0.2s ease"
+            }}
+            onMouseOver={(e) => { e.currentTarget.style.borderColor = "#1fd5a8"; }}
+            onMouseOut={(e) => { e.currentTarget.style.borderColor = "#1f2a2a"; }}
+          >
+            🛡️ Admin
+          </button>
+          <button
+            type="button"
+            disabled={loading}
+            onClick={() => handleSubmit({ username: "demo_cand_sreymom", password: "CareerLens2026!Demo" })}
+            style={{
+              fontSize: "12px",
+              padding: "8px 14px",
+              backgroundColor: "#232b2b",
+              color: "#ffffff",
+              border: "1px solid #1f2a2a",
+              borderRadius: "8px",
+              cursor: "pointer",
+              fontWeight: "600",
+              transition: "all 0.2s ease"
+            }}
+            onMouseOver={(e) => { e.currentTarget.style.borderColor = "#1fd5a8"; }}
+            onMouseOut={(e) => { e.currentTarget.style.borderColor = "#1f2a2a"; }}
+          >
+            🎓 Candidate
+          </button>
+          <button
+            type="button"
+            disabled={loading}
+            onClick={() => handleSubmit({ username: "demo_comp_mekong", password: "CareerLens2026!Demo" })}
+            style={{
+              fontSize: "12px",
+              padding: "8px 14px",
+              backgroundColor: "#232b2b",
+              color: "#ffffff",
+              border: "1px solid #1f2a2a",
+              borderRadius: "8px",
+              cursor: "pointer",
+              fontWeight: "600",
+              transition: "all 0.2s ease"
+            }}
+            onMouseOver={(e) => { e.currentTarget.style.borderColor = "#1fd5a8"; }}
+            onMouseOut={(e) => { e.currentTarget.style.borderColor = "#1f2a2a"; }}
+          >
+            🏢 Company
+          </button>
+        </div>
+        <p style={{ fontSize: "11px", color: "#818b8b", marginTop: "10px", marginBottom: 0 }}>
+          Password: <code style={{ color: "#1fd5a8" }}>CareerLens2026!Demo</code>
+        </p>
       </div>
     </AuthLayout>
   );

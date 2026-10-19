@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
-import { useAuth } from "../../../hooks/useAuth";
 import SideRays from "../../../components/ui/SideRays";
+import { useLanguage } from "../../../context/LanguageContext";
 import "./AuthPage.css";
 
 const ROLE_DASHBOARD = { candidate: "/candidate", company: "/company", admin: "/admin" };
@@ -23,6 +23,7 @@ const EyeOffIcon = () => (
 export default function AuthPage() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const { login, register, loading, error, clearError, isAuthenticated, user } = useAuth();
   
   const isLogin = location.pathname === "/login";
@@ -115,20 +116,20 @@ export default function AuthPage() {
           {/* Blade Content for Login */}
           <div className={`blade-content ${isLogin ? "show-content" : "hide-content"}`}>
             <h4 className="blade-brand">CareerLens</h4>
-            <h1 className="blade-title">Welcome<br/><em>back.</em></h1>
-            <p className="blade-desc">Your applications, jobs, and interviews are exactly where you left them.</p>
+            <h1 className="blade-title">{t("auth.welcomeBack")}<br/><em>CareerLens</em></h1>
+            <p className="blade-desc">{t("auth.loginSubtitle")}</p>
           </div>
         </div>
 
         {/* LOGIN FORM SECTION (Fixed on LEFT) */}
         <div className="auth-side auth-side-left">
           <form className="auth-form" onSubmit={handleLoginSubmit}>
-            <h2>Sign in</h2>
+            <h2>{t("auth.signIn")}</h2>
             
             {error && isLogin && <div className="auth-error">{error}</div>}
 
             <div className="auth-input-group">
-              <label>Username or email</label>
+              <label>{t("auth.username")}</label>
               <div className="auth-input-wrapper">
                 <input 
                   type="text" 
@@ -145,7 +146,7 @@ export default function AuthPage() {
             </div>
 
             <div className="auth-input-group">
-              <label>Password</label>
+              <label>{t("auth.password")}</label>
               <div className="auth-input-wrapper">
                 <input 
                   type={showLoginPassword ? "text" : "password"} 
@@ -175,13 +176,13 @@ export default function AuthPage() {
                   onChange={e => setLoginForm({...loginForm, remember: e.target.checked})}
                   disabled={loading}
                 />
-                <span>Keep me signed in</span>
+                <span>{t("auth.rememberMe")}</span>
               </label>
-              <Link to="/forgot-password" className="auth-link">Forgot password?</Link>
+              <Link to="/forgot-password" className="auth-link">{t("auth.forgotPassword")}</Link>
             </div>
 
             <button type="submit" className="auth-submit-btn" disabled={loading}>
-              {loading ? "Signing in..." : "Sign in"}
+              {loading ? t("auth.signingIn") : t("auth.signIn")}
             </button>
 
             <p style={{ textAlign: 'center', fontSize: '11px', color: '#888', marginBottom: '16px', lineHeight: 1.5 }}>
@@ -190,7 +191,7 @@ export default function AuthPage() {
             </p>
 
             <p className="auth-switch-text">
-              New to CareerLens? <Link to="/register">Create an account</Link>
+              {t("auth.noAccount")} <Link to="/register">{t("auth.signUp")}</Link>
             </p>
           </form>
         </div>
@@ -199,7 +200,7 @@ export default function AuthPage() {
         {/* REGISTER FORM SECTION (Fixed on RIGHT) */}
         <div className="auth-side auth-side-right">
           <form className="auth-form auth-form--register" onSubmit={handleRegisterSubmit}>
-            <h2>Create your CareerLens account</h2>
+            <h2>{t("auth.createAccount")}</h2>
             
             <div className="auth-role-toggle">
               <button 
@@ -207,14 +208,14 @@ export default function AuthPage() {
                 className={`auth-role-btn ${registerRole === 'candidate' ? 'active' : ''}`}
                 onClick={() => setRegisterRole('candidate')}
               >
-                Candidate
+                {t("auth.roleCandidate")}
               </button>
               <button 
                 type="button" 
                 className={`auth-role-btn ${registerRole === 'company' ? 'active' : ''}`}
                 onClick={() => setRegisterRole('company')}
               >
-                Company
+                {t("auth.roleCompany")}
               </button>
             </div>
 
@@ -223,7 +224,7 @@ export default function AuthPage() {
             {registerRole === 'candidate' ? (
               <>
                 <div className="auth-input-group">
-                  <label>Full name</label>
+                  <label>{t("auth.fullName")}</label>
                   <div className="auth-input-wrapper">
                     <input 
                       type="text" 
@@ -250,7 +251,7 @@ export default function AuthPage() {
 
                 <div className="auth-input-row">
                   <div className="auth-input-group">
-                    <label>Password</label>
+                    <label>{t("auth.password")}</label>
                     <div className="auth-input-wrapper">
                       <input 
                         type={showRegisterPassword ? "text" : "password"} 
@@ -271,7 +272,7 @@ export default function AuthPage() {
                     </div>
                   </div>
                   <div className="auth-input-group">
-                    <label>Confirm password</label>
+                    <label>{t("auth.confirmPassword")}</label>
                     <div className="auth-input-wrapper">
                       <input 
                         type={showRegisterConfirmPassword ? "text" : "password"} 
@@ -294,7 +295,7 @@ export default function AuthPage() {
                 </div>
 
                 <div className="auth-input-group">
-                  <label>University</label>
+                  <label>{t("auth.universityCollege")}</label>
                   <div className="auth-input-wrapper">
                     <input 
                       type="text" 
@@ -307,7 +308,7 @@ export default function AuthPage() {
                 </div>
 
                 <div className="auth-input-group">
-                  <label>Major</label>
+                  <label>{t("auth.majorStudyField")}</label>
                   <div className="auth-input-wrapper">
                     <input 
                       type="text" 
@@ -320,7 +321,7 @@ export default function AuthPage() {
                 </div>
 
                 <div className="auth-input-group">
-                  <label>Graduation year</label>
+                  <label>{t("auth.graduationYear")}</label>
                   <div className="auth-input-wrapper">
                     <select 
                       style={{ width: '100%', padding: '10px', border: 'none', background: 'transparent', outline: 'none' }}
@@ -340,7 +341,7 @@ export default function AuthPage() {
             ) : (
               <>
                 <div className="auth-input-group">
-                  <label>Company name</label>
+                  <label>{t("auth.companyName")}</label>
                   <div className="auth-input-wrapper">
                     <input 
                       type="text" 
@@ -353,7 +354,7 @@ export default function AuthPage() {
                 </div>
 
                 <div className="auth-input-group">
-                  <label>Work email</label>
+                  <label>{t("auth.workEmail")}</label>
                   <div className="auth-input-wrapper">
                     <input 
                       type="email" 
@@ -367,7 +368,7 @@ export default function AuthPage() {
 
                 <div className="auth-input-row">
                   <div className="auth-input-group">
-                    <label>Password</label>
+                    <label>{t("auth.password")}</label>
                     <div className="auth-input-wrapper">
                       <input 
                         type={showRegisterPassword ? "text" : "password"} 
@@ -388,7 +389,7 @@ export default function AuthPage() {
                     </div>
                   </div>
                   <div className="auth-input-group">
-                    <label>Confirm password</label>
+                    <label>{t("auth.confirmPassword")}</label>
                     <div className="auth-input-wrapper">
                       <input 
                         type={showRegisterConfirmPassword ? "text" : "password"} 
@@ -411,7 +412,7 @@ export default function AuthPage() {
                 </div>
 
                 <div className="auth-input-group">
-                  <label>Industry</label>
+                  <label>{t("company.industry")}</label>
                   <div className="auth-input-wrapper">
                     <select 
                       style={{ width: '100%', padding: '10px', border: 'none', background: 'transparent', outline: 'none' }}
@@ -429,7 +430,7 @@ export default function AuthPage() {
                 </div>
 
                 <div className="auth-input-group">
-                  <label>Company size</label>
+                  <label>{t("auth.companySize")}</label>
                   <div className="auth-input-wrapper">
                     <select 
                       style={{ width: '100%', padding: '10px', border: 'none', background: 'transparent', outline: 'none' }}
@@ -447,7 +448,7 @@ export default function AuthPage() {
                 </div>
 
                 <div className="auth-input-group">
-                  <label>Location</label>
+                  <label>{t("candidate.location")}</label>
                   <div className="auth-input-wrapper">
                     <input 
                       type="text" 
@@ -460,7 +461,7 @@ export default function AuthPage() {
                 </div>
 
                 <div className="auth-input-group">
-                  <label>Website</label>
+                  <label>{t("auth.website")}</label>
                   <div className="auth-input-wrapper">
                     <input 
                       type="text" 
@@ -483,16 +484,16 @@ export default function AuthPage() {
                   disabled={loading}
                   required
                 />
-                <span>I agree to the Terms</span>
+                <span>{t("auth.agreeTerms")}</span>
               </label>
             </div>
 
             <button type="submit" className="auth-submit-btn" disabled={loading}>
-              {loading ? "Creating..." : (registerRole === 'candidate' ? "Create Student Account" : "Create Company Account")}
+              {loading ? t("auth.creatingAccount") : t("auth.signUp")}
             </button>
 
             <p className="auth-switch-text" style={{ marginTop: '16px' }}>
-              Have an account? <Link to="/login">Sign in</Link>
+              {t("auth.hasAccount")} <Link to="/login">{t("auth.signIn")}</Link>
             </p>
           </form>
         </div>

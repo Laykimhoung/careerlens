@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
+import { useLanguage } from "../../../context/LanguageContext";
 import Button from "../../../components/common/Button";
 import SavedJobCard from "../../../components/candidate/SavedJobCard";
 import {
@@ -10,6 +11,7 @@ import { normalizeJobRecord } from "../../../services/jobService";
 import "./SavedJobs.css";
 
 export default function CandidateSavedJobs() {
+  const { t } = useLanguage();
   const [savedItems, setSavedItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -58,8 +60,9 @@ export default function CandidateSavedJobs() {
         <div
           style={{
             padding: "12px 16px",
-            backgroundColor: "#fef2f2",
-            color: "#b91c1c",
+            backgroundColor: "rgba(239, 68, 68, 0.15)",
+            color: "#ef4444",
+            border: "1px solid rgba(239, 68, 68, 0.3)",
             borderRadius: "8px",
             marginBottom: "16px",
           }}
@@ -71,15 +74,15 @@ export default function CandidateSavedJobs() {
       <div className="saved-jobs__header">
         <span className="saved-jobs__count">
           {loading
-            ? "Loading saved jobs..."
-            : `You have ${savedItems.length} saved job${savedItems.length !== 1 ? "s" : ""}`}
+            ? t("common.loading")
+            : `${savedItems.length} ${t("candidate.savedJobs")}`}
         </span>
       </div>
 
       <div className="saved-jobs__list">
         {loading ? (
           <div className="saved-jobs__empty">
-            <p>Loading your saved jobs from the server...</p>
+            <p>{t("common.loading")}</p>
           </div>
         ) : savedItems.length > 0 ? (
           savedItems.map((job) => (
@@ -87,13 +90,12 @@ export default function CandidateSavedJobs() {
           ))
         ) : (
           <div className="saved-jobs__empty">
-            <h3>No saved jobs</h3>
+            <h3>{t("candidate.noSavedJobs")}</h3>
             <p>
-              You haven&apos;t saved any jobs yet. When you save a job, it will
-              appear here so you can easily apply later.
+              {t("candidate.noSavedJobsDesc")}
             </p>
             <Link to="/candidate/jobs">
-              <Button variant="primary">Browse Jobs</Button>
+              <Button variant="primary">{t("candidate.browseJobs")}</Button>
             </Link>
           </div>
         )}

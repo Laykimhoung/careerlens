@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { useLanguage } from "../../../context/LanguageContext";
 import { extractResults } from "../../../services/api";
 import {
   getAdminSkills,
@@ -25,6 +26,7 @@ function Modal({ title, onClose, children }) {
 }
 
 function Skills() {
+  const { t } = useLanguage();
   const [skills, setSkills] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -92,8 +94,8 @@ function Skills() {
     <section className="workspace-page">
       <div className="workspace-heading">
         <div>
-          <h1>Global Skills List</h1>
-          <p>Manage the predefined skills candidates and jobs can select.</p>
+          <h1>{t("admin.globalSkillsList", "Global Skills List")}</h1>
+          <p>{t("admin.skillsDesc", "Manage the predefined skills candidates and jobs can select.")}</p>
         </div>
         <button
           className="workspace-button workspace-button-primary"
@@ -102,7 +104,7 @@ function Skills() {
             setModal(true);
           }}
         >
-          + Add Skill
+          {t("admin.addNewSkill", "+ Add Skill")}
         </button>
       </div>
 
@@ -126,14 +128,14 @@ function Skills() {
         <input
           type="search"
           className="workspace-search"
-          placeholder="Search skills..."
+          placeholder={t("admin.searchSkills", "Search skills...")}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
         <span className="workspace-muted">
           {loading
-            ? "Loading..."
-            : `${filtered.length} skill${filtered.length !== 1 ? "s" : ""}`}
+            ? t("common.loading", "Loading...")
+            : `${filtered.length} ${t("admin.entries", "entries")}`}
         </span>
       </div>
 
@@ -141,15 +143,15 @@ function Skills() {
         <table className="workspace-table">
           <thead>
             <tr>
-              <th>Skill Name</th>
-              <th style={{ textAlign: "right" }}>Actions</th>
+              <th>{t("admin.skillName", "Skill Name")}</th>
+              <th style={{ textAlign: "right" }}>{t("common.actions", "Actions")}</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
               <tr>
                 <td colSpan="2" className="workspace-empty">
-                  Loading skills from database...
+                  {t("admin.loadingSkills", "Loading skills from database...")}
                 </td>
               </tr>
             ) : (
@@ -166,7 +168,7 @@ function Skills() {
                           className="workspace-button workspace-button-danger"
                           onClick={() => setDeleteTarget(skill)}
                         >
-                          Delete
+                          {t("common.delete", "Delete")}
                         </button>
                       </div>
                     </td>
@@ -175,7 +177,7 @@ function Skills() {
                 {filtered.length === 0 && (
                   <tr>
                     <td colSpan="2" className="workspace-empty">
-                      No skills found.
+                      {t("admin.noSkills", "No skills found.")}
                     </td>
                   </tr>
                 )}
@@ -187,19 +189,19 @@ function Skills() {
 
       {/* Create Modal */}
       {modal && (
-        <Modal title="Add New Skill" onClose={() => setModal(false)}>
+        <Modal title={t("admin.addNewSkill", "Add New Skill")} onClose={() => setModal(false)}>
           <form onSubmit={handleAdd} className="admin-form">
-            <p className="admin-form-section">Skill Details</p>
+            <p className="admin-form-section">{t("admin.skillDetails", "Skill Details")}</p>
             <div className="admin-field">
               <label className="admin-label">
-                Skill Name <span className="admin-required">*</span>
+                {t("admin.skillName", "Skill Name")} <span className="admin-required">*</span>
               </label>
               <input
                 className="admin-input"
                 required
                 value={newSkill}
                 onChange={(e) => setNewSkill(e.target.value)}
-                placeholder="e.g. React, Python, UI/UX"
+                placeholder={t("admin.skillPlaceholder", "e.g. React, Python, UI/UX")}
                 autoFocus
               />
             </div>
@@ -209,13 +211,13 @@ function Skills() {
                 className="workspace-button"
                 onClick={() => setModal(false)}
               >
-                Cancel
+                {t("common.cancel", "Cancel")}
               </button>
               <button
                 type="submit"
                 className="workspace-button workspace-button-primary"
               >
-                Create Skill
+                {t("admin.createSkill", "Create Skill")}
               </button>
             </div>
           </form>
@@ -224,9 +226,9 @@ function Skills() {
 
       {/* Delete Confirm Modal */}
       {deleteTarget && (
-        <Modal title="Confirm Delete" onClose={() => setDeleteTarget(null)}>
+        <Modal title={t("admin.confirmDelete", "Confirm Delete")} onClose={() => setDeleteTarget(null)}>
           <p style={{ margin: "0 0 20px", color: "var(--color-text-secondary)" }}>
-            Delete <strong>{deleteTarget.name}</strong>? This cannot be undone.
+            {t("admin.deleteSkillConfirm", "Are you sure you want to delete this skill?")} <strong>{deleteTarget.name}</strong>?
           </p>
           <div className="workspace-actions">
             <button
@@ -234,14 +236,14 @@ function Skills() {
               className="workspace-button"
               onClick={() => setDeleteTarget(null)}
             >
-              Cancel
+              {t("common.cancel", "Cancel")}
             </button>
             <button
               type="button"
               className="workspace-button workspace-button-danger"
               onClick={confirmDelete}
             >
-              Yes, Delete
+              {t("admin.yesDelete", "Yes, Delete")}
             </button>
           </div>
         </Modal>

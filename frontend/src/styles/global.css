@@ -153,3 +153,514 @@ ol {
   display: grid;
   gap: 20px;
 }
+
+/* ==========================================================================
+   Galaxy Dark Mode System Styling
+   ========================================================================== */
+
+/* Smooth theme transitions */
+body, 
+.admin-main, 
+.candidate-layout__main, 
+.company-main, 
+.company-shell,
+.admin-header, 
+.header, 
+.company-header, 
+.admin-sidebar, 
+.candidate-sidebar, 
+.collapsible-sidebar,
+.card,
+.stat-card,
+.dashboard-card,
+.cj-card,
+.table-container {
+  transition: background-color 0.28s ease, 
+              border-color 0.28s ease, 
+              color 0.28s ease, 
+              box-shadow 0.28s ease;
+}
+
+/* ── Cosmic Nebula Layer ─────────────────────────────────────────────────── */
+html[data-theme="dark"] body {
+  background-color: #050814 !important;
+  position: relative;
+  min-height: 100vh;
+}
+
+html[data-theme="dark"] body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 90% 60% at 50% -10%, rgba(99, 142, 203, 0.42), transparent 75%),
+    radial-gradient(circle 800px at 8% 25%, rgba(139, 92, 246, 0.32), transparent 70%),
+    radial-gradient(circle 750px at 92% 75%, rgba(56, 189, 248, 0.28), transparent 65%),
+    radial-gradient(circle 550px at 50% 65%, rgba(1, 107, 251, 0.25), transparent 70%),
+    linear-gradient(180deg, #050814 0%, #070C1E 45%, #0B112C 100%);
+  background-attachment: fixed;
+  animation: galaxyNebulaBreathe 12s ease-in-out infinite alternate;
+}
+
+/* ── High-Density Glittering Alive Galaxy Dots & Stars Layer ─────────────── */
+html[data-theme="dark"] body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    /* Layer 1: Bright Crisp Starlight Dots (White & Diamond Blue) */
+    radial-gradient(2px 2px at 25px 35px, #ffffff, transparent),
+    radial-gradient(2.5px 2.5px at 110px 160px, #ffffff, transparent),
+    radial-gradient(2px 2px at 210px 75px, #a5f3fc, transparent),
+    radial-gradient(3px 3px at 170px 270px, #ffffff, transparent),
+    radial-gradient(1.5px 1.5px at 290px 180px, #ffffff, transparent),
+    radial-gradient(2.5px 2.5px at 320px 50px, #ffffff, transparent),
+    radial-gradient(2px 2px at 390px 310px, #c084fc, transparent),
+    radial-gradient(2.5px 2.5px at 450px 140px, #ffffff, transparent),
+    
+    /* Layer 2: Medium Sparkling Starlight with Celestial Glow */
+    radial-gradient(3px 3px at 65px 210px, #ffffff, rgba(99, 142, 203, 0.9) 1.5px, transparent 4px),
+    radial-gradient(3.5px 3.5px at 250px 105px, #ffffff, rgba(56, 189, 248, 0.95) 1.5px, transparent 5px),
+    radial-gradient(2.5px 2.5px at 370px 230px, #ffffff, transparent 3px),
+    radial-gradient(3.5px 3.5px at 510px 85px, #ffffff, rgba(168, 85, 247, 0.9) 1.5px, transparent 5px),
+    radial-gradient(2.5px 2.5px at 590px 270px, #ffffff, transparent 3px),
+    radial-gradient(3px 3px at 700px 150px, #a5f3fc, transparent 3.5px),
+    radial-gradient(2.5px 2.5px at 810px 330px, #ffffff, transparent 3px),
+
+    /* Layer 3: Brilliant Focal Stars with Soft Halos */
+    radial-gradient(4px 4px at 140px 65px, #ffffff, rgba(255, 255, 255, 0.95) 1.5px, rgba(1, 107, 251, 0.7) 3px, transparent 7px),
+    radial-gradient(4px 4px at 440px 200px, #ffffff, rgba(255, 255, 255, 0.95) 1.5px, rgba(56, 189, 248, 0.7) 3px, transparent 7px),
+    radial-gradient(3.5px 3.5px at 750px 75px, #ffffff, rgba(192, 132, 252, 0.8) 1.5px, transparent 6px),
+    radial-gradient(4.5px 4.5px at 920px 240px, #ffffff, rgba(255, 255, 255, 0.95) 2px, rgba(1, 107, 251, 0.75) 3.5px, transparent 8px);
+
+  background-repeat: repeat;
+  background-size: 
+    300px 300px, 300px 300px, 300px 300px, 300px 300px, 300px 300px, 300px 300px, 300px 300px, 300px 300px,
+    460px 460px, 460px 460px, 460px 460px, 460px 460px, 460px 460px, 460px 460px, 460px 460px,
+    680px 680px, 680px 680px, 680px 680px, 680px 680px;
+  animation: galaxyStarsAlive 5s ease-in-out infinite alternate;
+}
+
+@keyframes galaxyStarsAlive {
+  0% {
+    opacity: 0.65;
+    transform: scale(1) translateY(0);
+    filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.85)) drop-shadow(0 0 6px rgba(1, 107, 251, 0.75));
+  }
+  30% {
+    opacity: 1;
+    transform: scale(1.015) translateY(-2px);
+    filter: drop-shadow(0 0 5px #ffffff) drop-shadow(0 0 10px rgba(56, 189, 248, 0.95)) drop-shadow(0 0 16px rgba(1, 107, 251, 0.85));
+  }
+  65% {
+    opacity: 0.75;
+    transform: scale(0.99) translateY(1px);
+    filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.9)) drop-shadow(0 0 8px rgba(168, 85, 247, 0.85));
+  }
+  100% {
+    opacity: 0.98;
+    transform: scale(1.02) translateY(-3px);
+    filter: drop-shadow(0 0 6px #ffffff) drop-shadow(0 0 12px rgba(1, 107, 251, 1)) drop-shadow(0 0 20px rgba(99, 142, 203, 0.85));
+  }
+}
+
+@keyframes galaxyNebulaBreathe {
+  0% {
+    opacity: 0.82;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.03);
+  }
+  100% {
+    opacity: 0.88;
+    transform: scale(1.01);
+  }
+}
+
+/* ── Transparent Shells & Layouts (allow galaxy starfield to shine through) ── */
+[data-theme="dark"] #root,
+[data-theme="dark"] .company-shell,
+[data-theme="dark"] .admin-layout,
+[data-theme="dark"] .candidate-layout,
+[data-theme="dark"] .main-layout,
+[data-theme="dark"] .admin-main,
+[data-theme="dark"] .admin-content,
+[data-theme="dark"] .candidate-layout__main,
+[data-theme="dark"] .candidate-layout__content,
+[data-theme="dark"] .company-main,
+[data-theme="dark"] .company-content,
+[data-theme="dark"] .workspace-page,
+[data-theme="dark"] .cand-dash-container,
+[data-theme="dark"] .modern-dashboard-layout {
+  background: transparent !important;
+  background-color: transparent !important;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Luminous Glassmorphism Boxes & Panels across Admin, Candidate & Company ─────── */
+[data-theme="dark"] .card,
+[data-theme="dark"] .stat-card,
+[data-theme="dark"] .dashboard-card,
+[data-theme="dark"] .admin-card,
+[data-theme="dark"] .admin-stat-card,
+[data-theme="dark"] .cj-card,
+[data-theme="dark"] .job-card,
+[data-theme="dark"] .app-card,
+[data-theme="dark"] .saved-job-card,
+[data-theme="dark"] .application-card,
+[data-theme="dark"] .table-container,
+[data-theme="dark"] .messages-sidebar,
+[data-theme="dark"] .messages-chat,
+[data-theme="dark"] .profile-card,
+[data-theme="dark"] .resume-card,
+[data-theme="dark"] .modal-content,
+[data-theme="dark"] .company-card,
+[data-theme="dark"] .applicant-card,
+[data-theme="dark"] .workspace-card,
+[data-theme="dark"] .workspace-panel,
+[data-theme="dark"] .workspace-stat,
+[data-theme="dark"] .workspace-table-wrap,
+[data-theme="dark"] .dashboard-panel,
+[data-theme="dark"] .cand-spotlight-card,
+[data-theme="dark"] .cand-overview-card,
+[data-theme="dark"] .cand-performer-card,
+[data-theme="dark"] .cand-jobs-panel,
+[data-theme="dark"] .cand-process-card,
+[data-theme="dark"] .cand-banner-card,
+[data-theme="dark"] .cand-stat-card,
+[data-theme="dark"] .cand-action-card,
+[data-theme="dark"] .cand-rec-card,
+[data-theme="dark"] .cand-app-card,
+[data-theme="dark"] .cand-profile-card,
+[data-theme="dark"] .cand-pipeline-card,
+[data-theme="dark"] .comp-spotlight-card,
+[data-theme="dark"] .comp-overview-card,
+[data-theme="dark"] .comp-performer-card,
+[data-theme="dark"] .comp-jobs-panel,
+[data-theme="dark"] .comp-process-card,
+[data-theme="dark"] .comp-banner-card,
+[data-theme="dark"] .comp-stat-card,
+[data-theme="dark"] .comp-action-card,
+[data-theme="dark"] .comp-job-card,
+[data-theme="dark"] .comp-profile-card,
+[data-theme="dark"] .comp-pipeline-card,
+[data-theme="dark"] .modern-spotlight-card,
+[data-theme="dark"] .modern-overview-card,
+[data-theme="dark"] .modern-performer-card,
+[data-theme="dark"] .modern-stat-card,
+[data-theme="dark"] .modern-action-card,
+[data-theme="dark"] .modern-panel,
+[data-theme="dark"] .modern-card,
+[data-theme="dark"] .saved-jobs__empty,
+[data-theme="dark"] .applicant-row {
+  background: rgba(13, 21, 48, 0.82) !important;
+  backdrop-filter: blur(16px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(160%) !important;
+  border: 1px solid rgba(99, 142, 203, 0.32) !important;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45), 0 0 1px 1px rgba(99, 142, 203, 0.15) !important;
+  color: #ffffff !important;
+}
+
+/* Glowing hover state */
+[data-theme="dark"] .card:hover,
+[data-theme="dark"] .stat-card:hover,
+[data-theme="dark"] .cj-card:hover,
+[data-theme="dark"] .job-card:hover,
+[data-theme="dark"] .saved-job-card:hover,
+[data-theme="dark"] .app-card:hover,
+[data-theme="dark"] .workspace-card:hover,
+[data-theme="dark"] .admin-card:hover,
+[data-theme="dark"] .cand-stat-card:hover,
+[data-theme="dark"] .comp-stat-card:hover,
+[data-theme="dark"] .cand-spotlight-card:hover,
+[data-theme="dark"] .comp-spotlight-card:hover,
+[data-theme="dark"] .cand-overview-card:hover,
+[data-theme="dark"] .comp-overview-card:hover {
+  border-color: rgba(147, 197, 253, 0.55) !important;
+  box-shadow: 0 12px 36px 0 rgba(0, 0, 0, 0.55), 0 0 20px rgba(99, 142, 203, 0.35) !important;
+}
+
+/* Sub-elements inside cards & boxes */
+[data-theme="dark"] .cand-dual-stats,
+[data-theme="dark"] .comp-dual-stats,
+[data-theme="dark"] .modern-dual-stats,
+[data-theme="dark"] .cand-interviews-box,
+[data-theme="dark"] .comp-interviews-box {
+  background: rgba(18, 30, 68, 0.72) !important;
+  border: 1px solid rgba(99, 142, 203, 0.28) !important;
+}
+
+[data-theme="dark"] .cand-dual-stat-item strong,
+[data-theme="dark"] .comp-dual-stat-item strong,
+[data-theme="dark"] .modern-dual-stat-item strong {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .cand-dual-stat-item span,
+[data-theme="dark"] .comp-dual-stat-item span,
+[data-theme="dark"] .modern-dual-stat-item span {
+  color: #f1f5f9 !important;
+}
+
+[data-theme="dark"] .cand-process-item,
+[data-theme="dark"] .comp-process-item {
+  background: rgba(16, 26, 60, 0.78) !important;
+  border: 1px solid rgba(99, 142, 203, 0.25) !important;
+  border-left: 4px solid var(--color-primary, #016BFB) !important;
+}
+
+[data-theme="dark"] .cand-process-item:hover,
+[data-theme="dark"] .comp-process-item:hover {
+  background: rgba(24, 38, 86, 0.92) !important;
+  border-color: rgba(99, 142, 203, 0.5) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35) !important;
+}
+
+[data-theme="dark"] .cand-process-job,
+[data-theme="dark"] .comp-process-job {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .cand-process-co,
+[data-theme="dark"] .comp-process-co {
+  color: #f1f5f9 !important;
+}
+
+[data-theme="dark"] .cand-status-pill,
+[data-theme="dark"] .comp-status-pill {
+  background: rgba(99, 142, 203, 0.25) !important;
+  border: 1px solid rgba(99, 142, 203, 0.4) !important;
+  color: #ffffff !important;
+}
+
+/* ── Bright & Crisp High-Contrast Text in Dark Mode ─────────────────────── */
+[data-theme="dark"] h1,
+[data-theme="dark"] h2,
+[data-theme="dark"] h3,
+[data-theme="dark"] h4,
+[data-theme="dark"] h5,
+[data-theme="dark"] h6,
+[data-theme="dark"] strong,
+[data-theme="dark"] b,
+[data-theme="dark"] .stat-val,
+[data-theme="dark"] .cand-stat-num,
+[data-theme="dark"] .comp-stat-num,
+[data-theme="dark"] .modern-stat-num,
+[data-theme="dark"] .cand-banner-title,
+[data-theme="dark"] .comp-banner-title,
+[data-theme="dark"] .modern-banner-title,
+[data-theme="dark"] .workspace-heading h1,
+[data-theme="dark"] .cand-greeting-title,
+[data-theme="dark"] .comp-greeting-title,
+[data-theme="dark"] .modern-greeting-title,
+[data-theme="dark"] .cand-spotlight-title,
+[data-theme="dark"] .cand-overview-title,
+[data-theme="dark"] .cand-panel-title,
+[data-theme="dark"] .cand-process-title,
+[data-theme="dark"] .cand-rec-title,
+[data-theme="dark"] .cand-app-title,
+[data-theme="dark"] .comp-spotlight-title,
+[data-theme="dark"] .comp-overview-title,
+[data-theme="dark"] .comp-panel-title,
+[data-theme="dark"] .comp-process-title,
+[data-theme="dark"] .comp-job-title,
+[data-theme="dark"] .comp-app-title,
+[data-theme="dark"] .modern-overview-title,
+[data-theme="dark"] .modern-stat-title,
+[data-theme="dark"] .applicant-name,
+[data-theme="dark"] .applications-list__header,
+[data-theme="dark"] .saved-jobs__count,
+[data-theme="dark"] label {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] p,
+[data-theme="dark"] span:not(.badge):not(.status-badge):not(.cand-avatar-circle):not(.comp-avatar-circle):not(.modern-avatar-badge):not(.cand-dual-stat-item strong):not(.stat-val),
+[data-theme="dark"] .text-muted,
+[data-theme="dark"] .workspace-muted,
+[data-theme="dark"] .stat-label,
+[data-theme="dark"] .cand-greeting-sub,
+[data-theme="dark"] .comp-greeting-sub,
+[data-theme="dark"] .modern-greeting-sub,
+[data-theme="dark"] .cand-banner-desc,
+[data-theme="dark"] .comp-banner-desc,
+[data-theme="dark"] .modern-banner-desc,
+[data-theme="dark"] .cand-stat-label,
+[data-theme="dark"] .comp-stat-label,
+[data-theme="dark"] .modern-stat-label,
+[data-theme="dark"] .cand-spotlight-desc,
+[data-theme="dark"] .cand-overview-sub,
+[data-theme="dark"] .cand-panel-sub,
+[data-theme="dark"] .cand-rec-company,
+[data-theme="dark"] .cand-rec-location,
+[data-theme="dark"] .cand-app-company,
+[data-theme="dark"] .cand-app-date,
+[data-theme="dark"] .comp-spotlight-desc,
+[data-theme="dark"] .comp-overview-sub,
+[data-theme="dark"] .comp-panel-sub,
+[data-theme="dark"] .modern-overview-sub,
+[data-theme="dark"] .applicant-title {
+  color: #f1f5f9 !important;
+}
+
+/* Spotlight action buttons & badges */
+[data-theme="dark"] .cand-spotlight-btn,
+[data-theme="dark"] .comp-spotlight-btn,
+[data-theme="dark"] .spotlight-action-btn,
+[data-theme="dark"] .performer-action-btn,
+[data-theme="dark"] .cand-performer-btn,
+[data-theme="dark"] .comp-performer-btn {
+  background: var(--color-primary, #016BFB) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .cand-spotlight-btn:hover,
+[data-theme="dark"] .comp-spotlight-btn:hover,
+[data-theme="dark"] .spotlight-action-btn:hover,
+[data-theme="dark"] .performer-action-btn:hover,
+[data-theme="dark"] .cand-performer-btn:hover,
+[data-theme="dark"] .comp-performer-btn:hover {
+  background: var(--color-primary-hover, #0058d4) !important;
+}
+
+[data-theme="dark"] .cand-overview-badge,
+[data-theme="dark"] .comp-overview-badge {
+  background: rgba(99, 142, 203, 0.22) !important;
+  color: #93c5fd !important;
+  border: 1px solid rgba(99, 142, 203, 0.35) !important;
+}
+
+/* Sub-card list items & pills */
+[data-theme="dark"] .cand-spotlight-pill,
+[data-theme="dark"] .comp-spotlight-pill,
+[data-theme="dark"] .modern-pill {
+  background: rgba(99, 142, 203, 0.2) !important;
+  border-color: rgba(99, 142, 203, 0.4) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .cand-action-item,
+[data-theme="dark"] .comp-action-item,
+[data-theme="dark"] .modern-action-item,
+[data-theme="dark"] .workspace-row {
+  background: rgba(18, 28, 62, 0.6) !important;
+  border-color: rgba(99, 142, 203, 0.24) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .cand-action-item:hover,
+[data-theme="dark"] .comp-action-item:hover,
+[data-theme="dark"] .modern-action-item:hover {
+  background: rgba(28, 42, 90, 0.75) !important;
+  border-color: rgba(99, 142, 203, 0.45) !important;
+}
+
+/* Workspace buttons & controls in Dark Mode */
+[data-theme="dark"] .workspace-button {
+  background: rgba(14, 22, 52, 0.85) !important;
+  color: #ffffff !important;
+  border-color: rgba(99, 142, 203, 0.35) !important;
+}
+
+[data-theme="dark"] .workspace-button:hover {
+  background: rgba(99, 142, 203, 0.25) !important;
+  border-color: var(--color-primary-light, #60a5fa) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .workspace-button-primary {
+  background: var(--color-primary, #016BFB) !important;
+  border-color: var(--color-primary, #016BFB) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .workspace-button-primary:hover {
+  background: var(--color-primary-hover, #0058d4) !important;
+}
+
+[data-theme="dark"] .workspace-status {
+  background: rgba(99, 142, 203, 0.22) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(99, 142, 203, 0.35) !important;
+}
+
+/* ── Dark Mode Inputs, Selects, and Textareas ────────────────────────────── */
+[data-theme="dark"] input,
+[data-theme="dark"] select,
+[data-theme="dark"] textarea {
+  background-color: rgba(10, 16, 38, 0.88) !important;
+  border-color: rgba(99, 142, 203, 0.3) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] input:focus,
+[data-theme="dark"] select:focus,
+[data-theme="dark"] textarea:focus {
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 0 0 3px rgba(99, 142, 203, 0.35) !important;
+}
+
+/* ── Dark Mode Table headers and rows ────────────────────────────────────── */
+[data-theme="dark"] table thead th {
+  background-color: rgba(18, 28, 64, 0.95) !important;
+  color: #ffffff !important;
+  border-bottom: 1px solid var(--color-border) !important;
+}
+
+[data-theme="dark"] table tbody tr {
+  background-color: transparent !important;
+  border-bottom: 1px solid var(--color-border) !important;
+}
+
+[data-theme="dark"] table tbody tr:hover {
+  background-color: rgba(99, 142, 203, 0.12) !important;
+}
+
+/* ── Modals & Dialogs ────────────────────────────────────────────────────── */
+[data-theme="dark"] .modal,
+[data-theme="dark"] .modal-overlay {
+  background-color: rgba(4, 7, 18, 0.8) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+/* ── Headers & Bars ──────────────────────────────────────────────────────── */
+[data-theme="dark"] .admin-header,
+[data-theme="dark"] .header,
+[data-theme="dark"] .company-header,
+[data-theme="dark"] .navbar {
+  background: rgba(9, 14, 34, 0.92) !important;
+  backdrop-filter: blur(16px) !important;
+  border-color: var(--color-border) !important;
+}
+
+/* ── Tag / Badge items in Dark Mode ──────────────────────────────────────── */
+[data-theme="dark"] .cj-card__tag {
+  background-color: rgba(99, 142, 203, 0.18) !important;
+  border-color: rgba(99, 142, 203, 0.35) !important;
+  color: #c7d9f5 !important;
+}
+
+/* ── Buttons in Dark Mode ────────────────────────────────────────────────── */
+[data-theme="dark"] .cj-btn--outline,
+[data-theme="dark"] .btn--outline {
+  background-color: rgba(14, 22, 50, 0.7) !important;
+  color: #ffffff !important;
+  border-color: var(--color-border) !important;
+}
+
+[data-theme="dark"] .cj-btn--outline:hover,
+[data-theme="dark"] .btn--outline:hover {
+  background-color: rgba(99, 142, 203, 0.25) !important;
+  border-color: var(--color-primary-light) !important;
+}

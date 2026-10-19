@@ -120,12 +120,78 @@ export default function CandidateProfile() {
     }
   };
 
+  const [avatar, setAvatar] = useState(() => {
+    return (
+      (user?.id ? localStorage.getItem(`careerlens_avatar_${user.id}`) : null) ||
+      localStorage.getItem("careerlens_avatar") ||
+      ""
+    );
+  });
+
+  const handleAvatarChange = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 3 * 1024 * 1024) {
+      setStatusMsg({ type: "error", text: "Image file size must be less than 3MB." });
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = reader.result;
+      setAvatar(dataUrl);
+      if (user?.id) {
+        localStorage.setItem(`careerlens_avatar_${user.id}`, dataUrl);
+      }
+      localStorage.setItem("careerlens_avatar", dataUrl);
+      window.dispatchEvent(new CustomEvent("careerlens_profile_image_updated"));
+      setStatusMsg({ type: "success", text: "Profile photo uploaded successfully." });
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleRemoveAvatar = () => {
+    setAvatar("");
+    if (user?.id) {
+      localStorage.removeItem(`careerlens_avatar_${user.id}`);
+    }
+    localStorage.removeItem("careerlens_avatar");
+    window.dispatchEvent(new CustomEvent("careerlens_profile_image_updated"));
+    setStatusMsg({ type: "success", text: "Profile photo removed." });
+  };
+
   return (
     <div className="profile-page">
       <div className="profile-card">
         <div className="profile-card__header">
           <div className="profile-card__avatar-wrapper">
-            <div className="profile-card__avatar">{initial}</div>
+            <div className="profile-card__avatar">
+              {avatar ? (
+                <img
+                  src={avatar}
+                  alt={values.full_name || "Candidate Avatar"}
+                  className="profile-card__avatar-img"
+                />
+              ) : (
+                initial
+              )}
+            </div>
+            <label
+              htmlFor="candidate-avatar-input"
+              className="profile-card__avatar-edit"
+              title="Upload profile photo"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                <circle cx="12" cy="13" r="4"></circle>
+              </svg>
+            </label>
+            <input
+              id="candidate-avatar-input"
+              type="file"
+              accept="image/*"
+              style={{ display: "none" }}
+              onChange={handleAvatarChange}
+            />
           </div>
           <div className="profile-card__info">
             <h2>{values.full_name || "Candidate Profile"}</h2>
@@ -133,6 +199,39 @@ export default function CandidateProfile() {
               {values.major || "Candidate"} &middot;{" "}
               {values.university || "University not set"}
             </p>
+            <div style={{ display: "flex", gap: "8px", marginTop: "10px" }}>
+              <label
+                htmlFor="candidate-avatar-input"
+                className="workspace-button"
+                style={{
+                  fontSize: "12px",
+                  padding: "4px 12px",
+                  minHeight: "30px",
+                  cursor: "pointer",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px",
+                }}
+              >
+                <span>📷</span> {t("candidate.uploadPhoto", "Upload Photo")}
+              </label>
+              {avatar && (
+                <button
+                  type="button"
+                  onClick={handleRemoveAvatar}
+                  className="workspace-button"
+                  style={{
+                    fontSize: "12px",
+                    padding: "4px 10px",
+                    minHeight: "30px",
+                    color: "#ef4444",
+                    borderColor: "rgba(239, 68, 68, 0.3)",
+                  }}
+                >
+                  {t("common.remove", "Remove")}
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
