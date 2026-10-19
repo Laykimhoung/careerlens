@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { Link, useParams } from "react-router-dom";
+import { useLanguage } from "../../../context/LanguageContext";
 import ApplicationStatus from "../../../components/company/ApplicationStatus";
 import Button from "../../../components/common/Button";
 import {
@@ -17,6 +18,7 @@ import "./ApplicantDetails.css";
 
 export default function ApplicantDetails() {
   const { id } = useParams();
+  const { t } = useLanguage();
   const [applicant, setApplicant] = useState(null);
   const [notes, setNotes] = useState([]);
   const [offer, setOffer] = useState(null);
@@ -73,12 +75,12 @@ export default function ApplicantDetails() {
       );
       setStatusMsg({
         type: "success",
-        text: `Application status updated to ${nextDisplayStatus}.`,
+        text: t("common.success"),
       });
     } catch (err) {
       setStatusMsg({
         type: "error",
-        text: err.response?.data?.detail || "Failed to update status.",
+        text: err.response?.data?.detail || t("common.error"),
       });
     }
   };
@@ -95,7 +97,7 @@ export default function ApplicantDetails() {
       setNotes((prev) => [res.data, ...prev]);
       setNoteText("");
     } catch (err) {
-      alert(err.response?.data?.detail || "Failed to save note.");
+      alert(err.response?.data?.detail || t("common.error"));
     } finally {
       setSavingNote(false);
     }
@@ -122,13 +124,13 @@ export default function ApplicantDetails() {
       );
       setStatusMsg({
         type: "success",
-        text: "Job offer sent to candidate and status updated to Offered!",
+        text: t("common.success"),
       });
     } catch (err) {
       const detail =
         err.response?.data?.detail ||
         Object.values(err.response?.data || {})?.[0] ||
-        "Failed to send job offer.";
+        t("common.error");
       setStatusMsg({ type: "error", text: String(detail) });
     } finally {
       setSavingOffer(false);
@@ -139,7 +141,7 @@ export default function ApplicantDetails() {
     return (
       <section className="workspace-page">
         <div className="workspace-panel">
-          <p className="workspace-muted">Loading applicant details...</p>
+          <p className="workspace-muted">{t("common.loading")}</p>
         </div>
       </section>
     );
@@ -149,10 +151,10 @@ export default function ApplicantDetails() {
     return (
       <section className="workspace-page">
         <div className="workspace-panel">
-          <h1>Applicant not found</h1>
+          <h1>{t("common.error")}</h1>
           <p className="workspace-muted">{error}</p>
           <Link className="workspace-button" to="/company/applicants">
-            Back to applicants
+            {t("company.viewAllApplicants")}
           </Link>
         </div>
       </section>
@@ -165,11 +167,11 @@ export default function ApplicantDetails() {
         <div>
           <h1>{applicant.candidateName}</h1>
           <p>
-            {applicant.jobTitle} &middot; Applied {applicant.appliedDate}
+            {applicant.jobTitle} &middot; {t("candidate.appliedOn")} {applicant.appliedDate}
           </p>
         </div>
         <Link className="workspace-button" to="/company/applicants">
-          Back to applicants
+          {t("company.viewAllApplicants")}
         </Link>
       </div>
 
@@ -179,8 +181,9 @@ export default function ApplicantDetails() {
             padding: "12px 16px",
             borderRadius: "8px",
             marginBottom: "16px",
-            backgroundColor: statusMsg.type === "error" ? "#fef2f2" : "#f0fdf4",
-            color: statusMsg.type === "error" ? "#b91c1c" : "#15803d",
+            backgroundColor: statusMsg.type === "error" ? "rgba(239, 68, 68, 0.15)" : "rgba(16, 185, 129, 0.15)",
+            color: statusMsg.type === "error" ? "#ef4444" : "#10b981",
+            border: `1px solid ${statusMsg.type === "error" ? "rgba(239, 68, 68, 0.3)" : "rgba(16, 185, 129, 0.3)"}`,
             fontSize: "14px",
           }}
         >
@@ -190,23 +193,19 @@ export default function ApplicantDetails() {
 
       <div className="workspace-split">
         <section className="workspace-panel">
-          <h2>Candidate profile</h2>
+          <h2>{t("candidate.viewProfile")}</h2>
           <div className="workspace-row">
             <span className="workspace-muted">Email</span>
-            <strong>{applicant.candidateEmail || "Not provided"}</strong>
+            <strong>{applicant.candidateEmail || t("common.noData")}</strong>
           </div>
           <div className="workspace-row">
-            <span className="workspace-muted">Phone</span>
-            <strong>{applicant.candidatePhone || "Not provided"}</strong>
+            <span className="workspace-muted">{t("candidate.institution")}</span>
+            <strong>{applicant.candidateUniversity || t("common.noData")}</strong>
           </div>
           <div className="workspace-row">
-            <span className="workspace-muted">University</span>
-            <strong>{applicant.candidateUniversity || "Not provided"}</strong>
-          </div>
-          <div className="workspace-row">
-            <span className="workspace-muted">Major</span>
+            <span className="workspace-muted">{t("candidate.majorField")}</span>
             <strong>
-              {applicant.candidateMajor || "Not provided"}
+              {applicant.candidateMajor || t("common.noData")}
               {applicant.candidateGraduationYear
                 ? ` (${applicant.candidateGraduationYear})`
                 : ""}
@@ -214,21 +213,21 @@ export default function ApplicantDetails() {
           </div>
           {applicant.resumeFile && (
             <div className="workspace-row">
-              <span className="workspace-muted">Resume</span>
+              <span className="workspace-muted">{t("candidate.resumeAttached")}</span>
               <a
                 href={applicant.resumeFile}
                 target="_blank"
                 rel="noreferrer"
-                style={{ color: "#0d9488", fontWeight: 600 }}
+                style={{ color: "var(--color-primary, #016BFB)", fontWeight: 600 }}
               >
-                View / Download Resume &rarr;
+                {t("candidate.viewResumeFile")} &rarr;
               </a>
             </div>
           )}
           {applicant.candidateBio && (
             <div style={{ marginTop: "12px" }}>
               <span className="workspace-muted" style={{ display: "block", marginBottom: "4px" }}>
-                About Candidate
+                {t("candidate.aboutMe")}
               </span>
               <p style={{ margin: 0, fontSize: "14px", lineHeight: 1.5 }}>
                 {applicant.candidateBio}
@@ -238,7 +237,7 @@ export default function ApplicantDetails() {
           {applicant.coverLetter && (
             <div style={{ marginTop: "12px" }}>
               <span className="workspace-muted" style={{ display: "block", marginBottom: "4px" }}>
-                Cover Letter
+                {t("candidate.coverLetter")}
               </span>
               <p style={{ margin: 0, fontSize: "14px", lineHeight: 1.5 }}>
                 {applicant.coverLetter}
@@ -256,7 +255,7 @@ export default function ApplicantDetails() {
 
         <div style={{ display: "grid", gap: "20px" }}>
           <section className="workspace-panel">
-            <h2>Skills</h2>
+            <h2>{t("candidate.skillsLabel")}</h2>
             {applicant.candidateSkills && applicant.candidateSkills.length > 0 ? (
               <div className="workspace-list">
                 {applicant.candidateSkills.map((skill) => (
@@ -266,28 +265,28 @@ export default function ApplicantDetails() {
                 ))}
               </div>
             ) : (
-              <p className="workspace-muted">No skills listed on candidate profile.</p>
+              <p className="workspace-muted">{t("common.noData")}</p>
             )}
           </section>
 
           {/* Job Offer Section */}
           <section className="workspace-panel">
-            <h2>Job Offer</h2>
+            <h2>{t("candidate.jobOfferDetails")}</h2>
             {offer ? (
               <div>
                 <div className="workspace-row">
-                  <span className="workspace-muted">Offered Salary</span>
+                  <span className="workspace-muted">{t("candidate.offeredCompensation")}</span>
                   <strong>
                     {offer.currency || "USD"}{" "}
                     {Number(offer.salary || 0).toLocaleString()} / month
                   </strong>
                 </div>
                 <div className="workspace-row">
-                  <span className="workspace-muted">Offer Status</span>
+                  <span className="workspace-muted">{t("candidate.currentStatus")}</span>
                   <strong>{offer.status}</strong>
                 </div>
                 {offer.message && (
-                  <p style={{ fontSize: "13px", color: "#475569", marginTop: "8px" }}>
+                  <p style={{ fontSize: "13px", color: "var(--color-text-secondary, #475569)", marginTop: "8px" }}>
                     {offer.message}
                   </p>
                 )}
@@ -296,7 +295,7 @@ export default function ApplicantDetails() {
               <form onSubmit={handleSendOffer} style={{ display: "grid", gap: "10px" }}>
                 <input
                   type="number"
-                  placeholder="Monthly salary offer in USD (e.g. 950)"
+                  placeholder={t("company.offeredSalary")}
                   value={offerForm.salary}
                   onChange={(e) =>
                     setOfferForm({ ...offerForm, salary: e.target.value })
@@ -304,27 +303,31 @@ export default function ApplicantDetails() {
                   required
                   style={{
                     padding: "9px 12px",
-                    border: "1px solid #cbd5e1",
+                    border: "1px solid var(--color-border, #cbd5e1)",
+                    backgroundColor: "var(--color-surface, #fff)",
+                    color: "var(--color-text, #0f172a)",
                     borderRadius: "6px",
                     fontSize: "14px",
                   }}
                 />
                 <textarea
                   rows={2}
-                  placeholder="Offer message / terms..."
+                  placeholder={t("company.offerMessage")}
                   value={offerForm.message}
                   onChange={(e) =>
                     setOfferForm({ ...offerForm, message: e.target.value })
                   }
                   style={{
                     padding: "9px 12px",
-                    border: "1px solid #cbd5e1",
+                    border: "1px solid var(--color-border, #cbd5e1)",
+                    backgroundColor: "var(--color-surface, #fff)",
+                    color: "var(--color-text, #0f172a)",
                     borderRadius: "6px",
                     fontSize: "14px",
                   }}
                 />
                 <Button type="submit" variant="primary" size="sm" loading={savingOffer}>
-                  Extend Job Offer
+                  {t("company.sendOfferBtn")}
                 </Button>
               </form>
             )}
@@ -332,23 +335,25 @@ export default function ApplicantDetails() {
 
           {/* Internal Recruiter Notes Section */}
           <section className="workspace-panel">
-            <h2>Recruiter Notes</h2>
+            <h2>{t("company.internalNotes")}</h2>
             <form onSubmit={handleAddNote} style={{ display: "flex", gap: "8px", marginBottom: "14px" }}>
               <input
                 type="text"
-                placeholder="Add internal evaluation note..."
+                placeholder={t("company.addNotePlaceholder")}
                 value={noteText}
                 onChange={(e) => setNoteText(e.target.value)}
                 style={{
                   flex: 1,
                   padding: "8px 12px",
-                  border: "1px solid #cbd5e1",
+                  border: "1px solid var(--color-border, #cbd5e1)",
+                  backgroundColor: "var(--color-surface, #fff)",
+                  color: "var(--color-text, #0f172a)",
                   borderRadius: "6px",
                   fontSize: "14px",
                 }}
               />
               <Button type="submit" variant="primary" size="sm" loading={savingNote}>
-                Add Note
+                {t("company.addNoteBtn")}
               </Button>
             </form>
             {notes.length > 0 ? (
@@ -358,29 +363,23 @@ export default function ApplicantDetails() {
                     key={n.id}
                     style={{
                       padding: "10px 12px",
-                      backgroundColor: "#f8fafc",
-                      border: "1px solid #e2e8f0",
+                      backgroundColor: "var(--color-surface-hover, #f8fafc)",
+                      border: "1px solid var(--color-border, #e2e8f0)",
                       borderRadius: "6px",
                       fontSize: "13px",
                     }}
                   >
                     <div>{n.note}</div>
-                    <div style={{ fontSize: "11px", color: "#64748b", marginTop: "4px" }}>
+                    <div style={{ fontSize: "11px", color: "var(--color-text-secondary, #64748b)", marginTop: "4px" }}>
                       {n.created_at
-                        ? new Date(n.created_at).toLocaleString("en-US", {
-                            month: "short",
-                            day: "numeric",
-                            year: "numeric",
-                            hour: "numeric",
-                            minute: "2-digit",
-                          })
+                        ? new Date(n.created_at).toLocaleString()
                         : ""}
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="workspace-muted">No internal notes recorded yet.</p>
+              <p className="workspace-muted">{t("common.noData")}</p>
             )}
           </section>
         </div>

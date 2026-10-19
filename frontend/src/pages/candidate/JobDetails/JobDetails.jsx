@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
+import { useLanguage } from "../../../context/LanguageContext";
 import Button from "../../../components/common/Button";
 import { getJobById, normalizeJobRecord } from "../../../services/jobService";
 import {
@@ -14,6 +15,7 @@ import "./JobDetails.css";
 
 export default function CandidateJobDetails() {
   const { id } = useParams();
+  const { t } = useLanguage();
 
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -53,8 +55,8 @@ export default function CandidateJobDetails() {
   if (loading) {
     return (
       <div className="job-details-page">
-        <div style={{ padding: "40px", textAlign: "center", color: "#64748b" }}>
-          Loading job details...
+        <div style={{ padding: "40px", textAlign: "center", color: "var(--color-text-secondary, #64748b)" }}>
+          {t("common.loading")}
         </div>
       </div>
     );
@@ -64,12 +66,12 @@ export default function CandidateJobDetails() {
     return (
       <div className="job-details-page">
         <div className="job-not-found">
-          <h2>Job not found</h2>
-          <p style={{ marginBottom: "24px", color: "#6b7280" }}>
-            {error || "The job you are looking for does not exist or has been removed."}
+          <h2>{t("candidate.jobNotFound")}</h2>
+          <p style={{ marginBottom: "24px", color: "var(--color-text-secondary, #6b7280)" }}>
+            {error || t("candidate.jobNotFoundDesc")}
           </p>
           <Link to="/candidate/jobs">
-            <Button variant="primary">Back to Jobs</Button>
+            <Button variant="primary">{t("candidate.backToJobs")}</Button>
           </Link>
         </div>
       </div>
@@ -92,7 +94,7 @@ export default function CandidateJobDetails() {
     } catch (err) {
       setStatusMsg({
         type: "error",
-        text: err.response?.data?.detail || "Failed to update saved job.",
+        text: err.response?.data?.detail || t("common.error"),
       });
     } finally {
       setSaving(false);
@@ -114,12 +116,12 @@ export default function CandidateJobDetails() {
       setShowApplyForm(false);
       setStatusMsg({
         type: "success",
-        text: "Your application has been submitted successfully!",
+        text: t("common.success"),
       });
     } catch (err) {
       setStatusMsg({
         type: "error",
-        text: err.response?.data?.detail || "Failed to submit application.",
+        text: err.response?.data?.detail || t("common.error"),
       });
     } finally {
       setApplying(false);
@@ -145,7 +147,7 @@ export default function CandidateJobDetails() {
             d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
           />
         </svg>
-        Back to Jobs
+        {t("candidate.backToJobs")}
       </Link>
 
       {statusMsg.text && (
@@ -154,8 +156,9 @@ export default function CandidateJobDetails() {
             marginBottom: "16px",
             padding: "12px 16px",
             borderRadius: "8px",
-            backgroundColor: statusMsg.type === "error" ? "#fef2f2" : "#f0fdf4",
-            color: statusMsg.type === "error" ? "#b91c1c" : "#15803d",
+            backgroundColor: statusMsg.type === "error" ? "rgba(239, 68, 68, 0.15)" : "rgba(16, 185, 129, 0.15)",
+            color: statusMsg.type === "error" ? "#ef4444" : "#10b981",
+            border: `1px solid ${statusMsg.type === "error" ? "rgba(239, 68, 68, 0.3)" : "rgba(16, 185, 129, 0.3)"}`,
             fontSize: "14px",
           }}
         >
@@ -179,19 +182,19 @@ export default function CandidateJobDetails() {
         </div>
         <div className="job-details__actions">
           <Button variant="outline" onClick={handleToggleSave} disabled={saving}>
-            {isSaved ? "Saved ✓" : "Save Job"}
+            {isSaved ? `✓ ${t("candidate.saved")}` : t("candidate.saveJob")}
           </Button>
           {isApplied ? (
             <Link to={`/candidate/applications/${existingApplication.id}`}>
-              <Button variant="teal">Applied ✓ (View Status)</Button>
+              <Button variant="primary">✓ {t("candidate.applied")}</Button>
             </Link>
           ) : (
             <Button
-              variant="teal"
+              variant="primary"
               onClick={() => setShowApplyForm((prev) => !prev)}
               disabled={applying}
             >
-              Apply Now
+              {t("candidate.applyNow")}
             </Button>
           )}
         </div>
@@ -201,28 +204,30 @@ export default function CandidateJobDetails() {
         <form
           onSubmit={handleApplySubmit}
           style={{
-            backgroundColor: "#fff",
-            border: "1px solid #cbd5e1",
+            backgroundColor: "var(--color-surface, #fff)",
+            border: "1px solid var(--color-border, #cbd5e1)",
             borderRadius: "8px",
             padding: "20px",
             marginBottom: "24px",
           }}
         >
-          <h3 style={{ margin: "0 0 8px 0", fontSize: "16px", color: "#0f172a" }}>
-            Submit Application for {job.title}
+          <h3 style={{ margin: "0 0 8px 0", fontSize: "16px", color: "var(--color-text, #0f172a)" }}>
+            {t("candidate.submitApplicationFor")} {job.title}
           </h3>
-          <p style={{ margin: "0 0 12px 0", fontSize: "13px", color: "#64748b" }}>
-            Your candidate profile and uploaded resume will be included automatically. You may also include a cover letter below.
+          <p style={{ margin: "0 0 12px 0", fontSize: "13px", color: "var(--color-text-secondary, #64748b)" }}>
+            {t("candidate.submitApplicationDesc")}
           </p>
           <textarea
             rows={4}
-            placeholder="Write a brief cover letter or note to the hiring team (optional)..."
+            placeholder={t("candidate.coverLetterPlaceholder")}
             value={coverLetter}
             onChange={(e) => setCoverLetter(e.target.value)}
             style={{
               width: "100%",
               padding: "10px 12px",
-              border: "1px solid #cbd5e1",
+              border: "1px solid var(--color-border, #cbd5e1)",
+              backgroundColor: "var(--color-background, #fff)",
+              color: "var(--color-text, #0f172a)",
               borderRadius: "6px",
               marginBottom: "12px",
               fontSize: "14px",
@@ -235,10 +240,10 @@ export default function CandidateJobDetails() {
               size="sm"
               onClick={() => setShowApplyForm(false)}
             >
-              Cancel
+              {t("common.cancel")}
             </Button>
-            <Button type="submit" variant="teal" size="sm" loading={applying}>
-              Confirm & Submit Application
+            <Button type="submit" variant="primary" size="sm" loading={applying}>
+              {t("candidate.confirmSubmit")}
             </Button>
           </div>
         </form>
@@ -247,15 +252,15 @@ export default function CandidateJobDetails() {
       <div className="job-details__content">
         <div className="job-details__body">
           <div className="job-details__section">
-            <h3>Job Description</h3>
+            <h3>{t("candidate.jobDescription")}</h3>
             <p style={{ whiteSpace: "pre-line" }}>
-              {job.description || "No detailed description provided."}
+              {job.description || t("common.noData")}
             </p>
           </div>
 
           {job.tags && job.tags.length > 0 && (
             <div className="job-details__section">
-              <h3>Required Skills</h3>
+              <h3>{t("candidate.skillsLabel")}</h3>
               <ul>
                 {job.tags.map((skill) => (
                   <li key={skill}>{skill}</li>
@@ -265,19 +270,19 @@ export default function CandidateJobDetails() {
           )}
 
           <div className="job-details__section">
-            <h3>About {job.company}</h3>
+            <h3>{t("candidate.aboutCompany")} {job.company}</h3>
             <p>
               {companyInfo.description ||
                 `${job.company} is an employer in the ${companyInfo.industry || "technology"} sector located in ${companyInfo.location || job.location}.`}
             </p>
             {companyInfo.website && (
               <p style={{ marginTop: "8px" }}>
-                Website:{" "}
+                {t("company.website")}:{" "}
                 <a
                   href={companyInfo.website}
                   target="_blank"
                   rel="noreferrer"
-                  style={{ color: "#0d9488", textDecoration: "underline" }}
+                  style={{ color: "var(--color-primary, #016BFB)", textDecoration: "underline" }}
                 >
                   {companyInfo.website}
                 </a>
@@ -288,28 +293,28 @@ export default function CandidateJobDetails() {
 
         <aside className="job-details__sidebar">
           <div className="job-summary__item">
-            <span className="job-summary__label">Salary</span>
+            <span className="job-summary__label">{t("candidate.salary")}</span>
             <span className="job-summary__value">{job.salary}</span>
           </div>
           <div className="job-summary__item">
-            <span className="job-summary__label">Job Type</span>
+            <span className="job-summary__label">{t("candidate.jobType")}</span>
             <span className="job-summary__value">{job.type}</span>
           </div>
           <div className="job-summary__item">
-            <span className="job-summary__label">Work Setup</span>
+            <span className="job-summary__label">{t("candidate.workplaceFilter")}</span>
             <span className="job-summary__value">{job.setup}</span>
           </div>
           <div className="job-summary__item">
-            <span className="job-summary__label">Industry</span>
+            <span className="job-summary__label">{t("candidate.industryFilter")}</span>
             <span className="job-summary__value">{job.industry}</span>
           </div>
           <div className="job-summary__item">
-            <span className="job-summary__label">Posted</span>
+            <span className="job-summary__label">{t("candidate.postedOn")}</span>
             <span className="job-summary__value">{job.postedDate}</span>
           </div>
           {job.deadline && (
             <div className="job-summary__item">
-              <span className="job-summary__label">Deadline</span>
+              <span className="job-summary__label">{t("candidate.deadline")}</span>
               <span className="job-summary__value">{job.deadline}</span>
             </div>
           )}

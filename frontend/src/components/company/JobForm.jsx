@@ -1,3 +1,4 @@
+import { useLanguage } from "../../context/LanguageContext";
 import Input from "../common/Input";
 import Select from "../common/Select";
 import Textarea from "../common/Textarea";
@@ -7,9 +8,11 @@ import "./JobForm.css";
 export default function JobForm({
   initialJob = {},
   onSubmit,
-  submitLabel = "Save job",
+  submitLabel,
   loading = false,
 }) {
+  const { t } = useLanguage();
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
@@ -29,28 +32,30 @@ export default function JobForm({
         <Input
           id="title"
           name="title"
-          label="Job title"
+          label={t("company.jobTitleLabel")}
           defaultValue={initialJob.title || ""}
+          placeholder={t("company.jobTitlePlaceholder")}
           required
         />
         <Input
           id="location"
           name="location"
-          label="Location"
+          label={t("company.locationLabel")}
           defaultValue={initialJob.location || initialJob.loc || "Phnom Penh"}
+          placeholder={t("company.locationPlaceholder")}
           required
         />
         <Select
           id="type"
           name="type"
-          label="Employment type"
+          label={t("company.employmentTypeLabel")}
           defaultValue={initialJob.type || "Full-time"}
           options={["Full-time", "Part-time", "Contract", "Internship"]}
         />
         <Select
           id="setup"
           name="setup"
-          label="Workplace setup"
+          label={t("company.workplaceTypeLabel")}
           defaultValue={initialJob.setup || "On-site"}
           options={["On-site", "Hybrid", "Remote"]}
         />
@@ -58,7 +63,7 @@ export default function JobForm({
           id="salary_min"
           name="salary_min"
           type="number"
-          label="Minimum salary (USD)"
+          label={t("company.minSalaryLabel")}
           defaultValue={initialJob.salaryMin ?? ""}
           placeholder="e.g. 600"
         />
@@ -66,14 +71,14 @@ export default function JobForm({
           id="salary_max"
           name="salary_max"
           type="number"
-          label="Maximum salary (USD)"
+          label={t("company.maxSalaryLabel")}
           defaultValue={initialJob.salaryMax ?? ""}
           placeholder="e.g. 1200"
         />
         <Select
           id="status"
           name="status"
-          label="Posting status"
+          label={t("company.jobStatusLabel")}
           defaultValue={initialJob.status || "Published"}
           options={["Published", "Draft", "Closed"]}
         />
@@ -81,7 +86,7 @@ export default function JobForm({
           id="deadline"
           name="deadline"
           type="date"
-          label="Application deadline"
+          label={t("company.deadlineLabel")}
           defaultValue={initialJob.deadline || ""}
         />
       </div>
@@ -89,7 +94,7 @@ export default function JobForm({
       <Input
         id="skills"
         name="skills"
-        label="Required skills (comma-separated)"
+        label={t("company.skillsRequiredLabel")}
         defaultValue={initialSkills}
         placeholder="e.g. JavaScript, React, SQL, Git"
       />
@@ -97,7 +102,7 @@ export default function JobForm({
       <Textarea
         id="description"
         name="description"
-        label="Role description & requirements"
+        label={t("company.jobDescriptionLabel")}
         defaultValue={initialJob.description || ""}
         rows={6}
         required
@@ -105,7 +110,7 @@ export default function JobForm({
 
       <div className="job-form-actions">
         <Button type="submit" variant="primary" loading={loading}>
-          {submitLabel}
+          {submitLabel || t("common.save")}
         </Button>
       </div>
     </form>

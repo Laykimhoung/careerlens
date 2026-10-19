@@ -1,0 +1,129 @@
+/* PlaceholderPage.css — Fully styled for Light & Galaxy Dark Mode */
+
+.ph-card {
+  background-color: var(--color-surface, #ffffff);
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: 14px;
+  padding: 28px;
+  box-shadow: var(--shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.05));
+  transition: background-color 0.25s ease, border-color 0.25s ease;
+}
+
+.ph-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--color-text-primary, #0f172a);
+  margin: 0 0 6px 0;
+}
+
+.ph-desc {
+  font-size: 14px;
+  color: var(--color-text-muted, #64748b);
+  margin: 0 0 24px 0;
+  line-height: 1.5;
+}
+
+.ph-empty {
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--color-text-muted, #64748b);
+  border: 1px dashed var(--color-border-strong, #cbd5e1);
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+.ph-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.ph-item {
+  padding: 18px 20px;
+  border-radius: 12px;
+  border: 1px solid var(--color-border, #e2e8f0);
+  background-color: var(--color-surface, #ffffff);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.ph-item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md, 0 4px 6px -1px rgba(0, 0, 0, 0.08));
+}
+
+.ph-item-title {
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--color-text-primary, #0f172a);
+  margin-bottom: 4px;
+}
+
+.ph-item-meta {
+  font-size: 13px;
+  color: var(--color-text-secondary, #475569);
+  margin-top: 4px;
+}
+
+.ph-item-meta strong {
+  color: var(--color-text-primary, #0f172a);
+}
+
+.ph-item-notes {
+  font-size: 13px;
+  color: var(--color-text-muted, #64748b);
+  margin-top: 4px;
+}
+
+/* ── Galaxy Dark Mode ── */
+[data-theme="dark"] .ph-card {
+  background: rgba(13, 21, 48, 0.82) !important;
+  border: 1px solid rgba(99, 142, 203, 0.32) !important;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45), 0 0 1px 1px rgba(99, 142, 203, 0.15) !important;
+  backdrop-filter: blur(16px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(160%) !important;
+}
+
+[data-theme="dark"] .ph-title {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .ph-desc {
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .ph-empty {
+  background: rgba(18, 30, 68, 0.4) !important;
+  border-color: rgba(99, 142, 203, 0.35) !important;
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .ph-item {
+  background: rgba(18, 28, 64, 0.75) !important;
+  border-color: rgba(99, 142, 203, 0.3) !important;
+}
+
+[data-theme="dark"] .ph-item:hover {
+  background: rgba(26, 40, 90, 0.9) !important;
+  border-color: rgba(99, 142, 203, 0.6) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 12px rgba(1, 107, 251, 0.25) !important;
+}
+
+[data-theme="dark"] .ph-item-title {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .ph-item-meta {
+  color: #f1f5f9 !important;
+}
+
+[data-theme="dark"] .ph-item-meta strong {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .ph-item-notes {
+  color: #cbd5e1 !important;
+}

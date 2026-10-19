@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { useLanguage } from "../../../context/LanguageContext";
 import { extractResults } from "../../../services/api";
 import {
   fetchAdminDashboardData,
@@ -7,6 +8,7 @@ import {
 import "./Reports.css";
 
 export default function Reports() {
+  const { t } = useLanguage();
   const [data, setData] = useState({
     users: [],
     candidates: [],
@@ -92,8 +94,8 @@ export default function Reports() {
     <section className="workspace-page">
       <div className="workspace-heading">
         <div>
-          <h1>Platform Reports</h1>
-          <p>Live analytics based on current platform data.</p>
+          <h1>{t("admin.platformReports", "Platform Reports")}</h1>
+          <p>{t("admin.reportsDesc", "Live analytics based on current platform data.")}</p>
         </div>
       </div>
 
@@ -116,29 +118,29 @@ export default function Reports() {
       {/* Summary stats */}
       <div className="workspace-grid workspace-grid-stats">
         <div className="workspace-stat">
-          <span>Total Candidates</span>
+          <span>{t("admin.totalCandidates", "Total Candidates")}</span>
           <strong>{loading ? "…" : candidates.length}</strong>
         </div>
         <div className="workspace-stat">
-          <span>Verified Companies</span>
+          <span>{t("admin.verifiedCompanies", "Verified Companies")}</span>
           <strong>
             {loading ? "…" : `${verifiedCo.length} / ${companies.length}`}
           </strong>
         </div>
         <div className="workspace-stat">
-          <span>Active Jobs</span>
+          <span>{t("admin.activeJobs", "Active Jobs")}</span>
           <strong>{loading ? "…" : publishedJobs.length}</strong>
         </div>
         <div className="workspace-stat">
-          <span>Total Applications</span>
+          <span>{t("admin.totalApplications", "Total Applications")}</span>
           <strong>{loading ? "…" : apps.length}</strong>
         </div>
         <div className="workspace-stat">
-          <span>Offers Made</span>
+          <span>{t("admin.offersMade", "Offers Made")}</span>
           <strong>{loading ? "…" : offeredApps.length}</strong>
         </div>
         <div className="workspace-stat">
-          <span>Rejected Apps</span>
+          <span>{t("admin.rejectedApps", "Rejected Apps")}</span>
           <strong>{loading ? "…" : rejectedApps.length}</strong>
         </div>
       </div>
@@ -146,17 +148,17 @@ export default function Reports() {
       <div className="reports-row">
         {/* Category breakdown */}
         <div className="workspace-panel reports-panel">
-          <h2>Jobs by Category</h2>
+          <h2>{t("admin.jobsByCategory", "Jobs by Category")}</h2>
           {topCats.length === 0 ? (
             <p className="workspace-empty">
-              {loading ? "Loading..." : "No jobs yet."}
+              {loading ? t("common.loading", "Loading...") : t("candidate.noJobsFound", "No jobs yet.")}
             </p>
           ) : (
             <table className="workspace-table">
               <thead>
                 <tr>
-                  <th>Category</th>
-                  <th>Total Jobs</th>
+                  <th>{t("admin.categories", "Category")}</th>
+                  <th>{t("admin.totalJobsCount", "Total Jobs")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -175,17 +177,17 @@ export default function Reports() {
 
         {/* Application status breakdown */}
         <div className="workspace-panel reports-panel">
-          <h2>Applications by Status</h2>
+          <h2>{t("admin.applicationsByStatus", "Applications by Status")}</h2>
           {Object.keys(statusCount).length === 0 ? (
             <p className="workspace-empty">
-              {loading ? "Loading..." : "No applications yet."}
+              {loading ? t("common.loading", "Loading...") : t("candidate.noApplications", "No applications yet.")}
             </p>
           ) : (
             <table className="workspace-table">
               <thead>
                 <tr>
-                  <th>Status</th>
-                  <th>Count</th>
+                  <th>{t("common.status", "Status")}</th>
+                  <th>{t("admin.count", "Count")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -205,12 +207,12 @@ export default function Reports() {
 
       {/* CSV Exports */}
       <div className="workspace-panel">
-        <h2>Data Exports</h2>
+        <h2>{t("admin.exportData", "Data Exports")}</h2>
         <div className="workspace-list">
           <div className="workspace-card reports-card">
             <div>
-              <h3>Users Export</h3>
-              <p>All user accounts (name, email, role, status).</p>
+              <h3>{t("admin.users", "Users")}</h3>
+              <p>{t("admin.userManagementDesc", "All user accounts (name, email, role, status).")}</p>
             </div>
             <button
               type="button"
@@ -234,8 +236,8 @@ export default function Reports() {
           </div>
           <div className="workspace-card reports-card">
             <div>
-              <h3>Jobs Export</h3>
-              <p>All job listings (title, company, status, category).</p>
+              <h3>{t("admin.jobs", "Jobs")}</h3>
+              <p>{t("admin.jobManagementDesc", "All job listings (title, company, status, category).")}</p>
             </div>
             <button
               type="button"
@@ -258,8 +260,8 @@ export default function Reports() {
           </div>
           <div className="workspace-card reports-card">
             <div>
-              <h3>Applications Export</h3>
-              <p>All applications with candidate and job details.</p>
+              <h3>{t("admin.applications", "Applications")}</h3>
+              <p>{t("admin.applicationManagementDesc", "All applications with candidate and job details.")}</p>
             </div>
             <button
               type="button"

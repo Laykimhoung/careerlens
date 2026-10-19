@@ -12,27 +12,46 @@
 
 .saved-jobs__count {
   font-size: 15px;
-  color: #4b5563;
+  color: var(--color-text-secondary, #4b5563);
   font-weight: 500;
 }
 
 .saved-jobs__empty {
   text-align: center;
   padding: 64px 20px;
-  background-color: #ffffff;
-  border: 1px dashed #d1d5db;
-  border-radius: 8px;
+  background-color: var(--color-surface, #ffffff);
+  border: 1px dashed var(--color-border-strong, #d1d5db);
+  border-radius: 12px;
 }
 
 .saved-jobs__empty h3 {
   font-size: 18px;
-  font-weight: 600;
-  color: #111827;
+  font-weight: 700;
+  color: var(--color-text-primary, #111827);
   margin-bottom: 8px;
 }
 
 .saved-jobs__empty p {
   font-size: 15px;
-  color: #6b7280;
+  color: var(--color-text-muted, #6b7280);
   margin-bottom: 24px;
+}
+
+/* ── Galaxy Dark Mode ── */
+[data-theme="dark"] .saved-jobs__count {
+  color: #f1f5f9 !important;
+}
+
+[data-theme="dark"] .saved-jobs__empty {
+  background-color: rgba(13, 21, 48, 0.78) !important;
+  border-color: rgba(99, 142, 203, 0.35) !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+[data-theme="dark"] .saved-jobs__empty h3 {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .saved-jobs__empty p {
+  color: #e2e8f0 !important;
 }

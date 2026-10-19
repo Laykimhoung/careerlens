@@ -2,16 +2,18 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  padding: 16px 20px;
-  background-color: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  margin-bottom: 12px;
-  transition: box-shadow 0.2s, opacity 0.3s;
+  padding: 18px 22px;
+  background-color: var(--color-surface, #ffffff);
+  border: 1px solid var(--color-border, #e5e7eb);
+  border-radius: 12px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow-sm, 0 1px 2px rgba(0, 0, 0, 0.05));
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .saved-job-card:hover {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md, 0 4px 6px -1px rgba(0, 0, 0, 0.08));
 }
 
 .saved-job-card__title-link {
@@ -19,28 +21,28 @@
 }
 
 .saved-job-card__title {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--color-primary);
-  margin-bottom: 4px;
-  transition: color 0.15s;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--color-primary, #016BFB);
+  margin-bottom: 6px;
+  transition: color 0.15s ease;
 }
 
 .saved-job-card__title-link:hover .saved-job-card__title {
-  color: var(--color-primary-hover);
+  color: var(--color-primary-hover, #0058d4);
   text-decoration: underline;
 }
 
 .saved-job-card__meta {
-  font-size: 13px;
-  color: #4b5563;
-  margin-bottom: 4px;
+  font-size: 14px;
+  color: var(--color-text-secondary, #4b5563);
+  margin-bottom: 6px;
 }
 
 .saved-job-card__salary {
-  font-size: 13px;
-  color: #374151;
-  font-weight: 500;
+  font-size: 14px;
+  color: var(--color-text-primary, #111827);
+  font-weight: 600;
   margin-bottom: 10px;
 }
 
@@ -53,7 +55,7 @@
 .saved-job-card__remove-btn {
   background: none;
   border: none;
-  color: #9ca3af;
+  color: #94a3b8;
   cursor: pointer;
   padding: 8px;
   border-radius: 50%;
@@ -66,6 +68,45 @@
 .saved-job-card__remove-btn:hover {
   background-color: #fee2e2;
   color: #dc2626;
+}
+
+/* ── Galaxy Dark Mode ── */
+[data-theme="dark"] .saved-job-card {
+  background: rgba(13, 21, 48, 0.82) !important;
+  border: 1px solid rgba(99, 142, 203, 0.32) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35), 0 0 1px 1px rgba(99, 142, 203, 0.15) !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+[data-theme="dark"] .saved-job-card:hover {
+  background: rgba(20, 32, 72, 0.92) !important;
+  border-color: rgba(99, 142, 203, 0.55) !important;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45), 0 0 14px rgba(99, 142, 203, 0.25) !important;
+}
+
+[data-theme="dark"] .saved-job-card__title {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .saved-job-card__title-link:hover .saved-job-card__title {
+  color: #93c5fd !important;
+}
+
+[data-theme="dark"] .saved-job-card__meta {
+  color: #f1f5f9 !important;
+}
+
+[data-theme="dark"] .saved-job-card__salary {
+  color: #93c5fd !important;
+}
+
+[data-theme="dark"] .saved-job-card__remove-btn {
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .saved-job-card__remove-btn:hover {
+  background-color: rgba(239, 68, 68, 0.25) !important;
+  color: #f87171 !important;
 }
 
 @media (max-width: 640px) {

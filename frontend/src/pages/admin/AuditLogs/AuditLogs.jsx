@@ -1,9 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
+import { useLanguage } from "../../../context/LanguageContext";
 import { extractResults } from "../../../services/api";
 import { getAdminAuditLogs } from "../../../services/adminService";
 import "./AuditLogs.css";
 
 function AuditLogs() {
+  const { t } = useLanguage();
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -53,10 +55,10 @@ function AuditLogs() {
     <section className="workspace-page">
       <div className="workspace-heading">
         <div>
-          <h1>Audit Logs</h1>
-          <p>A full history of system events and administrator actions.</p>
+          <h1>{t("nav.auditLogs", "Audit Logs")}</h1>
+          <p>{t("admin.auditLogsDesc", "A full history of system events and administrator actions.")}</p>
         </div>
-        <span className="workspace-status">{logs.length} entries</span>
+        <span className="workspace-status">{logs.length} {t("admin.entries", "entries")}</span>
       </div>
 
       {error && (
@@ -79,14 +81,14 @@ function AuditLogs() {
         <input
           type="search"
           className="workspace-search"
-          placeholder="Search audit logs..."
+          placeholder={t("admin.searchAuditLogs", "Search audit logs...")}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
         <span className="workspace-muted">
           {loading
-            ? "Loading..."
-            : `${filtered.length} log${filtered.length !== 1 ? "s" : ""}`}
+            ? t("common.loading", "Loading...")
+            : `${filtered.length} ${t("admin.entries", "entries")}`}
         </span>
       </div>
 
@@ -94,16 +96,16 @@ function AuditLogs() {
         <table className="workspace-table">
           <thead>
             <tr>
-              <th style={{ width: "180px" }}>Timestamp</th>
-              <th style={{ width: "150px" }}>Actor</th>
-              <th>Event Description</th>
+              <th style={{ width: "180px" }}>{t("admin.timestamp", "Timestamp")}</th>
+              <th style={{ width: "150px" }}>{t("admin.actor", "Actor")}</th>
+              <th>{t("admin.eventDescription", "Event Description")}</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
               <tr>
                 <td colSpan="3" className="workspace-empty">
-                  Loading audit logs from database...
+                  {t("admin.loadingAuditLogs", "Loading audit logs from database...")}
                 </td>
               </tr>
             ) : (
@@ -120,7 +122,7 @@ function AuditLogs() {
                 {filtered.length === 0 && (
                   <tr>
                     <td colSpan="3" className="workspace-empty">
-                      No audit log entries found.
+                      {t("admin.noAuditLogs", "No audit log entries found.")}
                     </td>
                   </tr>
                 )}

@@ -572,18 +572,34 @@
 }
 
 .admin-layout .workspace-table-actions {
-  display: flex;
+  display: inline-flex;
   justify-content: flex-end;
   align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
+  gap: 6px;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+
+.admin-layout .workspace-table th:last-child,
+.admin-layout .workspace-table td:last-child {
+  text-align: right;
+  white-space: nowrap;
+  min-width: 290px;
+  width: 290px;
 }
 
 .admin-layout .workspace-table .workspace-button {
-  min-height: var(--admin-btn-sm-height, 34px);
-  padding: 6px 12px;
-  font-size: 12.5px;
+  min-height: 32px;
+  height: 32px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
   border-radius: var(--admin-radius-sm, 6px);
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
 }
 
 .admin-layout .workspace-page button {
@@ -641,12 +657,6 @@
 
   .admin-mobile-bar {
     display: flex;
-  }
-
-  .admin-menu-button {
-    display: inline-flex;
-    min-height: 38px;
-    padding: 6px 14px;
   }
 }
 
