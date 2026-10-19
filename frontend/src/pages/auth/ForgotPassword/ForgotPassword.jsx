@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { forgotPasswordApi } from '../../../services/authService';
+import SideRays from "../../../components/ui/SideRays";
 import "../AuthPage/AuthPage.css"; // Reuse the premium styling
 
 export default function ForgotPassword() {
@@ -27,6 +28,29 @@ export default function ForgotPassword() {
 
   return (
     <div className="auth-page-bg">
+      <div className="auth-rays-bg">
+        <SideRays
+          origin="top-left"
+          rayColor1="#FFC46B"
+          rayColor2="#016BFB"
+          speed={2.2}
+          intensity={2}
+          spread={2}
+          density={5}
+          followMouse={true}
+        />
+        <SideRays
+          origin="top-right"
+          rayColor1="#FFC46B"
+          rayColor2="#016BFB"
+          speed={2.5}
+          intensity={2}
+          spread={2}
+          density={5}
+          followMouse={true}
+        />
+      </div>
+
       <div className="auth-container">
         
         {/* Right side form */}
