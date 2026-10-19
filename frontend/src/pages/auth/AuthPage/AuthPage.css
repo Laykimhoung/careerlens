@@ -385,3 +385,74 @@ button.auth-icon:active,
   margin: auto;
   padding: 40px 0;
 }
+
+/* ── Mobile Responsive Styles (<768px) ── */
+@media (max-width: 768px) {
+  .auth-page-bg {
+    height: auto;
+    min-height: 100vh;
+    padding: 16px;
+    overflow-y: auto;
+    align-items: flex-start;
+  }
+
+  .auth-container {
+    height: auto;
+    min-height: calc(100vh - 32px);
+    width: 100%;
+    max-width: 480px;
+    border-radius: 20px;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: visible;
+  }
+
+  /* The desktop sliding blade is hidden on mobile to give 100% width to the active form */
+  .auth-blade {
+    display: none !important;
+  }
+
+  .auth-side {
+    position: relative;
+    width: 100%;
+    height: auto;
+    min-height: 100%;
+    padding: 32px 20px;
+  }
+
+  .auth-container.auth-mode-login .auth-side-right {
+    display: none !important;
+  }
+
+  .auth-container.auth-mode-login .auth-side-left {
+    display: flex !important;
+    width: 100%;
+  }
+
+  .auth-container.auth-mode-register .auth-side-left {
+    display: none !important;
+  }
+
+  .auth-container.auth-mode-register .auth-side-right {
+    display: flex !important;
+    width: 100%;
+    padding: 32px 20px;
+  }
+
+  .auth-form {
+    max-width: 100%;
+  }
+
+  .auth-form h2 {
+    font-size: 22px;
+    margin-bottom: 24px;
+    text-align: center;
+  }
+
+  .auth-input-row {
+    flex-direction: column;
+    gap: 0;
+  }
+}

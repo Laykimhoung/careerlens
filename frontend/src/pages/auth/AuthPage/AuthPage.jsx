@@ -104,7 +104,7 @@ export default function AuthPage() {
         />
       </div>
 
-      <div className="auth-container">
+      <div className={`auth-container ${isLogin ? "auth-mode-login" : "auth-mode-register"}`}>
         {/* The Blade (Dark Green Overlay) */}
         <div className={`auth-blade ${isLogin ? "blade-on-right" : "blade-on-left"}`}>
           {/* Blade Content for Register */}
