@@ -20,22 +20,27 @@
 .tether-label {
   font-size: 13px;
   font-weight: 600;
-  color: #1fd5a8;
+  color: #016BFB;
   letter-spacing: 0.5px;
 }
 
 .tether-forgot {
   font-size: 13px;
-  color: #1fd5a8;
+  color: #016BFB;
   text-decoration: none;
   font-weight: 500;
+}
+
+.tether-forgot:hover {
+  color: #3b82f6;
+  text-decoration: underline;
 }
 
 .tether-input-wrapper {
   display: flex;
   align-items: center;
-  background-color: #090c0c;
-  border: 1px solid #1f2a2a;
+  background-color: #080d19;
+  border: 1px solid #1a2744;
   border-radius: 12px;
   padding: 0 16px;
   height: 52px;
@@ -43,15 +48,16 @@
 }
 
 .tether-input-wrapper:focus-within {
-  border-color: #1fd5a8;
+  border-color: #016BFB;
+  box-shadow: 0 0 0 3px rgba(1, 107, 251, 0.2);
 }
 
 .tether-input-wrapper.valid {
-  border-color: #1fd5a8;
+  border-color: #016BFB;
 }
 
 .tether-icon-left {
-  color: #818b8b;
+  color: #475d86;
   display: flex;
   align-items: center;
   margin-right: 12px;
@@ -64,14 +70,14 @@
 }
 
 .tether-icon-right.check {
-  color: #1fd5a8;
-  background-color: rgba(31, 213, 168, 0.1);
+  color: #016BFB;
+  background-color: rgba(1, 107, 251, 0.15);
   border-radius: 50%;
   padding: 2px;
 }
 
 .tether-icon-right.eye {
-  color: #818b8b;
+  color: #475d86;
   cursor: pointer;
 }
 
@@ -90,7 +96,7 @@
 }
 
 .tether-input::placeholder {
-  color: #4a5555;
+  color: #475569;
 }
 
 /* Button & Track */
@@ -107,7 +113,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  border: 2px dashed #1f2a2a;
+  border: 2px dashed rgba(1, 107, 251, 0.35);
   border-radius: 28px;
   display: flex;
   align-items: center;
@@ -121,7 +127,7 @@
   width: 20px;
   height: 20px;
   background-color: transparent;
-  border: 2px solid rgba(31, 213, 168, 0.4);
+  border: 2px solid rgba(1, 107, 251, 0.4);
   border-radius: 50%;
   position: absolute;
 }
@@ -136,13 +142,13 @@
 /* The Glowing Cable */
 .tether-cable {
   position: absolute;
-  top: calc(50% - 2px); /* Perfectly center the 4px height */
+  top: calc(50% - 2px);
   left: 50%;
   height: 4px;
-  background-color: #1fd5a8;
-  box-shadow: 0 0 10px rgba(31, 213, 168, 0.8), 0 0 4px rgba(255, 255, 255, 0.5);
-  transform-origin: 0 50%; /* Rotate from the exact left center point */
-  z-index: 2; /* Below button (10), above track (1) */
+  background: linear-gradient(90deg, rgba(1, 107, 251, 0.4), #016BFB);
+  box-shadow: 0 0 10px rgba(1, 107, 251, 0.8), 0 0 4px rgba(255, 255, 255, 0.5);
+  transform-origin: 0 50%;
+  z-index: 2;
   border-radius: 2px;
   transition: width 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
               transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -174,15 +180,17 @@
 }
 
 .tether-btn.unlocked {
-  background-color: #232b2b;
-  color: #818b8b;
+  background-color: #121a2c;
+  color: #ffffff;
+  border: 1px solid #1e2d4d;
   box-shadow: 0 4px 15px rgba(0,0,0,0.3);
 }
 
 .tether-btn.locked {
-  background: linear-gradient(135deg, #3de8be, #1fd5a8);
-  color: #050a0a;
-  box-shadow: 0 0 20px rgba(31, 213, 168, 0.4);
+  background: linear-gradient(135deg, #2b8aff, #016BFB);
+  color: #ffffff;
+  font-weight: 800;
+  box-shadow: 0 0 20px rgba(1, 107, 251, 0.5);
 }
 
 /* Footer Status */
@@ -190,7 +198,7 @@
   text-align: center;
   margin-top: 8px;
   font-size: 13px;
-  color: #818b8b;
+  color: #8fa2c0;
 }
 
 .tether-status-text {
@@ -205,16 +213,16 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background-color: #818b8b;
+  background-color: #ffaa44;
 }
 
 .tether-status-dot.locked {
-  background-color: #1fd5a8;
-  box-shadow: 0 0 8px #1fd5a8;
+  background-color: #016BFB;
+  box-shadow: 0 0 8px #016BFB;
 }
 
 .tether-status-msg.locked {
-  color: #1fd5a8;
+  color: #016BFB;
   font-weight: 500;
 }
 
@@ -226,7 +234,7 @@
 }
 
 .tether-key {
-  background-color: #1f2a2a;
+  background-color: #121a2c;
   color: #ffffff;
   padding: 2px 6px;
   border-radius: 4px;
@@ -238,11 +246,11 @@
   text-align: center;
   margin-top: 16px;
   font-size: 13px;
-  color: #818b8b;
+  color: #8fa2c0;
 }
 
 .tether-create a {
-  color: #1fd5a8;
+  color: #016BFB;
   text-decoration: none;
   font-weight: 600;
 }

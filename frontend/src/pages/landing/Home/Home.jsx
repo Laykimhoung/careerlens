@@ -68,6 +68,8 @@ export default function Home() {
   const { t } = useLanguage();
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState("");
   const [isMobile, setIsMobile] = useState(
     typeof window !== "undefined" ? window.innerWidth < 768 : false
   );
@@ -119,7 +121,24 @@ export default function Home() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setShowScrollTop(window.scrollY > 200);
+      const y = window.scrollY;
+      setShowScrollTop(y > 200);
+      setScrolled(y > 20);
+
+      // Section tracking
+      const sectionIds = ["companies", "how", "about"];
+      let found = "";
+      for (const id of sectionIds) {
+        const el = document.getElementById(id);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= 260 && rect.bottom >= 120) {
+            found = id;
+            break;
+          }
+        }
+      }
+      setActiveSection(found);
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
@@ -183,7 +202,7 @@ export default function Home() {
 
       <div className="landing-content-layer">
         {/* Header */}
-        <header className="landing-header">
+        <header className={`landing-header ${scrolled ? "landing-header--scrolled" : ""}`}>
           <div className="landing-header__inner">
             <Link to="/" className="landing-logo">
               <div className="landing-logo__icon-box">
@@ -196,16 +215,41 @@ export default function Home() {
             </Link>
             
             <nav className="landing-nav">
-              <Link to="/login">{t("common.nav.findJobs")}</Link>
-              <a href="#companies">{t("common.forCompanies")}</a>
-              <a href="#how">{t("common.howItWorks")}</a>
-              <a href="#about">{t("common.about")}</a>
+              <Link to="/login" className="landing-nav__link">
+                <span>{t("common.nav.findJobs")}</span>
+              </Link>
+              <a 
+                href="#companies" 
+                className={`landing-nav__link ${activeSection === "companies" ? "active" : ""}`}
+              >
+                <span>{t("common.forCompanies")}</span>
+              </a>
+              <a 
+                href="#how" 
+                className={`landing-nav__link ${activeSection === "how" ? "active" : ""}`}
+              >
+                <span>{t("common.howItWorks")}</span>
+              </a>
+              <a 
+                href="#about" 
+                className={`landing-nav__link ${activeSection === "about" ? "active" : ""}`}
+              >
+                <span>{t("common.about")}</span>
+              </a>
             </nav>
 
             <div className="landing-actions">
               <ThemeLanguageToggle />
-              <Link to="/login" className="landing-btn b2 landing-btn--desktop">{t("auth.signIn")}</Link>
-              <Link to="/register" className="landing-btn landing-btn--desktop">{t("common.getStarted")}</Link>
+              <Link to="/login" className="landing-btn landing-btn--signin landing-btn--desktop">
+                {t("auth.signIn")}
+              </Link>
+              <Link to="/register" className="landing-btn landing-btn--getstarted landing-btn-shimmer landing-btn--desktop">
+                <span>{t("common.getStarted")}</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="landing-btn__arrow">
+                  <path d="M5 12h14"></path>
+                  <path d="m12 5 7 7-7 7"></path>
+                </svg>
+              </Link>
 
               {/* Mobile menu hamburger toggle button */}
               <button 
@@ -235,26 +279,26 @@ export default function Home() {
           {mobileMenuOpen && (
             <div className="landing-mobile-menu">
               <nav className="landing-mobile-nav">
-                <Link to="/login" onClick={() => setMobileMenuOpen(false)}>
-                  {t("common.nav.findJobs")}
+                <Link to="/login" className="landing-mobile-nav__link" onClick={() => setMobileMenuOpen(false)}>
+                  <span>{t("common.nav.findJobs")}</span>
                 </Link>
-                <a href="#companies" onClick={() => setMobileMenuOpen(false)}>
-                  {t("common.forCompanies")}
+                <a href="#companies" className={`landing-mobile-nav__link ${activeSection === "companies" ? "active" : ""}`} onClick={() => setMobileMenuOpen(false)}>
+                  <span>{t("common.forCompanies")}</span>
                 </a>
-                <a href="#how" onClick={() => setMobileMenuOpen(false)}>
-                  {t("common.howItWorks")}
+                <a href="#how" className={`landing-mobile-nav__link ${activeSection === "how" ? "active" : ""}`} onClick={() => setMobileMenuOpen(false)}>
+                  <span>{t("common.howItWorks")}</span>
                 </a>
-                <a href="#about" onClick={() => setMobileMenuOpen(false)}>
-                  {t("common.about")}
+                <a href="#about" className={`landing-mobile-nav__link ${activeSection === "about" ? "active" : ""}`} onClick={() => setMobileMenuOpen(false)}>
+                  <span>{t("common.about")}</span>
                 </a>
               </nav>
 
               <div className="landing-mobile-actions">
-                <Link to="/login" className="landing-btn b2" onClick={() => setMobileMenuOpen(false)}>
+                <Link to="/login" className="landing-btn landing-btn--signin" onClick={() => setMobileMenuOpen(false)}>
                   {t("auth.signIn")}
                 </Link>
-                <Link to="/register" className="landing-btn" onClick={() => setMobileMenuOpen(false)}>
-                  {t("common.getStarted")}
+                <Link to="/register" className="landing-btn landing-btn--getstarted" onClick={() => setMobileMenuOpen(false)}>
+                  <span>{t("common.getStarted")}</span>
                 </Link>
               </div>
             </div>
@@ -520,8 +564,8 @@ export default function Home() {
               <h2 style={{ fontSize: "32px", fontWeight: "700", marginBottom: "12px" }}>{t("common.readyNextOpp")}</h2>
               <p className="text-muted" style={{ fontSize: "16px", marginBottom: "32px" }}>{t("common.landingHeroTag")}</p>
               <div className="landing-footer-cta__actions">
-                <Link to="/register" className="landing-btn b-white">{t("common.browseJobs")}</Link>
-                <Link to="/register" className="landing-btn b-white">{t("common.hireTalent")}</Link>
+                <Link to="/register" className="landing-btn-3d landing-btn-3d--primary">{t("common.browseJobs")}</Link>
+                <Link to="/register" className="landing-btn-3d landing-btn-3d--secondary">{t("common.hireTalent")}</Link>
               </div>
             </div>
           </section>

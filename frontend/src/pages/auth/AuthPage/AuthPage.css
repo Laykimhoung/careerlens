@@ -1,6 +1,6 @@
 /* ═════════════════════════════════════════════════════════════════════
-   SETTIGATION COMPONENT 95: TETHER (100% STYLE FIDELITY)
-   Dark cybernetic aesthetic with mint #1fd5a8 accents & vector evasion
+   SETTIGATION COMPONENT 95: TETHER (#016BFB ELECTRIC BLUE THEME)
+   Cybernetic dark aesthetic with electric royal blue (#016BFB) accents
    ═════════════════════════════════════════════════════════════════════ */
 
 /* Full Viewport Background */
@@ -10,11 +10,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #070b0b;
+  background-color: #060b13;
   background-image: 
-    radial-gradient(circle at 50% 20%, rgba(31, 213, 168, 0.08) 0%, transparent 60%),
-    radial-gradient(circle at 80% 80%, rgba(1, 107, 251, 0.06) 0%, transparent 50%),
-    radial-gradient(circle at 10% 70%, rgba(31, 213, 168, 0.05) 0%, transparent 50%);
+    radial-gradient(circle at 50% 20%, rgba(1, 107, 251, 0.12) 0%, transparent 60%),
+    radial-gradient(circle at 80% 80%, rgba(1, 107, 251, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 10% 70%, rgba(1, 107, 251, 0.06) 0%, transparent 50%);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   position: relative;
   overflow-x: hidden;
@@ -43,14 +43,14 @@
   z-index: 10;
   width: 100%;
   max-width: 460px;
-  background: rgba(12, 19, 19, 0.94);
+  background: rgba(9, 15, 27, 0.94);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(31, 213, 168, 0.22);
+  border: 1px solid rgba(1, 107, 251, 0.25);
   border-radius: 24px;
   box-shadow: 
     0 30px 80px rgba(0, 0, 0, 0.8),
-    0 0 50px rgba(31, 213, 168, 0.08),
+    0 0 50px rgba(1, 107, 251, 0.12),
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
   padding: 38px 34px 34px;
   box-sizing: border-box;
@@ -93,13 +93,13 @@
   width: 26px;
   height: 26px;
   border-radius: 50%;
-  border: 1.5px solid rgba(31, 213, 168, 0.45);
+  border: 1.5px solid rgba(1, 107, 251, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  background: rgba(31, 213, 168, 0.05);
-  box-shadow: 0 0 12px rgba(31, 213, 168, 0.2);
+  background: rgba(1, 107, 251, 0.08);
+  box-shadow: 0 0 14px rgba(1, 107, 251, 0.25);
 }
 
 .tether-brand-ring::before {
@@ -108,15 +108,15 @@
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  border: 1px solid rgba(31, 213, 168, 0.3);
+  border: 1px solid rgba(1, 107, 251, 0.35);
 }
 
 .tether-brand-dot {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: #1fd5a8;
-  box-shadow: 0 0 8px #1fd5a8;
+  background: #016BFB;
+  box-shadow: 0 0 8px #016BFB;
   animation: tetherPulse 2.4s ease-in-out infinite;
 }
 
@@ -124,12 +124,12 @@
   0%, 100% {
     transform: scale(1);
     opacity: 1;
-    box-shadow: 0 0 8px #1fd5a8;
+    box-shadow: 0 0 8px #016BFB;
   }
   50% {
     transform: scale(1.2);
     opacity: 0.8;
-    box-shadow: 0 0 14px #1fd5a8;
+    box-shadow: 0 0 16px #016BFB;
   }
 }
 
@@ -137,7 +137,7 @@
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 3.5px;
-  color: #1fd5a8;
+  color: #016BFB;
   text-transform: uppercase;
   user-select: none;
 }
@@ -153,7 +153,7 @@
 
 .tether-subtitle {
   font-size: 13.5px;
-  color: #818b8b;
+  color: #8fa2c0;
   line-height: 1.5;
   margin: 0;
   font-weight: 400;
@@ -203,86 +203,367 @@
 .tether-label {
   font-size: 12.5px;
   font-weight: 600;
-  color: #99b3ae;
+  color: #94a3b8;
   letter-spacing: 0.3px;
   text-transform: uppercase;
 }
 
 .tether-forgot {
   font-size: 12px;
-  color: #1fd5a8;
+  color: #016BFB;
   text-decoration: none;
   font-weight: 500;
   transition: color 0.2s, text-shadow 0.2s;
 }
 
 .tether-forgot:hover {
-  color: #3de8be;
-  text-shadow: 0 0 8px rgba(31, 213, 168, 0.4);
+  color: #3b82f6;
+  text-shadow: 0 0 8px rgba(1, 107, 251, 0.4);
   text-decoration: underline;
 }
 
-.tether-input-wrapper {
+/* ═════════════════════════════════════════════════════════════════════
+   LAKSHAY-ART "CURVY-EARWIG-22" MULTI-LAYER GLOWING ROTATING INPUTS
+   ═════════════════════════════════════════════════════════════════════ */
+
+.tether-poda {
+  position: relative;
   display: flex;
   align-items: center;
-  background-color: #090c0c;
-  border: 1px solid #1f2a2a;
+  justify-content: center;
+  width: 100%;
+  height: 52px;
   border-radius: 12px;
-  padding: 0 15px;
-  height: 50px;
-  transition: all 0.22s ease;
+  box-sizing: border-box;
+}
+
+/* Common layer properties */
+.tether-glow,
+.tether-darkBorderBg,
+.tether-white,
+.tether-border {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 12px;
+  pointer-events: none;
+}
+
+/* Layer 1: Ambient Neon Glow (blur 24px) */
+.tether-glow {
+  filter: blur(24px);
+  opacity: 0.35;
+  z-index: 1;
+  transition: opacity 0.5s ease;
+}
+
+.tether-glow::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 700px;
+  height: 700px;
+  transform: translate(-50%, -50%) rotate(60deg);
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  background-image: conic-gradient(
+    #000,
+    #016BFB 5%,
+    #000 38%,
+    #000 50%,
+    #388bfd 60%,
+    #000 87%
+  );
+  transition: transform 2.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Layer 2: Deep Border Background (blur 3px) */
+.tether-darkBorderBg {
+  filter: blur(3px);
+  z-index: 2;
+}
+
+.tether-darkBorderBg::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 700px;
+  height: 700px;
+  transform: translate(-50%, -50%) rotate(82deg);
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  background-image: conic-gradient(
+    rgba(0, 0, 0, 0),
+    #0a225e,
+    rgba(0, 0, 0, 0) 10%,
+    rgba(0, 0, 0, 0) 50%,
+    #173b98,
+    rgba(0, 0, 0, 0) 60%
+  );
+  transition: transform 2.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Layer 3: Brilliant Bright Edge (blur 1.5px) */
+.tether-white {
+  filter: blur(1.5px);
+  z-index: 3;
+}
+
+.tether-white::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 700px;
+  height: 700px;
+  transform: translate(-50%, -50%) rotate(83deg);
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  filter: brightness(1.4);
+  background-image: conic-gradient(
+    rgba(0, 0, 0, 0) 0%,
+    #8ab9ff,
+    rgba(0, 0, 0, 0) 8%,
+    rgba(0, 0, 0, 0) 50%,
+    #ffffff,
+    rgba(0, 0, 0, 0) 58%
+  );
+  transition: transform 2.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Layer 4: Razor Sharp Border (blur 0.5px) */
+.tether-border {
+  filter: blur(0.5px);
+  z-index: 4;
+}
+
+.tether-border::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 700px;
+  height: 700px;
+  transform: translate(-50%, -50%) rotate(70deg);
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  filter: brightness(1.35);
+  background-image: conic-gradient(
+    #080e1c,
+    #016BFB 5%,
+    #080e1c 14%,
+    #080e1c 50%,
+    #5aa0ff 60%,
+    #080e1c 64%
+  );
+  transition: transform 2.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Hover Interactions (Rotates opposite direction) */
+.tether-poda:hover > .tether-glow::before {
+  transform: translate(-50%, -50%) rotate(-120deg);
+}
+.tether-poda:hover > .tether-darkBorderBg::before {
+  transform: translate(-50%, -50%) rotate(-98deg);
+}
+.tether-poda:hover > .tether-white::before {
+  transform: translate(-50%, -50%) rotate(-97deg);
+}
+.tether-poda:hover > .tether-border::before {
+  transform: translate(-50%, -50%) rotate(-110deg);
+}
+
+/* Focus-Within Interactions (Full 360° sweeping rotation) */
+.tether-poda:focus-within > .tether-glow::before {
+  transform: translate(-50%, -50%) rotate(420deg);
+  transition: transform 4s cubic-bezier(0.1, 0.8, 0.2, 1);
+}
+.tether-poda:focus-within > .tether-darkBorderBg::before {
+  transform: translate(-50%, -50%) rotate(442deg);
+  transition: transform 4s cubic-bezier(0.1, 0.8, 0.2, 1);
+}
+.tether-poda:focus-within > .tether-white::before {
+  transform: translate(-50%, -50%) rotate(443deg);
+  transition: transform 4s cubic-bezier(0.1, 0.8, 0.2, 1);
+}
+.tether-poda:focus-within > .tether-border::before {
+  transform: translate(-50%, -50%) rotate(430deg);
+  transition: transform 4s cubic-bezier(0.1, 0.8, 0.2, 1);
+}
+
+.tether-poda:focus-within > .tether-glow,
+.tether-poda.valid > .tether-glow {
+  opacity: 0.75;
+}
+
+/* Inner Core: Holds the icon, text input, and validation checkmark (Single Unified Box) */
+.tether-input-inner,
+.tether-input-wrapper {
   position: relative;
+  z-index: 5;
+  width: calc(100% - 2.5px);
+  height: calc(100% - 2.5px);
+  background-color: #070c16;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  box-sizing: border-box;
+  transition: background-color 0.25s ease;
+  border: none !important;
+  box-shadow: none !important;
 }
 
-.tether-input-wrapper:focus-within {
-  border-color: #1fd5a8;
-  box-shadow: 0 0 0 3px rgba(31, 213, 168, 0.15), 0 0 14px rgba(31, 213, 168, 0.12);
-  background-color: #0c1212;
-}
-
-.tether-input-wrapper.valid {
-  border-color: rgba(31, 213, 168, 0.55);
+.tether-poda:focus-within .tether-input-inner,
+.tether-poda:focus-within .tether-input-wrapper {
+  background-color: #0a1120;
 }
 
 .tether-icon-left {
-  color: #556f6a;
+  color: #475d86;
   display: flex;
   align-items: center;
   margin-right: 12px;
   transition: color 0.2s;
+  z-index: 6;
+  flex-shrink: 0;
 }
 
-.tether-input-wrapper:focus-within .tether-icon-left,
-.tether-input-wrapper.valid .tether-icon-left {
-  color: #1fd5a8;
+.tether-poda:focus-within .tether-icon-left,
+.tether-poda.valid .tether-icon-left {
+  color: #016BFB;
 }
 
-.tether-input {
-  flex: 1;
-  background: transparent;
-  border: none;
-  outline: none;
-  color: #ffffff;
-  font-size: 14.5px;
-  font-family: inherit;
-  width: 100%;
+/* Ensure the text input itself is completely borderless and seamless inside the single box */
+.auth-page-bg,
+.tether-card,
+.tether-form,
+.tether-poda,
+.tether-input-inner,
+.tether-poda input {
+  color-scheme: dark;
+}
+
+.tether-card input.tether-input,
+.tether-poda input:not([type="checkbox"]),
+.tether-input-inner input,
+.tether-input-wrapper input {
+  flex: 1 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  color: #ffffff !important;
+  font-size: 14.5px !important;
+  font-family: inherit !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.tether-card input.tether-input:focus,
+.tether-poda input:not([type="checkbox"]):focus,
+.tether-input-inner input:focus,
+.tether-input-wrapper input:focus {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  background-color: transparent !important;
 }
 
 .tether-input::placeholder {
-  color: #3f5551;
+  color: #475569;
+}
+
+/* ═════════════════════════════════════════════════════════════════════
+   BROWSER AUTOFILL STYLING (OVERRIDING NATIVE WHITE / LIGHT-BLUE BOX)
+   ═════════════════════════════════════════════════════════════════════ */
+.auth-page-bg input:-webkit-autofill,
+.auth-page-bg input:-webkit-autofill:hover, 
+.auth-page-bg input:-webkit-autofill:focus, 
+.auth-page-bg input:-webkit-autofill:active,
+.tether-card input:-webkit-autofill,
+.tether-card input:-webkit-autofill:hover, 
+.tether-card input:-webkit-autofill:focus, 
+.tether-card input:-webkit-autofill:active,
+.tether-poda input:-webkit-autofill,
+.tether-poda input:-webkit-autofill:hover,
+.tether-poda input:-webkit-autofill:focus,
+.tether-poda input:-webkit-autofill:active,
+.tether-input-inner input:-webkit-autofill,
+.tether-input-inner input:-webkit-autofill:hover,
+.tether-input-inner input:-webkit-autofill:focus,
+.tether-input-inner input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #070c16 inset !important;
+  box-shadow: 0 0 0 1000px #070c16 inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  color: #ffffff !important;
+  caret-color: #ffffff !important;
+  background-color: transparent !important;
+  transition: background-color 50000s ease-in-out 0s !important;
+  font-family: inherit !important;
+  font-size: 14.5px !important;
+}
+
+.tether-poda:focus-within input:-webkit-autofill,
+.tether-poda:focus-within input:-webkit-autofill:hover,
+.tether-poda:focus-within input:-webkit-autofill:focus,
+.tether-poda:focus-within input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #0a1120 inset !important;
+  box-shadow: 0 0 0 1000px #0a1120 inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  color: #ffffff !important;
+}
+
+/* Modern standard :autofill pseudo-class (Firefox & modern browsers) */
+.auth-page-bg input:autofill,
+.auth-page-bg input:autofill:hover,
+.auth-page-bg input:autofill:focus,
+.tether-card input:autofill,
+.tether-card input:autofill:hover,
+.tether-card input:autofill:focus,
+.tether-poda input:autofill,
+.tether-poda input:autofill:hover,
+.tether-poda input:autofill:focus,
+.tether-input-inner input:autofill,
+.tether-input-inner input:autofill:hover,
+.tether-input-inner input:autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px #070c16 inset !important;
+  box-shadow: 0 0 0 1000px #070c16 inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  color: #ffffff !important;
+  caret-color: #ffffff !important;
+  filter: none !important;
+}
+
+.tether-poda:focus-within input:autofill,
+.tether-poda:focus-within input:autofill:hover,
+.tether-poda:focus-within input:autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px #0a1120 inset !important;
+  box-shadow: 0 0 0 1000px #0a1120 inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  color: #ffffff !important;
 }
 
 .tether-icon-right {
   display: flex;
   align-items: center;
   margin-left: 10px;
-  color: #556f6a;
+  color: #475d86;
   user-select: none;
 }
 
 .tether-icon-right.check {
-  color: #1fd5a8;
-  background-color: rgba(31, 213, 168, 0.12);
+  color: #016BFB;
+  background-color: rgba(1, 107, 251, 0.15);
   border-radius: 50%;
   padding: 3px;
   display: flex;
@@ -310,7 +591,9 @@
 .tether-remember-row {
   display: flex;
   align-items: center;
-  margin-top: -2px;
+  margin-top: 4px;
+  margin-bottom: 2px;
+  padding: 2px 0;
 }
 
 .tether-checkbox {
@@ -318,7 +601,7 @@
   align-items: center;
   gap: 9px;
   font-size: 13px;
-  color: #818b8b;
+  color: #8fa2c0;
   cursor: pointer;
   user-select: none;
 }
@@ -328,9 +611,9 @@
   -webkit-appearance: none;
   width: 17px;
   height: 17px;
-  border: 1.5px solid #283737;
+  border: 1.5px solid #24355a;
   border-radius: 5px;
-  background: #090c0c;
+  background: #080d19;
   cursor: pointer;
   position: relative;
   transition: all 0.2s ease;
@@ -338,9 +621,9 @@
 }
 
 .tether-checkbox input[type="checkbox"]:checked {
-  background: #1fd5a8;
-  border-color: #1fd5a8;
-  box-shadow: 0 0 8px rgba(31, 213, 168, 0.4);
+  background: #016BFB;
+  border-color: #016BFB;
+  box-shadow: 0 0 8px rgba(1, 107, 251, 0.45);
 }
 
 .tether-checkbox input[type="checkbox"]:checked::after {
@@ -350,7 +633,7 @@
   top: 2px;
   width: 4px;
   height: 8px;
-  border: solid #050a0a;
+  border: solid #ffffff;
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
 }
@@ -376,9 +659,9 @@
   left: 0;
   right: 0;
   bottom: 0;
-  border: 1.5px dashed rgba(31, 213, 168, 0.35);
+  border: 1.5px dashed rgba(1, 107, 251, 0.35);
   border-radius: 26px;
-  background: rgba(31, 213, 168, 0.02);
+  background: rgba(1, 107, 251, 0.03);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -392,15 +675,15 @@
   width: 18px;
   height: 18px;
   background-color: transparent;
-  border: 1.5px solid rgba(31, 213, 168, 0.3);
+  border: 1.5px solid rgba(1, 107, 251, 0.3);
   border-radius: 50%;
   position: absolute;
 }
 
 .tether-track.locked {
-  border: 1.5px solid rgba(31, 213, 168, 0.6);
-  background: rgba(31, 213, 168, 0.06);
-  box-shadow: 0 0 20px rgba(31, 213, 168, 0.2);
+  border: 1.5px solid rgba(1, 107, 251, 0.65);
+  background: rgba(1, 107, 251, 0.08);
+  box-shadow: 0 0 20px rgba(1, 107, 251, 0.25);
 }
 
 .tether-track.locked::before {
@@ -413,9 +696,9 @@
   top: calc(50% - 2px);
   left: 50%;
   height: 4px;
-  background: linear-gradient(90deg, rgba(31, 213, 168, 0.4), #1fd5a8);
+  background: linear-gradient(90deg, rgba(1, 107, 251, 0.4), #016BFB);
   box-shadow: 
-    0 0 10px rgba(31, 213, 168, 0.9),
+    0 0 12px rgba(1, 107, 251, 0.95),
     0 0 4px rgba(255, 255, 255, 0.7);
   transform-origin: 0 50%;
   z-index: 2;
@@ -460,38 +743,38 @@
 
 /* Unlocked (Runs away / empty form: dark matte, no neon color) */
 .tether-btn.unlocked {
-  background-color: #1f2727;
+  background-color: #121a2c;
   color: #ffffff;
-  border: 1px solid #283737;
+  border: 1px solid #1e2d4d;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
 }
 
 .tether-btn.unlocked:hover:not(:disabled) {
-  background-color: #263232;
-  border-color: #384c48;
+  background-color: #172238;
+  border-color: #273960;
   color: #ffffff;
 }
 
 .tether-btn.unlocked:focus-visible {
-  border-color: #1fd5a8;
-  box-shadow: 0 0 0 3px rgba(31, 213, 168, 0.25);
+  border-color: #016BFB;
+  box-shadow: 0 0 0 3px rgba(1, 107, 251, 0.25);
 }
 
-/* Locked (Snaps home, mint neon glow) */
+/* Locked (Snaps home, #016BFB royal blue glow) */
 .tether-btn.locked {
-  background: linear-gradient(135deg, #3de8be 0%, #1fd5a8 100%);
-  color: #050a0a;
+  background: linear-gradient(135deg, #2b8aff 0%, #016BFB 100%);
+  color: #ffffff;
   font-weight: 800;
   box-shadow: 
-    0 0 25px rgba(31, 213, 168, 0.45),
-    0 6px 20px rgba(31, 213, 168, 0.35);
+    0 0 25px rgba(1, 107, 251, 0.5),
+    0 6px 20px rgba(1, 107, 251, 0.4);
 }
 
 .tether-btn.locked:hover {
-  filter: brightness(1.07);
+  filter: brightness(1.08);
   box-shadow: 
-    0 0 30px rgba(31, 213, 168, 0.6),
-    0 8px 25px rgba(31, 213, 168, 0.45);
+    0 0 30px rgba(1, 107, 251, 0.7),
+    0 8px 25px rgba(1, 107, 251, 0.5);
   transform: translateY(-1px);
 }
 
@@ -538,19 +821,19 @@
 }
 
 .tether-status-dot.locked {
-  background-color: #1fd5a8;
-  box-shadow: 0 0 10px #1fd5a8;
+  background-color: #016BFB;
+  box-shadow: 0 0 10px #016BFB;
 }
 
 .tether-status-msg {
   font-size: 13px;
-  color: #818b8b;
+  color: #8fa2c0;
   font-style: italic;
   transition: color 0.3s ease;
 }
 
 .tether-status-msg.locked {
-  color: #1fd5a8;
+  color: #016BFB;
   font-weight: 600;
   font-style: normal;
 }
@@ -561,13 +844,13 @@
   justify-content: center;
   gap: 4px;
   font-size: 11.5px;
-  color: #556f6a;
+  color: #64748b;
 }
 
 .tether-key {
-  background-color: #1f2a2a;
-  color: #99b3ae;
-  border: 1px solid rgba(31, 213, 168, 0.2);
+  background-color: #121a2c;
+  color: #94a3b8;
+  border: 1px solid rgba(1, 107, 251, 0.25);
   padding: 1px 6px;
   border-radius: 4px;
   font-size: 11px;
@@ -582,8 +865,8 @@
 .tether-demo-box {
   margin-top: 14px;
   padding: 13px 14px;
-  background: rgba(9, 14, 14, 0.7);
-  border: 1px solid rgba(31, 213, 168, 0.16);
+  background: rgba(8, 13, 24, 0.7);
+  border: 1px solid rgba(1, 107, 251, 0.18);
   border-radius: 12px;
   text-align: center;
 }
@@ -592,7 +875,7 @@
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 1.5px;
-  color: #67827d;
+  color: #64748b;
   margin: 0 0 9px 0;
   font-weight: 700;
 }
@@ -605,9 +888,9 @@
 }
 
 .tether-demo-btn {
-  background: #101a1a;
-  border: 1px solid rgba(31, 213, 168, 0.22);
-  color: #b0c9c4;
+  background: #0f172a;
+  border: 1px solid rgba(1, 107, 251, 0.25);
+  color: #cbd5e1;
   font-size: 11.5px;
   font-weight: 600;
   padding: 6px 12px;
@@ -618,10 +901,10 @@
 }
 
 .tether-demo-btn:hover:not(:disabled) {
-  background: rgba(31, 213, 168, 0.16);
-  border-color: #1fd5a8;
+  background: rgba(1, 107, 251, 0.2);
+  border-color: #016BFB;
   color: #ffffff;
-  box-shadow: 0 0 10px rgba(31, 213, 168, 0.2);
+  box-shadow: 0 0 10px rgba(1, 107, 251, 0.25);
 }
 
 .tether-demo-btn:disabled {
@@ -631,13 +914,13 @@
 
 .tether-demo-pw {
   font-size: 11px;
-  color: #556f6a;
+  color: #64748b;
   margin: 9px 0 0 0;
 }
 
 .tether-demo-pw code {
-  color: #1fd5a8;
-  background: rgba(31, 213, 168, 0.1);
+  color: #016BFB;
+  background: rgba(1, 107, 251, 0.12);
   padding: 2px 6px;
   border-radius: 4px;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
@@ -648,11 +931,11 @@
   text-align: center;
   margin-top: 14px;
   font-size: 13px;
-  color: #818b8b;
+  color: #8fa2c0;
 }
 
 .tether-switch a {
-  color: #1fd5a8;
+  color: #016BFB;
   text-decoration: none;
   font-weight: 600;
   margin-left: 4px;
@@ -660,8 +943,8 @@
 }
 
 .tether-switch a:hover {
-  color: #3de8be;
-  text-shadow: 0 0 8px rgba(31, 213, 168, 0.4);
+  color: #3b82f6;
+  text-shadow: 0 0 8px rgba(1, 107, 251, 0.4);
   text-decoration: underline;
 }
 
@@ -671,8 +954,8 @@
 
 .tether-role-toggle {
   display: flex;
-  background: #090c0c;
-  border: 1px solid #1f2a2a;
+  background: #080d19;
+  border: 1px solid #1a2744;
   border-radius: 12px;
   padding: 4px;
   gap: 4px;
@@ -684,7 +967,7 @@
   padding: 9px 12px;
   border: none;
   background: transparent;
-  color: #718581;
+  color: #64748b;
   font-size: 13px;
   font-weight: 600;
   border-radius: 9px;
@@ -694,10 +977,10 @@
 }
 
 .tether-role-btn.active {
-  background: linear-gradient(135deg, rgba(31, 213, 168, 0.25), rgba(31, 213, 168, 0.12));
-  color: #1fd5a8;
-  border: 1px solid rgba(31, 213, 168, 0.35);
-  box-shadow: 0 0 10px rgba(31, 213, 168, 0.15);
+  background: linear-gradient(135deg, rgba(1, 107, 251, 0.28), rgba(1, 107, 251, 0.14));
+  color: #016BFB;
+  border: 1px solid rgba(1, 107, 251, 0.4);
+  box-shadow: 0 0 12px rgba(1, 107, 251, 0.2);
 }
 
 /* ═════════════════════════════════════════════════════════════════════
@@ -716,20 +999,20 @@
   width: 68px;
   height: 68px;
   border-radius: 50%;
-  background: rgba(31, 213, 168, 0.1);
-  border: 1.5px solid rgba(31, 213, 168, 0.45);
-  box-shadow: 0 0 25px rgba(31, 213, 168, 0.25);
+  background: rgba(1, 107, 251, 0.12);
+  border: 1.5px solid rgba(1, 107, 251, 0.5);
+  box-shadow: 0 0 25px rgba(1, 107, 251, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #1fd5a8;
+  color: #016BFB;
   margin: 6px auto 18px auto;
   animation: checkPop 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
 }
 
 .tether-success-note {
   font-size: 13px;
-  color: #818b8b;
+  color: #8fa2c0;
   line-height: 1.6;
   margin: 0 0 18px 0;
   max-width: 360px;
@@ -738,8 +1021,8 @@
 .tether-spinner {
   width: 16px;
   height: 16px;
-  border: 2px solid rgba(5, 10, 10, 0.35);
-  border-top-color: #050a0a;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
   border-radius: 50%;
   animation: tetherSpin 0.6s linear infinite;
   display: inline-block;
