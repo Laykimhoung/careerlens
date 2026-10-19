@@ -7,11 +7,27 @@
   justify-content: center;
   background-color: #0b1313; /* Matches the dark background outside the floating box */
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-rays-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
 }
 
 /* Floating Card Container */
 .auth-container {
   position: relative;
+  z-index: 1;
   width: 100%;
   max-width: 960px;
   height: 720px; /* Slightly taller than original 600px to fit new fields, but still floating */
