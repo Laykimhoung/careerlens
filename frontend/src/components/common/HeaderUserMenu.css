@@ -1,0 +1,341 @@
+/* ============================================================
+   HeaderUserMenu.css — Universal Profile & Logout Dropdown
+   Works across Candidate, Company, and Admin roles in Light & Dark Mode
+   ============================================================ */
+
+.header-user-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 120;
+}
+
+/* ── Toggle Pill Button ── */
+.header-user-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--color-surface, #ffffff);
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: 9999px;
+  padding: 4px 12px 4px 5px;
+  cursor: pointer;
+  color: var(--color-text-primary, #0f172a);
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.header-user-pill:hover,
+.header-user-pill--active {
+  background: var(--color-surface-hover, #f8fafc);
+  border-color: #638ECB;
+  box-shadow: 0 2px 8px rgba(99, 142, 203, 0.15);
+}
+
+.header-user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #638ECB 0%, #016BFB 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 13px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.header-user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.header-user-display-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-primary, #1e293b);
+  max-width: 140px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.header-user-chevron {
+  color: var(--color-text-muted, #64748b);
+  transition: transform 0.2s ease;
+}
+
+.header-user-chevron--open {
+  transform: rotate(180deg);
+}
+
+/* ── Dedicated 1-Click Logout Button (Icon + Label) ── */
+.header-logout-btn {
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 9999px;
+  border: 1.5px solid rgba(239, 68, 68, 0.35);
+  background: var(--color-surface, #ffffff);
+  color: #ef4444;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  font-family: inherit;
+}
+
+.header-logout-btn:hover {
+  background: #fef2f2;
+  border-color: #ef4444;
+  color: #dc2626;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(239, 68, 68, 0.18);
+}
+
+.header-logout-icon {
+  flex-shrink: 0;
+}
+
+/* ── Dropdown Menu Card ── */
+.header-user-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 250px;
+  background: var(--color-surface, #ffffff);
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: 14px;
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.12), 0 8px 10px -6px rgba(15, 23, 42, 0.08);
+  padding: 12px;
+  z-index: 1000;
+  animation: dropdownFadeSlide 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes dropdownFadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.header-user-dropdown-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 4px 10px;
+}
+
+.header-user-avatar--lg {
+  width: 44px;
+  height: 44px;
+  font-size: 16px;
+}
+
+.header-user-details {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.header-user-full-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-text-primary, #0f172a);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.header-user-email {
+  font-size: 11px;
+  color: var(--color-text-muted, #64748b);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 4px;
+}
+
+.header-user-role-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 2px 7px;
+  border-radius: 9999px;
+  width: fit-content;
+}
+
+.role-badge--candidate {
+  background: #eff6ff;
+  color: #016BFB;
+  border: 1px solid #bfdbfe;
+}
+
+.role-badge--company {
+  background: #ecfdf5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
+}
+
+.role-badge--admin {
+  background: #faf5ff;
+  color: #7c3aed;
+  border: 1px solid #ddd6fe;
+}
+
+.header-user-dropdown-divider {
+  height: 1px;
+  background: var(--color-border, #e2e8f0);
+  margin: 6px 0;
+}
+
+.header-user-dropdown-links {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.header-user-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-primary, #334155);
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  transition: all 0.15s ease;
+  font-family: inherit;
+}
+
+.header-user-dropdown-item:hover {
+  background: var(--color-surface-hover, #f1f5f9);
+  color: #016BFB;
+}
+
+.header-user-dropdown-item--logout {
+  color: #ef4444;
+  font-weight: 600;
+}
+
+.header-user-dropdown-item--logout:hover {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+/* ── Galaxy Dark Mode ── */
+[data-theme="dark"] .header-user-pill {
+  background: rgba(15, 23, 42, 0.7);
+  border-color: rgba(99, 142, 203, 0.3);
+  color: #ffffff;
+}
+
+[data-theme="dark"] .header-user-pill:hover,
+[data-theme="dark"] .header-user-pill--active {
+  background: rgba(30, 41, 59, 0.85);
+  border-color: #638ECB;
+  box-shadow: 0 0 14px rgba(99, 142, 203, 0.25);
+}
+
+[data-theme="dark"] .header-user-display-name {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .header-logout-btn {
+  background: rgba(15, 23, 42, 0.7);
+  border-color: rgba(239, 68, 68, 0.45);
+  color: #f87171;
+}
+
+[data-theme="dark"] .header-logout-btn:hover {
+  background: rgba(239, 68, 68, 0.25);
+  border-color: #ef4444;
+  color: #ffffff;
+  box-shadow: 0 0 14px rgba(239, 68, 68, 0.35);
+}
+
+[data-theme="dark"] .header-user-dropdown {
+  background: rgba(11, 15, 30, 0.96);
+  backdrop-filter: blur(20px);
+  border-color: rgba(99, 142, 203, 0.35);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5), 0 0 16px rgba(99, 142, 203, 0.15);
+}
+
+[data-theme="dark"] .header-user-full-name {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .header-user-dropdown-divider {
+  background: rgba(99, 142, 203, 0.2);
+}
+
+[data-theme="dark"] .header-user-dropdown-item {
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .header-user-dropdown-item:hover {
+  background: rgba(99, 142, 203, 0.15);
+  color: #ffffff;
+}
+
+[data-theme="dark"] .header-user-dropdown-item--logout {
+  color: #f87171;
+}
+
+[data-theme="dark"] .header-user-dropdown-item--logout:hover {
+  background: rgba(239, 68, 68, 0.2);
+  color: #fca5a5;
+}
+
+[data-theme="dark"] .role-badge--candidate {
+  background: rgba(1, 107, 251, 0.2);
+  color: #93c5fd;
+  border-color: rgba(99, 142, 203, 0.35);
+}
+
+[data-theme="dark"] .role-badge--company {
+  background: rgba(16, 185, 129, 0.2);
+  color: #6ee7b7;
+  border-color: rgba(16, 185, 129, 0.35);
+}
+
+[data-theme="dark"] .role-badge--admin {
+  background: rgba(168, 85, 247, 0.2);
+  color: #d8b4fe;
+  border-color: rgba(168, 85, 247, 0.35);
+}
+
+@media (max-width: 640px) {
+  .header-user-display-name {
+    display: none;
+  }
+  .header-logout-text {
+    display: none;
+  }
+  .header-logout-btn {
+    padding: 0 10px;
+  }
+}

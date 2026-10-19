@@ -405,4 +405,59 @@
   background: var(--color-surface-hover);
 }
 
+/* ── Galaxy Dark Mode Scoped Overrides for Company Layout ──────────────────── */
+[data-theme="dark"] .company-shell {
+  background: transparent;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .company-shell .workspace-panel,
+[data-theme="dark"] .company-shell .workspace-card,
+[data-theme="dark"] .company-shell .workspace-stat {
+  background: rgba(13, 21, 48, 0.82) !important;
+  border-color: rgba(99, 142, 203, 0.32) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .company-shell .applicant-row {
+  background: rgba(16, 26, 60, 0.78) !important;
+  border: 1px solid rgba(99, 142, 203, 0.25) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .company-shell .applicant-row:hover {
+  background: rgba(24, 38, 86, 0.92) !important;
+  border-color: rgba(99, 142, 203, 0.5) !important;
+}
+
+[data-theme="dark"] .company-shell .workspace-table th {
+  background: rgba(18, 28, 64, 0.95) !important;
+  color: #ffffff !important;
+  border-bottom: 1px solid rgba(99, 142, 203, 0.3) !important;
+}
+
+[data-theme="dark"] .company-shell .workspace-table td {
+  color: #ffffff !important;
+  border-top: 1px solid rgba(99, 142, 203, 0.2) !important;
+}
+
+[data-theme="dark"] .company-shell .workspace-table tbody tr:hover {
+  background-color: rgba(99, 142, 203, 0.16) !important;
+}
+
+[data-theme="dark"] .company-shell .workspace-table-wrap {
+  background: rgba(13, 21, 48, 0.82) !important;
+  border: 1px solid rgba(99, 142, 203, 0.32) !important;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45) !important;
+}
+
+[data-theme="dark"] .company-shell .grid-line {
+  background: rgba(99, 142, 203, 0.2) !important;
+}
+
+[data-theme="dark"] .company-shell .chart-label {
+  color: #f1f5f9 !important;
+}
+
+
 

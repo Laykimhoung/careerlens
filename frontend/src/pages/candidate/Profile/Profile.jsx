@@ -143,7 +143,8 @@ export default function CandidateProfile() {
         localStorage.setItem(`careerlens_avatar_${user.id}`, dataUrl);
       }
       localStorage.setItem("careerlens_avatar", dataUrl);
-      window.dispatchEvent(new CustomEvent("careerlens_profile_image_updated"));
+      window.dispatchEvent(new CustomEvent("careerlens_profile_image_updated", { detail: { avatar: dataUrl } }));
+      window.dispatchEvent(new Event("storage"));
       setStatusMsg({ type: "success", text: "Profile photo uploaded successfully." });
     };
     reader.readAsDataURL(file);
@@ -155,7 +156,8 @@ export default function CandidateProfile() {
       localStorage.removeItem(`careerlens_avatar_${user.id}`);
     }
     localStorage.removeItem("careerlens_avatar");
-    window.dispatchEvent(new CustomEvent("careerlens_profile_image_updated"));
+    window.dispatchEvent(new CustomEvent("careerlens_profile_image_updated", { detail: { avatar: "" } }));
+    window.dispatchEvent(new Event("storage"));
     setStatusMsg({ type: "success", text: "Profile photo removed." });
   };
 

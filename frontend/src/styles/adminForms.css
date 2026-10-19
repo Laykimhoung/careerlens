@@ -349,3 +349,79 @@ button.admin-skill-btn:disabled,
     width: 100%;
   }
 }
+
+/* ── Galaxy Dark Mode for Admin Modals and CRUD Forms ───────────────────────── */
+[data-theme="dark"] .crud-overlay {
+  background: rgba(4, 7, 18, 0.8) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+[data-theme="dark"] .crud-modal {
+  background: rgba(13, 21, 48, 0.96) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(99, 142, 203, 0.35) !important;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6), 0 0 1px 1px rgba(99, 142, 203, 0.25) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .crud-modal-header {
+  border-bottom: 1px solid rgba(99, 142, 203, 0.25) !important;
+}
+
+[data-theme="dark"] .crud-modal-header h2 {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .crud-close {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .crud-close:hover {
+  background: rgba(99, 142, 203, 0.2) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .admin-form-section {
+  border-bottom: 1px solid rgba(99, 142, 203, 0.25) !important;
+  color: #93c5fd !important;
+}
+
+[data-theme="dark"] .admin-label {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .admin-input,
+[data-theme="dark"] .admin-select,
+[data-theme="dark"] .admin-textarea {
+  background-color: rgba(10, 16, 38, 0.88) !important;
+  border: 1px solid rgba(99, 142, 203, 0.3) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .admin-input:focus,
+[data-theme="dark"] .admin-select:focus,
+[data-theme="dark"] .admin-textarea:focus {
+  border-color: var(--color-primary, #016BFB) !important;
+  box-shadow: 0 0 0 3px rgba(99, 142, 203, 0.35) !important;
+}
+
+[data-theme="dark"] .admin-chip {
+  background: rgba(99, 142, 203, 0.22) !important;
+  color: #93c5fd !important;
+  border: 1px solid rgba(99, 142, 203, 0.35) !important;
+}
+
+[data-theme="dark"] .admin-chip-remove {
+  color: #93c5fd !important;
+}
+
+[data-theme="dark"] .admin-chip-remove:hover {
+  background: rgba(239, 68, 68, 0.25) !important;
+  color: #fca5a5 !important;
+}
+
+[data-theme="dark"] .admin-form-actions,
+[data-theme="dark"] .crud-modal .workspace-actions {
+  border-top: 1px solid rgba(99, 142, 203, 0.25) !important;
+}
+
