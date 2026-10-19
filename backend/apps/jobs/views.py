@@ -1,4 +1,5 @@
 from rest_framework import viewsets, permissions, status
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.utils import timezone
@@ -88,3 +89,28 @@ class SavedJobViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(candidate=self.request.user.candidate_profile)
+
+
+class PlatformStatsView(APIView):
+    """
+    Public endpoint returning real-time platform metrics from the database:
+    students, registered companies, published jobs, and connection applications.
+    """
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request):
+        from apps.accounts.models import CandidateProfile, CompanyProfile
+        from apps.applications.models import Application
+
+        students_count = CandidateProfile.objects.count()
+        companies_count = CompanyProfile.objects.count()
+        published_jobs = Job.objects.filter(status=Job.Status.PUBLISHED).count()
+        jobs_count = published_jobs if published_jobs > 0 else Job.objects.count()
+        connections_count = Application.objects.count()
+
+        return Response({
+            "students": students_count,
+            "companies": companies_count,
+            "jobs": jobs_count,
+            "connections": connections_count,
+        })

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../../hooks/useAuth";
+import SideRays from "../../../components/ui/SideRays";
 import "./AuthPage.css";
 
 const ROLE_DASHBOARD = { candidate: "/candidate", company: "/company", admin: "/admin" };
@@ -78,6 +79,29 @@ export default function AuthPage() {
 
   return (
     <div className="auth-page-bg">
+      <div className="auth-rays-bg">
+        <SideRays
+          origin="top-left"
+          rayColor1="#FFC46B"
+          rayColor2="#016BFB"
+          speed={2.2}
+          intensity={2}
+          spread={2}
+          density={5}
+          followMouse={true}
+        />
+        <SideRays
+          origin="top-right"
+          rayColor1="#FFC46B"
+          rayColor2="#016BFB"
+          speed={2.5}
+          intensity={2}
+          spread={2}
+          density={5}
+          followMouse={true}
+        />
+      </div>
+
       <div className="auth-container">
         {/* The Blade (Dark Green Overlay) */}
         <div className={`auth-blade ${isLogin ? "blade-on-right" : "blade-on-left"}`}>
