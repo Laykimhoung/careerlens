@@ -458,12 +458,18 @@
   outline: none;
 }
 
-/* Unlocked (Runs away until 2 fields are filled) */
+/* Unlocked (Runs away / empty form: dark matte, no neon color) */
 .tether-btn.unlocked {
   background-color: #1f2727;
-  color: #818b8b;
+  color: #ffffff;
   border: 1px solid #283737;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.tether-btn.unlocked:hover:not(:disabled) {
+  background-color: #263232;
+  border-color: #384c48;
+  color: #ffffff;
 }
 
 .tether-btn.unlocked:focus-visible {
@@ -692,6 +698,56 @@
   color: #1fd5a8;
   border: 1px solid rgba(31, 213, 168, 0.35);
   box-shadow: 0 0 10px rgba(31, 213, 168, 0.15);
+}
+
+/* ═════════════════════════════════════════════════════════════════════
+   SUCCESS STATE & UTILITY ANIMATIONS
+   ═════════════════════════════════════════════════════════════════════ */
+
+.tether-success-content {
+  text-align: center;
+  padding: 8px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.tether-success-icon {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: rgba(31, 213, 168, 0.1);
+  border: 1.5px solid rgba(31, 213, 168, 0.45);
+  box-shadow: 0 0 25px rgba(31, 213, 168, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1fd5a8;
+  margin: 6px auto 18px auto;
+  animation: checkPop 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+
+.tether-success-note {
+  font-size: 13px;
+  color: #818b8b;
+  line-height: 1.6;
+  margin: 0 0 18px 0;
+  max-width: 360px;
+}
+
+.tether-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(5, 10, 10, 0.35);
+  border-top-color: #050a0a;
+  border-radius: 50%;
+  animation: tetherSpin 0.6s linear infinite;
+  display: inline-block;
+  margin-right: 8px;
+}
+
+@keyframes tetherSpin {
+  to { transform: rotate(360deg); }
 }
 
 /* ═════════════════════════════════════════════════════════════════════
