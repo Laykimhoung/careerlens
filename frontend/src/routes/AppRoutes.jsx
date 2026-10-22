@@ -13,6 +13,10 @@ import ResetPassword from "../pages/auth/ResetPassword/ResetPassword";
 import CandidateDashboard from "../pages/candidate/Dashboard/Dashboard";
 import CandidateProfile from "../pages/candidate/Profile/Profile";
 import CandidateResume from "../pages/candidate/Resume/Resume";
+import CandidateCVStudio from "../pages/candidate/CVStudio/CVStudio";
+import CandidateCVVersions from "../pages/candidate/CVVersions/CVVersions";
+import CandidateCareerRoadmap from "../pages/candidate/CareerRoadmap/CareerRoadmap";
+import CandidateBestFitJobs from "../pages/candidate/BestFitJobs/BestFitJobs";
 import CandidateJobs from "../pages/candidate/Jobs/Jobs";
 import CandidateJobDetails from "../pages/candidate/JobDetails/JobDetails";
 import CandidateApplications from "../pages/candidate/Applications/Applications";
@@ -69,6 +73,11 @@ export default function AppRoutes() {
           <Route index element={<CandidateDashboard />} />
           <Route path="profile" element={<CandidateProfile />} />
           <Route path="resume" element={<CandidateResume />} />
+          <Route path="cv-studio" element={<CandidateCVStudio />} />
+          <Route path="cv-versions" element={<CandidateCVVersions />} />
+          <Route path="career-roadmap" element={<CandidateCareerRoadmap />} />
+          <Route path="roadmap" element={<CandidateCareerRoadmap />} />
+          <Route path="best-fit-jobs" element={<CandidateBestFitJobs />} />
           <Route path="jobs" element={<CandidateJobs />} />
           <Route path="jobs/:id" element={<CandidateJobDetails />} />
           <Route path="applications" element={<CandidateApplications />} />

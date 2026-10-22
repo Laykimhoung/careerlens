@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   LayoutDashboard,
+  Sparkles,
   Search,
   FileText,
   Bookmark,
@@ -8,6 +9,9 @@ import {
   MessageSquare,
   User,
   FileUser,
+  FileCheck,
+  History,
+  Compass,
   Bell,
   Settings,
 } from 'lucide-react';
@@ -34,6 +38,8 @@ export default function CandidateSidebar({ isOpen, open, onClose }) {
 
   const items = [
     { to: '/candidate', label: t('nav.dashboard') || 'Dashboard', icon: LayoutDashboard, end: true },
+    { to: '/candidate/career-roadmap', label: 'Career Roadmap', icon: Compass },
+    { to: '/candidate/best-fit-jobs', label: 'Best-Fit Jobs', icon: Sparkles },
     { to: '/candidate/jobs', label: t('nav.findJobs') || 'Find Jobs', icon: Search },
     { to: '/candidate/applications', label: t('nav.myApplications') || 'My Applications', icon: FileText },
     { to: '/candidate/saved-jobs', label: t('nav.savedJobs') || 'Saved Jobs', icon: Bookmark },
@@ -41,6 +47,8 @@ export default function CandidateSidebar({ isOpen, open, onClose }) {
     { to: '/candidate/messages', label: t('nav.messages') || 'Messages', icon: MessageSquare },
     { to: '/candidate/profile', label: t('nav.myProfile') || 'My Profile', icon: User },
     { to: '/candidate/resume', label: t('nav.resume') || 'Resume', icon: FileUser },
+    { to: '/candidate/cv-studio', label: 'CV Studio', icon: FileCheck },
+    { to: '/candidate/cv-versions', label: 'CV Versions', icon: History },
     {
       to: '/candidate/notifications',
       label: t('nav.notifications') || 'Notifications',

@@ -21,6 +21,11 @@ import {
   CheckCircle2,
   Video,
   Sparkles,
+  Crown,
+  History,
+  ShieldCheck,
+  Zap,
+  Compass,
 } from "lucide-react";
 import { useAuth } from "../../../hooks/useAuth";
 import JobCard from "../../../components/candidate/JobCard";
@@ -36,6 +41,8 @@ import {
   getOffers,
 } from "../../../services/applicationService";
 import { fetchInterviewsList } from "../../../services/interviewService";
+import { getUsageSummary } from "../../../services/resumeImprovementService";
+import UpgradeModal from "../../../components/candidate/UpgradeModal";
 import { extractResults } from "../../../services/api";
 import RecruitmentWorkspaceBanner from "../../../components/illustrations/RecruitmentWorkspaceBanner";
 import CandidateCareerSpotlight from "../../../components/illustrations/CandidateCareerSpotlight";
@@ -77,6 +84,8 @@ export default function CandidateDashboard() {
   const [offers, setOffers] = useState([]);
   const [savedRecords, setSavedRecords] = useState([]);
   const [applyingJobId, setApplyingJobId] = useState(null);
+  const [usageSummary, setUsageSummary] = useState(null);
+  const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
 
   const [avatar, setAvatar] = useState(() => {
     return (
@@ -112,13 +121,14 @@ export default function CandidateDashboard() {
     setLoading(true);
     setError("");
     try {
-      const [prof, jobList, appList, intList, offerRes, savedList] = await Promise.all([
+      const [prof, jobList, appList, intList, offerRes, savedList, usageRes] = await Promise.all([
         getCurrentCandidateProfile(user?.id).catch(() => null),
         fetchNormalizedJobs(),
         fetchNormalizedApplications(),
         fetchInterviewsList().catch(() => []),
         getOffers().catch(() => ({ data: [] })),
         fetchSavedJobRecords(),
+        getUsageSummary().catch(() => ({ data: null })),
       ]);
       setProfile(prof);
       setJobs(jobList.filter((j) => j.rawStatus === "PUBLISHED"));
@@ -126,6 +136,7 @@ export default function CandidateDashboard() {
       setInterviews(intList);
       setOffers(extractResults(offerRes));
       setSavedRecords(savedList);
+      if (usageRes?.data) setUsageSummary(usageRes.data);
     } catch (err) {
       setError(err.response?.data?.detail || "Failed to load dashboard data.");
     } finally {
@@ -476,6 +487,73 @@ export default function CandidateDashboard() {
             <RecruitmentWorkspaceBanner />
           </div>
 
+          {/* AI Resume & Plan Quota Card */}
+          {usageSummary && (
+            <div className={`cand-ai-usage-card ${usageSummary.plan_tier === "PREMIUM" ? "cand-ai-card-premium" : ""}`}>
+              <div className="cand-ai-usage-header">
+                <div className="cand-ai-tier-wrap">
+                  {usageSummary.plan_tier === "PREMIUM" ? (
+                    <span className="cand-tier-badge-premium">
+                      <Crown size={14} className="text-amber-400" />
+                      <strong>PREMIUM TIER</strong>
+                    </span>
+                  ) : (
+                    <span className="cand-tier-badge-free">
+                      <ShieldCheck size={14} />
+                      <strong>FREE PROTOTYPE</strong>
+                    </span>
+                  )}
+                </div>
+                <button
+                  type="button"
+                  className="cand-btn-upgrade-pill"
+                  onClick={() => setIsUpgradeModalOpen(true)}
+                >
+                  <Zap size={13} />
+                  <span>{usageSummary.plan_tier === "PREMIUM" ? "Manage Plan" : "Upgrade ($3.99)"}</span>
+                </button>
+              </div>
+
+              <div className="cand-ai-meter-body">
+                <div className="cand-ai-meter-row">
+                  <span className="cand-ai-meter-label">AI CV Improvements</span>
+                  <strong className="cand-ai-meter-nums">
+                    {usageSummary.improvements_used} / {usageSummary.improvements_limit}
+                  </strong>
+                </div>
+                <div className="cand-ai-meter-track">
+                  <div
+                    className="cand-ai-meter-bar"
+                    style={{
+                      width: `${Math.min(100, (usageSummary.improvements_used / (usageSummary.improvements_limit || 1)) * 100)}%`,
+                    }}
+                  />
+                </div>
+                <span className="cand-ai-meter-sub">
+                  {usageSummary.improvements_remaining} credits remaining for active CV
+                </span>
+              </div>
+
+              <div className="cand-ai-quick-links">
+                <Link to="/candidate/career-roadmap" className="cand-ai-link-item">
+                  <Compass size={14} />
+                  <span>My Career Roadmap</span>
+                  <ArrowUpRight size={13} className="cand-link-arrow" />
+                </Link>
+                <Link to="/candidate/cv-versions" className="cand-ai-link-item">
+                  <History size={14} />
+                  <span>My CV Versions ({usageSummary.total_versions || 0})</span>
+                  <ArrowUpRight size={13} className="cand-link-arrow" />
+                </Link>
+                <Link to="/candidate/cv-studio" className="cand-ai-link-item">
+                  <Sparkles size={14} />
+                  <span>AI CV Studio</span>
+                  <ArrowUpRight size={13} className="cand-link-arrow" />
+                </Link>
+              </div>
+            </div>
+          )}
+
           {/* "On Process" Active Applications Card */}
           <div className="cand-process-card">
             <div className="cand-process-header">
@@ -551,6 +629,17 @@ export default function CandidateDashboard() {
           </div>
         </div>
       </div>
+
+      {/* Upgrade Modal */}
+      <UpgradeModal
+        isOpen={isUpgradeModalOpen}
+        onClose={() => setIsUpgradeModalOpen(false)}
+        onUpgraded={(newUsage) => {
+          if (newUsage) setUsageSummary(newUsage);
+          else loadDashboard();
+        }}
+        usageSummary={usageSummary}
+      />
     </div>
   );
 }
