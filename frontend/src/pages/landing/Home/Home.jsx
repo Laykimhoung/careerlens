@@ -306,200 +306,280 @@ export default function Home() {
         </header>
 
         <main>
-          {/* Hero Section */}
-          <section className="landing-hero">
+          {/* ── Hero Section ── */}
+          <section className="landing-hero landing-hero--v2">
             <div className="landing-animate-on-scroll">
-              <p className="landing-hero__tag">{t("common.landingHeroTag")}</p>
-              <h1 className="landing-hero__title">{t("common.landingHeroTitle")}</h1>
-              <p className="landing-hero__desc">
-                {t("common.landingHeroDesc")}
+              {/* Badge */}
+              <div className="landing-hero__badge">
+                <span className="landing-hero__badge-dot" />
+                {t("common.heroBadge")}
+              </div>
+
+              {/* Title */}
+              <h1 className="landing-hero__title landing-hero__title--v2">
+                {t("common.heroTitle1")}{" "}
+                <span className="landing-hero__title-accent">{t("common.heroTitle2")}</span>
+              </h1>
+
+              {/* Subtitle */}
+              <p className="landing-hero__desc landing-hero__desc--v2">
+                {t("common.heroSubtitle")}
               </p>
-              <div className="landing-hero__cta">
-                <Link to="/register" className="landing-btn">{t("common.browseJobs")}</Link>
-                <Link to="/register" className="landing-btn b2">{t("common.hireTalent")}</Link>
-              </div>
-            </div>
 
-            <div className="landing-card landing-animate-on-scroll landing-stagger-2">
-              <p className="landing-journey__title">{t("common.recruitmentJourney")}</p>
-              
-              <div className="landing-journey__step">
-                <span className="landing-journey__num">1</span>
-                <span className="landing-journey__text">{t("common.student")}</span>
-              </div>
-              <div className="landing-journey__line"></div>
-              
-              <div className="landing-journey__step">
-                <span className="landing-journey__num">2</span>
-                <span className="landing-journey__text">{t("common.application")}</span>
-              </div>
-              <div className="landing-journey__line"></div>
-
-              <div className="landing-journey__step">
-                <span className="landing-journey__num">3</span>
-                <span className="landing-journey__text">{t("common.interview")}</span>
-              </div>
-              <div className="landing-journey__line"></div>
-
-              <div className="landing-journey__step">
-                <span className="landing-journey__num">4</span>
-                <span className="landing-journey__text">{t("common.job")}</span>
+              {/* CTA Buttons */}
+              <div className="landing-hero__cta landing-hero__cta--v2">
+                <Link to="/register" className="landing-btn landing-btn--hero-primary">
+                  {t("common.browseJobs")} →
+                </Link>
+                <Link to="/register" className="landing-btn landing-btn--hero-outline">
+                  {t("common.postJob")}
+                </Link>
               </div>
             </div>
           </section>
 
-          {/* Features Section */}
+          {/* ── Features / Role Cards Section ── */}
           <section className="landing-section">
             <div className="landing-section__inner">
-              <h2 className="landing-section__title landing-animate-on-scroll">{t("common.landingPlatformTitle")}</h2>
-              <div className="landing-grid-3">
-                <div className="landing-card landing-animate-on-scroll landing-stagger-1">
-                  <h3 className="landing-feat__title">{t("common.nav.candidates")}</h3>
-                  <p className="landing-feat__desc">{t("common.forStudentsDesc")}</p>
+              <div className="landing-section__header landing-animate-on-scroll">
+                <h2 className="landing-section__title landing-section__title--center">
+                  {t("common.landingPlatformTitle")}
+                </h2>
+                <p className="landing-section__subtitle text-muted">
+                  {t("common.platformSubtitle")}
+                </p>
+              </div>
+              <div className="landing-grid-3 landing-feat-grid">
+                {/* Candidates Card */}
+                <div className="landing-feat-card landing-animate-on-scroll landing-stagger-1">
+                  <div className="landing-feat-card__icon landing-feat-card__icon--blue">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                    </svg>
+                  </div>
+                  <h3 className="landing-feat-card__title">{t("common.featCandidatesTitle")}</h3>
+                  <p className="landing-feat-card__desc">{t("common.featCandidatesDesc")}</p>
+                  <Link to="/register" className="landing-feat-card__link">{t("common.learnMore")}</Link>
                 </div>
-                <div className="landing-card landing-animate-on-scroll landing-stagger-2">
-                  <h3 className="landing-feat__title">{t("common.forCompanies")}</h3>
-                  <p className="landing-feat__desc">{t("common.forCompaniesDesc")}</p>
+
+                {/* Companies Card */}
+                <div className="landing-feat-card landing-feat-card--highlight landing-animate-on-scroll landing-stagger-2">
+                  <div className="landing-feat-card__icon landing-feat-card__icon--white">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                    </svg>
+                  </div>
+                  <h3 className="landing-feat-card__title">{t("common.featCompaniesTitle")}</h3>
+                  <p className="landing-feat-card__desc">{t("common.featCompaniesDesc")}</p>
+                  <Link to="/register" className="landing-feat-card__link landing-feat-card__link--white">{t("common.learnMore")}</Link>
                 </div>
-                <div className="landing-card landing-animate-on-scroll landing-stagger-3">
-                  <h3 className="landing-feat__title">{t("common.platformAdmin")}</h3>
-                  <p className="landing-feat__desc">{t("common.forAdminsDesc")}</p>
+
+                {/* Admins Card */}
+                <div className="landing-feat-card landing-animate-on-scroll landing-stagger-3">
+                  <div className="landing-feat-card__icon landing-feat-card__icon--purple">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                  </div>
+                  <h3 className="landing-feat-card__title">{t("common.featAdminsTitle")}</h3>
+                  <p className="landing-feat-card__desc">{t("common.featAdminsDesc")}</p>
+                  <Link to="/login" className="landing-feat-card__link">{t("common.learnMore")}</Link>
                 </div>
               </div>
             </div>
           </section>
 
-          {/* How it works Section */}
+          {/* ── How It Works — Visual Timeline ── */}
           <section className="landing-section landing-section--gray" id="how">
             <div className="landing-section__inner">
-              <h2 className="landing-section__title landing-animate-on-scroll">{t("common.howItWorks")}</h2>
-              <div className="landing-grid-4">
-                <div className="landing-card landing-animate-on-scroll landing-stagger-1">
-                  <div className="landing-step__num">01</div>
-                  <h3 className="landing-feat__title">{t("candidate.completeProfile")}</h3>
-                  <p className="landing-feat__desc">Create your professional profile and showcase your skills.</p>
+              <div className="landing-section__header landing-animate-on-scroll">
+                <h2 className="landing-section__title landing-section__title--center">{t("common.howItWorks")}</h2>
+                <p className="landing-section__subtitle text-muted">
+                  {t("common.howSubtitle")}
+                </p>
+              </div>
+
+              <div className="landing-timeline">
+                {/* Connecting line (desktop) */}
+                <div className="landing-timeline__line" />
+
+                {/* Step 1 */}
+                <div className="landing-timeline__step landing-animate-on-scroll landing-stagger-1">
+                  <div className="landing-timeline__circle">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+                    </svg>
+                  </div>
+                  <div className="landing-timeline__number">01</div>
+                  <h3 className="landing-timeline__title">{t("common.howStep1Title")}</h3>
+                  <p className="landing-timeline__desc">{t("common.howStep1Desc")}</p>
                 </div>
-                <div className="landing-card landing-animate-on-scroll landing-stagger-2">
-                  <div className="landing-step__num">02</div>
-                  <h3 className="landing-feat__title">{t("common.browseJobs")}</h3>
-                  <p className="landing-feat__desc">Find jobs that match your interests and experience.</p>
+
+                {/* Step 2 */}
+                <div className="landing-timeline__step landing-animate-on-scroll landing-stagger-2">
+                  <div className="landing-timeline__circle">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                    </svg>
+                  </div>
+                  <div className="landing-timeline__number">02</div>
+                  <h3 className="landing-timeline__title">{t("common.howStep2Title")}</h3>
+                  <p className="landing-timeline__desc">{t("common.howStep2Desc")}</p>
                 </div>
-                <div className="landing-card landing-animate-on-scroll landing-stagger-3">
-                  <div className="landing-step__num">03</div>
-                  <h3 className="landing-feat__title">{t("common.apply")}</h3>
-                  <p className="landing-feat__desc">Submit applications and communicate with recruiters.</p>
+
+                {/* Step 3 */}
+                <div className="landing-timeline__step landing-animate-on-scroll landing-stagger-3">
+                  <div className="landing-timeline__circle">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/>
+                    </svg>
+                  </div>
+                  <div className="landing-timeline__number">03</div>
+                  <h3 className="landing-timeline__title">{t("common.howStep3Title")}</h3>
+                  <p className="landing-timeline__desc">{t("common.howStep3Desc")}</p>
                 </div>
-                <div className="landing-card landing-animate-on-scroll landing-stagger-4">
-                  <div className="landing-step__num">04</div>
-                  <h3 className="landing-feat__title">{t("common.getHired")}</h3>
-                  <p className="landing-feat__desc">Track interviews, offers and your path to employment.</p>
+
+                {/* Step 4 */}
+                <div className="landing-timeline__step landing-animate-on-scroll landing-stagger-4">
+                  <div className="landing-timeline__circle landing-timeline__circle--gold">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                  </div>
+                  <div className="landing-timeline__number landing-timeline__number--gold">04</div>
+                  <h3 className="landing-timeline__title">{t("common.howStep4Title")}</h3>
+                  <p className="landing-timeline__desc">{t("common.howStep4Desc")}</p>
                 </div>
               </div>
             </div>
           </section>
 
-          {/* Company & Pipeline Section */}
+          {/* ── Stats + Pipeline Section ── */}
           <section className="landing-section" id="companies">
             <div className="landing-section__inner">
-              <div style={{ marginBottom: "64px" }}>
-                <h2 className="landing-section__title landing-animate-on-scroll" style={{ marginBottom: "8px", textAlign: "left" }}>Find people who can move your company forward.</h2>
-                <p className="text-muted landing-animate-on-scroll landing-stagger-1" style={{ marginBottom: "24px", fontSize: "15px" }}>Job posting, applicant tracking, interview scheduling, messaging and offers in one ATS pipeline.</p>
-                
-                <div className="landing-pipeline">
-                  <span className="landing-pipeline__step landing-animate-on-scroll landing-stagger-1">{t("common.applied")}</span>
-                  <span className="landing-pipeline__arrow">&rarr;</span>
-                  <span className="landing-pipeline__step landing-animate-on-scroll landing-stagger-2">{t("company.inReview")}</span>
-                  <span className="landing-pipeline__arrow">&rarr;</span>
-                  <span className="landing-pipeline__step landing-animate-on-scroll landing-stagger-3">{t("company.shortlistApplication")}</span>
-                  <span className="landing-pipeline__arrow">&rarr;</span>
-                  <span className="landing-pipeline__step landing-animate-on-scroll landing-stagger-4">{t("common.interview")}</span>
-                  <span className="landing-pipeline__arrow">&rarr;</span>
-                  <span className="landing-pipeline__step landing-animate-on-scroll landing-stagger-5">{t("common.offer")}</span>
-                  <span className="landing-pipeline__arrow">&rarr;</span>
-                  <span className="landing-pipeline__step landing-animate-on-scroll landing-stagger-6">{t("company.totalHired")}</span>
-                </div>
 
-                <div className="landing-animate-on-scroll landing-stagger-3" style={{ display: "flex", gap: "12px", marginTop: "32px" }}>
-                  <Link to="/register" className="landing-btn">{t("common.hireTalent")}</Link>
-                  <Link to="/login" className="landing-btn b2">{t("common.browseJobs")}</Link>
+              {/* Stats Header */}
+              <div className="landing-stats-header landing-animate-on-scroll">
+                <h2 className="landing-section__title landing-section__title--center">
+                  {t("common.statsTrust")}
+                </h2>
+                <div className="landing-stats-live">
+                  <span className="landing-live-dot" />
+                  <span className="text-muted" style={{ fontSize: "12px", fontWeight: "500" }}>{t("common.statsLiveNotice")}</span>
                 </div>
               </div>
 
               {/* Stats Grid (Real-time from Database) */}
-              <div className="landing-grid-4 landing-stats-grid" style={{ marginBottom: "16px" }}>
-                <div className="landing-card landing-animate-on-scroll landing-stagger-1" style={{ textAlign: "center", padding: "32px 16px" }}>
-                  <h3 className="text-primary" style={{ fontSize: "32px", fontWeight: "800", marginBottom: "8px" }}>
+              <div className="landing-grid-4 landing-stats-grid">
+                <div className="landing-stat-card landing-animate-on-scroll landing-stagger-1">
+                  <div className="landing-stat-card__icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+                    </svg>
+                  </div>
+                  <h3 className="landing-stat-card__number">
                     <AnimatedCounter value={stats.students} />
                   </h3>
-                  <p className="text-muted" style={{ fontSize: "14px" }}>{t("common.nav.candidates")}</p>
+                  <p className="landing-stat-card__label">{t("common.nav.candidates")}</p>
                 </div>
-                <div className="landing-card landing-animate-on-scroll landing-stagger-2" style={{ textAlign: "center", padding: "32px 16px" }}>
-                  <h3 className="text-primary" style={{ fontSize: "32px", fontWeight: "800", marginBottom: "8px" }}>
+                <div className="landing-stat-card landing-animate-on-scroll landing-stagger-2">
+                  <div className="landing-stat-card__icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                    </svg>
+                  </div>
+                  <h3 className="landing-stat-card__number">
                     <AnimatedCounter value={stats.companies} />
                   </h3>
-                  <p className="text-muted" style={{ fontSize: "14px" }}>{t("common.nav.companies")}</p>
+                  <p className="landing-stat-card__label">{t("common.nav.companies")}</p>
                 </div>
-                <div className="landing-card landing-animate-on-scroll landing-stagger-3" style={{ textAlign: "center", padding: "32px 16px" }}>
-                  <h3 className="text-primary" style={{ fontSize: "32px", fontWeight: "800", marginBottom: "8px" }}>
+                <div className="landing-stat-card landing-animate-on-scroll landing-stagger-3">
+                  <div className="landing-stat-card__icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+                    </svg>
+                  </div>
+                  <h3 className="landing-stat-card__number">
                     <AnimatedCounter value={stats.jobs} />
                   </h3>
-                  <p className="text-muted" style={{ fontSize: "14px" }}>{t("common.nav.jobs")}</p>
+                  <p className="landing-stat-card__label">{t("common.nav.jobs")}</p>
                 </div>
-                <div className="landing-card landing-animate-on-scroll landing-stagger-4" style={{ textAlign: "center", padding: "32px 16px" }}>
-                  <h3 className="text-primary" style={{ fontSize: "32px", fontWeight: "800", marginBottom: "8px" }}>
+                <div className="landing-stat-card landing-animate-on-scroll landing-stagger-4">
+                  <div className="landing-stat-card__icon landing-stat-card__icon--gold">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                  </div>
+                  <h3 className="landing-stat-card__number landing-stat-card__number--gold">
                     <AnimatedCounter value={stats.connections} />
                   </h3>
-                  <p className="text-muted" style={{ fontSize: "14px" }}>{t("company.totalHired")}</p>
+                  <p className="landing-stat-card__label">{t("company.totalHired")}</p>
                 </div>
               </div>
 
-              <div
-                className="landing-animate-on-scroll"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: "8px",
-                  marginBottom: "64px",
-                }}
-              >
-                <span className="landing-live-dot" />
-                <p className="text-muted" style={{ margin: 0, fontSize: "12px", fontWeight: "500" }}>
-                  Real-time database statistics
-                </p>
-              </div>
+              {/* Pipeline Section */}
+              <div className="landing-pipeline-section">
+                <div className="landing-pipeline-section__content landing-animate-on-scroll">
+                  <h2 className="landing-section__title" style={{ marginBottom: "8px" }}>
+                    {t("common.pipelineTitle")}
+                  </h2>
+                  <p className="text-muted" style={{ marginBottom: "24px", fontSize: "15px", lineHeight: "1.6" }}>
+                    {t("common.pipelineDesc")}
+                  </p>
 
-              {/* Testimonials */}
-              <p className="landing-animate-on-scroll" style={{ fontSize: "12px", color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "16px", fontWeight: "600" }}>Demonstration testimonials</p>
-              <div className="landing-grid-3">
-                <div className="landing-card landing-animate-on-scroll landing-stagger-1" style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-                  <p style={{ fontSize: "15px", lineHeight: "1.5", marginBottom: "24px" }}>&quot;CareerLens made it much easier to keep track of my applications and interviews.&quot;</p>
-                  <p className="text-muted" style={{ fontSize: "14px", fontWeight: "500" }}>Student (demo)</p>
+                  {/* Feature checklist */}
+                  <div className="landing-pipeline-features">
+                    {[
+                      t("common.pipelineFeature1"),
+                      t("common.pipelineFeature2"),
+                      t("common.pipelineFeature3"),
+                      t("common.pipelineFeature4"),
+                    ].map((feat) => (
+                      <div key={feat} className="landing-pipeline-feature-item">
+                        <span className="landing-pipeline-feature-check">✓</span>
+                        <span>{feat}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div style={{ display: "flex", gap: "12px", marginTop: "28px", flexWrap: "wrap" }}>
+                    <Link to="/register" className="landing-btn">{t("common.hireTalent")}</Link>
+                    <Link to="/login" className="landing-btn b2">{t("common.browseJobs")}</Link>
+                  </div>
                 </div>
-                <div className="landing-card landing-animate-on-scroll landing-stagger-2" style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-                  <p style={{ fontSize: "15px", lineHeight: "1.5", marginBottom: "24px" }}>&quot;We can manage the entire candidate pipeline from one place.&quot;</p>
-                  <p className="text-muted" style={{ fontSize: "14px", fontWeight: "500" }}>Recruiter (demo)</p>
-                </div>
-                <div className="landing-card landing-animate-on-scroll landing-stagger-3" style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-                  <p style={{ fontSize: "15px", lineHeight: "1.5", marginBottom: "24px" }}>&quot;It provides a clear view of recruitment activity across the platform.&quot;</p>
-                  <p className="text-muted" style={{ fontSize: "14px", fontWeight: "500" }}>University Admin (demo)</p>
+
+                <div className="landing-pipeline-section__visual landing-animate-on-scroll landing-stagger-2">
+                  <div className="landing-pipeline landing-pipeline--v2">
+                    <span className="landing-pipeline__step landing-pipeline__step--applied landing-animate-on-scroll landing-stagger-1">{t("common.applied")}</span>
+                    <span className="landing-pipeline__arrow">→</span>
+                    <span className="landing-pipeline__step landing-pipeline__step--review landing-animate-on-scroll landing-stagger-2">{t("company.inReview")}</span>
+                    <span className="landing-pipeline__arrow">→</span>
+                    <span className="landing-pipeline__step landing-pipeline__step--shortlist landing-animate-on-scroll landing-stagger-3">{t("company.shortlistApplication")}</span>
+                    <span className="landing-pipeline__arrow">→</span>
+                    <span className="landing-pipeline__step landing-pipeline__step--interview landing-animate-on-scroll landing-stagger-4">{t("common.interview")}</span>
+                    <span className="landing-pipeline__arrow">→</span>
+                    <span className="landing-pipeline__step landing-pipeline__step--offer landing-animate-on-scroll landing-stagger-5">{t("common.offer")}</span>
+                    <span className="landing-pipeline__arrow">→</span>
+                    <span className="landing-pipeline__step landing-pipeline__step--hired landing-animate-on-scroll landing-stagger-6">{t("company.totalHired")}</span>
+                  </div>
                 </div>
               </div>
             </div>
           </section>
 
-          {/* About Section */}
+          {/* ── About Section ── */}
           <section className="landing-section landing-section--gray" id="about">
             <div className="landing-section__inner">
-              <div style={{ textAlign: "center", marginBottom: "32px" }}>
-                <p className="landing-hero__tag landing-animate-on-scroll" style={{ display: "inline-block" }}>
-                  About CareerLens
-                </p>
-                <h2 className="landing-section__title landing-animate-on-scroll landing-stagger-1" style={{ marginBottom: "12px" }}>
-                  Empowering Cambodia&apos;s Next Generation of Talent.
+              <div className="landing-about__header">
+                <span className="landing-hero__badge landing-animate-on-scroll" style={{ display: "inline-flex", marginBottom: "12px" }}>
+                  <span className="landing-hero__badge-dot" />
+                  {t("common.aboutBadge")}
+                </span>
+                <h2 className="landing-section__title landing-section__title--center landing-animate-on-scroll landing-stagger-1">
+                  {t("common.aboutTitle")}
                 </h2>
-                <p className="text-muted landing-animate-on-scroll landing-stagger-2" style={{ maxWidth: "680px", margin: "0 auto", fontSize: "15px", lineHeight: "1.6" }}>
-                  CareerLens connects motivated students and graduates with forward-thinking employers through a seamless, transparent recruitment journey.
+                <p className="text-muted landing-animate-on-scroll landing-stagger-2" style={{ maxWidth: "680px", margin: "0 auto", fontSize: "15px", lineHeight: "1.7" }}>
+                  {t("common.aboutSubtitle")}
                 </p>
               </div>
 
@@ -525,10 +605,10 @@ export default function Home() {
                   clickToFront={true}
                   centerContent={
                     <div className="landing-about__center-card">
-                      <span className="landing-about__badge">Our Community</span>
-                      <h3 className="landing-about__center-title">Talent in Motion</h3>
+                      <span className="landing-about__badge">{t("common.communityBadge")}</span>
+                      <h3 className="landing-about__center-title">{t("common.communityTitle")}</h3>
                       <p className="landing-about__center-desc">
-                        Bridging classroom excellence with real-world industry opportunities.
+                        {t("common.communityDesc")}
                       </p>
                     </div>
                   }
@@ -536,33 +616,48 @@ export default function Home() {
               </div>
 
               {/* About Cards Grid */}
-              <div className="landing-grid-3" style={{ marginTop: "40px" }}>
-                <div className="landing-card landing-animate-on-scroll landing-stagger-1">
-                  <h3 className="landing-feat__title">Student Opportunities</h3>
-                  <p className="landing-feat__desc">
-                    Access verified internships, graduate jobs, and mentorship programs designed to launch your career.
-                  </p>
+              <div className="landing-grid-3 landing-about-cards" style={{ marginTop: "40px" }}>
+                {/* Students */}
+                <div className="landing-about-card landing-animate-on-scroll landing-stagger-1">
+                  <div className="landing-about-card__icon landing-about-card__icon--blue">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                    </svg>
+                  </div>
+                  <h3 className="landing-about-card__title">{t("common.aboutCard1Title")}</h3>
+                  <p className="landing-about-card__desc">{t("common.aboutCard1Desc")}</p>
                 </div>
-                <div className="landing-card landing-animate-on-scroll landing-stagger-2">
-                  <h3 className="landing-feat__title">Company Growth</h3>
-                  <p className="landing-feat__desc">
-                    Discover skilled candidates faster with our automated screening, interview scheduling, and pipeline tools.
-                  </p>
+
+                {/* Companies */}
+                <div className="landing-about-card landing-animate-on-scroll landing-stagger-2">
+                  <div className="landing-about-card__icon landing-about-card__icon--teal">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                    </svg>
+                  </div>
+                  <h3 className="landing-about-card__title">{t("common.aboutCard2Title")}</h3>
+                  <p className="landing-about-card__desc">{t("common.aboutCard2Desc")}</p>
                 </div>
-                <div className="landing-card landing-animate-on-scroll landing-stagger-3">
-                  <h3 className="landing-feat__title">University Partnership</h3>
-                  <p className="landing-feat__desc">
-                    Empowering academic institutions to track employment outcomes and guide students toward high-impact paths.
-                  </p>
+
+                {/* University */}
+                <div className="landing-about-card landing-animate-on-scroll landing-stagger-3">
+                  <div className="landing-about-card__icon landing-about-card__icon--amber">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+                    </svg>
+                  </div>
+                  <h3 className="landing-about-card__title">{t("common.aboutCard3Title")}</h3>
+                  <p className="landing-about-card__desc">{t("common.aboutCard3Desc")}</p>
                 </div>
               </div>
             </div>
           </section>
 
-          <section className="landing-footer-cta">
+          {/* ── Footer CTA ── */}
+          <section className="landing-footer-cta landing-footer-cta--v2">
             <div className="landing-footer-cta__inner landing-animate-on-scroll">
-              <h2 style={{ fontSize: "32px", fontWeight: "700", marginBottom: "12px" }}>{t("common.readyNextOpp")}</h2>
-              <p className="text-muted" style={{ fontSize: "16px", marginBottom: "32px" }}>{t("common.landingHeroTag")}</p>
+              <h2 className="landing-footer-cta__title">{t("common.ctaTitle")}</h2>
+              <p className="landing-footer-cta__subtitle text-muted">{t("common.ctaSubtitle")}</p>
               <div className="landing-footer-cta__actions">
                 <Link to="/register" className="landing-btn-3d landing-btn-3d--primary">{t("common.browseJobs")}</Link>
                 <Link to="/register" className="landing-btn-3d landing-btn-3d--secondary">{t("common.hireTalent")}</Link>
@@ -625,6 +720,14 @@ export default function Home() {
                 <Link to="/login">Student Portal</Link>
                 <span className="landing-footer__dot">•</span>
                 <Link to="/login">Employer Portal</Link>
+              </div>
+              {/* Social Icons */}
+              <div className="landing-footer__social">
+                <a href="https://github.com/Laykimhoung/careerlens" target="_blank" rel="noopener noreferrer" className="landing-footer__social-btn" aria-label="GitHub">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/>
+                  </svg>
+                </a>
               </div>
             </div>
           </div>

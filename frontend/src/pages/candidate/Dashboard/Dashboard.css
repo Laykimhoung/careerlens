@@ -805,3 +805,184 @@
   color: #FFFFFF;
 }
 
+
+
+/* ── AI Resume & Usage Card (Priority 4) ─────────────────────────────────── */
+.cand-ai-usage-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 16px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-shadow: 0 2px 8px -2px rgba(15, 23, 42, 0.05);
+  transition: all 0.2s ease;
+}
+
+.cand-ai-card-premium {
+  border-color: #818CF8;
+  background: linear-gradient(180deg, rgba(99, 102, 241, 0.03) 0%, #FFFFFF 100%);
+  box-shadow: 0 4px 16px -2px rgba(99, 102, 241, 0.12);
+}
+
+.cand-ai-usage-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.cand-tier-badge-premium {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(245, 158, 11, 0.12);
+  color: #D97706;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.cand-tier-badge-free {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #F1F5F9;
+  color: #475569;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.cand-btn-upgrade-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid #6366F1;
+  background: rgba(99, 102, 241, 0.06);
+  color: #6366F1;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.cand-btn-upgrade-pill:hover {
+  background: #6366F1;
+  color: #FFFFFF;
+}
+
+.cand-ai-meter-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cand-ai-meter-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.8125rem;
+}
+
+.cand-ai-meter-label {
+  color: #64748B;
+  font-weight: 500;
+}
+
+.cand-ai-meter-nums {
+  color: #0F172A;
+  font-weight: 700;
+}
+
+.cand-ai-meter-track {
+  width: 100%;
+  height: 6px;
+  background: #F1F5F9;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.cand-ai-meter-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #6366F1 0%, #A855F7 100%);
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+.cand-ai-meter-sub {
+  font-size: 0.71875rem;
+  color: #10B981;
+  font-weight: 600;
+}
+
+.cand-ai-quick-links {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 10px;
+  border-top: 1px solid #F1F5F9;
+}
+
+.cand-ai-link-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: #F8FAFC;
+  color: #334155;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.cand-ai-link-item:hover {
+  background: rgba(99, 102, 241, 0.08);
+  color: #4F46E5;
+}
+
+.cand-link-arrow {
+  margin-left: auto;
+  opacity: 0.6;
+}
+
+[data-theme="dark"] .cand-ai-usage-card {
+  background: #0F172A;
+  border-color: #1E293B;
+}
+
+[data-theme="dark"] .cand-ai-card-premium {
+  border-color: #6366F1;
+  background: linear-gradient(180deg, rgba(99, 102, 241, 0.08) 0%, #0F172A 100%);
+}
+
+[data-theme="dark"] .cand-ai-meter-track {
+  background: #1E293B;
+}
+
+[data-theme="dark"] .cand-ai-meter-nums {
+  color: #F8FAFC;
+}
+
+[data-theme="dark"] .cand-ai-quick-links {
+  border-color: #1E293B;
+}
+
+[data-theme="dark"] .cand-ai-link-item {
+  background: #1E293B;
+  color: #E2E8F0;
+}
+
+[data-theme="dark"] .cand-ai-link-item:hover {
+  background: #334155;
+  color: #818CF8;
+}
