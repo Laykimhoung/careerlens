@@ -35,6 +35,7 @@ def api_root_view(request):
             "applications": "/api/applications/",
             "messages": "/api/messages/",
             "notifications": "/api/notifications/",
+            "telegram": "/api/telegram/webhook/",
         }
     })
 
@@ -46,6 +47,7 @@ urlpatterns = [
     path('api/', include('apps.jobs.urls')),
     path('api/', include('apps.applications.urls')),
     path('api/', include('apps.messaging.urls')),
+    path('api/telegram/', include('apps.telegram_bot.urls')),
 ]
 
 if settings.DEBUG:
