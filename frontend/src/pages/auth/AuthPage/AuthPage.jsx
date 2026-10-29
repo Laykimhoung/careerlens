@@ -440,11 +440,17 @@ export default function AuthPage() {
             </div>
 
             <div className="tether-field">
-              <label className="tether-label">{t("auth.fullName")}</label>
+              <label className="tether-label">
+                {registerRole === "company" ? t("auth.representativeName") : t("auth.fullName")}
+              </label>
               <CurvyInput isValid={Boolean(registerForm.full_name.trim())}>
                 <input
                   type="text"
-                  placeholder="Full name"
+                  placeholder={
+                    registerRole === "company"
+                      ? t("auth.representativePlaceholder")
+                      : t("auth.candidateNamePlaceholder")
+                  }
                   value={registerForm.full_name}
                   onChange={(e) => setRegisterForm({ ...registerForm, full_name: e.target.value })}
                   disabled={loading}
@@ -533,7 +539,7 @@ export default function AuthPage() {
                 <CurvyInput isValid={Boolean(registerForm.company_name.trim())}>
                   <input
                     type="text"
-                    placeholder="Company name"
+                    placeholder={t("auth.companyNamePlaceholder")}
                     value={registerForm.company_name}
                     onChange={(e) => setRegisterForm({ ...registerForm, company_name: e.target.value })}
                     disabled={loading}
