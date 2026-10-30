@@ -551,15 +551,40 @@ export default function Home() {
                 <div className="landing-pipeline-section__visual landing-animate-on-scroll landing-stagger-2">
                   <div className="landing-pipeline landing-pipeline--v2">
                     <span className="landing-pipeline__step landing-pipeline__step--applied landing-animate-on-scroll landing-stagger-1">{t("common.applied")}</span>
-                    <span className="landing-pipeline__arrow">→</span>
+                    <span className="landing-pipeline__arrow" aria-hidden="true">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="landing-pipeline__arrow-icon">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                      </svg>
+                    </span>
                     <span className="landing-pipeline__step landing-pipeline__step--review landing-animate-on-scroll landing-stagger-2">{t("company.inReview")}</span>
-                    <span className="landing-pipeline__arrow">→</span>
+                    <span className="landing-pipeline__arrow" aria-hidden="true">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="landing-pipeline__arrow-icon">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                      </svg>
+                    </span>
                     <span className="landing-pipeline__step landing-pipeline__step--shortlist landing-animate-on-scroll landing-stagger-3">{t("company.shortlistApplication")}</span>
-                    <span className="landing-pipeline__arrow">→</span>
+                    <span className="landing-pipeline__arrow" aria-hidden="true">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="landing-pipeline__arrow-icon">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                      </svg>
+                    </span>
                     <span className="landing-pipeline__step landing-pipeline__step--interview landing-animate-on-scroll landing-stagger-4">{t("common.interview")}</span>
-                    <span className="landing-pipeline__arrow">→</span>
+                    <span className="landing-pipeline__arrow" aria-hidden="true">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="landing-pipeline__arrow-icon">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                      </svg>
+                    </span>
                     <span className="landing-pipeline__step landing-pipeline__step--offer landing-animate-on-scroll landing-stagger-5">{t("common.offer")}</span>
-                    <span className="landing-pipeline__arrow">→</span>
+                    <span className="landing-pipeline__arrow" aria-hidden="true">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="landing-pipeline__arrow-icon">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                      </svg>
+                    </span>
                     <span className="landing-pipeline__step landing-pipeline__step--hired landing-animate-on-scroll landing-stagger-6">{t("company.totalHired")}</span>
                   </div>
                 </div>

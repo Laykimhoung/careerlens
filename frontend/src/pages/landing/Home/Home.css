@@ -46,6 +46,9 @@
   display: flex;
   flex-direction: column;
   position: relative;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
   transition: background-color var(--transition-normal, 0.25s ease), color var(--transition-normal, 0.25s ease);
 }
 
@@ -64,6 +67,9 @@
 .landing-content-layer {
   position: relative;
   z-index: 1;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
 }
 
 /* ═════════════════════════════════════════════════════════════════════
@@ -114,6 +120,7 @@
 }
 
 .landing-header__inner {
+  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
@@ -121,6 +128,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  box-sizing: border-box;
   transition: height 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -229,7 +237,7 @@
   box-shadow: 0 4px 16px rgba(1, 107, 251, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
-@media (min-width: 768px) {
+@media (min-width: 992px) {
   .landing-nav { display: flex; }
 }
 
@@ -416,7 +424,7 @@
   color: #016BFB;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 991px) {
   .landing-mobile-menu-btn {
     display: flex;
   }
@@ -783,6 +791,15 @@
 .landing-pipeline__arrow {
   color: var(--color-text-muted, #94a3b8);
   font-size: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.landing-pipeline__arrow-icon {
+  display: block;
+  transition: transform 0.25s ease, color 0.2s ease;
 }
 
 /* Footer CTA */
@@ -1105,12 +1122,13 @@ html {
 .landing-about__orbit-wrapper {
   position: relative;
   width: 100%;
-  max-width: 980px;
+  max-width: 100%;
   margin: 16px auto 32px;
   padding: 16px 0;
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 }
 
 .landing-about__center-card {
@@ -1857,6 +1875,31 @@ html {
   }
 }
 
+@media (max-width: 599px) {
+  .landing-pipeline--v2 {
+    gap: 4px;
+  }
+
+  .landing-pipeline--v2 .landing-pipeline__step {
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+  }
+
+  .landing-pipeline--v2 .landing-pipeline__arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 4px auto;
+    color: #016BFB;
+  }
+
+  .landing-pipeline--v2 .landing-pipeline__arrow-icon {
+    transform: rotate(90deg);
+  }
+}
+
 /* Colored stage badges */
 .landing-pipeline__step--applied   { background: rgba(99, 102, 241, 0.12) !important; color: #6366f1 !important; border-color: rgba(99,102,241,0.25) !important; }
 .landing-pipeline__step--review    { background: rgba(245, 158, 11, 0.12) !important; color: #d97706 !important; border-color: rgba(245,158,11,0.25) !important; }
@@ -2100,3 +2143,4 @@ html {
     justify-content: center;
   }
 }
+
