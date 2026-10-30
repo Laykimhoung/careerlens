@@ -7,10 +7,13 @@ from apps.jobs.services import get_public_jobs, get_public_job_by_id
 
 def get_web_url():
     """Returns the configured public frontend URL, defaulting to local dev or production URL."""
-    return os.getenv(
+    raw_url = os.getenv(
         "CAREERLENS_WEB_URL",
-        "https://careerlens-ivory-ten.vercel.app"
-    ).rstrip("/")
+        "https://careerlens-ivory-ten.vercel.app",
+    ).strip()
+    if "," in raw_url:
+        raw_url = raw_url.split(",")[0].strip()
+    return raw_url.rstrip("/")
 
 
 def format_salary(salary_min, salary_max):
