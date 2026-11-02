@@ -37,25 +37,25 @@ export default function CandidateSidebar({ isOpen, open, onClose }) {
   }, []);
 
   const items = [
-    { to: '/candidate', label: t('nav.dashboard') || 'Dashboard', icon: LayoutDashboard, end: true },
-    { to: '/candidate/career-roadmap', label: 'Career Roadmap', icon: Compass },
-    { to: '/candidate/best-fit-jobs', label: 'Best-Fit Jobs', icon: Sparkles },
-    { to: '/candidate/jobs', label: t('nav.findJobs') || 'Find Jobs', icon: Search },
-    { to: '/candidate/applications', label: t('nav.myApplications') || 'My Applications', icon: FileText },
-    { to: '/candidate/saved-jobs', label: t('nav.savedJobs') || 'Saved Jobs', icon: Bookmark },
-    { to: '/candidate/interviews', label: t('nav.interviews') || 'Interviews', icon: CalendarCheck },
-    { to: '/candidate/messages', label: t('nav.messages') || 'Messages', icon: MessageSquare },
-    { to: '/candidate/profile', label: t('nav.myProfile') || 'My Profile', icon: User },
-    { to: '/candidate/resume', label: t('nav.resume') || 'Resume', icon: FileUser },
-    { to: '/candidate/cv-studio', label: 'CV Studio', icon: FileCheck },
-    { to: '/candidate/cv-versions', label: 'CV Versions', icon: History },
+    { to: '/candidate', label: t('nav.dashboard', 'Dashboard'), icon: LayoutDashboard, end: true },
+    { to: '/candidate/career-roadmap', label: t('nav.careerRoadmap', 'Career Roadmap'), icon: Compass },
+    { to: '/candidate/best-fit-jobs', label: t('nav.bestFitJobs', 'Best-Fit Jobs'), icon: Sparkles },
+    { to: '/candidate/jobs', label: t('nav.findJobs', 'Find Jobs'), icon: Search },
+    { to: '/candidate/applications', label: t('nav.myApplications', 'My Applications'), icon: FileText },
+    { to: '/candidate/saved-jobs', label: t('nav.savedJobs', 'Saved Jobs'), icon: Bookmark },
+    { to: '/candidate/interviews', label: t('nav.interviews', 'Interviews'), icon: CalendarCheck },
+    { to: '/candidate/messages', label: t('nav.messages', 'Messages'), icon: MessageSquare },
+    { to: '/candidate/profile', label: t('nav.myProfile', 'My Profile'), icon: User },
+    { to: '/candidate/resume', label: t('nav.resume', 'Resume'), icon: FileUser },
+    { to: '/candidate/cv-studio', label: t('nav.cvStudio', 'CV Studio'), icon: FileCheck },
+    { to: '/candidate/cv-versions', label: t('nav.cvVersions', 'CV Versions'), icon: History },
     {
       to: '/candidate/notifications',
-      label: t('nav.notifications') || 'Notifications',
+      label: t('nav.notifications', 'Notifications'),
       icon: Bell,
       badge: unreadCount > 0 ? unreadCount : null,
     },
-    { to: '/candidate/settings', label: t('nav.settings') || 'Settings', icon: Settings },
+    { to: '/candidate/settings', label: t('nav.settings', 'Settings'), icon: Settings },
   ];
 
   return (

@@ -29,7 +29,7 @@ export default function AuthPage() {
   const { t } = useLanguage();
   const { login, register, loading, error, clearError, isAuthenticated, user } = useAuth();
 
-  const isLogin = location.pathname === "/login";
+  const isLogin = location.pathname !== "/register";
 
   // Password visibility states
   const [showLoginPassword, setShowLoginPassword] = useState(false);

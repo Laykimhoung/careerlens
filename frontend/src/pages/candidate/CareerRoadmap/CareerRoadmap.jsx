@@ -253,9 +253,9 @@ export default function CareerRoadmap() {
             <Compass className="w-4 h-4 text-indigo-500" />
             <span>Career Navigation & Readiness</span>
           </div>
-          <h1 className="roadmap-header-title">My Career Roadmap</h1>
+          <h1 className="roadmap-header-title">{t('candidate.roadmap.title', 'My Career Roadmap')}</h1>
           <p className="roadmap-header-subtitle">
-            Bridge your technical skill gaps, master prioritized milestones, and systematically level up for your target role.
+            {t('candidate.roadmap.subtitle', 'Bridge your technical skill gaps, master prioritized milestones, and systematically level up for your target role.')}
           </p>
         </div>
 
@@ -264,10 +264,10 @@ export default function CareerRoadmap() {
             type="button"
             className="btn-roadmap-outline"
             onClick={handleRecalculate}
-            title="Re-run analysis against latest CV"
+            title={t('candidate.roadmap.regenerate', 'Recalculate')}
           >
             <RefreshCw className="w-4 h-4" />
-            <span>Recalculate</span>
+            <span>{t('candidate.roadmap.regenerate', 'Recalculate')}</span>
           </button>
 
           <button
@@ -276,7 +276,7 @@ export default function CareerRoadmap() {
             onClick={() => setIsSelectModalOpen(true)}
           >
             <Target className="w-4 h-4" />
-            <span>Change Target Career</span>
+            <span>{t('candidate.roadmap.switchRole', 'Change Target Career')}</span>
           </button>
         </div>
       </div>

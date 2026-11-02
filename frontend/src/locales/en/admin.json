@@ -173,5 +173,20 @@
   "noNotifications": "No system notifications logged yet.",
   "adminAvatar": "Administrator Avatar",
   "avatarSpecs": "Upload a square PNG or JPG image (up to 3MB).",
-  "uploadPhoto": "Upload Photo"
+  "uploadPhoto": "Upload Photo",
+  "role": "Administrator",
+  "applied": "Applied",
+  "review": "Review",
+  "interview": "Interview",
+  "offered": "Offered",
+  "accepted": "Accepted",
+  "users": "Users",
+  "jobs": "Jobs",
+  "applications": "Applications",
+  "editJob": "Edit Job",
+  "editCandidate": "Edit Candidate",
+  "newPasswordOptional": "New Password (optional)",
+  "rejectReason": "Reason for rejection (Optional)",
+  "selectCandidate": "Select candidate...",
+  "selectJob": "Select job..."
 }

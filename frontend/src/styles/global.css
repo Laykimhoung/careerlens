@@ -813,7 +813,8 @@ html[data-theme="dark"] body::after {
   background: rgba(9, 14, 34, 0.92) !important;
   backdrop-filter: blur(16px) !important;
   border-color: rgba(99, 142, 203, 0.28) !important;
-  position: relative !important;
+  position: sticky !important;
+  top: 0 !important;
   z-index: 100 !important;
 }
 

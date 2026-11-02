@@ -51,6 +51,14 @@
   "noMessages": "មិនទាន់មានសារ។",
   "exploreCareer": "ស្វែងរកឱកាសការងារដែលសមស្របសម្រាប់អ្នក",
   "searchPlaceholder": "ស្វែងរកការងារ, ជំនាញ...",
+  "popularSearches": "ការស្វែងរកពេញនិយម",
+  "recommendedRoles": "ការងារថ្មីៗ",
+  "matchingJobs": "ការងារត្រូវគ្នា",
+  "skillsKeywords": "ជំនាញ & ពាក្យគន្លឹះ",
+  "companies": "ក្រុមហ៊ុន",
+  "noSuggestionsFound": "រកមិនឃើញការណែនាំត្រូវគ្នាទេ",
+  "pressEnterToSearch": "ចុច Enter ដើម្បីស្វែងរកការងារទាំងអស់សម្រាប់",
+  "viewAllResults": "មើលលទ្ធផលទាំងអស់សម្រាប់",
   "profileReadiness": "ការត្រៀមខ្លួននៃប្រវត្តិរូប",
   "appOverviews": "ទិដ្ឋភាពរួមនៃពាក្យស្នើសុំ",
   "hiringPipeline": "ដំណើរការជ្រើសរើសការងាររបស់អ្នក",
@@ -102,8 +110,8 @@
   "noContacts": "មិនមានទំនាក់ទំនងទេ។",
   "noMessagesThread": "មិនទាន់មានសារនៅក្នុងការសន្ទនានេះទេ។ ផ្ញើសារខាងក្រោមដើម្បីចាប់ផ្តើមជជែក។",
   "loadingConversation": "កំពុងផ្ទុកការសន្ទនា...",
-  "backToApplications": "ត្រឡប់ទៅពាក្យស្នើសុំវិញ",
-  "backToJobs": "ត្រឡប់ទៅការងារវិញ",
+  "backToApplications": "ត្រឡប់ទៅពាក្យស្នើសុំ",
+  "backToJobs": "ត្រឡប់ទៅការងារ",
   "withdrawApplication": "ដកពាក្យស្នើសុំ",
   "withdrawConfirm": "តើអ្នកប្រាកដជាចង់ដកពាក្យស្នើសុំនេះទេ?",
   "applicationProgress": "វឌ្ឍនភាពពាក្យស្នើសុំ",
@@ -140,5 +148,41 @@
   "jobNotFound": "រកមិនឃើញការងារទេ",
   "jobNotFoundDesc": "ការងារដែលអ្នកកំពុងស្វែងរកមិនមាន ឬត្រូវបានលុបចេញ។",
   "scheduledInterviews": "ការសម្ភាសន៍ដែលបានកំណត់ពេល",
-  "uploadPhoto": "ផ្ទុកឡើងរូបថត"
+  "uploadPhoto": "ផ្ទុកឡើងរូបថត",
+  "role": "បេក្ខជន",
+  "inProgress": "កំពុងដំណើរការ",
+  "loadingProfile": "កំពុងផ្ទុកប្រវត្តិរូបពីម៉ាស៊ីនបម្រើ...",
+  "viewEditProfile": "មើល និងកែសម្រួលប្រវត្តិរូប",
+  "roadmap": {
+    "title": "ផែនទីបង្ហាញផ្លូវអាជីព AI & ផែនការអភិវឌ្ឍន៍",
+    "subtitle": "ផែនការជំហានផ្ទាល់ខ្លួនពីជំនាញបច្ចុប្បន្នទៅកាន់ការងារក្នុងក្តីស្រមៃ",
+    "regenerate": "បង្កើតផែនទីឡើងវិញ",
+    "switchRole": "ប្តូរតួនាទីគោលដៅ",
+    "milestones": "ជំហានសំខាន់ៗ",
+    "skillsGap": "ការវិភាគគម្លាតជំនាញ",
+    "inProgress": "កំពុងដំណើរការ",
+    "completed": "បានបញ្ចប់"
+  },
+  "bestFit": {
+    "title": "ការងារដែលត្រូវគ្នានឹង AI បំផុត",
+    "subtitle": "អនុសាសន៍ផ្ទាល់ខ្លួនចាត់ថ្នាក់ដោយពិន្ទុត្រូវគ្នារបស់ CareerLens AI",
+    "recalculate": "គណនាឡើងវិញ",
+    "matchScore": "ពិន្ទុត្រូវគ្នា",
+    "matchingSkills": "ជំនាញត្រូវគ្នា",
+    "missingSkills": "ជំនាញខ្វះខាត",
+    "applyNow": "ដាក់ពាក្យឥឡូវនេះ"
+  },
+  "cvStudio": {
+    "title": "ស្ទូឌីយោ CV & AI បង្កើនប្រសិទ្ធភាព",
+    "subtitle": "វិនិច្ឆ័យ បង្កើនគុណភាព និងសម្រប CV របស់អ្នកដោយសុក្រឹត",
+    "saveVersion": "រក្សាទុកកំណែ",
+    "download": "ទាញយក",
+    "exportDocx": "នាំចេញជា DOCX"
+  },
+  "cvVersions": {
+    "title": "ប្រវត្តិកំណែ CV",
+    "subtitle": "តាមដាន មើលជាមុន និងស្តារកំណែមុនៗនៃ CV របស់អ្នក",
+    "restore": "ស្តារកំណែឡើងវិញ"
+  },
+  "searchJobsCompanies": "ស្វែងរកបេក្ខជន, ការងារ..."
 }
