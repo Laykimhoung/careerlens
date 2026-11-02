@@ -1124,11 +1124,12 @@ html {
   width: 100%;
   max-width: 100%;
   margin: 16px auto 32px;
-  padding: 16px 0;
+  padding: 50px 0 20px;
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
+  overflow-x: clip;
+  overflow-y: visible;
 }
 
 .landing-about__center-card {
@@ -1255,7 +1256,9 @@ html {
   /* Compact center card so OrbitImages have space to orbit */
   .landing-about__orbit-wrapper {
     margin: 8px auto 20px;
-    padding: 8px 0;
+    padding: 36px 0 16px;
+    overflow-x: clip;
+    overflow-y: visible;
   }
 
   .landing-about__center-card {
