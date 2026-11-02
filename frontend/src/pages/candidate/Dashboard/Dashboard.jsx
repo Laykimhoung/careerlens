@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   ResponsiveContainer,
@@ -17,6 +17,7 @@ import {
   Calendar,
   Clock,
   ArrowUpRight,
+  ArrowRight,
   Bookmark,
   CheckCircle2,
   Video,
@@ -26,6 +27,10 @@ import {
   ShieldCheck,
   Zap,
   Compass,
+  Briefcase,
+  Building2,
+  Tag,
+  TrendingUp,
 } from "lucide-react";
 import { useAuth } from "../../../hooks/useAuth";
 import JobCard from "../../../components/candidate/JobCard";
@@ -33,6 +38,7 @@ import {
   getCurrentCandidateProfile,
   fetchSavedJobRecords,
   toggleSavedJobBackend,
+  getNotifications,
 } from "../../../services/candidateService";
 import { fetchNormalizedJobs } from "../../../services/jobService";
 import {
@@ -83,9 +89,12 @@ export default function CandidateDashboard() {
   const [interviews, setInterviews] = useState([]);
   const [offers, setOffers] = useState([]);
   const [savedRecords, setSavedRecords] = useState([]);
+  const [unreadNotifCount, setUnreadNotifCount] = useState(0);
   const [applyingJobId, setApplyingJobId] = useState(null);
   const [usageSummary, setUsageSummary] = useState(null);
   const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const searchBarRef = useRef(null);
 
   const [avatar, setAvatar] = useState(() => {
     return (
@@ -121,7 +130,7 @@ export default function CandidateDashboard() {
     setLoading(true);
     setError("");
     try {
-      const [prof, jobList, appList, intList, offerRes, savedList, usageRes] = await Promise.all([
+      const [prof, jobList, appList, intList, offerRes, savedList, usageRes, notifRes] = await Promise.all([
         getCurrentCandidateProfile(user?.id).catch(() => null),
         fetchNormalizedJobs(),
         fetchNormalizedApplications(),
@@ -129,6 +138,7 @@ export default function CandidateDashboard() {
         getOffers().catch(() => ({ data: [] })),
         fetchSavedJobRecords(),
         getUsageSummary().catch(() => ({ data: null })),
+        getNotifications().catch(() => ({ data: [] })),
       ]);
       setProfile(prof);
       setJobs(jobList.filter((j) => j.rawStatus === "PUBLISHED"));
@@ -136,6 +146,8 @@ export default function CandidateDashboard() {
       setInterviews(intList);
       setOffers(extractResults(offerRes));
       setSavedRecords(savedList);
+      const notifs = extractResults(notifRes);
+      setUnreadNotifCount(notifs.filter((n) => !n.is_read).length);
       if (usageRes?.data) setUsageSummary(usageRes.data);
     } catch (err) {
       setError(err.response?.data?.detail || "Failed to load dashboard data.");
@@ -147,6 +159,79 @@ export default function CandidateDashboard() {
   useEffect(() => {
     loadDashboard();
   }, [loadDashboard]);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (searchBarRef.current && !searchBarRef.current.contains(e.target)) {
+        setShowSuggestions(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const matchingSuggestions = useMemo(() => {
+    const q = searchFilter.trim().toLowerCase();
+
+    // Unique skills from loaded jobs
+    const allSkillsMap = new Map();
+    jobs.forEach((j) => {
+      const jobSkills = [
+        ...(Array.isArray(j.tags) ? j.tags : []),
+        ...(Array.isArray(j.skills) ? j.skills : []),
+      ];
+      jobSkills.forEach((s) => {
+        if (s && typeof s === "string") {
+          allSkillsMap.set(s.toLowerCase(), s);
+        }
+      });
+    });
+    // Ensure popular baseline skills exist
+    ["React", "Node.js", "Python", "JavaScript", "TypeScript", "UI/UX", "SQL", "Docker", "Tailwind CSS", "Figma"].forEach(
+      (s) => allSkillsMap.set(s.toLowerCase(), s)
+    );
+
+    const allSkills = Array.from(allSkillsMap.values());
+
+    if (!q) {
+      return {
+        jobs: jobs.slice(0, 4),
+        skills: allSkills.slice(0, 6),
+        companies: [],
+        totalCount: jobs.length,
+      };
+    }
+
+    const matchedJobs = jobs
+      .filter((j) => {
+        const titleMatch = j.title && j.title.toLowerCase().includes(q);
+        const compMatch = j.company && j.company.toLowerCase().includes(q);
+        const locMatch = j.location && j.location.toLowerCase().includes(q);
+        const tagMatch = Array.isArray(j.tags) && j.tags.some((t) => t.toLowerCase().includes(q));
+        const skillMatch = Array.isArray(j.skills) && j.skills.some((s) => s.toLowerCase().includes(q));
+        return titleMatch || compMatch || locMatch || tagMatch || skillMatch;
+      })
+      .slice(0, 4);
+
+    const matchedSkills = allSkills
+      .filter((s) => s.toLowerCase().includes(q))
+      .slice(0, 5);
+
+    const matchedCompanies = Array.from(
+      new Set(
+        jobs
+          .map((j) => j.company)
+          .filter((c) => c && c.toLowerCase().includes(q))
+      )
+    ).slice(0, 3);
+
+    return {
+      jobs: matchedJobs,
+      skills: matchedSkills,
+      companies: matchedCompanies,
+      totalCount: matchedJobs.length,
+    };
+  }, [jobs, searchFilter]);
 
   const savedJobIds = useMemo(
     () => new Set(savedRecords.map((r) => Number(r.job?.id || r.job_id || r.job))),
@@ -316,25 +401,197 @@ export default function CandidateDashboard() {
         </Link>
 
         <div className="cand-header-controls">
-          <div className="cand-search-bar">
+          <div className="cand-search-bar" ref={searchBarRef}>
             <Search size={18} className="cand-search-icon" />
             <input
               type="search"
               placeholder={t("candidate.searchPlaceholder", "Search jobs, skills, companies...")}
               value={searchFilter}
-              onChange={(e) => setSearchFilter(e.target.value)}
+              onChange={(e) => {
+                setSearchFilter(e.target.value);
+                setShowSuggestions(true);
+              }}
+              onFocus={() => setShowSuggestions(true)}
               onKeyDown={(e) => {
                 if (e.key === "Enter" && searchFilter.trim()) {
+                  setShowSuggestions(false);
                   navigate(`/candidate/jobs?q=${encodeURIComponent(searchFilter.trim())}`);
+                } else if (e.key === "Escape") {
+                  setShowSuggestions(false);
                 }
               }}
               className="cand-search-input"
+              autoComplete="off"
             />
+
+            {showSuggestions && (
+              <div className="cand-search-suggestions" role="listbox">
+                {!searchFilter.trim() ? (
+                  <div className="cand-sugg-section">
+                    <div className="cand-sugg-header">
+                      <TrendingUp size={13} />
+                      <span>{t("candidate.popularSearches", "Popular Searches")}</span>
+                    </div>
+                    <div className="cand-sugg-pills">
+                      {matchingSuggestions.skills.map((skill) => (
+                        <button
+                          key={skill}
+                          type="button"
+                          className="cand-sugg-pill"
+                          onMouseDown={(e) => {
+                            e.preventDefault();
+                            setSearchFilter(skill);
+                            setShowSuggestions(false);
+                            navigate(`/candidate/jobs?q=${encodeURIComponent(skill)}`);
+                          }}
+                        >
+                          <Sparkles size={11} />
+                          {skill}
+                        </button>
+                      ))}
+                    </div>
+                    {matchingSuggestions.jobs.length > 0 && (
+                      <div className="cand-sugg-sublist">
+                        <div className="cand-sugg-header">
+                          <Briefcase size={13} />
+                          <span>{t("candidate.recommendedRoles", "Recent Vacancies")}</span>
+                        </div>
+                        {matchingSuggestions.jobs.map((j) => (
+                          <div
+                            key={j.id}
+                            className="cand-sugg-job-item"
+                            onMouseDown={(e) => {
+                              e.preventDefault();
+                              setShowSuggestions(false);
+                              navigate(`/candidate/jobs/${j.id}`);
+                            }}
+                          >
+                            <div className="cand-sugg-job-info">
+                              <span className="cand-sugg-job-title">{j.title}</span>
+                              <span className="cand-sugg-job-meta">{j.company} • {j.location}</span>
+                            </div>
+                            <span className="cand-sugg-badge">{j.type}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <>
+                    {matchingSuggestions.jobs.length === 0 &&
+                    matchingSuggestions.skills.length === 0 &&
+                    matchingSuggestions.companies.length === 0 ? (
+                      <div className="cand-sugg-empty">
+                        <p className="cand-sugg-empty-title">
+                          {t("candidate.noSuggestionsFound", "No exact suggestions found")}
+                        </p>
+                        <p className="cand-sugg-empty-sub">
+                          {t("candidate.pressEnterToSearch", "Press Enter to search all jobs for")} &ldquo;{searchFilter}&rdquo;
+                        </p>
+                      </div>
+                    ) : (
+                      <>
+                        {matchingSuggestions.jobs.length > 0 && (
+                          <div className="cand-sugg-section">
+                            <div className="cand-sugg-header">
+                              <Briefcase size={13} />
+                              <span>{t("candidate.matchingJobs", "Matching Jobs")}</span>
+                            </div>
+                            {matchingSuggestions.jobs.map((j) => (
+                              <div
+                                key={j.id}
+                                className="cand-sugg-job-item"
+                                onMouseDown={(e) => {
+                                  e.preventDefault();
+                                  setShowSuggestions(false);
+                                  navigate(`/candidate/jobs/${j.id}`);
+                                }}
+                              >
+                                <div className="cand-sugg-job-info">
+                                  <span className="cand-sugg-job-title">{j.title}</span>
+                                  <span className="cand-sugg-job-meta">{j.company} • {j.location}</span>
+                                </div>
+                                <span className="cand-sugg-badge">{j.type}</span>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                        {matchingSuggestions.skills.length > 0 && (
+                          <div className="cand-sugg-section">
+                            <div className="cand-sugg-header">
+                              <Sparkles size={13} />
+                              <span>{t("candidate.skillsKeywords", "Skills & Tags")}</span>
+                            </div>
+                            <div className="cand-sugg-pills">
+                              {matchingSuggestions.skills.map((skill) => (
+                                <button
+                                  key={skill}
+                                  type="button"
+                                  className="cand-sugg-pill"
+                                  onMouseDown={(e) => {
+                                    e.preventDefault();
+                                    setSearchFilter(skill);
+                                    setShowSuggestions(false);
+                                    navigate(`/candidate/jobs?q=${encodeURIComponent(skill)}`);
+                                  }}
+                                >
+                                  <Tag size={11} />
+                                  {skill}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {matchingSuggestions.companies.length > 0 && (
+                          <div className="cand-sugg-section">
+                            <div className="cand-sugg-header">
+                              <Building2 size={13} />
+                              <span>{t("candidate.companies", "Companies")}</span>
+                            </div>
+                            {matchingSuggestions.companies.map((comp) => (
+                              <div
+                                key={comp}
+                                className="cand-sugg-company-item"
+                                onMouseDown={(e) => {
+                                  e.preventDefault();
+                                  setSearchFilter(comp);
+                                  setShowSuggestions(false);
+                                  navigate(`/candidate/jobs?q=${encodeURIComponent(comp)}`);
+                                }}
+                              >
+                                <Building2 size={14} className="cand-sugg-icon" />
+                                <span>{comp}</span>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </>
+                    )}
+
+                    <div
+                      className="cand-sugg-footer"
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        setShowSuggestions(false);
+                        navigate(`/candidate/jobs?q=${encodeURIComponent(searchFilter.trim())}`);
+                      }}
+                    >
+                      <span>
+                        {t("candidate.viewAllResults", "View all results for")} <strong>&ldquo;{searchFilter}&rdquo;</strong>
+                      </span>
+                      <ArrowRight size={14} />
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
           </div>
 
           <Link to="/candidate/notifications" className="cand-notif-btn" title={t("common.nav.notifications", "Notifications")}>
             <Bell size={20} />
-            {applications.length > 0 && <span className="cand-notif-badge">{applications.length}</span>}
+            {unreadNotifCount > 0 && <span className="cand-notif-badge">{unreadNotifCount}</span>}
           </Link>
         </div>
       </header>

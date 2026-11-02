@@ -51,6 +51,14 @@
   "noMessages": "No messages yet.",
   "exploreCareer": "Explore your tailored career opportunities",
   "searchPlaceholder": "Search jobs, skills...",
+  "popularSearches": "Popular Searches",
+  "recommendedRoles": "Recent Vacancies",
+  "matchingJobs": "Matching Jobs",
+  "skillsKeywords": "Skills & Tags",
+  "companies": "Companies",
+  "noSuggestionsFound": "No exact suggestions found",
+  "pressEnterToSearch": "Press Enter to search all jobs for",
+  "viewAllResults": "View all results for",
   "profileReadiness": "Profile Readiness",
   "appOverviews": "Application Overviews",
   "hiringPipeline": "Your hiring journey pipeline",
@@ -140,5 +148,41 @@
   "jobNotFound": "Job not found",
   "jobNotFoundDesc": "The job you are looking for does not exist or has been removed.",
   "scheduledInterviews": "Scheduled Interviews",
-  "uploadPhoto": "Upload Photo"
+  "uploadPhoto": "Upload Photo",
+  "role": "Candidate",
+  "inProgress": "In Progress",
+  "loadingProfile": "Loading profile from server...",
+  "viewEditProfile": "View and Edit Profile",
+  "roadmap": {
+    "title": "AI Career Roadmap & Growth Plan",
+    "subtitle": "Personalized milestone plan from your current skills to your dream job",
+    "regenerate": "Regenerate Roadmap",
+    "switchRole": "Switch Target Role",
+    "milestones": "Milestones",
+    "skillsGap": "Skills Gap Analysis",
+    "inProgress": "In Progress",
+    "completed": "Completed"
+  },
+  "bestFit": {
+    "title": "AI Best-Fit Job Matches",
+    "subtitle": "Personalized recommendations ranked by CareerLens AI match scoring",
+    "recalculate": "Recalculate Best Fit",
+    "matchScore": "Match Score",
+    "matchingSkills": "Matching Skills",
+    "missingSkills": "Missing Skills",
+    "applyNow": "Apply Now"
+  },
+  "cvStudio": {
+    "title": "CV Studio & AI Optimizer",
+    "subtitle": "Diagnose, enhance, and tailor your CV with precision",
+    "saveVersion": "Save Version",
+    "download": "Download",
+    "exportDocx": "Export DOCX"
+  },
+  "cvVersions": {
+    "title": "CV Version History",
+    "subtitle": "Track, preview, and restore previous versions of your resume",
+    "restore": "Restore Version"
+  },
+  "searchJobsCompanies": "Search applicants, jobs..."
 }

@@ -89,7 +89,17 @@ export default function CVStudio() {
   const [versions, setVersions] = useState([]);
   const [currentVersion, setCurrentVersion] = useState(null);
   const [editableContent, setEditableContent] = useState(null);
+  const [techSkillsInput, setTechSkillsInput] = useState("");
+  const [softSkillsInput, setSoftSkillsInput] = useState("");
   const [saveStatus, setSaveStatus] = useState("");
+
+  // Sync skill string buffers whenever a new version is loaded or generated
+  useEffect(() => {
+    if (editableContent?.skills) {
+      setTechSkillsInput((editableContent.skills.technical || []).join(", "));
+      setSoftSkillsInput((editableContent.skills.soft || []).join(", "));
+    }
+  }, [currentVersion?.id]);
   const [isApproving, setIsApproving] = useState(false);
   const [showDiffView, setShowDiffView] = useState(false);
   const [usageSummary, setUsageSummary] = useState(null);
@@ -135,6 +145,8 @@ export default function CVStudio() {
         const activeVer = versionList.find((v) => v.is_current) || versionList[0];
         setCurrentVersion(activeVer);
         setEditableContent(activeVer.content);
+        setTechSkillsInput((activeVer.content?.skills?.technical || []).join(", "));
+        setSoftSkillsInput((activeVer.content?.skills?.soft || []).join(", "));
         setSelectedTemplate(activeVer.template || "modern");
         if (searchParams.get("step") === "editor" || versionList.length > 0) {
           setCurrentStep("editor");
@@ -180,6 +192,8 @@ export default function CVStudio() {
       const newVersion = res.data;
       setCurrentVersion(newVersion);
       setEditableContent(newVersion.content);
+      setTechSkillsInput((newVersion.content?.skills?.technical || []).join(", "));
+      setSoftSkillsInput((newVersion.content?.skills?.soft || []).join(", "));
 
       // Refresh versions list and usage summary
       const [versRes, usageRes] = await Promise.all([
@@ -230,6 +244,8 @@ export default function CVStudio() {
       const res = await getResumeVersionById(versionId);
       setCurrentVersion(res.data);
       setEditableContent(res.data.content);
+      setTechSkillsInput((res.data.content?.skills?.technical || []).join(", "));
+      setSoftSkillsInput((res.data.content?.skills?.soft || []).join(", "));
       setSelectedTemplate(res.data.template || "modern");
     } catch {
       alert("Could not load version details.");
@@ -348,9 +364,9 @@ export default function CVStudio() {
               <span>My CV Versions ({versions.length})</span>
             </Link>
           </div>
-          <h1 className="studio-header__title">Transform & Polish Your CV</h1>
+          <h1 className="studio-header__title">{t('candidate.cvStudio.title', 'Transform & Polish Your CV')}</h1>
           <p className="studio-header__subtitle">
-            Turn your diagnostic weaknesses into an ATS-optimized, high-impact resume with verified facts.
+            {t('candidate.cvStudio.subtitle', 'Turn your diagnostic weaknesses into an ATS-optimized, high-impact resume with verified facts.')}
           </p>
         </div>
 
@@ -736,14 +752,21 @@ export default function CVStudio() {
                   <input
                     type="text"
                     className="studio-input"
-                    value={(editableContent.skills?.technical || []).join(", ")}
+                    value={techSkillsInput}
                     onChange={(e) => {
-                      const list = e.target.value.split(",").map((s) => s.trim()).filter(Boolean);
-                      setEditableContent({
-                        ...editableContent,
-                        skills: { ...editableContent.skills, technical: list },
-                      });
+                      const val = e.target.value;
+                      setTechSkillsInput(val);
+                      const list = val.split(",").map((s) => s.trim()).filter(Boolean);
+                      setEditableContent((prev) => ({
+                        ...prev,
+                        skills: { ...prev?.skills, technical: list },
+                      }));
                     }}
+                    onBlur={() => {
+                      const list = techSkillsInput.split(",").map((s) => s.trim()).filter(Boolean);
+                      setTechSkillsInput(list.join(", "));
+                    }}
+                    placeholder="e.g. Python, JavaScript, Django, PostgreSQL"
                   />
                 </div>
 
@@ -753,14 +776,21 @@ export default function CVStudio() {
                   <input
                     type="text"
                     className="studio-input"
-                    value={(editableContent.skills?.soft || []).join(", ")}
+                    value={softSkillsInput}
                     onChange={(e) => {
-                      const list = e.target.value.split(",").map((s) => s.trim()).filter(Boolean);
-                      setEditableContent({
-                        ...editableContent,
-                        skills: { ...editableContent.skills, soft: list },
-                      });
+                      const val = e.target.value;
+                      setSoftSkillsInput(val);
+                      const list = val.split(",").map((s) => s.trim()).filter(Boolean);
+                      setEditableContent((prev) => ({
+                        ...prev,
+                        skills: { ...prev?.skills, soft: list },
+                      }));
                     }}
+                    onBlur={() => {
+                      const list = softSkillsInput.split(",").map((s) => s.trim()).filter(Boolean);
+                      setSoftSkillsInput(list.join(", "));
+                    }}
+                    placeholder="e.g. Communication, Teamwork, Leadership, Agile"
                   />
                 </div>
 
