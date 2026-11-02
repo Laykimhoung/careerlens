@@ -103,6 +103,7 @@ INSTALLED_APPS = [
     "apps.jobs",
     "apps.applications",
     "apps.messaging",
+    "apps.telegram_bot",
 ]
 
 MIDDLEWARE = [

@@ -65,7 +65,12 @@
     "auditLogs": "កំណត់ហេតុ",
     "applicants": "អ្នកដាក់ពាក្យ",
     "companyProfile": "ប្រវត្តិរូបក្រុមហ៊ុន",
-    "talentPool": "ក្រុមអ្នកមានទេពកោសល្យ"
+    "talentPool": "ក្រុមអ្នកមានទេពកោសល្យ",
+    "careerRoadmap": "ផែនទីបង្ហាញផ្លូវអាជីព",
+    "bestFitJobs": "ការងារស័ក្តិសមបំផុត",
+    "cvStudio": "ស្ទូឌីយោ CV",
+    "cvVersions": "កំណែ CV នានា",
+    "candidateRanking": "ការចាត់ចំណាត់ថ្នាក់បេក្ខជន AI"
   },
   "theme": {
     "lightMode": "របៀបពន្លឺ",
@@ -179,5 +184,30 @@
   "teamYoueAge": "២១ ឆ្នាំ",
   "teamKimhoungRole": "អ្នកអភិវឌ្ឍន៍ Backend",
   "teamKimhoungTitle": "និស្សិត CS",
-  "teamKimhoungAge": "២១ ឆ្នាំ"
+  "teamKimhoungAge": "២១ ឆ្នាំ",
+  "welcomeTo": "សូមស្វាគមន៍មកកាន់",
+  "backToDashboard": "ត្រឡប់ទៅផ្ទាំងគ្រប់គ្រង",
+  "remove": "លុបចេញ",
+  "header": {
+    "searchCandidate": "ស្វែងរកការងារ, ក្រុមហ៊ុន, ជំនាញ...",
+    "searchCompany": "ស្វែងរកបេក្ខជន, ជំនាញ, ពាក្យស្នើសុំ...",
+    "searchAdmin": "ស្វែងរករហ័សអ្នកប្រើប្រាស់, ការងារ, កំណត់ហេតុ..."
+  },
+  "messages": {
+    "title": "សារ & ការសន្ទនាផ្ទាល់",
+    "subtitle": "ការសន្ទនាផ្ទាល់ជាមួយបេក្ខជន ក្រុមហ៊ុន និងអ្នកជ្រើសរើស",
+    "addMessage": "+ បន្ថែមសារ",
+    "searchPlaceholder": "ស្វែងរកការសន្ទនា...",
+    "all": "ទាំងអស់",
+    "unread": "មិនទាន់អាន",
+    "companies": "ក្រុមហ៊ុន",
+    "candidates": "បេក្ខជន",
+    "typeMessage": "សរសេរសារ...",
+    "send": "ផ្ញើ",
+    "newMessage": "ការសន្ទនាថ្មី",
+    "selectContact": "ជ្រើសរើសទំនាក់ទំនងដើម្បីចាប់ផ្តើមជជែក",
+    "searchContacts": "ស្វែងរកតាមឈ្មោះ អ៊ីមែល ឬតួនាទី...",
+    "online": "លើបណ្តាញ",
+    "noChatSelected": "ជ្រើសរើសការសន្ទនាដើម្បីចាប់ផ្តើមជជែក"
+  }
 }

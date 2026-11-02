@@ -46,24 +46,26 @@ export const deleteApplicationNote = (id) =>
 export const APPLICATION_STATUS_LABELS = {
   APPLIED: "Applied",
   REVIEWING: "Reviewing",
+  SHORTLISTED: "Shortlisted",
   INTERVIEW: "Interviewing",
   OFFERED: "Offered",
+  HIRED: "Hired",
   REJECTED: "Rejected",
 };
 
 export function toBackendApplicationStatus(value) {
   if (!value) return "APPLIED";
   const upper = String(value).trim().toUpperCase();
-  if (["APPLIED", "REVIEWING", "INTERVIEW", "OFFERED", "REJECTED"].includes(upper)) {
+  if (["APPLIED", "REVIEWING", "SHORTLISTED", "INTERVIEW", "OFFERED", "HIRED", "REJECTED"].includes(upper)) {
     return upper;
   }
-  if (upper === "SCREENING" || upper === "SHORTLISTED" || upper === "UNDER REVIEW") {
+  if (upper === "SCREENING" || upper === "UNDER REVIEW") {
     return "REVIEWING";
   }
   if (upper === "INTERVIEWING" || upper === "INTERVIEW SCHEDULED") {
     return "INTERVIEW";
   }
-  if (upper === "OFFER RECEIVED" || upper === "HIRED" || upper === "ACCEPTED") {
+  if (upper === "OFFER RECEIVED" || upper === "ACCEPTED") {
     return "OFFERED";
   }
   return "APPLIED";

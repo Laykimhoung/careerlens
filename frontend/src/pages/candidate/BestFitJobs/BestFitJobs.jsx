@@ -275,9 +275,9 @@ export default function BestFitJobs() {
             <Sparkles size={14} className="bf-sparkle-icon" />
             <span>AI Job Recommendation Engine</span>
           </div>
-          <h1 className="bf-header__title">Find My Best-Fit Jobs</h1>
+          <h1 className="bf-header__title">{t('candidate.bestFit.title', 'Find My Best-Fit Jobs')}</h1>
           <p className="bf-header__subtitle">
-            Ranked matches calculated by comparing your approved CV profile against actual open positions in CareerLens.
+            {t('candidate.bestFit.subtitle', 'Ranked matches calculated by comparing your approved CV profile against actual open positions in CareerLens.')}
           </p>
         </div>
 

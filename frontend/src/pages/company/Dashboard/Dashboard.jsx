@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "../../../hooks/useAuth";
 import { getCurrentCompanyProfile } from "../../../services/companyService";
+import { getNotifications } from "../../../services/candidateService";
 import { fetchNormalizedJobs } from "../../../services/jobService";
 import {
   fetchNormalizedApplications,
@@ -56,6 +57,7 @@ export default function CompanyDashboard() {
   const [applications, setApplications] = useState([]);
   const [interviews, setInterviews] = useState([]);
   const [offers, setOffers] = useState([]);
+  const [unreadNotifCount, setUnreadNotifCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [searchFilter, setSearchFilter] = useState("");
@@ -95,12 +97,13 @@ export default function CompanyDashboard() {
     setLoading(true);
     setError("");
     try {
-      const [compProf, allJobs, appList, intList, offerRes] = await Promise.all([
+      const [compProf, allJobs, appList, intList, offerRes, notifRes] = await Promise.all([
         getCurrentCompanyProfile(user?.id).catch(() => null),
         fetchNormalizedJobs(),
         fetchNormalizedApplications(),
         fetchInterviewsList().catch(() => []),
         getOffers().catch(() => ({ data: [] })),
+        getNotifications().catch(() => ({ data: [] })),
       ]);
       setCompanyProfile(compProf);
 
@@ -113,6 +116,8 @@ export default function CompanyDashboard() {
       setApplications(appList);
       setInterviews(intList);
       setOffers(extractResults(offerRes));
+      const notifs = extractResults(notifRes);
+      setUnreadNotifCount(notifs.filter((n) => !n.is_read).length);
     } catch (err) {
       setError(err.response?.data?.detail || "Failed to load company dashboard.");
     } finally {
@@ -213,7 +218,7 @@ export default function CompanyDashboard() {
 
           <Link to="/company/notifications" className="comp-notif-btn" title="Notifications">
             <Bell size={20} />
-            {applications.length > 0 && <span className="comp-notif-badge">{applications.length}</span>}
+            {unreadNotifCount > 0 && <span className="comp-notif-badge">{unreadNotifCount}</span>}
           </Link>
         </div>
       </header>

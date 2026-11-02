@@ -65,7 +65,12 @@
     "auditLogs": "Audit Logs",
     "applicants": "Applicants",
     "companyProfile": "Company Profile",
-    "talentPool": "Talent Pool"
+    "talentPool": "Talent Pool",
+    "careerRoadmap": "Career Roadmap",
+    "bestFitJobs": "Best-Fit Jobs",
+    "cvStudio": "CV Studio",
+    "cvVersions": "CV Versions",
+    "candidateRanking": "AI Candidate Ranking"
   },
   "theme": {
     "lightMode": "Light Mode",
@@ -179,5 +184,30 @@
   "teamYoueAge": "21 years",
   "teamKimhoungRole": "Team Leader & Backend Developer",
   "teamKimhoungTitle": "CS Student",
-  "teamKimhoungAge": "21 years"
+  "teamKimhoungAge": "21 years",
+  "welcomeTo": "Welcome to",
+  "backToDashboard": "Back to Dashboard",
+  "remove": "Remove",
+  "header": {
+    "searchCandidate": "Search jobs, companies, skills...",
+    "searchCompany": "Search candidates, skills, applications...",
+    "searchAdmin": "Quick search users, jobs, system logs..."
+  },
+  "messages": {
+    "title": "Messages & Real-Time Chat",
+    "subtitle": "Live messaging with candidates, companies & recruiters",
+    "addMessage": "+ Add Message",
+    "searchPlaceholder": "Search conversations...",
+    "all": "All",
+    "unread": "Unread",
+    "companies": "Companies",
+    "candidates": "Candidates",
+    "typeMessage": "Type a message...",
+    "send": "Send",
+    "newMessage": "New Conversation",
+    "selectContact": "Select a contact to start messaging",
+    "searchContacts": "Search contacts by name, email, or role...",
+    "online": "Online",
+    "noChatSelected": "Select a conversation to start chatting"
+  }
 }

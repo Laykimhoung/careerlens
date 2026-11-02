@@ -1,5 +1,6 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import { Link, useSearchParams } from "react-router-dom";
+import { Sparkles, Briefcase, Tag, TrendingUp, Search } from "lucide-react";
 import { fetchNormalizedJobs } from "../../../services/jobService";
 import {
   fetchNormalizedApplications,
@@ -24,11 +25,73 @@ export default function CandidateJobs() {
   const [applyingId, setApplyingId] = useState(null);
   const [savingId, setSavingId] = useState(null);
 
-  // Filter States
-  const [searchTerm, setSearchTerm] = useState("");
+  // Filter States & URL Synchronization
+  const [searchParams, setSearchParams] = useSearchParams();
+  const urlQ = searchParams.get("q") || searchParams.get("search") || "";
+  const [searchTerm, setSearchTerm] = useState(urlQ);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const searchWrapRef = useRef(null);
   const [typeFilter, setTypeFilter] = useState("");
   const [setupFilter, setSetupFilter] = useState("");
   const [industryFilter, setIndustryFilter] = useState("");
+
+  useEffect(() => {
+    const q = searchParams.get("q") || searchParams.get("search");
+    if (q !== null && q !== searchTerm) {
+      setSearchTerm(q);
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (searchWrapRef.current && !searchWrapRef.current.contains(e.target)) {
+        setShowSuggestions(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const suggestions = useMemo(() => {
+    const q = searchTerm.trim().toLowerCase();
+    const allSkillsMap = new Map();
+    jobs.forEach((j) => {
+      const skills = [
+        ...(Array.isArray(j.tags) ? j.tags : []),
+        ...(Array.isArray(j.skills) ? j.skills : []),
+      ];
+      skills.forEach((s) => {
+        if (s && typeof s === "string") allSkillsMap.set(s.toLowerCase(), s);
+      });
+    });
+    ["React", "Node.js", "Python", "JavaScript", "TypeScript", "UI/UX", "SQL", "Docker", "Tailwind CSS", "Figma"].forEach(
+      (s) => allSkillsMap.set(s.toLowerCase(), s)
+    );
+    const allSkills = Array.from(allSkillsMap.values());
+
+    if (!q) {
+      return {
+        jobs: jobs.slice(0, 3),
+        skills: allSkills.slice(0, 6),
+      };
+    }
+
+    const matchedJobs = jobs
+      .filter((j) => {
+        const text = `${j.title} ${j.company} ${j.location} ${(j.tags || []).join(" ")}`.toLowerCase();
+        return text.includes(q);
+      })
+      .slice(0, 4);
+
+    const matchedSkills = allSkills
+      .filter((s) => s.toLowerCase().includes(q))
+      .slice(0, 5);
+
+    return {
+      jobs: matchedJobs,
+      skills: matchedSkills,
+    };
+  }, [jobs, searchTerm]);
 
   const loadJobsData = useCallback(async () => {
     setLoading(true);
@@ -135,13 +198,87 @@ export default function CandidateJobs() {
 
       {/* Search and Filters */}
       <div className="cj-filters">
-        <input
-          type="text"
-          className="cj-search"
-          placeholder={t("candidate.searchJobsFilterPlaceholder", "Search title, company, skill or location")}
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
+        <div className="cj-search-wrap" ref={searchWrapRef}>
+          <input
+            type="text"
+            className="cj-search"
+            placeholder={t("candidate.searchJobsFilterPlaceholder", "Search title, company, skill or location")}
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setShowSuggestions(true);
+            }}
+            onFocus={() => setShowSuggestions(true)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === "Escape") {
+                setShowSuggestions(false);
+              }
+            }}
+            autoComplete="off"
+          />
+
+          {showSuggestions && (
+            <div className="cj-search-suggestions" role="listbox">
+              {suggestions.skills.length > 0 && (
+                <div className="cj-sugg-section">
+                  <div className="cj-sugg-header">
+                    <TrendingUp size={13} />
+                    <span>{searchTerm ? t("candidate.skillsKeywords", "Skills & Tags") : t("candidate.popularSearches", "Popular Searches")}</span>
+                  </div>
+                  <div className="cj-sugg-pills">
+                    {suggestions.skills.map((skill) => (
+                      <button
+                        key={skill}
+                        type="button"
+                        className="cj-sugg-pill"
+                        onMouseDown={(e) => {
+                          e.preventDefault();
+                          setSearchTerm(skill);
+                          setShowSuggestions(false);
+                        }}
+                      >
+                        <Tag size={11} />
+                        {skill}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {suggestions.jobs.length > 0 && (
+                <div className="cj-sugg-section">
+                  <div className="cj-sugg-header">
+                    <Briefcase size={13} />
+                    <span>{searchTerm ? t("candidate.matchingJobs", "Matching Jobs") : t("candidate.recommendedRoles", "Recent Vacancies")}</span>
+                  </div>
+                  {suggestions.jobs.map((j) => (
+                    <div
+                      key={j.id}
+                      className="cj-sugg-job-item"
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        setSearchTerm(j.title);
+                        setShowSuggestions(false);
+                      }}
+                    >
+                      <div className="cj-sugg-job-info">
+                        <span className="cj-sugg-job-title">{j.title}</span>
+                        <span className="cj-sugg-job-meta">{j.company} • {j.location}</span>
+                      </div>
+                      <span className="cj-sugg-badge">{j.type}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {searchTerm && suggestions.jobs.length === 0 && suggestions.skills.length === 0 && (
+                <div className="cj-sugg-empty">
+                  <span>{t("candidate.noSuggestionsFound", "No exact suggestions for")} &ldquo;{searchTerm}&rdquo;</span>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
         <div className="cj-dropdowns">
           <select
             className="cj-select"

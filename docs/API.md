@@ -65,6 +65,9 @@
 
 ### Jobs
 - **GET** `/api/jobs/`
+  - Query parameters:
+    - `search` (optional): Case-insensitive keyword search across job title, company name, required skills, and description.
+    - `location` (optional): Case-insensitive partial match on job location (e.g. `Phnom Penh`, `Remote`).
   - Description: Lists jobs. Unauthenticated users and candidates only see `PUBLISHED` jobs. Companies see their own jobs (any status) plus `PUBLISHED` jobs from other companies.
 
 - **GET** `/api/jobs/{id}/`
@@ -145,3 +148,13 @@
   - Description: Lists notifications for the authenticated user.
 - **POST** `/api/notifications/{id}/mark_as_read/`
   - Description: Marks a specific notification as read. Only the notification owner can perform this action.
+
+## Telegram Bot Integration
+
+### Webhook
+- **GET** `/api/telegram/webhook/`
+  - Description: Health check reporting readiness and whether bot token/secret are configured.
+- **POST** `/api/telegram/webhook/`
+  - Headers: `X-Telegram-Bot-Api-Secret-Token: <token>` (if `TELEGRAM_WEBHOOK_SECRET` is set in environment).
+  - Body: Telegram `Update` JSON payload.
+  - Description: Ingests incoming updates from Telegram Bot API, dispatching commands (`/start`, `/jobs`, `/search`, `/job <id>`) and callback queries.

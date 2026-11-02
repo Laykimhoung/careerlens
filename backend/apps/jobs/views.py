@@ -6,6 +6,7 @@ from django.utils import timezone
 from .models import Job, Skill, JobSkill, SavedJob
 from .serializers import JobSerializer, SkillSerializer, JobSkillSerializer, SavedJobSerializer
 from .permissions import IsJobOwnerOrReadOnly
+from .services import filter_jobs
 from apps.accounts.permissions import IsCompanyUser, IsCandidateUser, IsAdminUserRole, IsCompanyOrAdminUser
 from apps.accounts.models import CompanyProfile
 
@@ -44,6 +45,10 @@ class JobViewSet(viewsets.ModelViewSet):
         elif self.request.user.is_authenticated and self.request.user.role == self.request.user.Role.COMPANY:
             from django.db.models import Q
             qs = qs.filter(Q(status=Job.Status.PUBLISHED) | Q(company=self.request.user.company_profile))
+        search = self.request.query_params.get("search")
+        location = self.request.query_params.get("location")
+        if search or location:
+            qs = filter_jobs(qs, search=search, location=location, exclude_expired=False)
         return qs
 
     def perform_create(self, serializer):
