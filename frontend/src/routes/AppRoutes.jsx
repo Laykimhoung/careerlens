@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoute from "../components/common/ProtectedRoute";
 import MainLayout from "../layouts/MainLayout/MainLayout";
 import CandidateLayout from "../layouts/CandidateLayout/CandidateLayout";
@@ -32,6 +32,7 @@ import CompanyCreateJob from "../pages/company/CreateJob/CreateJob";
 import CompanyEditJob from "../pages/company/EditJob/EditJob";
 import CompanyApplicants from "../pages/company/Applicants/Applicants";
 import CompanyApplicantDetails from "../pages/company/ApplicantDetails/ApplicantDetails";
+import CompanyCandidateRanking from "../pages/company/CandidateRanking/CandidateRanking";
 import CompanyInterviews from "../pages/company/Interviews/Interviews";
 
 import AdminDashboard from "../pages/admin/Dashboard/Dashboard";
@@ -54,13 +55,12 @@ export default function AppRoutes() {
       <Routes>
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home />} />
+          <Route path="/auth" element={<AuthPage />} />
+          <Route path="/login" element={<AuthPage />} />
+          <Route path="/register" element={<AuthPage />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:uid/:token" element={<ResetPassword />} />
         </Route>
-
-        {/* Auth Routes (Full screen, no Navbar/Footer) */}
-        <Route path="/login" element={<AuthPage />} />
-        <Route path="/register" element={<AuthPage />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
 
         <Route
           path="/candidate"
@@ -76,7 +76,6 @@ export default function AppRoutes() {
           <Route path="cv-studio" element={<CandidateCVStudio />} />
           <Route path="cv-versions" element={<CandidateCVVersions />} />
           <Route path="career-roadmap" element={<CandidateCareerRoadmap />} />
-          <Route path="roadmap" element={<CandidateCareerRoadmap />} />
           <Route path="best-fit-jobs" element={<CandidateBestFitJobs />} />
           <Route path="jobs" element={<CandidateJobs />} />
           <Route path="jobs/:id" element={<CandidateJobDetails />} />
@@ -85,7 +84,7 @@ export default function AppRoutes() {
           <Route path="saved-jobs" element={<CandidateSavedJobs />} />
           <Route path="interviews" element={<CandidatePlaceholder title="Interviews" />} />
           <Route path="messages" element={<CandidateMessages />} />
-          <Route path="notifications" element={<CandidatePlaceholder title="Notifications" />} />
+          <Route path="notifications" element={<AdminNotifications />} />
           <Route path="settings" element={<CandidatePlaceholder title="Settings" />} />
         </Route>
 
@@ -104,11 +103,12 @@ export default function AppRoutes() {
           <Route path="jobs/:id/edit" element={<CompanyEditJob />} />
           <Route path="applicants" element={<CompanyApplicants />} />
           <Route path="applicants/:id" element={<CompanyApplicantDetails />} />
+          <Route path="candidate-ranking" element={<CompanyCandidateRanking />} />
           <Route path="interviews" element={<CompanyInterviews />} />
-          <Route path="messages" element={<CandidatePlaceholder title="Messages" />} />
+          <Route path="messages" element={<CandidateMessages />} />
           <Route path="talent-pool" element={<CandidatePlaceholder title="Talent Pool" />} />
           <Route path="reports" element={<CandidatePlaceholder title="Reports" />} />
-          <Route path="notifications" element={<CandidatePlaceholder title="Notifications" />} />
+          <Route path="notifications" element={<AdminNotifications />} />
           <Route path="settings" element={<CandidatePlaceholder title="Settings" />} />
         </Route>
 
@@ -134,6 +134,8 @@ export default function AppRoutes() {
           <Route path="notifications" element={<AdminNotifications />} />
           <Route path="settings" element={<AdminSettings />} />
         </Route>
+
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   );

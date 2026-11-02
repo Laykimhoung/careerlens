@@ -431,6 +431,7 @@ const createEngine = (root, config, setAspect) => {
   };
 
   const onLeave = () => {
+    st.items.forEach(it => it.el.removeAttribute('data-hovered'));
     st.hovered = false;
     st.hoverIndex = -1;
     wake();
@@ -439,6 +440,13 @@ const createEngine = (root, config, setAspect) => {
   const onOver = e => {
     const index = itemIndex(e.target);
     if (index !== st.hoverIndex) {
+      st.items.forEach((it, i) => {
+        if (i === index) {
+          it.el.setAttribute('data-hovered', '');
+        } else {
+          it.el.removeAttribute('data-hovered');
+        }
+      });
       st.hoverIndex = index;
       if (st.lut) render(performance.now());
     }
@@ -506,6 +514,14 @@ const createEngine = (root, config, setAspect) => {
   const activate = index => {
     const cfg = config.current;
     if (index < 0) return;
+    st.items.forEach((it, i) => {
+      if (i === index) {
+        it.el.setAttribute('data-hovered', '');
+      } else {
+        it.el.removeAttribute('data-hovered');
+      }
+    });
+    st.hoverIndex = index;
     if (cfg.clickToFront) bringToFront(index);
     cfg.onItemClick?.(index, cfg.sources[index]);
   };
@@ -689,7 +705,7 @@ export default function OrbitImages({
       images.map((image, index) =>
         typeof image === 'string'
           ? { src: image, alt: `${altPrefix} ${index + 1}` }
-          : { src: image.src, alt: image.alt ?? `${altPrefix} ${index + 1}` }
+          : { ...image, src: image.src, alt: image.alt ?? `${altPrefix} ${index + 1}` }
       ),
     [images, altPrefix]
   );
@@ -825,6 +841,44 @@ export default function OrbitImages({
           <div className="orbit-item-inner">
             <img src={item.src} alt={item.alt} draggable={false} decoding="async" className="orbit-image" />
           </div>
+          {(item.name || (item.details && item.details.length > 0) || item.role || item.age !== undefined) && (
+            <div className="orbit-item-tooltip" role="tooltip">
+              {item.name && <div className="orbit-item-tooltip__name">{item.name}</div>}
+              {item.details && item.details.length > 0 ? (
+                <ul className="orbit-item-tooltip__list">
+                  {item.details.map((detail, dIdx) => (
+                    <li key={dIdx} className="orbit-item-tooltip__item">
+                      <span className="orbit-item-tooltip__bullet" />
+                      <span className="orbit-item-tooltip__text">{detail}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <ul className="orbit-item-tooltip__list">
+                  {item.role && (
+                    <li className="orbit-item-tooltip__item">
+                      <span className="orbit-item-tooltip__bullet" />
+                      <span className="orbit-item-tooltip__text">{item.role}</span>
+                    </li>
+                  )}
+                  {item.education && (
+                    <li className="orbit-item-tooltip__item">
+                      <span className="orbit-item-tooltip__bullet" />
+                      <span className="orbit-item-tooltip__text">{item.education}</span>
+                    </li>
+                  )}
+                  {item.age !== undefined && item.age !== null && (
+                    <li className="orbit-item-tooltip__item">
+                      <span className="orbit-item-tooltip__bullet" />
+                      <span className="orbit-item-tooltip__text">
+                        {item.age} {item.ageUnit || 'years'}
+                      </span>
+                    </li>
+                  )}
+                </ul>
+              )}
+            </div>
+          )}
         </div>
       ))}
       {centerContent && (

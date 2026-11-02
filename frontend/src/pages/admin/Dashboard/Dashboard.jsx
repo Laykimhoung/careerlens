@@ -25,7 +25,8 @@ import {
   Briefcase,
   TrendingUp,
 } from 'lucide-react';
-import { fetchAdminDashboardData } from '../../../services/adminService';
+import { fetchAdminDashboardData, getAdminNotifications } from '../../../services/adminService';
+import { extractResults } from '../../../services/api';
 import { resetDemoStore } from '../../../services/member3DemoStore';
 import { useAuth } from '../../../hooks/useAuth';
 import RecruitmentWorkspaceBanner from '../../../components/illustrations/RecruitmentWorkspaceBanner';
@@ -59,6 +60,7 @@ export default function AdminDashboard() {
     error: null,
     analytics: null,
   });
+  const [unreadNotifCount, setUnreadNotifCount] = useState(0);
 
   const getAdminAvatar = (usr) => {
     const uid = usr?.id;
@@ -92,7 +94,12 @@ export default function AdminDashboard() {
 
   const loadData = useCallback(async () => {
     try {
-      const result = await fetchAdminDashboardData({ dateRange });
+      const [result, notifRes] = await Promise.all([
+        fetchAdminDashboardData({ dateRange }),
+        getAdminNotifications().catch(() => ({ data: [] })),
+      ]);
+      const notifs = extractResults(notifRes);
+      setUnreadNotifCount(notifs.filter((n) => !n.is_read).length);
       setState({
         loading: false,
         error: null,
@@ -247,7 +254,7 @@ export default function AdminDashboard() {
 
           <Link to="/admin/notifications" className="modern-notif-bell" title="Notifications">
             <Bell size={20} />
-            <span className="modern-notif-count">2</span>
+            {unreadNotifCount > 0 && <span className="modern-notif-count">{unreadNotifCount}</span>}
           </Link>
         </div>
       </header>

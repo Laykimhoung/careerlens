@@ -134,9 +134,9 @@ export default function CVVersions() {
             <History className="w-6 h-6 text-indigo-500" />
           </div>
           <div>
-            <h1 className="cv-versions-title">My CV Versions & History</h1>
+            <h1 className="cv-versions-title">{t('candidate.cvVersions.title', 'My CV Versions & History')}</h1>
             <p className="cv-versions-subtitle">
-              Inspect your revision history, compare quality scores, restore previous drafts, and manage AI usage credits.
+              {t('candidate.cvVersions.subtitle', 'Inspect your revision history, compare quality scores, restore previous drafts, and manage AI usage credits.')}
             </p>
           </div>
         </div>

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { Link } from "react-router-dom";
 import api from "../../../services/api";
 import Radar from "../../../components/ui/Radar";
@@ -82,6 +82,52 @@ export default function Home() {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  const aboutOrbitImages = useMemo(
+    () => [
+      {
+        src: coachImg,
+        alt: t("common.teamCoachName", "Coach"),
+        name: t("common.teamCoachName", "Coach"),
+        details: [
+          t("common.teamCoachRole", "Project Advisor"),
+          t("common.teamCoachTitle", "Career Coach"),
+          t("common.teamCoachAge", "28 years"),
+        ],
+      },
+      {
+        src: enImg,
+        alt: t("common.teamEnName", "Sokun En"),
+        name: t("common.teamEnName", "Sokun En"),
+        details: [
+          t("common.teamEnRole", "Frontend Developer"),
+          t("common.teamEnTitle", "CS Student"),
+          t("common.teamEnAge", "21 years"),
+        ],
+      },
+      {
+        src: youeImg,
+        alt: t("common.teamYoueName", "Eiv Youe"),
+        name: t("common.teamYoueName", "Eiv Youe"),
+        details: [
+          t("common.teamYoueRole", "Frontend Developer"),
+          t("common.teamYoueTitle", "CS Student"),
+          t("common.teamYoueAge", "21 years"),
+        ],
+      },
+      {
+        src: kimhoungImg,
+        alt: t("common.teamKimhoungName", "Lay Kimhoung"),
+        name: t("common.teamKimhoungName", "Lay Kimhoung"),
+        details: [
+          t("common.teamKimhoungRole", "Backend Developer"),
+          t("common.teamKimhoungTitle", "CS Student"),
+          t("common.teamKimhoungAge", "21 years"),
+        ],
+      },
+    ],
+    [t]
+  );
 
   const [stats, setStats] = useState({
     students: 0,
@@ -611,7 +657,7 @@ export default function Home() {
               {/* Orbiting Images Showcase */}
               <div className="landing-about__orbit-wrapper landing-animate-on-scroll landing-stagger-3">
                 <OrbitImages
-                  images={ABOUT_ORBIT_IMAGES}
+                  images={aboutOrbitImages}
                   shape="ellipse"
                   radiusX={isMobile ? 240 : 460}
                   radiusY={isMobile ? 75 : 85}
@@ -625,7 +671,7 @@ export default function Home() {
                   pathDash={8}
                   itemRadius={isMobile ? 16 : 24}
                   hoverScale={1.16}
-                  hoverSpeed={0.25}
+                  hoverSpeed={0}
                   draggable={true}
                   clickToFront={true}
                   centerContent={
