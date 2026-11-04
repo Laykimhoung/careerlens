@@ -157,21 +157,21 @@ export default function CandidateDashboard() {
     try {
       const [prof, jobList, appList, intList, offerRes, savedList, usageRes, notifRes, geminiRes] = await Promise.all([
         getCurrentCandidateProfile(user?.id).catch(() => null),
-        fetchNormalizedJobs(),
-        fetchNormalizedApplications(),
+        fetchNormalizedJobs().catch(() => []),
+        fetchNormalizedApplications().catch(() => []),
         fetchInterviewsList().catch(() => []),
         getOffers().catch(() => ({ data: [] })),
-        fetchSavedJobRecords(),
+        fetchSavedJobRecords().catch(() => []),
         getUsageSummary().catch(() => ({ data: null })),
         getNotifications().catch(() => ({ data: [] })),
         getGeminiKeyStatus().catch(() => ({ data: null })),
       ]);
       setProfile(prof);
-      setJobs(jobList.filter((j) => j.rawStatus === "PUBLISHED"));
-      setApplications(appList);
-      setInterviews(intList);
+      setJobs((jobList || []).filter((j) => j.rawStatus === "PUBLISHED"));
+      setApplications(appList || []);
+      setInterviews(intList || []);
       setOffers(extractResults(offerRes));
-      setSavedRecords(savedList);
+      setSavedRecords(savedList || []);
       const notifs = extractResults(notifRes);
       setUnreadNotifCount(notifs.filter((n) => !n.is_read).length);
       if (usageRes?.data) setUsageSummary(usageRes.data);
@@ -180,7 +180,13 @@ export default function CandidateDashboard() {
         if (!geminiRes.data.has_key) setShowKeyForm(true);
       }
     } catch (err) {
-      setError(err.response?.data?.detail || "Failed to load dashboard data.");
+      console.error("Dashboard loading error:", err);
+      const detail =
+        err.response?.data?.detail ||
+        err.response?.data?.message ||
+        err.message ||
+        "Failed to load dashboard data.";
+      setError(detail);
     } finally {
       setLoading(false);
     }
@@ -214,9 +220,16 @@ export default function CandidateDashboard() {
       });
       setTimeout(() => setGeminiNotice({ type: "", text: "" }), 5000);
     } catch (err) {
+      console.error("Gemini API key validation error:", err);
+      const detail =
+        err.response?.data?.detail ||
+        err.response?.data?.error ||
+        err.response?.data?.message ||
+        err.message ||
+        "Failed to validate Gemini API key.";
       setGeminiNotice({
         type: "error",
-        text: err.response?.data?.detail || "Failed to validate Gemini API key.",
+        text: detail,
       });
     } finally {
       setGeminiLoading(false);

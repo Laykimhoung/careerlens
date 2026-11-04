@@ -102,6 +102,9 @@ class SavedJobViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, IsCandidateUser]
 
     def get_queryset(self):
+        if not hasattr(self.request.user, 'candidate_profile'):
+            from apps.accounts.models import CandidateProfile
+            CandidateProfile.objects.get_or_create(user=self.request.user)
         return (
             SavedJob.objects.select_related('job__company__user')
             .prefetch_related('job__job_skills__skill')
@@ -112,6 +115,9 @@ class SavedJobViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         from django.db import IntegrityError, transaction
         from rest_framework import serializers as drf_serializers
+        from apps.accounts.models import CandidateProfile
+        if not hasattr(self.request.user, 'candidate_profile'):
+            CandidateProfile.objects.get_or_create(user=self.request.user)
         job = serializer.validated_data.get('job')
         if SavedJob.objects.filter(candidate=self.request.user.candidate_profile, job=job).exists():
             raise drf_serializers.ValidationError({"detail": "Job is already saved."})

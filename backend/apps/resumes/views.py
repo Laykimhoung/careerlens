@@ -20,6 +20,9 @@ from apps.accounts.models import CandidateProfile
 def _resolve_candidate(request):
     if hasattr(request.user, "candidate_profile"):
         return request.user.candidate_profile
+    if request.user.role == request.user.Role.CANDIDATE:
+        profile, _ = CandidateProfile.objects.get_or_create(user=request.user)
+        return profile
     if request.user.role == request.user.Role.ADMIN:
         cand_id = request.query_params.get("candidate_id") or (
             request.data.get("candidate_id") if isinstance(request.data, dict) else None

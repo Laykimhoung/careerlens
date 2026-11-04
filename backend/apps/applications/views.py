@@ -31,8 +31,12 @@ class ApplicationViewSet(viewsets.ModelViewSet):
         if self.request.user.role == self.request.user.Role.ADMIN:
             return base_qs.all().order_by('-applied_at')
         elif self.request.user.role == self.request.user.Role.CANDIDATE:
+            if not hasattr(self.request.user, 'candidate_profile'):
+                return Application.objects.none()
             return base_qs.filter(candidate=self.request.user.candidate_profile).order_by('-applied_at')
         elif self.request.user.role == self.request.user.Role.COMPANY:
+            if not hasattr(self.request.user, 'company_profile'):
+                return Application.objects.none()
             return base_qs.filter(job__company=self.request.user.company_profile).order_by('-applied_at')
         return Application.objects.none()
 
@@ -283,8 +287,12 @@ class ApplicationStatusHistoryViewSet(viewsets.ReadOnlyModelViewSet):
         if self.request.user.role == self.request.user.Role.ADMIN:
             return ApplicationStatusHistory.objects.all().order_by('created_at')
         elif self.request.user.role == self.request.user.Role.CANDIDATE:
+            if not hasattr(self.request.user, 'candidate_profile'):
+                return ApplicationStatusHistory.objects.none()
             return ApplicationStatusHistory.objects.filter(application__candidate=self.request.user.candidate_profile).order_by('created_at')
         elif self.request.user.role == self.request.user.Role.COMPANY:
+            if not hasattr(self.request.user, 'company_profile'):
+                return ApplicationStatusHistory.objects.none()
             return ApplicationStatusHistory.objects.filter(application__job__company=self.request.user.company_profile).order_by('created_at')
         return ApplicationStatusHistory.objects.none()
 
@@ -296,8 +304,12 @@ class InterviewViewSet(viewsets.ModelViewSet):
         if self.request.user.role == self.request.user.Role.ADMIN:
             return Interview.objects.all().order_by('scheduled_at')
         elif self.request.user.role == self.request.user.Role.CANDIDATE:
+            if not hasattr(self.request.user, 'candidate_profile'):
+                return Interview.objects.none()
             return Interview.objects.filter(application__candidate=self.request.user.candidate_profile).order_by('scheduled_at')
         elif self.request.user.role == self.request.user.Role.COMPANY:
+            if not hasattr(self.request.user, 'company_profile'):
+                return Interview.objects.none()
             return Interview.objects.filter(application__job__company=self.request.user.company_profile).order_by('scheduled_at')
         return Interview.objects.none()
 
@@ -346,8 +358,12 @@ class OfferViewSet(viewsets.ModelViewSet):
         if self.request.user.role == self.request.user.Role.ADMIN:
             return Offer.objects.all().order_by('-sent_at')
         elif self.request.user.role == self.request.user.Role.CANDIDATE:
+            if not hasattr(self.request.user, 'candidate_profile'):
+                return Offer.objects.none()
             return Offer.objects.filter(application__candidate=self.request.user.candidate_profile).order_by('-sent_at')
         elif self.request.user.role == self.request.user.Role.COMPANY:
+            if not hasattr(self.request.user, 'company_profile'):
+                return Offer.objects.none()
             return Offer.objects.filter(application__job__company=self.request.user.company_profile).order_by('-sent_at')
         return Offer.objects.none()
 
