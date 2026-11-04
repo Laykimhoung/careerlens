@@ -75,3 +75,34 @@ class JobTests(APITestCase):
         response = self.client.post(reverse('saved-job-list'), data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue(SavedJob.objects.filter(candidate=self.candidate_profile, job=self.job1_published).exists())
+
+    def test_job_recommendations_get(self):
+        self.client.force_authenticate(user=self.candidate_user)
+        url = reverse('job_recommendations')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('count', response.data)
+        self.assertIn('top_score', response.data)
+        self.assertIn('results', response.data)
+        self.assertGreaterEqual(response.data['count'], 1)
+        rec = response.data['results'][0]
+        self.assertIn('match_score', rec)
+        self.assertIn('score_breakdown', rec)
+        self.assertIn('matching_skills', rec)
+        self.assertIn('missing_skills', rec)
+        self.assertIn('explanation', rec)
+        self.assertIn('improvement_suggestions', rec)
+
+    def test_job_recommendations_post_preferences(self):
+        self.client.force_authenticate(user=self.candidate_user)
+        url = reverse('job_recommendations')
+        pref_data = {
+            'target_role': 'Job 1',
+            'preferred_location': 'Remote',
+            'preferred_employment_type': 'FULL_TIME',
+            'preferred_workplace_type': 'ON_SITE',
+        }
+        response = self.client.post(url, pref_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['target_role'], 'Job 1')
+        self.assertIn('results', response.data)

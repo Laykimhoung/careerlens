@@ -17,9 +17,10 @@ class ApplicationSerializer(serializers.ModelSerializer):
         read_only_fields = ('candidate', 'candidate_details', 'applied_at', 'updated_at', 'status')
 
 class ApplicationUpdateSerializer(serializers.ModelSerializer):
+    note = serializers.CharField(write_only=True, required=False, allow_blank=True)
     class Meta:
         model = Application
-        fields = ('status',)
+        fields = ('status', 'note')
 
 class ApplicationStatusHistorySerializer(serializers.ModelSerializer):
     class Meta:
