@@ -66,7 +66,6 @@ class TelegramWebhookView(View):
                 bot.process_new_updates([update])
         except Exception as exc:
             logger.exception("Error processing Telegram update: %s", exc)
-            # Return HTTP 200 so Telegram does not continuously retry failing updates in a loop
             return HttpResponse("Processed with errors", status=200)
 
         return HttpResponse("OK", status=200)
