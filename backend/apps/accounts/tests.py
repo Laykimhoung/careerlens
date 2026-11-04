@@ -27,6 +27,30 @@ class AuthenticationTests(APITestCase):
         self.assertTrue(CandidateProfile.objects.filter(user=user).exists())
         self.assertFalse(CompanyProfile.objects.filter(user=user).exists())
 
+    def test_register_candidate_with_major_and_skills(self):
+        data = {
+            "username": "candidate_tech",
+            "email": "candidate_tech@example.com",
+            "password": "StrongPassword123!",
+            "first_name": "Alice",
+            "last_name": "Dev",
+            "role": User.Role.CANDIDATE,
+            "university": "Royal University of Phnom Penh",
+            "major": "Computer Science",
+            "graduation_year": 2026,
+            "skills": ["React", "Python", "Docker"]
+        }
+        response = self.client.post(self.register_url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        user = User.objects.get(username="candidate_tech")
+        profile = CandidateProfile.objects.get(user=user)
+        self.assertEqual(profile.major, "Computer Science")
+        self.assertEqual(profile.university, "Royal University of Phnom Penh")
+        skill_names = list(profile.skills.values_list('skill__name', flat=True))
+        self.assertIn("React", skill_names)
+        self.assertIn("Python", skill_names)
+        self.assertIn("Docker", skill_names)
+
     def test_register_company(self):
         data = {
             "username": "company1",

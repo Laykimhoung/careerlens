@@ -366,10 +366,14 @@ function CandidateInterviewsView() {
                   </div>
                 )}
               </div>
-              {iv.meeting_link && (
-                <a href={iv.meeting_link} target="_blank" rel="noreferrer">
+              {(iv.meeting_link || String(iv.location || "").toLowerCase().includes("video")) && (
+                <a
+                  href={iv.meeting_link || `https://meet.jit.si/CareerLens-Interview-${iv.application || iv.id}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   <Button variant="primary" size="sm">
-                    Join Video Call
+                    🎥 Join Video Call
                   </Button>
                 </a>
               )}

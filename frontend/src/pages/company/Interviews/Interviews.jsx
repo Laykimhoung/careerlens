@@ -97,11 +97,13 @@ export default function Interviews() {
     setStatusMsg({ type: "", text: "" });
     try {
       const isoDateTime = new Date(`${date}T${time}`).toISOString();
+      const resolvedLink =
+        meetingLink || (format === "Video call" ? `https://meet.jit.si/CareerLens-Interview-${appId}-${Date.now().toString(36)}` : "");
       const payload = {
         application: appId,
         scheduled_at: isoDateTime,
-        location,
-        meeting_link: meetingLink,
+        location: location || format,
+        meeting_link: resolvedLink,
         status: "SCHEDULED",
       };
       await createInterview(payload);

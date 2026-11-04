@@ -19,7 +19,14 @@ class MessageViewSet(viewsets.ModelViewSet):
         ).order_by('-sent_at')
 
     def perform_create(self, serializer):
-        serializer.save(sender=self.request.user)
+        msg = serializer.save(sender=self.request.user)
+        if msg.recipient != self.request.user:
+            sender_name = f"{self.request.user.first_name} {self.request.user.last_name}".strip() or self.request.user.username
+            Notification.objects.create(
+                user=msg.recipient,
+                message=f"New message from {sender_name}: {msg.text[:50]}",
+                type=Notification.Type.INFO
+            )
 
     @action(detail=True, methods=['post'])
     def mark_as_read(self, request, pk=None):

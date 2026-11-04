@@ -180,7 +180,7 @@ export default function Messages() {
     }
   }, [searchParams, directoryContacts, messages, user?.id]);
 
-  // 2. Real-Time High-Frequency Polling (every 2.5 seconds)
+  // 2. Real-Time High-Frequency Polling (every 2 seconds + on tab focus)
   useEffect(() => {
     let isMounted = true;
 
@@ -202,10 +202,15 @@ export default function Messages() {
       }
     };
 
-    const intervalId = setInterval(pollMessages, 2500);
+    const intervalId = setInterval(pollMessages, 2000);
+    window.addEventListener("focus", pollMessages);
+    document.addEventListener("visibilitychange", pollMessages);
+
     return () => {
       isMounted = false;
       clearInterval(intervalId);
+      window.removeEventListener("focus", pollMessages);
+      document.removeEventListener("visibilitychange", pollMessages);
     };
   }, []);
 
