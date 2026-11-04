@@ -11,6 +11,27 @@ import { updateMeApi } from "../../../services/authService";
 import { useLanguage } from "../../../context/LanguageContext";
 import "./Profile.css";
 
+const SUGGESTED_PROFILE_SKILLS = [
+  "React",
+  "Node.js",
+  "Python",
+  "JavaScript",
+  "TypeScript",
+  "SQL",
+  "PostgreSQL",
+  "Git",
+  "Docker",
+  "Figma",
+  "UI/UX",
+  "Java",
+  "C++",
+  "HTML/CSS",
+  "Tailwind CSS",
+  "Next.js",
+  "AWS",
+  "Machine Learning",
+];
+
 export default function CandidateProfile() {
   const { user, refreshUser } = useAuth();
   const { t } = useLanguage();
@@ -20,6 +41,7 @@ export default function CandidateProfile() {
   const [fetching, setFetching] = useState(true);
   const [loading, setLoading] = useState(false);
   const [statusMsg, setStatusMsg] = useState({ type: "", text: "" });
+  const [skillInput, setSkillInput] = useState("");
 
   const [values, setValues] = useState({
     full_name: user?.full_name || "",
@@ -29,6 +51,7 @@ export default function CandidateProfile() {
     major: "",
     graduation_year: "",
     bio: "",
+    skills: [],
   });
 
   const loadProfile = useCallback(async () => {
@@ -43,6 +66,9 @@ export default function CandidateProfile() {
           u.username ||
           user?.full_name ||
           "";
+        const skillList = (cand.skills || [])
+          .map((s) => (typeof s === "string" ? s : s?.name || s?.skill?.name))
+          .filter(Boolean);
         setValues({
           full_name: fullName,
           email: u.email || user?.email || "",
@@ -51,6 +77,7 @@ export default function CandidateProfile() {
           major: cand.major || "",
           graduation_year: cand.graduation_year ? String(cand.graduation_year) : "",
           bio: cand.bio || "",
+          skills: skillList,
         });
       }
     } catch (err) {
@@ -74,6 +101,38 @@ export default function CandidateProfile() {
     setValues((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleAddSkill = (e) => {
+    if (e) e.preventDefault();
+    const trimmed = skillInput.trim();
+    if (!trimmed) return;
+    setValues((prev) => {
+      const current = prev.skills || [];
+      if (!current.some((s) => s.toLowerCase() === trimmed.toLowerCase())) {
+        return { ...prev, skills: [...current, trimmed] };
+      }
+      return prev;
+    });
+    setSkillInput("");
+  };
+
+  const handleRemoveSkill = (skillToRemove) => {
+    setValues((prev) => ({
+      ...prev,
+      skills: (prev.skills || []).filter((s) => s !== skillToRemove),
+    }));
+  };
+
+  const handleToggleSkill = (skill) => {
+    setValues((prev) => {
+      const current = prev.skills || [];
+      const exists = current.some((s) => s.toLowerCase() === skill.toLowerCase());
+      if (exists) {
+        return { ...prev, skills: current.filter((s) => s.toLowerCase() !== skill.toLowerCase()) };
+      }
+      return { ...prev, skills: [...current, skill] };
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -91,6 +150,7 @@ export default function CandidateProfile() {
         major: values.major.trim(),
         graduation_year: values.graduation_year ? Number(values.graduation_year) : null,
         bio: values.bio.trim(),
+        skills: values.skills || [],
       };
 
       if (profileId) {
@@ -319,6 +379,112 @@ export default function CandidateProfile() {
               rows={5}
               placeholder="Write a short professional bio..."
             />
+
+            {/* Skills & Technologies Section */}
+            <div className="profile-skills-section">
+              <div className="profile-skills-header">
+                <div>
+                  <h3 className="profile-skills-title">
+                    {t("candidate.skillsAndTech", "Skills & Technologies")}
+                  </h3>
+                  <p className="profile-skills-subtitle">
+                    {t(
+                      "candidate.skillsSubtitle",
+                      "These skills are evaluated directly by our AI matching engine to match you with recommended jobs and roadmap milestones."
+                    )}
+                  </p>
+                </div>
+                <span className="profile-skills-counter">
+                  {(values.skills || []).length} {t("candidate.skillsCount", "skills")}
+                </span>
+              </div>
+
+              {!isEditing ? (
+                <div className="profile-skills-badges">
+                  {(values.skills || []).length > 0 ? (
+                    values.skills.map((s) => (
+                      <span key={s} className="profile-skill-badge">
+                        {s}
+                      </span>
+                    ))
+                  ) : (
+                    <p className="profile-skills-empty">
+                      {t(
+                        "candidate.noSkillsYet",
+                        "No skills added yet. Click 'Edit Profile' below to add your technical skills."
+                      )}
+                    </p>
+                  )}
+                </div>
+              ) : (
+                <div className="profile-skills-editor">
+                  {/* Removable Selected Tags */}
+                  {(values.skills || []).length > 0 && (
+                    <div className="profile-skills-tags-editable">
+                      {values.skills.map((s) => (
+                        <span key={s} className="profile-skill-tag-removable">
+                          <span>{s}</span>
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveSkill(s)}
+                            title={`Remove ${s}`}
+                          >
+                            &times;
+                          </button>
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Custom Skill Input */}
+                  <div className="profile-skill-add-row">
+                    <input
+                      type="text"
+                      value={skillInput}
+                      onChange={(e) => setSkillInput(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          handleAddSkill();
+                        }
+                      }}
+                      placeholder="Type a skill (e.g. React, Python, Docker) and press Enter"
+                      className="profile-skill-input"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleAddSkill}
+                      disabled={!skillInput.trim()}
+                      className="profile-btn-add-skill"
+                    >
+                      + Add Skill
+                    </button>
+                  </div>
+
+                  {/* Popular Suggestions */}
+                  <div className="profile-skills-suggestions">
+                    <span className="profile-skills-suggestions-label">Popular Suggestions:</span>
+                    <div className="profile-suggestions-grid">
+                      {SUGGESTED_PROFILE_SKILLS.map((s) => {
+                        const isSelected = (values.skills || []).some(
+                          (item) => item.toLowerCase() === s.toLowerCase()
+                        );
+                        return (
+                          <button
+                            key={s}
+                            type="button"
+                            className={`profile-suggestion-chip ${isSelected ? "is-selected" : ""}`}
+                            onClick={() => handleToggleSkill(s)}
+                          >
+                            {isSelected ? `✓ ${s}` : `+ ${s}`}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
 
             <div className="profile-form__actions">
               {!isEditing ? (

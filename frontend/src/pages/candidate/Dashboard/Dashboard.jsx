@@ -31,9 +31,21 @@ import {
   Building2,
   Tag,
   TrendingUp,
+  Key,
+  Eye,
+  EyeOff,
+  Trash2,
+  ExternalLink,
+  AlertCircle,
+  Loader2,
 } from "lucide-react";
 import { useAuth } from "../../../hooks/useAuth";
 import JobCard from "../../../components/candidate/JobCard";
+import {
+  getGeminiKeyStatus,
+  saveGeminiKey,
+  deleteGeminiKey,
+} from "../../../services/authService";
 import {
   getCurrentCandidateProfile,
   fetchSavedJobRecords,
@@ -96,6 +108,19 @@ export default function CandidateDashboard() {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const searchBarRef = useRef(null);
 
+  // Gemini BYOK AI Engine state
+  const [geminiStatus, setGeminiStatus] = useState({
+    has_key: false,
+    key_preview: "",
+    model: "gemini-3.5-flash-lite",
+    status: "not_configured",
+  });
+  const [geminiKeyInput, setGeminiKeyInput] = useState("");
+  const [showKeyForm, setShowKeyForm] = useState(false);
+  const [showRawKey, setShowRawKey] = useState(false);
+  const [geminiLoading, setGeminiLoading] = useState(false);
+  const [geminiNotice, setGeminiNotice] = useState({ type: "", text: "" });
+
   const [avatar, setAvatar] = useState(() => {
     return (
       (user?.id ? localStorage.getItem(`careerlens_avatar_${user.id}`) : null) ||
@@ -130,7 +155,7 @@ export default function CandidateDashboard() {
     setLoading(true);
     setError("");
     try {
-      const [prof, jobList, appList, intList, offerRes, savedList, usageRes, notifRes] = await Promise.all([
+      const [prof, jobList, appList, intList, offerRes, savedList, usageRes, notifRes, geminiRes] = await Promise.all([
         getCurrentCandidateProfile(user?.id).catch(() => null),
         fetchNormalizedJobs(),
         fetchNormalizedApplications(),
@@ -139,6 +164,7 @@ export default function CandidateDashboard() {
         fetchSavedJobRecords(),
         getUsageSummary().catch(() => ({ data: null })),
         getNotifications().catch(() => ({ data: [] })),
+        getGeminiKeyStatus().catch(() => ({ data: null })),
       ]);
       setProfile(prof);
       setJobs(jobList.filter((j) => j.rawStatus === "PUBLISHED"));
@@ -149,6 +175,10 @@ export default function CandidateDashboard() {
       const notifs = extractResults(notifRes);
       setUnreadNotifCount(notifs.filter((n) => !n.is_read).length);
       if (usageRes?.data) setUsageSummary(usageRes.data);
+      if (geminiRes?.data) {
+        setGeminiStatus(geminiRes.data);
+        if (!geminiRes.data.has_key) setShowKeyForm(true);
+      }
     } catch (err) {
       setError(err.response?.data?.detail || "Failed to load dashboard data.");
     } finally {
@@ -159,6 +189,68 @@ export default function CandidateDashboard() {
   useEffect(() => {
     loadDashboard();
   }, [loadDashboard]);
+
+  const handleSaveGeminiKey = async (e) => {
+    if (e) e.preventDefault();
+    if (!geminiKeyInput.trim()) {
+      setGeminiNotice({ type: "error", text: "Please paste your Google Gemini API key." });
+      return;
+    }
+    setGeminiLoading(true);
+    setGeminiNotice({ type: "", text: "" });
+    try {
+      const res = await saveGeminiKey(geminiKeyInput.trim());
+      setGeminiStatus({
+        has_key: true,
+        key_preview: res.data.key_preview,
+        model: res.data.model || "gemini-3.5-flash-lite",
+        status: "connected",
+      });
+      setGeminiKeyInput("");
+      setShowKeyForm(false);
+      setGeminiNotice({
+        type: "success",
+        text: res.data.message || "Google Gemini API key verified and connected successfully!",
+      });
+      setTimeout(() => setGeminiNotice({ type: "", text: "" }), 5000);
+    } catch (err) {
+      setGeminiNotice({
+        type: "error",
+        text: err.response?.data?.detail || "Failed to validate Gemini API key.",
+      });
+    } finally {
+      setGeminiLoading(false);
+    }
+  };
+
+  const handleDeleteGeminiKey = async () => {
+    if (!window.confirm("Disconnect your Gemini API key? CareerLens AI features will fall back to the built-in heuristic engine.")) {
+      return;
+    }
+    setGeminiLoading(true);
+    try {
+      await deleteGeminiKey();
+      setGeminiStatus({
+        has_key: false,
+        key_preview: "",
+        model: "gemini-3.5-flash-lite",
+        status: "disconnected",
+      });
+      setShowKeyForm(true);
+      setGeminiNotice({
+        type: "info",
+        text: "Gemini key disconnected. AI features will use the built-in engine.",
+      });
+      setTimeout(() => setGeminiNotice({ type: "", text: "" }), 4000);
+    } catch (err) {
+      setGeminiNotice({
+        type: "error",
+        text: err.response?.data?.detail || "Failed to disconnect Gemini key.",
+      });
+    } finally {
+      setGeminiLoading(false);
+    }
+  };
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -810,6 +902,132 @@ export default function CandidateDashboard() {
               </div>
             </div>
           )}
+
+          {/* Personal Google Gemini AI Engine BYOK Card */}
+          <div className="cand-gemini-card">
+            <div className="cand-gemini-header">
+              <div className="cand-gemini-title-wrap">
+                <div className="cand-gemini-icon-circle">
+                  <Sparkles size={16} className="cand-gemini-sparkle-icon" />
+                </div>
+                <div>
+                  <h3 className="cand-gemini-title">AI Engine (Google Gemini)</h3>
+                  <span className="cand-gemini-subtitle">BYOK — Bring Your Own API Key</span>
+                </div>
+              </div>
+              <span className={`cand-gemini-badge ${geminiStatus.has_key ? "badge-connected" : "badge-heuristic"}`}>
+                <span className="cand-status-dot" />
+                {geminiStatus.has_key ? "Gemini 3.5 Flash-Lite" : "Built-in Engine"}
+              </span>
+            </div>
+
+            <p className="cand-gemini-desc">
+              Connect your personal Google Gemini API key to power all CareerLens AI tools (Resume Analyzer, CV Studio, Career Roadmap, and Job Matching) with Gemini 3.5 Flash-Lite.
+            </p>
+
+            {geminiNotice.text && (
+              <div className={`cand-gemini-notice notice-${geminiNotice.type}`}>
+                <AlertCircle size={15} />
+                <span>{geminiNotice.text}</span>
+              </div>
+            )}
+
+            {geminiStatus.has_key && !showKeyForm ? (
+              <div className="cand-gemini-active-box">
+                <div className="cand-gemini-active-meta">
+                  <Key size={15} className="text-emerald-500" />
+                  <span className="cand-gemini-masked-key">Key: {geminiStatus.key_preview || "••••••••"}</span>
+                  <span className="cand-gemini-model-tag">{geminiStatus.model || "gemini-3.5-flash-lite"}</span>
+                </div>
+                <div className="cand-gemini-actions">
+                  <button
+                    type="button"
+                    className="cand-btn-gemini-ghost"
+                    onClick={() => setShowKeyForm(true)}
+                  >
+                    Change Key
+                  </button>
+                  <button
+                    type="button"
+                    className="cand-btn-gemini-danger"
+                    onClick={handleDeleteGeminiKey}
+                    disabled={geminiLoading}
+                    title="Disconnect Gemini API Key"
+                  >
+                    <Trash2 size={13} />
+                    <span>Disconnect</span>
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <form onSubmit={handleSaveGeminiKey} className="cand-gemini-form">
+                <div className="cand-gemini-input-wrap">
+                  <Key size={15} className="cand-gemini-input-icon" />
+                  <input
+                    type={showRawKey ? "text" : "password"}
+                    value={geminiKeyInput}
+                    onChange={(e) => setGeminiKeyInput(e.target.value)}
+                    placeholder="Paste Gemini API key (AIzaSy...)"
+                    className="cand-gemini-input"
+                    disabled={geminiLoading}
+                    autoComplete="off"
+                  />
+                  <button
+                    type="button"
+                    className="cand-btn-toggle-eye"
+                    onClick={() => setShowRawKey((prev) => !prev)}
+                    title={showRawKey ? "Hide key" : "Show key"}
+                  >
+                    {showRawKey ? <EyeOff size={15} /> : <Eye size={15} />}
+                  </button>
+                </div>
+
+                <div className="cand-gemini-form-footer">
+                  <a
+                    href="https://aistudio.google.com/app/apikey"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="cand-gemini-free-link"
+                  >
+                    <span>Get a free API key at Google AI Studio</span>
+                    <ExternalLink size={12} />
+                  </a>
+
+                  <div className="cand-gemini-btn-row">
+                    {geminiStatus.has_key && (
+                      <button
+                        type="button"
+                        className="cand-btn-gemini-cancel"
+                        onClick={() => {
+                          setShowKeyForm(false);
+                          setGeminiKeyInput("");
+                        }}
+                      >
+                        Cancel
+                      </button>
+                    )}
+                    <button
+                      type="submit"
+                      className="cand-btn-gemini-submit"
+                      disabled={geminiLoading || !geminiKeyInput.trim()}
+                    >
+                      {geminiLoading ? (
+                        <>
+                          <Loader2 size={14} className="cand-spinner" />
+                          <span>Testing & Saving...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Sparkles size={14} />
+                          <span>Verify & Connect</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </form>
+            )}
+          </div>
 
           {/* "On Process" Active Applications Card */}
           <div className="cand-process-card">

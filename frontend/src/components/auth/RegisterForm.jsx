@@ -7,7 +7,7 @@ import PasswordField from "./PasswordField";
 import ErrorMessage from "../common/ErrorMessage";
 import "./RegisterForm.css";
 
-const INITIAL = { full_name: "", email: "", password: "", confirm_password: "", role: "candidate" };
+const INITIAL = { full_name: "", email: "", password: "", confirm_password: "", role: "candidate", university: "", major: "", skills: "" };
 
 export default function RegisterForm({ onSubmit, loading, error, onClearError }) {
   const { t } = useLanguage();
@@ -21,6 +21,9 @@ export default function RegisterForm({ onSubmit, loading, error, onClearError })
     else if (data.full_name.trim().length < 2) errs.full_name = "Must be at least 2 characters.";
     if (!data.email.trim()) errs.email = t("validation.required");
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) errs.email = t("validation.emailInvalid");
+    if (data.role === "candidate" && !data.major?.trim()) {
+      errs.major = t("validation.required");
+    }
     if (!data.password) errs.password = t("validation.required");
     else if (data.password.length < 8) errs.password = t("validation.passwordTooShort");
     else if (!/[A-Z]/.test(data.password)) errs.password = "Must contain at least one uppercase letter.";
@@ -87,6 +90,22 @@ export default function RegisterForm({ onSubmit, loading, error, onClearError })
           ))}
         </div>
       </div>
+
+      {values.role === "candidate" && (
+        <>
+          <Input id="university" label={t("auth.universityCollege")} type="text" value={values.university || ""}
+            onChange={handleChange} onBlur={handleBlur} placeholder="e.g. Royal University of Phnom Penh"
+            error={touched.university ? fieldErrors.university : undefined} disabled={loading} />
+
+          <Input id="major" label={`${t("auth.majorStudyField", "Major / Field of Study")} *`} type="text" value={values.major || ""}
+            onChange={handleChange} onBlur={handleBlur} placeholder="e.g. Computer Science, Information Technology"
+            error={touched.major ? fieldErrors.major : undefined} required disabled={loading} />
+
+          <Input id="skills" label={t("auth.skills", "Key Skills & Technologies (Comma-separated)")} type="text" value={values.skills || ""}
+            onChange={handleChange} onBlur={handleBlur} placeholder="e.g. React, Python, JavaScript, SQL, Figma"
+            error={touched.skills ? fieldErrors.skills : undefined} disabled={loading} />
+        </>
+      )}
 
       <PasswordField id="password" label={t("auth.password")} value={values.password}
         onChange={handleChange} onBlur={handleBlur} placeholder="Min. 8 characters"

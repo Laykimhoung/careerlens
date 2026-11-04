@@ -9,6 +9,10 @@ export const logoutApi = () => Promise.resolve({ data: { detail: "Logged out" } 
 export const forgotPasswordApi = (data) => api.post("/auth/forgot-password/", data);
 export const resetPasswordApi = (data) => api.post("/auth/reset-password/", data);
 
+export const getGeminiKeyStatus = () => api.get("/auth/gemini-key/");
+export const saveGeminiKey = (apiKey) => api.post("/auth/gemini-key/", { api_key: apiKey });
+export const deleteGeminiKey = () => api.delete("/auth/gemini-key/");
+
 export function normalizeAuthUser(rawUser) {
   if (!rawUser) return null;
   const rawRole = String(rawUser.role || "CANDIDATE").toLowerCase();

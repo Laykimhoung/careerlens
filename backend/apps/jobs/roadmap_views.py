@@ -115,6 +115,19 @@ class GenerateRoadmapView(APIView):
             weekly_hours=weekly_hours,
         )
 
+        gemini_key = candidate.gemini_api_key or request.headers.get("X-Gemini-Api-Key")
+        if gemini_key:
+            from apps.resumes.gemini_service import gemini_generate_roadmap
+            known_skills = [cs.skill.name for cs in candidate.skills.select_related("skill").all() if cs.skill]
+            target_job_meta = {"title": target_job.title, "location": target_job.location} if target_job else None
+            g_roadmap = gemini_generate_roadmap(target_role, weekly_hours, known_skills, target_job_meta, gemini_key)
+            if g_roadmap and isinstance(g_roadmap, dict) and "stages" in g_roadmap and len(g_roadmap["stages"]) == 5:
+                roadmap_data["stages"] = g_roadmap["stages"]
+                if "missing_skills" in g_roadmap:
+                    roadmap_data["missing_skills"] = g_roadmap["missing_skills"]
+                if "additional_recommendations" in g_roadmap:
+                    roadmap_data["additional_recommendations"] = g_roadmap["additional_recommendations"]
+
         roadmap_obj, _ = CandidateRoadmap.objects.update_or_create(
             candidate=candidate,
             defaults={

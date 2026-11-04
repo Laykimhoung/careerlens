@@ -12,6 +12,7 @@ from .views import (
     CompanyProfileViewSet,
     AuditLogViewSet,
     AdminDashboardStatsView,
+    GeminiKeyView,
 )
 
 router = DefaultRouter()
@@ -25,6 +26,7 @@ urlpatterns = [
     path('login/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('register/', RegisterView.as_view(), name='register'),
     path('me/', CurrentUserView.as_view(), name='current_user'),
+    path('gemini-key/', GeminiKeyView.as_view(), name='gemini_key'),
     path('admin/dashboard/', AdminDashboardStatsView.as_view(), name='admin_dashboard_stats'),
     path('', include(router.urls)),
 ]

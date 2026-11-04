@@ -42,7 +42,21 @@ import {
   recalculateRoadmap,
   getRoadmapOptions,
 } from "../../../services/roadmapService";
+import { fetchNormalizedJobs } from "../../../services/jobService";
 import "./CareerRoadmap.css";
+
+const FALLBACK_POPULAR_ROLES = [
+  "Frontend Developer",
+  "Backend Developer",
+  "Full Stack Engineer",
+  "Data Analyst",
+  "DevOps Engineer",
+  "Mobile Developer",
+  "QA Automation Engineer",
+  "UI/UX Designer",
+  "Cloud Solutions Architect",
+  "Cybersecurity Analyst",
+];
 
 export default function CareerRoadmap() {
   const { user } = useAuth();
@@ -54,7 +68,7 @@ export default function CareerRoadmap() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [roadmap, setRoadmap] = useState(null);
-  const [options, setOptions] = useState({ popular_roles: [], available_jobs: [] });
+  const [options, setOptions] = useState({ popular_roles: FALLBACK_POPULAR_ROLES, available_jobs: [] });
 
   // Target Selection Modal
   const [isSelectModalOpen, setIsSelectModalOpen] = useState(false);
@@ -82,14 +96,31 @@ export default function CareerRoadmap() {
     setLoading(true);
     setError("");
     try {
-      const [roadmapRes, optionsRes] = await Promise.all([
+      const [roadmapRes, optionsRes, fallbackJobs] = await Promise.all([
         getCareerRoadmap().catch(() => ({ data: { has_roadmap: false, roadmap: null } })),
         getRoadmapOptions().catch(() => ({ data: { popular_roles: [], available_jobs: [] } })),
+        fetchNormalizedJobs().catch(() => []),
       ]);
 
-      if (optionsRes?.data) {
-        setOptions(optionsRes.data);
-      }
+      const optData = optionsRes?.data || {};
+      const popRoles = (optData.popular_roles && optData.popular_roles.length > 0)
+        ? optData.popular_roles
+        : FALLBACK_POPULAR_ROLES;
+
+      const availJobs = (optData.available_jobs && optData.available_jobs.length > 0)
+        ? optData.available_jobs
+        : (fallbackJobs || []).filter((j) => j.rawStatus === "PUBLISHED").map((j) => ({
+            id: j.id,
+            title: j.title,
+            company_name: j.company || j.companyName || "CareerLens Partner",
+            location: j.location,
+            required_skills: j.skills || [],
+          }));
+
+      setOptions({
+        popular_roles: popRoles,
+        available_jobs: availJobs,
+      });
 
       if (roadmapRes?.data?.has_roadmap && roadmapRes?.data?.roadmap) {
         setRoadmap(roadmapRes.data.roadmap);
@@ -834,7 +865,7 @@ export default function CareerRoadmap() {
                   <option value="">-- Choose from available database jobs --</option>
                   {(options.available_jobs || []).map((job) => (
                     <option key={job.id} value={job.id}>
-                      {job.title} at {job.company_name} ({job.location || "Cambodia"})
+                      {job.title} at {job.company_name || job.company || "CareerLens Partner"} ({job.location || "Cambodia"})
                     </option>
                   ))}
                 </select>
