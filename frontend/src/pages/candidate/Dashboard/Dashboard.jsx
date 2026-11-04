@@ -60,7 +60,6 @@ import {
 } from "../../../services/applicationService";
 import { fetchInterviewsList } from "../../../services/interviewService";
 import { getUsageSummary } from "../../../services/resumeImprovementService";
-import UpgradeModal from "../../../components/candidate/UpgradeModal";
 import { extractResults } from "../../../services/api";
 import RecruitmentWorkspaceBanner from "../../../components/illustrations/RecruitmentWorkspaceBanner";
 import CandidateCareerSpotlight from "../../../components/illustrations/CandidateCareerSpotlight";
@@ -104,7 +103,6 @@ export default function CandidateDashboard() {
   const [unreadNotifCount, setUnreadNotifCount] = useState(0);
   const [applyingJobId, setApplyingJobId] = useState(null);
   const [usageSummary, setUsageSummary] = useState(null);
-  const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const searchBarRef = useRef(null);
 
@@ -849,72 +847,35 @@ export default function CandidateDashboard() {
             <RecruitmentWorkspaceBanner />
           </div>
 
-          {/* AI Resume & Plan Quota Card */}
-          {usageSummary && (
-            <div className={`cand-ai-usage-card ${usageSummary.plan_tier === "PREMIUM" ? "cand-ai-card-premium" : ""}`}>
-              <div className="cand-ai-usage-header">
-                <div className="cand-ai-tier-wrap">
-                  {usageSummary.plan_tier === "PREMIUM" ? (
-                    <span className="cand-tier-badge-premium">
-                      <Crown size={14} className="text-amber-400" />
-                      <strong>PREMIUM TIER</strong>
-                    </span>
-                  ) : (
-                    <span className="cand-tier-badge-free">
-                      <ShieldCheck size={14} />
-                      <strong>FREE PROTOTYPE</strong>
-                    </span>
-                  )}
-                </div>
-                <button
-                  type="button"
-                  className="cand-btn-upgrade-pill"
-                  onClick={() => setIsUpgradeModalOpen(true)}
-                >
-                  <Zap size={13} />
-                  <span>{usageSummary.plan_tier === "PREMIUM" ? "Manage Plan" : "Upgrade ($3.99)"}</span>
-                </button>
-              </div>
-
-              <div className="cand-ai-meter-body">
-                <div className="cand-ai-meter-row">
-                  <span className="cand-ai-meter-label">AI CV Improvements</span>
-                  <strong className="cand-ai-meter-nums">
-                    {usageSummary.improvements_used} / {usageSummary.improvements_limit}
-                  </strong>
-                </div>
-                <div className="cand-ai-meter-track">
-                  <div
-                    className="cand-ai-meter-bar"
-                    style={{
-                      width: `${Math.min(100, (usageSummary.improvements_used / (usageSummary.improvements_limit || 1)) * 100)}%`,
-                    }}
-                  />
-                </div>
-                <span className="cand-ai-meter-sub">
-                  {usageSummary.improvements_remaining} credits remaining for active CV
+          {/* AI Career Toolkit Quick Links */}
+          <div className="cand-ai-usage-card">
+            <div className="cand-ai-usage-header">
+              <div className="cand-ai-tier-wrap">
+                <span className="cand-tier-badge-premium" style={{ background: "rgba(59, 130, 246, 0.1)", color: "#3B82F6", borderColor: "rgba(59, 130, 246, 0.2)" }}>
+                  <Sparkles size={14} />
+                  <strong>AI CAREER TOOLKIT</strong>
                 </span>
               </div>
-
-              <div className="cand-ai-quick-links">
-                <Link to="/candidate/career-roadmap" className="cand-ai-link-item">
-                  <Compass size={14} />
-                  <span>My Career Roadmap</span>
-                  <ArrowUpRight size={13} className="cand-link-arrow" />
-                </Link>
-                <Link to="/candidate/cv-versions" className="cand-ai-link-item">
-                  <History size={14} />
-                  <span>My CV Versions ({usageSummary.total_versions || 0})</span>
-                  <ArrowUpRight size={13} className="cand-link-arrow" />
-                </Link>
-                <Link to="/candidate/cv-studio" className="cand-ai-link-item">
-                  <Sparkles size={14} />
-                  <span>AI CV Studio</span>
-                  <ArrowUpRight size={13} className="cand-link-arrow" />
-                </Link>
-              </div>
             </div>
-          )}
+
+            <div className="cand-ai-quick-links" style={{ marginTop: "0.5rem" }}>
+              <Link to="/candidate/career-roadmap" className="cand-ai-link-item">
+                <Compass size={14} />
+                <span>My Career Roadmap</span>
+                <ArrowUpRight size={13} className="cand-link-arrow" />
+              </Link>
+              <Link to="/candidate/cv-versions" className="cand-ai-link-item">
+                <History size={14} />
+                <span>My CV Versions</span>
+                <ArrowUpRight size={13} className="cand-link-arrow" />
+              </Link>
+              <Link to="/candidate/cv-studio" className="cand-ai-link-item">
+                <Sparkles size={14} />
+                <span>AI CV Studio</span>
+                <ArrowUpRight size={13} className="cand-link-arrow" />
+              </Link>
+            </div>
+          </div>
 
           {/* Personal Google Gemini AI Engine BYOK Card */}
           <div className="cand-gemini-card">
@@ -1117,17 +1078,6 @@ export default function CandidateDashboard() {
           </div>
         </div>
       </div>
-
-      {/* Upgrade Modal */}
-      <UpgradeModal
-        isOpen={isUpgradeModalOpen}
-        onClose={() => setIsUpgradeModalOpen(false)}
-        onUpgraded={(newUsage) => {
-          if (newUsage) setUsageSummary(newUsage);
-          else loadDashboard();
-        }}
-        usageSummary={usageSummary}
-      />
     </div>
   );
 }

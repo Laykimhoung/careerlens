@@ -50,7 +50,6 @@ import {
   getUsageSummary,
 } from "../../../services/resumeImprovementService";
 import { getLatestResume } from "../../../services/resumeService";
-import UpgradeModal from "../../../components/candidate/UpgradeModal";
 import "./CVStudio.css";
 
 export default function CVStudio() {
@@ -103,7 +102,6 @@ export default function CVStudio() {
   const [isApproving, setIsApproving] = useState(false);
   const [showDiffView, setShowDiffView] = useState(false);
   const [usageSummary, setUsageSummary] = useState(null);
-  const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
 
   // Print ref for PDF export
   const previewPrintRef = useRef(null);
@@ -205,17 +203,7 @@ export default function CVStudio() {
 
       setCurrentStep("editor");
     } catch (err) {
-      const isQuota =
-        err.response?.status === 403 ||
-        err.response?.data?.error_code === "QUOTA_EXCEEDED" ||
-        err.response?.data?.detail?.error_code === "QUOTA_EXCEEDED" ||
-        JSON.stringify(err.response?.data || "").includes("QUOTA_EXCEEDED");
-
-      if (isQuota) {
-        setIsUpgradeModalOpen(true);
-      } else {
-        alert(err.response?.data?.detail || err.response?.data?.error || "Failed to generate improved CV.");
-      }
+      alert(err.response?.data?.detail || err.response?.data?.error || "Failed to generate improved CV.");
     } finally {
       setGenerating(false);
     }
@@ -342,23 +330,6 @@ export default function CVStudio() {
               <Sparkles size={14} className="sparkle-icon" />
               <span>AI CV Improvement Studio</span>
             </div>
-            {usageSummary && (
-              <button
-                type="button"
-                className={`studio-quota-badge ${usageSummary.plan_tier === "PREMIUM" ? "quota-badge-premium" : ""}`}
-                onClick={() => setIsUpgradeModalOpen(true)}
-                title="Click to view AI quotas or upgrade"
-              >
-                {usageSummary.plan_tier === "PREMIUM" ? (
-                  <Crown size={13} className="text-amber-400" />
-                ) : (
-                  <Sparkles size={13} />
-                )}
-                <span>
-                  {usageSummary.plan_tier}: {usageSummary.improvements_remaining} AI edits left
-                </span>
-              </button>
-            )}
             <Link to="/candidate/cv-versions" className="studio-versions-nav-btn">
               <History size={14} />
               <span>My CV Versions ({versions.length})</span>
@@ -1152,17 +1123,6 @@ export default function CVStudio() {
           </div>
         </div>
       )}
-
-      {/* Priority 4: Upgrade Modal */}
-      <UpgradeModal
-        isOpen={isUpgradeModalOpen}
-        onClose={() => setIsUpgradeModalOpen(false)}
-        onUpgraded={(newUsage) => {
-          if (newUsage) setUsageSummary(newUsage);
-          else loadStudioData();
-        }}
-        usageSummary={usageSummary}
-      />
     </div>
   );
 }

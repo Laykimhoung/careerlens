@@ -30,7 +30,6 @@ import {
   getUsageSummary,
 } from "../../../services/resumeImprovementService";
 import { getLatestResume } from "../../../services/resumeService";
-import UpgradeModal from "../../../components/candidate/UpgradeModal";
 import "./CVVersions.css";
 
 export default function CVVersions() {
@@ -45,7 +44,6 @@ export default function CVVersions() {
   const [usage, setUsage] = useState(null);
   const [actionLoading, setActionLoading] = useState(null);
   const [successMessage, setSuccessMessage] = useState("");
-  const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
   const [selectedVersionForPreview, setSelectedVersionForPreview] = useState(null);
 
   const loadData = useCallback(async () => {
@@ -136,7 +134,7 @@ export default function CVVersions() {
           <div>
             <h1 className="cv-versions-title">{t('candidate.cvVersions.title', 'My CV Versions & History')}</h1>
             <p className="cv-versions-subtitle">
-              {t('candidate.cvVersions.subtitle', 'Inspect your revision history, compare quality scores, restore previous drafts, and manage AI usage credits.')}
+              {t('candidate.cvVersions.subtitle', 'Inspect your revision history, compare quality scores, and restore previous drafts.')}
             </p>
           </div>
         </div>
@@ -148,55 +146,6 @@ export default function CVVersions() {
           </Link>
         </div>
       </div>
-
-      {/* Usage & Plan Quota Banner */}
-      {usage && (
-        <div className={`usage-quota-card ${usage.plan_tier === "PREMIUM" ? "usage-card-premium" : ""}`}>
-          <div className="usage-left">
-            <div className="tier-pill">
-              {usage.plan_tier === "PREMIUM" ? (
-                <>
-                  <Crown className="w-4 h-4 text-amber-400" />
-                  <span className="font-semibold">PREMIUM CANDIDATE</span>
-                </>
-              ) : (
-                <>
-                  <ShieldCheck className="w-4 h-4 text-slate-400" />
-                  <span className="font-semibold">FREE PLAN</span>
-                </>
-              )}
-            </div>
-            <div className="usage-details">
-              <span className="usage-stat-label">AI CV Improvements:</span>
-              <span className="usage-stat-val">
-                <strong>{usage.improvements_used}</strong> / {usage.improvements_limit} used
-              </span>
-              <span className="usage-separator">•</span>
-              <span className="usage-remaining">
-                <strong>{usage.improvements_remaining}</strong> remaining
-              </span>
-            </div>
-          </div>
-
-          <div className="usage-right">
-            <div className="usage-progress-bar">
-              <div
-                className="usage-progress-fill"
-                style={{
-                  width: `${Math.min(100, (usage.improvements_used / (usage.improvements_limit || 1)) * 100)}%`,
-                }}
-              />
-            </div>
-            <button
-              type="button"
-              className="btn-quota-upgrade"
-              onClick={() => setIsUpgradeModalOpen(true)}
-            >
-              {usage.plan_tier === "PREMIUM" ? "Manage Plan ($3.99/op)" : "Upgrade ($3.99/op)"}
-            </button>
-          </div>
-        </div>
-      )}
 
       {/* Success Notification */}
       {successMessage && (
@@ -446,17 +395,6 @@ export default function CVVersions() {
           </div>
         </div>
       )}
-
-      {/* Upgrade Modal */}
-      <UpgradeModal
-        isOpen={isUpgradeModalOpen}
-        onClose={() => setIsUpgradeModalOpen(false)}
-        onUpgraded={(newUsage) => {
-          if (newUsage) setUsage(newUsage);
-          else loadData();
-        }}
-        usageSummary={usage}
-      />
     </div>
   );
 }

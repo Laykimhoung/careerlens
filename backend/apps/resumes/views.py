@@ -243,10 +243,6 @@ class ImprovementGenerateView(APIView):
             return Response({"detail": "Candidate profile required."}, status=status.HTTP_400_BAD_REQUEST)
 
         usage = _get_or_create_usage(candidate)
-        if usage.improvements_used >= usage.improvements_limit:
-            return Response({
-                "detail": "You have reached your CV improvement limit for this cycle. Please upgrade your plan for unlimited revisions."
-            }, status=status.HTTP_403_FORBIDDEN)
 
         data = request.data if isinstance(request.data, dict) else {}
         options = data.get("selected_improvements", [])
