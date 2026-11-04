@@ -73,7 +73,7 @@ Before going live, keep these provider behaviors in mind:
    * **Runtime:** `Python`
    * **Build Command:**
      ```bash
-     pip install -r requirements.txt && python manage.py collectstatic --no-input
+     pip install -r requirements.txt && python manage.py migrate --no-input && python manage.py collectstatic --no-input
      ```
    * **Start Command:**
      ```bash

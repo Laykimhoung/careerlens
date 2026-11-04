@@ -22,20 +22,45 @@ DEFAULT_GEMINI_MODEL = "gemini-3.5-flash-lite"
 SUPPORTED_GEMINI_MODELS = [
     "gemini-3.5-flash-lite",
     "gemini-3.8-flash",
+    "gemini-3.1-flash-lite",
     "gemini-2.5-flash-lite",
 ]
 
 
 def validate_gemini_key(api_key):
     """
-    Validates a Gemini API key with a minimal test request.
-    Uses gemini-3.5-flash-lite as primary with automatic fallback to supported flash models.
+    Validates a Gemini API key with Google's API.
+    1. Probes the ListModels endpoint (universal authentication verification).
+    2. Falls back to minimal generateContent test requests across supported models.
     Returns (is_valid: bool, message: str).
     """
     if not api_key or not isinstance(api_key, str) or len(api_key.strip()) < 10:
         return False, "API key format is invalid."
 
     clean_key = api_key.strip()
+
+    # Step 1: Universal API key authentication check via ListModels
+    try:
+        models_url = f"https://generativelanguage.googleapis.com/v1beta/models?key={clean_key}"
+        resp = requests.get(models_url, timeout=10)
+        if resp.status_code == 200:
+            data = resp.json()
+            available = [m.get("name", "").replace("models/", "") for m in data.get("models", [])]
+            chosen = DEFAULT_GEMINI_MODEL
+            for model_cand in SUPPORTED_GEMINI_MODELS:
+                if model_cand in available:
+                    chosen = model_cand
+                    break
+            return True, f"Key is valid and active with {chosen}."
+        elif resp.status_code in (400, 403):
+            data = resp.json()
+            err_msg = data.get("error", {}).get("message", "API key authentication failed.")
+            if any(term in err_msg.lower() for term in ["api key not valid", "api_key_invalid", "permission_denied", "caller has been deleted"]):
+                return False, err_msg
+    except Exception as e:
+        logger.warning("Gemini ListModels probe error: %s", e)
+
+    # Step 2: Generation test with fallback across supported models
     payload = {
         "contents": [
             {"parts": [{"text": "Respond with OK."}]}
@@ -54,9 +79,9 @@ def validate_gemini_key(api_key):
                 return True, f"Key is valid and active with {model_name}."
             data = resp.json()
             last_error = data.get("error", {}).get("message", "API key authentication failed.")
-            # If model is unavailable or not found, try next model in fallback list
-            if resp.status_code != 404 and "not found" not in last_error.lower() and "no longer available" not in last_error.lower():
+            if any(term in last_error.lower() for term in ["api key not valid", "api_key_invalid", "permission_denied"]):
                 return False, last_error
+            logger.info("Model %s returned %s: %s; trying next fallback...", model_name, resp.status_code, last_error)
         except Exception as e:
             logger.warning("Gemini key validation error with %s: %s", model_name, e)
             last_error = f"Could not connect to Gemini API: {str(e)}"
@@ -67,7 +92,7 @@ def validate_gemini_key(api_key):
 def call_gemini_api(prompt, api_key, system_instruction=None, response_json=True):
     """
     Sends a structured prompt to Gemini with system instructions and JSON mode.
-    Tries gemini-3.5-flash-lite with fallback to gemini-3.8-flash.
+    Tries gemini-3.5-flash-lite with fallback to gemini-3.8-flash and other supported models.
     Returns (success: bool, result_data: dict | str).
     """
     if not api_key:
@@ -98,7 +123,7 @@ def call_gemini_api(prompt, api_key, system_instruction=None, response_json=True
             if resp.status_code != 200:
                 err_text = resp.text
                 logger.warning("Gemini API call with %s failed (status %s): %s", model_name, resp.status_code, err_text)
-                if resp.status_code == 404 or "not found" in err_text.lower() or "no longer available" in err_text.lower():
+                if any(phrase in err_text.lower() for phrase in ["not found", "no longer available", "not supported", "is not available", "unsupported", "deprecated"]):
                     continue
                 return False, None
 

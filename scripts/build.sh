@@ -24,6 +24,9 @@ pip install -r requirements.txt
 echo "==> [CareerLens] Running Django system verification checks..."
 python manage.py check
 
+echo "==> [CareerLens] Applying database migrations..."
+python manage.py migrate --no-input
+
 echo "==> [CareerLens] Collecting static files with WhiteNoise into staticfiles/..."
 python manage.py collectstatic --no-input
 
