@@ -27,6 +27,30 @@ class AuthenticationTests(APITestCase):
         self.assertTrue(CandidateProfile.objects.filter(user=user).exists())
         self.assertFalse(CompanyProfile.objects.filter(user=user).exists())
 
+    def test_register_candidate_with_major_and_skills(self):
+        data = {
+            "username": "candidate_tech",
+            "email": "candidate_tech@example.com",
+            "password": "StrongPassword123!",
+            "first_name": "Alice",
+            "last_name": "Dev",
+            "role": User.Role.CANDIDATE,
+            "university": "Royal University of Phnom Penh",
+            "major": "Computer Science",
+            "graduation_year": 2026,
+            "skills": ["React", "Python", "Docker"]
+        }
+        response = self.client.post(self.register_url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        user = User.objects.get(username="candidate_tech")
+        profile = CandidateProfile.objects.get(user=user)
+        self.assertEqual(profile.major, "Computer Science")
+        self.assertEqual(profile.university, "Royal University of Phnom Penh")
+        skill_names = list(profile.skills.values_list('skill__name', flat=True))
+        self.assertIn("React", skill_names)
+        self.assertIn("Python", skill_names)
+        self.assertIn("Docker", skill_names)
+
     def test_register_company(self):
         data = {
             "username": "company1",
@@ -107,3 +131,26 @@ class ProfileTests(APITestCase):
         response = self.client.patch(url, data, format='json')
         # company user cannot edit candidate profile
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_gemini_key_get_and_delete(self):
+        self.client.force_authenticate(user=self.candidate_user)
+        url = reverse('gemini_key')
+        get_res = self.client.get(url)
+        self.assertEqual(get_res.status_code, status.HTTP_200_OK)
+        self.assertFalse(get_res.data['has_key'])
+        self.assertEqual(get_res.data['status'], 'not_configured')
+
+        # Set key directly and test get preview + delete
+        self.candidate_profile.gemini_api_key = "AIzaSyFakeTestKey12345"
+        self.candidate_profile.save()
+
+        get_res2 = self.client.get(url)
+        self.assertEqual(get_res2.status_code, status.HTTP_200_OK)
+        self.assertTrue(get_res2.data['has_key'])
+        self.assertIn("...", get_res2.data['key_preview'])
+
+        del_res = self.client.delete(url)
+        self.assertEqual(del_res.status_code, status.HTTP_200_OK)
+        self.assertEqual(del_res.data['status'], 'disconnected')
+        self.candidate_profile.refresh_from_db()
+        self.assertEqual(self.candidate_profile.gemini_api_key, "")

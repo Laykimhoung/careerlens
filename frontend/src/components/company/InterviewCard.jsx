@@ -25,15 +25,27 @@ export default function InterviewCard({ interview, onCancel, onComplete }) {
         </span>
         <span className="workspace-muted">{interview.format}</span>
       </div>
-      {interview.meetingLink && (
-        <div style={{ marginTop: "6px" }}>
+      {(interview.meetingLink || String(interview.format || "").toLowerCase().includes("video")) && (
+        <div style={{ marginTop: "10px" }}>
           <a
-            href={interview.meetingLink}
+            href={interview.meetingLink || `https://meet.jit.si/CareerLens-Interview-${interview.appId || interview.id}`}
             target="_blank"
             rel="noreferrer"
-            style={{ color: "#0d9488", fontSize: "13px", fontWeight: 600 }}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "6px",
+              padding: "6px 14px",
+              borderRadius: "8px",
+              background: "linear-gradient(135deg, #016BFB 0%, #2563eb 100%)",
+              color: "#ffffff",
+              fontSize: "12.5px",
+              fontWeight: 700,
+              textDecoration: "none",
+              boxShadow: "0 2px 6px rgba(1, 107, 251, 0.25)",
+            }}
           >
-            Join Meeting Link &rarr;
+            <span>🎥 Join Video Call</span> &rarr;
           </a>
         </div>
       )}

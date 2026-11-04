@@ -151,6 +151,28 @@ def calculate_job_recommendation(candidate, job, preferences=None):
     else:
         fit_verdict = "Potential Match"
 
+    gemini_key = getattr(candidate, "gemini_api_key", "")
+    if gemini_key:
+        from apps.resumes.gemini_service import gemini_recommend_job
+        candidate_summary = {
+            "university": candidate.university if candidate else "",
+            "major": candidate.major if candidate else "",
+            "skills": [s["name"] for s in candidate_skills.values()],
+            "target_role": target_role,
+        }
+        job_summary = {
+            "title": job.title,
+            "company": company_name,
+            "required_skills": job_skills_list,
+            "location": job.location,
+            "employment_type": job.employment_type,
+        }
+        g_rec = gemini_recommend_job(job_summary, candidate_summary, prefs, gemini_key)
+        if g_rec and isinstance(g_rec, dict) and "match_score" in g_rec:
+            g_rec["id"] = job.id
+            g_rec["job"] = JobSerializer(job).data
+            return g_rec
+
     job_data = JobSerializer(job).data
 
     return {

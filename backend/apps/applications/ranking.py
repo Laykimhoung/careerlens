@@ -1,7 +1,8 @@
 def calculate_candidate_ranking(job, application):
     """
-    Computes an explainable match evaluation between a Job and a candidate's Application.
-    Returns the exact data structure expected by Company CandidateRanking.jsx.
+    Computes an explainable, deterministic match evaluation between a Job and a candidate's Application.
+    Runs entirely on CareerLens's built-in intelligent evaluation engine with zero external API dependencies.
+    Returns the exact data structure expected by Company CandidateRanking.
     """
     candidate = application.candidate
     candidate_user = candidate.user if candidate else None

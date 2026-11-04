@@ -40,6 +40,7 @@ export default function AuthPage() {
   // Form states
   const [loginForm, setLoginForm] = useState({ email: "", password: "", remember: false });
   const [registerRole, setRegisterRole] = useState("candidate");
+  const [customSkillInput, setCustomSkillInput] = useState("");
   const [registerForm, setRegisterForm] = useState({
     full_name: "",
     email: "",
@@ -47,6 +48,7 @@ export default function AuthPage() {
     confirm_password: "",
     university: "",
     major: "",
+    skills: [],
     graduation_year: "2029",
     company_name: "",
     work_email: "",
@@ -165,8 +167,62 @@ export default function AuthPage() {
     }
   };
 
+  const POPULAR_SIGNUP_SKILLS = [
+    "React",
+    "Node.js",
+    "Python",
+    "JavaScript",
+    "TypeScript",
+    "SQL",
+    "Git",
+    "Figma",
+    "UI/UX",
+    "Docker",
+    "Java",
+    "Tailwind CSS",
+  ];
+
+  const handleToggleSkill = (skill) => {
+    setRegisterForm((prev) => {
+      const current = prev.skills || [];
+      const exists = current.some((s) => s.toLowerCase() === skill.toLowerCase());
+      if (exists) {
+        return { ...prev, skills: current.filter((s) => s.toLowerCase() !== skill.toLowerCase()) };
+      } else {
+        return { ...prev, skills: [...current, skill] };
+      }
+    });
+  };
+
+  const handleAddCustomSkill = (e) => {
+    if (e) e.preventDefault();
+    const trimmed = customSkillInput.trim();
+    if (!trimmed) return;
+    setRegisterForm((prev) => {
+      const current = prev.skills || [];
+      if (!current.some((s) => s.toLowerCase() === trimmed.toLowerCase())) {
+        return { ...prev, skills: [...current, trimmed] };
+      }
+      return prev;
+    });
+    setCustomSkillInput("");
+  };
+
+  const handleRemoveSkill = (skillToRemove) => {
+    setRegisterForm((prev) => ({
+      ...prev,
+      skills: (prev.skills || []).filter((s) => s !== skillToRemove),
+    }));
+  };
+
   const handleRegisterSubmit = async (e) => {
     e.preventDefault();
+    if (registerRole === "candidate") {
+      if (!registerForm.major?.trim()) {
+        alert("Please enter your Field of Study / Major.");
+        return;
+      }
+    }
     if (!registerForm.terms) {
       alert("Please agree to the Terms");
       return;
@@ -524,19 +580,113 @@ export default function AuthPage() {
             </div>
 
             {registerRole === "candidate" ? (
-              <div className="tether-field">
-                <label className="tether-label">{t("auth.universityCollege")}</label>
-                <CurvyInput isValid={Boolean(registerForm.university.trim())}>
-                  <input
-                    type="text"
-                    placeholder="e.g. Royal University of Phnom Penh"
-                    value={registerForm.university}
-                    onChange={(e) => setRegisterForm({ ...registerForm, university: e.target.value })}
-                    disabled={loading}
-                    className="tether-input"
-                  />
-                </CurvyInput>
-              </div>
+              <>
+                <div className="tether-field">
+                  <label className="tether-label">{t("auth.universityCollege")}</label>
+                  <CurvyInput isValid={Boolean(registerForm.university.trim())}>
+                    <input
+                      type="text"
+                      placeholder="e.g. Royal University of Phnom Penh"
+                      value={registerForm.university}
+                      onChange={(e) => setRegisterForm({ ...registerForm, university: e.target.value })}
+                      disabled={loading}
+                      className="tether-input"
+                    />
+                  </CurvyInput>
+                </div>
+
+                <div className="tether-field">
+                  <label className="tether-label">{t("auth.majorStudyField", "Major / Field of Study")} *</label>
+                  <CurvyInput isValid={Boolean(registerForm.major.trim())}>
+                    <input
+                      type="text"
+                      placeholder="e.g. Computer Science, Information Technology, Software Engineering"
+                      value={registerForm.major}
+                      onChange={(e) => setRegisterForm({ ...registerForm, major: e.target.value })}
+                      disabled={loading}
+                      className="tether-input"
+                      required
+                    />
+                  </CurvyInput>
+                </div>
+
+                <div className="tether-field">
+                  <div className="tether-label-row">
+                    <label className="tether-label">{t("auth.skills", "Key Skills & Technologies")}</label>
+                    <span className="text-[11px] text-slate-400 font-semibold">
+                      {(registerForm.skills || []).length} selected
+                    </span>
+                  </div>
+
+                  {/* Selected Skill Tags */}
+                  {(registerForm.skills || []).length > 0 && (
+                    <div className="tether-selected-tags">
+                      {registerForm.skills.map((skill) => (
+                        <span key={skill} className="tether-skill-tag">
+                          <span>{skill}</span>
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveSkill(skill)}
+                            title={`Remove ${skill}`}
+                          >
+                            ×
+                          </button>
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Custom Skill Input Row */}
+                  <div className="tether-skill-input-row">
+                    <div className="flex-1">
+                      <CurvyInput isValid={Boolean(customSkillInput.trim())}>
+                        <input
+                          type="text"
+                          placeholder={t("auth.skillsPlaceholder", "Add a skill (e.g. React, Python) and press Enter")}
+                          value={customSkillInput}
+                          onChange={(e) => setCustomSkillInput(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              e.preventDefault();
+                              handleAddCustomSkill();
+                            }
+                          }}
+                          disabled={loading}
+                          className="tether-input"
+                        />
+                      </CurvyInput>
+                    </div>
+                    <button
+                      type="button"
+                      className="tether-btn-add-skill"
+                      onClick={handleAddCustomSkill}
+                      disabled={!customSkillInput.trim() || loading}
+                    >
+                      + Add
+                    </button>
+                  </div>
+
+                  {/* Quick-Pick Popular Suggestions */}
+                  <div className="tether-skills-quick">
+                    <span className="tether-skills-quick-label">Suggestions:</span>
+                    {POPULAR_SIGNUP_SKILLS.map((skill) => {
+                      const isSel = (registerForm.skills || []).some(
+                        (s) => s.toLowerCase() === skill.toLowerCase()
+                      );
+                      return (
+                        <button
+                          key={skill}
+                          type="button"
+                          className={`tether-skill-chip-btn ${isSel ? "selected" : ""}`}
+                          onClick={() => handleToggleSkill(skill)}
+                        >
+                          {isSel ? `✓ ${skill}` : `+ ${skill}`}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </>
             ) : (
               <div className="tether-field">
                 <label className="tether-label">{t("auth.companyName")}</label>

@@ -309,11 +309,25 @@ class InterviewViewSet(viewsets.ModelViewSet):
         if self.request.user.role == self.request.user.Role.COMPANY and application.job.company != self.request.user.company_profile:
             raise PermissionDenied("You do not own this application.")
 
-        instance = serializer.save(scheduled_by=self.request.user)
+        # Auto-generate video meeting room link if not provided
+        meeting_link = serializer.validated_data.get('meeting_link')
+        location = serializer.validated_data.get('location', '')
+        if not meeting_link:
+            import time
+            room_id = f"{application.id}-{int(time.time()) % 100000}"
+            meeting_link = f"https://meet.jit.si/CareerLens-Interview-{room_id}"
+            if not location:
+                location = "Video call"
+
+        instance = serializer.save(
+            scheduled_by=self.request.user,
+            meeting_link=meeting_link,
+            location=location,
+        )
         from apps.messaging.models import Notification
         Notification.objects.create(
             user=application.candidate.user,
-            message=f"An interview has been scheduled for '{application.job.title}' at {application.job.company.company_name}.",
+            message=f"An interview with video call has been scheduled for '{application.job.title}' at {application.job.company.company_name}.",
             type=Notification.Type.INFO
         )
         log_audit_action(

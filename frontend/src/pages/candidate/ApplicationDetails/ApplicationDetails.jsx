@@ -376,15 +376,26 @@ export default function CandidateApplicationDetails() {
                     Location: {iv.location}
                   </div>
                 )}
-                {iv.meeting_link && (
-                  <div style={{ marginTop: "6px" }}>
+                {(iv.meeting_link || String(iv.location || "").toLowerCase().includes("video")) && (
+                  <div style={{ marginTop: "8px" }}>
                     <a
-                      href={iv.meeting_link}
+                      href={iv.meeting_link || `https://meet.jit.si/CareerLens-Interview-${iv.application || iv.id}`}
                       target="_blank"
                       rel="noreferrer"
-                      style={{ color: "#0d9488", fontWeight: 600, fontSize: "13px" }}
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "6px",
+                        padding: "6px 14px",
+                        borderRadius: "6px",
+                        backgroundColor: "#016BFB",
+                        color: "#ffffff",
+                        fontWeight: 600,
+                        fontSize: "13px",
+                        textDecoration: "none",
+                      }}
                     >
-                      Join Video Interview &rarr;
+                      <span>🎥 Join Video Call</span> &rarr;
                     </a>
                   </div>
                 )}

@@ -191,6 +191,7 @@ export function AuthProvider({ children }) {
           : {
               university: formData.university || "",
               major: formData.major || "",
+              skills: formData.skills || [],
               graduation_year: formData.graduation_year
                 ? Number(formData.graduation_year)
                 : null,

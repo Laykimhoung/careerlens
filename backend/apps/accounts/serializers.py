@@ -258,13 +258,46 @@ class RegisterSerializer(serializers.ModelSerializer):
                 grad_year = int(grad_year) if grad_year else None
             except (TypeError, ValueError):
                 grad_year = None
-            CandidateProfile.objects.create(
+            candidate = CandidateProfile.objects.create(
                 user=user,
-                university=initial.get('university', '') or '',
-                major=initial.get('major', '') or '',
+                university=(initial.get('university', '') or '').strip(),
+                major=(initial.get('major', '') or '').strip(),
                 graduation_year=grad_year,
-                bio=initial.get('bio', '') or '',
+                bio=(initial.get('bio', '') or '').strip(),
             )
+
+            # Process and attach initial candidate skills
+            raw_skills = initial.get('skills')
+            if raw_skills:
+                from apps.jobs.models import Skill
+                from apps.accounts.models import CandidateSkill
+
+                skills_list = []
+                if isinstance(raw_skills, str):
+                    skills_list = [s.strip() for s in raw_skills.split(',') if s.strip()]
+                elif isinstance(raw_skills, (list, tuple)):
+                    skills_list = raw_skills
+
+                for item in skills_list:
+                    if isinstance(item, dict):
+                        skill_name = (item.get('name') or item.get('skill') or '').strip()
+                        proficiency = item.get('proficiency', CandidateSkill.Proficiency.INTERMEDIATE)
+                    else:
+                        skill_name = str(item).strip()
+                        proficiency = CandidateSkill.Proficiency.INTERMEDIATE
+
+                    if not skill_name:
+                        continue
+
+                    skill_obj = Skill.objects.filter(name__iexact=skill_name).first()
+                    if not skill_obj:
+                        skill_obj = Skill.objects.create(name=skill_name)
+
+                    CandidateSkill.objects.get_or_create(
+                        candidate=candidate,
+                        skill=skill_obj,
+                        defaults={'proficiency': proficiency}
+                    )
         elif user.role == User.Role.COMPANY:
             CompanyProfile.objects.create(
                 user=user,

@@ -1241,3 +1241,396 @@
   background: #334155;
   color: #818CF8;
 }
+
+/* ── BYOK Google Gemini AI Card ────────────────────────────────────────── */
+.cand-gemini-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 16px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 0 2px 8px -2px rgba(15, 23, 42, 0.05);
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.cand-gemini-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #6366F1, #8B5CF6, #EC4899);
+}
+
+.cand-gemini-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.cand-gemini-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cand-gemini-icon-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6366F1;
+  flex-shrink: 0;
+}
+
+.cand-gemini-title {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #0F172A;
+  line-height: 1.2;
+}
+
+.cand-gemini-subtitle {
+  font-size: 0.71875rem;
+  color: #64748B;
+  display: block;
+}
+
+.cand-gemini-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.cand-gemini-badge.badge-connected {
+  background: #ECFDF5;
+  color: #059669;
+  border: 1px solid #A7F3D0;
+}
+
+.cand-gemini-badge.badge-heuristic {
+  background: #F1F5F9;
+  color: #64748B;
+  border: 1px solid #E2E8F0;
+}
+
+.cand-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.cand-gemini-badge.badge-connected .cand-status-dot {
+  animation: pulseDot 2s infinite;
+}
+
+@keyframes pulseDot {
+  0% { transform: scale(0.95); opacity: 0.7; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0.7; }
+}
+
+.cand-gemini-desc {
+  font-size: 0.78125rem;
+  line-height: 1.4;
+  color: #64748B;
+  margin: 0;
+}
+
+.cand-gemini-notice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.cand-gemini-notice.notice-success {
+  background: #ECFDF5;
+  color: #065F46;
+  border: 1px solid #A7F3D0;
+}
+
+.cand-gemini-notice.notice-error {
+  background: #FEF2F2;
+  color: #991B1B;
+  border: 1px solid #FECACA;
+}
+
+.cand-gemini-notice.notice-info {
+  background: #F0F9FF;
+  color: #0369A1;
+  border: 1px solid #BAE6FD;
+}
+
+.cand-gemini-active-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+}
+
+.cand-gemini-active-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.78125rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+.cand-gemini-masked-key {
+  font-family: monospace;
+  font-size: 0.75rem;
+}
+
+.cand-gemini-model-tag {
+  background: #EEF2FF;
+  color: #4F46E5;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.65625rem;
+  font-weight: 700;
+}
+
+.cand-gemini-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cand-btn-gemini-ghost {
+  background: transparent;
+  border: 1px solid #CBD5E1;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.cand-btn-gemini-ghost:hover {
+  background: #F1F5F9;
+  color: #0F172A;
+}
+
+.cand-btn-gemini-danger {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: transparent;
+  border: 1px solid #FCA5A5;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: #DC2626;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.cand-btn-gemini-danger:hover {
+  background: #FEF2F2;
+}
+
+.cand-gemini-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cand-gemini-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.cand-gemini-input-icon {
+  position: absolute;
+  left: 10px;
+  color: #94A3B8;
+  pointer-events: none;
+}
+
+.cand-gemini-input {
+  width: 100%;
+  padding: 8px 36px 8px 32px;
+  border-radius: 8px;
+  border: 1px solid #CBD5E1;
+  font-size: 0.8125rem;
+  font-family: inherit;
+  color: #0F172A;
+  background: #FFFFFF;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.cand-gemini-input:focus {
+  border-color: #6366F1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+}
+
+.cand-btn-toggle-eye {
+  position: absolute;
+  right: 8px;
+  background: transparent;
+  border: none;
+  color: #94A3B8;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cand-btn-toggle-eye:hover {
+  color: #475569;
+}
+
+.cand-gemini-form-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.cand-gemini-free-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.71875rem;
+  font-weight: 600;
+  color: #6366F1;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.cand-gemini-free-link:hover {
+  color: #4338CA;
+  text-decoration: underline;
+}
+
+.cand-gemini-btn-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.cand-btn-gemini-cancel {
+  background: transparent;
+  border: 1px solid #CBD5E1;
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-size: 0.71875rem;
+  font-weight: 600;
+  color: #64748B;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.cand-btn-gemini-cancel:hover {
+  background: #F1F5F9;
+  color: #0F172A;
+}
+
+.cand-btn-gemini-submit {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: linear-gradient(135deg, #6366F1 0%, #4F46E5 100%);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  padding: 5px 12px;
+  font-size: 0.71875rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s ease, transform 0.1s ease;
+}
+
+.cand-btn-gemini-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.cand-btn-gemini-submit:hover:not(:disabled) {
+  opacity: 0.95;
+  transform: translateY(-1px);
+}
+
+.cand-spinner {
+  animation: spin 1s linear infinite;
+}
+
+/* Dark mode overrides */
+[data-theme="dark"] .cand-gemini-card {
+  background: #1E293B;
+  border-color: #334155;
+  box-shadow: none;
+}
+
+[data-theme="dark"] .cand-gemini-title {
+  color: #F8FAFC;
+}
+
+[data-theme="dark"] .cand-gemini-subtitle,
+[data-theme="dark"] .cand-gemini-desc {
+  color: #94A3B8;
+}
+
+[data-theme="dark"] .cand-gemini-active-box {
+  background: #0F172A;
+  border-color: #334155;
+}
+
+[data-theme="dark"] .cand-gemini-active-meta {
+  color: #E2E8F0;
+}
+
+[data-theme="dark"] .cand-gemini-input {
+  background: #0F172A;
+  border-color: #334155;
+  color: #F8FAFC;
+}
+
+[data-theme="dark"] .cand-btn-gemini-ghost {
+  border-color: #475569;
+  color: #CBD5E1;
+}
+
+[data-theme="dark"] .cand-btn-gemini-ghost:hover {
+  background: #334155;
+}
+
+[data-theme="dark"] .cand-gemini-badge.badge-heuristic {
+  background: #334155;
+  color: #CBD5E1;
+  border-color: #475569;
+}
