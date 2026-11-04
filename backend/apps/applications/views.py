@@ -1,4 +1,6 @@
 from rest_framework import viewsets, permissions, status
+from rest_framework.decorators import action
+from .ranking import calculate_candidate_ranking
 from rest_framework.response import Response
 from rest_framework.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
@@ -137,6 +139,138 @@ class ApplicationViewSet(viewsets.ModelViewSet):
             )
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response({"detail": "Not authorized to withdraw this application."}, status=status.HTTP_403_FORBIDDEN)
+
+    @action(detail=False, methods=['get'])
+    def ranking(self, request):
+        job_id = request.query_params.get('job_id')
+        if not job_id:
+            return Response({'detail': 'job_id query parameter is required.'}, status=status.HTTP_400_BAD_REQUEST)
+        job = get_object_or_404(Job, id=job_id)
+        if request.user.role != request.user.Role.ADMIN:
+            if not hasattr(request.user, 'company_profile') or job.company != request.user.company_profile:
+                raise PermissionDenied('You do not have permission to view rankings for this job vacancy.')
+        qs = Application.objects.filter(job=job).select_related(
+            'candidate__user', 'job__company__user'
+        ).prefetch_related(
+            'candidate__skills__skill', 'notes__author', 'interviews'
+        )
+        status_filter = request.query_params.get('status', 'all').strip()
+        if status_filter and status_filter.upper() != 'ALL':
+            qs = qs.filter(status=status_filter.upper())
+        search = request.query_params.get('search', '').strip().lower()
+        results = []
+        for app in list(qs):
+            item = calculate_candidate_ranking(job, app)
+            if search:
+                cand = item['candidate_details']
+                u = cand['user']
+                searchable = f"{u['first_name']} {u['last_name']} {u['username']} {cand['university']} {cand['major']}".lower()
+                skills_str = ' '.join(s['name'].lower() for s in cand['skills'])
+                if search not in searchable and search not in skills_str:
+                    continue
+            min_score = request.query_params.get('min_score')
+            if min_score and min_score.isdigit():
+                if item['ranking']['match_score'] < int(min_score):
+                    continue
+            results.append(item)
+        ordering = request.query_params.get('ordering', '-score').strip()
+        if ordering in ['-score', 'score_desc']:
+            results.sort(key=lambda x: x['ranking']['match_score'], reverse=True)
+        elif ordering in ['score', 'score_asc']:
+            results.sort(key=lambda x: x['ranking']['match_score'])
+        elif ordering in ['-date', 'date_desc']:
+            results.sort(key=lambda x: x['applied_at'], reverse=True)
+        elif ordering in ['name', 'name_asc']:
+            results.sort(key=lambda x: (x['candidate_details']['user']['first_name'] or x['candidate_details']['user']['username']).lower())
+        scores = [item['ranking']['match_score'] for item in results]
+        total_for_job = Application.objects.filter(job=job)
+        stats_data = {
+            'total_applicants': len(results),
+            'average_score': round(sum(scores) / len(scores)) if scores else 0,
+            'top_score': max(scores) if scores else 0,
+            'shortlisted_count': total_for_job.filter(status=Application.Status.SHORTLISTED).count(),
+        }
+        required_skills = [js.skill.name for js in job.job_skills.all() if js.skill]
+        return Response({
+            'job': {
+                'id': job.id,
+                'title': job.title,
+                'required_skills': required_skills,
+                'company_name': job.company.company_name,
+                'location': job.location,
+            },
+            'stats': stats_data,
+            'results': results,
+        })
+
+    @action(detail=False, methods=['post'], url_path='ranking/refresh')
+    def refresh_ranking(self, request):
+        job_id = request.data.get('job_id')
+        if not job_id:
+            return Response({'detail': 'job_id is required.'}, status=status.HTTP_400_BAD_REQUEST)
+        get_object_or_404(Job, id=job_id)
+        return Response({'status': 'success', 'message': 'Candidate rankings refreshed with latest qualification assessment.'})
+
+    @action(detail=False, methods=['post'], url_path='ranking/compare')
+    def compare(self, request):
+        app_ids = request.data.get('application_ids', [])
+        if not app_ids or len(app_ids) < 2:
+            return Response({'detail': 'Please select at least 2 candidates to compare.'}, status=status.HTTP_400_BAD_REQUEST)
+        apps = Application.objects.filter(id__in=app_ids).select_related(
+            'job', 'candidate__user'
+        ).prefetch_related('candidate__skills__skill', 'notes__author')
+        if not apps.exists():
+            return Response({'detail': 'No matching applications found.'}, status=status.HTTP_404_NOT_FOUND)
+        job = apps.first().job
+        candidates_compared = []
+        for app in apps:
+            ranked = calculate_candidate_ranking(job, app)
+            cand_details = ranked['candidate_details']
+            cand_user = cand_details['user']
+            name = f"{cand_user['first_name']} {cand_user['last_name']}".strip() or cand_user['username'] or f"Applicant #{app.id}"
+            candidates_compared.append({
+                'application_id': app.id,
+                'candidate_name': name,
+                'status': app.status,
+                'match_score': ranked['ranking']['match_score'],
+                'score_breakdown': ranked['ranking']['score_breakdown'],
+                'matching_skills': ranked['ranking']['score_breakdown']['matching_required_skills'],
+                'missing_skills': ranked['ranking']['score_breakdown']['missing_required_skills'],
+                'strengths': ranked['ranking']['strengths'],
+                'areas_for_review': ranked['ranking']['areas_for_review'],
+            })
+        candidates_compared.sort(key=lambda c: c['match_score'], reverse=True)
+        return Response({
+            'job_title': job.title,
+            'candidates': candidates_compared,
+        })
+
+    @action(detail=True, methods=['post'])
+    def shortlist(self, request, pk=None):
+        application = self.get_object()
+        if request.user.role != request.user.Role.ADMIN:
+            if not hasattr(request.user, 'company_profile') or application.job.company != request.user.company_profile:
+                raise PermissionDenied('Not authorized to shortlist this applicant.')
+        old_status = application.status
+        if application.status == Application.Status.SHORTLISTED:
+            application.status = Application.Status.REVIEWING
+            action_desc = "removed from shortlist (returned to Reviewing)"
+        else:
+            application.status = Application.Status.SHORTLISTED
+            action_desc = "shortlisted for priority review"
+        application.save()
+        ApplicationStatusHistory.objects.create(
+            application=application,
+            changed_by=request.user,
+            old_status=old_status,
+            new_status=application.status,
+            note=f"Candidate {action_desc}"
+        )
+        return Response({
+            'status': application.status,
+            'is_shortlisted': application.status == Application.Status.SHORTLISTED,
+            'detail': f"Candidate {action_desc}."
+        })
 
 class ApplicationStatusHistoryViewSet(viewsets.ReadOnlyModelViewSet):
     """

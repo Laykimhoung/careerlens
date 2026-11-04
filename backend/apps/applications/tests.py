@@ -119,3 +119,46 @@ class ApplicationTests(APITestCase):
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
+
+    def test_candidate_ranking_as_company(self):
+        self.client.force_authenticate(user=self.company_user1)
+        url = reverse('application-ranking') + f'?job_id={self.job1_published.id}'
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('job', response.data)
+        self.assertIn('stats', response.data)
+        self.assertIn('results', response.data)
+        self.assertEqual(len(response.data['results']), 1)
+        result = response.data['results'][0]
+        self.assertIn('ranking', result)
+        self.assertIn('match_score', result['ranking'])
+
+    def test_candidate_shortlist_toggle(self):
+        self.client.force_authenticate(user=self.company_user1)
+        url = reverse('application-shortlist', args=[self.application1.id])
+        # Shortlist
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(response.data['is_shortlisted'])
+        self.application1.refresh_from_db()
+        self.assertEqual(self.application1.status, Application.Status.SHORTLISTED)
+
+        # Un-shortlist (reverts to REVIEWING)
+        response2 = self.client.post(url)
+        self.assertEqual(response2.status_code, status.HTTP_200_OK)
+        self.assertFalse(response2.data['is_shortlisted'])
+        self.application1.refresh_from_db()
+        self.assertEqual(self.application1.status, Application.Status.REVIEWING)
+
+    def test_candidate_ranking_compare(self):
+        self.client.force_authenticate(user=self.company_user1)
+        app2 = Application.objects.create(
+            candidate=self.candidate_profile2,
+            job=self.job1_published,
+            status=Application.Status.APPLIED
+        )
+        url = reverse('application-compare')
+        response = self.client.post(url, {'application_ids': [self.application1.id, app2.id]}, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('candidates', response.data)
+        self.assertEqual(len(response.data['candidates']), 2)
