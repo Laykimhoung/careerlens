@@ -32,7 +32,6 @@ import CompanyCreateJob from "../pages/company/CreateJob/CreateJob";
 import CompanyEditJob from "../pages/company/EditJob/EditJob";
 import CompanyApplicants from "../pages/company/Applicants/Applicants";
 import CompanyApplicantDetails from "../pages/company/ApplicantDetails/ApplicantDetails";
-import CompanyCandidateRanking from "../pages/company/CandidateRanking/CandidateRanking";
 import CompanyInterviews from "../pages/company/Interviews/Interviews";
 
 import AdminDashboard from "../pages/admin/Dashboard/Dashboard";
@@ -103,7 +102,7 @@ export default function AppRoutes() {
           <Route path="jobs/:id/edit" element={<CompanyEditJob />} />
           <Route path="applicants" element={<CompanyApplicants />} />
           <Route path="applicants/:id" element={<CompanyApplicantDetails />} />
-          <Route path="candidate-ranking" element={<CompanyCandidateRanking />} />
+          <Route path="candidate-ranking" element={<Navigate to="/company/applicants" replace />} />
           <Route path="interviews" element={<CompanyInterviews />} />
           <Route path="messages" element={<CandidateMessages />} />
           <Route path="talent-pool" element={<CandidatePlaceholder title="Talent Pool" />} />

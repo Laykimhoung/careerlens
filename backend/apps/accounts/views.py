@@ -313,7 +313,7 @@ class GeminiKeyView(APIView):
         return Response({
             "has_key": has_key,
             "key_preview": preview,
-            "model": "gemini-2.5-flash",
+            "model": "gemini-3.5-flash-lite",
             "status": "connected" if has_key else "not_configured",
         })
 
@@ -339,9 +339,9 @@ class GeminiKeyView(APIView):
         preview = f"{api_key[:6]}...{api_key[-4:]}" if len(api_key) > 10 else "••••••••"
         return Response({
             "status": "connected",
-            "message": "Google Gemini API key verified and connected successfully! AI features are now powered by Gemini 2.5 Flash.",
+            "message": "Google Gemini API key verified and connected successfully! AI features are now powered by Gemini 3.5 Flash-Lite.",
             "key_preview": preview,
-            "model": "gemini-2.5-flash",
+            "model": "gemini-3.5-flash-lite",
         })
 
     def delete(self, request):

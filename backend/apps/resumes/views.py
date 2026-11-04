@@ -56,7 +56,13 @@ class ResumeUploadView(APIView):
 
         target_role = (request.data.get("target_role") or "").strip()
         parsed_data = parse_resume_content(uploaded_file.name, candidate, target_role=target_role)
-        analysis_data = analyze_resume_data(parsed_data, target_role=target_role)
+        gemini_key = candidate.gemini_api_key or request.headers.get("X-Gemini-Api-Key")
+        if gemini_key:
+            from .gemini_service import gemini_analyze_cv
+            g_analysis = gemini_analyze_cv(parsed_data, target_role=target_role, api_key=gemini_key)
+            analysis_data = g_analysis if g_analysis else analyze_resume_data(parsed_data, target_role=target_role)
+        else:
+            analysis_data = analyze_resume_data(parsed_data, target_role=target_role)
 
         # Deactivate existing active resumes
         Resume.objects.filter(candidate=candidate).update(is_active=False)
@@ -175,7 +181,7 @@ class ResumeAnalyzeView(APIView):
 class ImprovementDiagnosisView(APIView):
     """
     GET /api/resumes/improvement/diagnosis/
-    Fetches weaknesses diagnosis & selectable improvement options.
+    Fetches weaknesses diagnosis & selectable improvement options using Prompt 2.
     """
     permission_classes = [permissions.IsAuthenticated]
 
@@ -185,6 +191,14 @@ class ImprovementDiagnosisView(APIView):
             return Response({"detail": "Candidate profile required."}, status=status.HTTP_400_BAD_REQUEST)
 
         latest_resume = Resume.objects.filter(candidate=candidate, is_active=True).first()
+        gemini_key = candidate.gemini_api_key or request.headers.get("X-Gemini-Api-Key")
+        if gemini_key and latest_resume:
+            from .gemini_service import gemini_diagnose_cv
+            g_diag = gemini_diagnose_cv(latest_resume.parsed_data, latest_resume.target_role, gemini_key)
+            if g_diag and isinstance(g_diag, dict) and "improvement_options" in g_diag:
+                g_diag["target_role"] = latest_resume.target_role or "Software Developer"
+                return Response(g_diag)
+
         diagnosis = generate_cv_diagnosis(candidate, latest_resume)
         return Response(diagnosis)
 
@@ -192,7 +206,7 @@ class ImprovementDiagnosisView(APIView):
 class ImprovementQuestionnaireView(APIView):
     """
     GET /api/resumes/improvement/questionnaire/
-    Personalized missing-information questionnaire based on actual gaps.
+    Personalized missing-information questionnaire based on actual gaps using Prompt 2.
     """
     permission_classes = [permissions.IsAuthenticated]
 
@@ -202,6 +216,13 @@ class ImprovementQuestionnaireView(APIView):
             return Response({"detail": "Candidate profile required."}, status=status.HTTP_400_BAD_REQUEST)
 
         latest_resume = Resume.objects.filter(candidate=candidate, is_active=True).first()
+        gemini_key = candidate.gemini_api_key or request.headers.get("X-Gemini-Api-Key")
+        if gemini_key and latest_resume:
+            from .gemini_service import gemini_diagnose_cv
+            g_diag = gemini_diagnose_cv(latest_resume.parsed_data, latest_resume.target_role, gemini_key)
+            if g_diag and isinstance(g_diag, dict) and "questions" in g_diag:
+                return Response({"questions": g_diag["questions"]})
+
         questionnaire = generate_cv_questionnaire(candidate, latest_resume)
         return Response(questionnaire)
 
