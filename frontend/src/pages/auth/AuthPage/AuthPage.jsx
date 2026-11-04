@@ -6,6 +6,7 @@ import CurvyInput from "../../../components/common/CurvyInput";
 import NeonCheckbox from "../../../components/common/NeonCheckbox";
 import { useLanguage } from "../../../context/LanguageContext";
 import "./AuthPage.css";
+import { isDemoModeEnabled } from "../../../config/features";
 
 const ROLE_DASHBOARD = { candidate: "/candidate", company: "/company", admin: "/admin" };
 
@@ -178,6 +179,7 @@ export default function AuthPage() {
 
   // Quick Demo fill handler
   const fillDemo = (username, password) => {
+    if (!isDemoModeEnabled()) return;
     setLoginForm((prev) => ({
       ...prev,
       email: username,
@@ -380,8 +382,9 @@ export default function AuthPage() {
               </div>
             </div>
 
-            {/* Quick Demo Login Pills */}
-            <div className="tether-demo-box">
+            {/* Quick Demo Login Pills (Visible only when Demo Mode is enabled) */}
+            {isDemoModeEnabled() && (
+              <div className="tether-demo-box">
               <p className="tether-demo-title">Quick Demo Login</p>
               <div className="tether-demo-buttons">
                 <button
@@ -413,6 +416,7 @@ export default function AuthPage() {
                 Password: <code>CareerLens2026!Demo</code>
               </p>
             </div>
+            )}
 
             {/* Switch to Register */}
             <div className="tether-switch">

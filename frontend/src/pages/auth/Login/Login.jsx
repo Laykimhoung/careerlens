@@ -4,6 +4,7 @@ import { useAuth } from '../../../hooks/useAuth';
 import AuthLayout from '../../../components/auth/AuthLayout';
 import LoginForm from '../../../components/auth/LoginForm';
 import "../auth.css";
+import { isDemoModeEnabled } from "../../../config/features";
 
 const ROLE_DASHBOARD = { candidate: "/candidate", company: "/company", admin: "/admin" };
 
@@ -38,7 +39,8 @@ export default function Login() {
       </div>
       <LoginForm onSubmit={handleSubmit} loading={loading} error={error} onClearError={clearError} />
       
-      {/* Demo Accounts Quick Login */}
+      {/* Demo Accounts Quick Login (Visible only when Demo Mode is enabled) */}
+      {isDemoModeEnabled() && (
       <div style={{
         marginTop: "24px",
         padding: "16px",
@@ -116,6 +118,7 @@ export default function Login() {
           Password: <code style={{ color: "#1fd5a8" }}>CareerLens2026!Demo</code>
         </p>
       </div>
+      )}
     </AuthLayout>
   );
 }
