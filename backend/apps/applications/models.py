@@ -6,6 +6,7 @@ class Application(models.Model):
     class Status(models.TextChoices):
         APPLIED = "APPLIED", "Applied"
         REVIEWING = "REVIEWING", "Reviewing"
+        SHORTLISTED = "SHORTLISTED", "Shortlisted"
         INTERVIEW = "INTERVIEW", "Interview"
         OFFERED = "OFFERED", "Offered"
         REJECTED = "REJECTED", "Rejected"

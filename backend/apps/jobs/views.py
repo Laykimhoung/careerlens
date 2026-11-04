@@ -145,3 +145,97 @@ class PlatformStatsView(APIView):
             "jobs": jobs_count,
             "connections": connections_count,
         })
+
+
+from .recommendations import get_candidate_recommendations
+
+
+class JobRecommendationView(APIView):
+    """
+    Candidate AI job recommendations based on skills, profile, and career preferences.
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def _resolve_candidate(self, request):
+        if hasattr(request.user, "candidate_profile"):
+            return request.user.candidate_profile
+        if request.user.role == request.user.Role.ADMIN:
+            cand_id = request.query_params.get("candidate_id") or (request.data.get("candidate_id") if isinstance(request.data, dict) else None)
+            if cand_id:
+                return CandidateProfile.objects.filter(id=cand_id).first()
+            return CandidateProfile.objects.first()
+        return None
+
+    def get(self, request):
+        candidate = self._resolve_candidate(request)
+        if not candidate and request.user.role == request.user.Role.COMPANY:
+            return Response({
+                "detail": "Job recommendations are designed for candidates. Switch to a candidate account to view personalized matches."
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        preferences = {
+            "target_role": request.query_params.get("target_role", ""),
+            "preferred_location": request.query_params.get("location", ""),
+            "preferred_employment_type": request.query_params.get("employment_type", ""),
+            "preferred_workplace_type": request.query_params.get("workplace_type", ""),
+        }
+
+        results = get_candidate_recommendations(
+            candidate=candidate,
+            preferences=preferences,
+            search=request.query_params.get("search"),
+            min_score=request.query_params.get("min_score"),
+            location=request.query_params.get("location"),
+            employment_type=request.query_params.get("employment_type"),
+            workplace_type=request.query_params.get("workplace_type"),
+        )
+
+        top_score = results[0]["match_score"] if results else 0
+        target_role = preferences["target_role"] or (candidate.major if candidate else "")
+
+        return Response({
+            "count": len(results),
+            "top_score": top_score,
+            "target_role": target_role,
+            "preferred_location": preferences["preferred_location"],
+            "preferred_employment_type": preferences["preferred_employment_type"],
+            "preferred_workplace_type": preferences["preferred_workplace_type"],
+            "results": results,
+        })
+
+    def post(self, request):
+        candidate = self._resolve_candidate(request)
+        if not candidate and request.user.role == request.user.Role.COMPANY:
+            return Response({
+                "detail": "Job recommendations are designed for candidates."
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        data = request.data if isinstance(request.data, dict) else {}
+        preferences = {
+            "target_role": data.get("target_role", ""),
+            "preferred_location": data.get("preferred_location", ""),
+            "preferred_employment_type": data.get("preferred_employment_type", ""),
+            "preferred_workplace_type": data.get("preferred_workplace_type", ""),
+        }
+
+        results = get_candidate_recommendations(
+            candidate=candidate,
+            preferences=preferences,
+            search=data.get("search"),
+            min_score=data.get("min_score"),
+            location=preferences["preferred_location"],
+            employment_type=preferences["preferred_employment_type"],
+            workplace_type=preferences["preferred_workplace_type"],
+        )
+
+        top_score = results[0]["match_score"] if results else 0
+
+        return Response({
+            "count": len(results),
+            "top_score": top_score,
+            "target_role": preferences["target_role"] or (candidate.major if candidate else ""),
+            "preferred_location": preferences["preferred_location"],
+            "preferred_employment_type": preferences["preferred_employment_type"],
+            "preferred_workplace_type": preferences["preferred_workplace_type"],
+            "results": results,
+        })
