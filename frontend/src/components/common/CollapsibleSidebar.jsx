@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { LogOut } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
+import { isDemoModeEnabled } from '../../config/features';
 import logoIcon from '../../assets/logo/logo.webp';
 import './CollapsibleSidebar.css';
 
@@ -158,7 +159,7 @@ export default function CollapsibleSidebar({
         {/* Footer Section: Role Switcher & User Profile */}
         <div className="collapsible-sidebar-foot">
           {/* Role Switcher */}
-          {switchRole && (
+          {switchRole && isDemoModeEnabled() && (
             <div className="sidebar-role-box">
               <label htmlFor="sidebar-role-select" className="sidebar-role-label">
                 {t('common.roleSwitcher') || t('roleSwitcher') || 'Role Switcher'}

@@ -89,3 +89,32 @@ class DemoCommandsTests(TestCase):
         self.assertEqual(CompanyProfile.objects.filter(user__username__startswith="demo_comp_").count(), 9)
         self.assertEqual(CandidateProfile.objects.filter(user__username__startswith="demo_cand_").count(), 5)
         self.assertTrue(User.objects.filter(username="unrelated_student").exists())
+
+
+    def test_seed_blocked_when_demo_mode_disabled(self):
+        out = StringIO()
+        with self.settings(ENABLE_DEMO_MODE=False):
+            call_command("seed_demo_data", manifest=self.manifest_path, stdout=out)
+        out_str = out.getvalue()
+        self.assertIn("Demo Mode is disabled in this environment", out_str)
+        # Verify 0 demo jobs created
+        self.assertEqual(Job.objects.filter(company__user__username__startswith="demo_comp_").count(), 0)
+
+    def test_seed_allowed_with_force_when_demo_mode_disabled(self):
+        out = StringIO()
+        with self.settings(ENABLE_DEMO_MODE=False):
+            call_command("seed_demo_data", force=True, manifest=self.manifest_path, stdout=out)
+        out_str = out.getvalue()
+        self.assertIn("[SUCCESS] Demo seeding completed successfully!", out_str)
+        self.assertEqual(Job.objects.filter(company__user__username__startswith="demo_comp_").count(), 24)
+
+    def test_api_root_reports_demo_mode(self):
+        with self.settings(ENABLE_DEMO_MODE=False):
+            response = self.client.get("/")
+            self.assertEqual(response.status_code, 200)
+            self.assertFalse(response.json().get("demo_mode"))
+
+        with self.settings(ENABLE_DEMO_MODE=True):
+            response = self.client.get("/")
+            self.assertEqual(response.status_code, 200)
+            self.assertTrue(response.json().get("demo_mode"))

@@ -14,6 +14,7 @@ import {
   getMeApi,
   normalizeAuthUser,
 } from "../services/authService";
+import { isDemoModeEnabled } from "../config/features";
 
 export const AuthContext = createContext(null);
 
@@ -244,6 +245,11 @@ export function AuthProvider({ children }) {
 
   const switchRole = useCallback(
     async (newRole) => {
+      if (!isDemoModeEnabled()) {
+        console.warn("Demo role switching is disabled in this environment.");
+        return;
+      }
+
       const normalizedTarget =
         newRole === "student" ? "candidate" : String(newRole || "candidate").toLowerCase();
       const creds = DEMO_ROLE_CREDENTIALS[normalizedTarget];
@@ -280,7 +286,7 @@ export function AuthProvider({ children }) {
     register,
     logout,
     clearError,
-    switchRole,
+    switchRole: isDemoModeEnabled() ? switchRole : null,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

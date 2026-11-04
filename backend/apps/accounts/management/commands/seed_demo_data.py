@@ -21,8 +21,22 @@ class Command(BaseCommand):
             default=None,
             help="Optional path to a custom demo manifest file.",
         )
+        parser.add_argument(
+            "--force",
+            action="store_true",
+            help="Bypass the ENABLE_DEMO_MODE safety check and force seeding.",
+        )
 
     def handle(self, *args, **options):
+        force = options.get("force", False)
+        if not getattr(settings, "ENABLE_DEMO_MODE", True) and not force:
+            self.stdout.write(
+                self.style.ERROR(
+                    "Error: Demo Mode is disabled in this environment (ENABLE_DEMO_MODE=False).\n"
+                    "Seeding is blocked to protect production data. Use --force to override if intentional."
+                )
+            )
+            return
         manifest_path = options.get("manifest")
         tracker = DemoTracker(manifest_path=manifest_path)
         default_password = os.getenv("DEMO_USER_PASSWORD", "CareerLens2026!Demo")

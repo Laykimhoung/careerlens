@@ -30,6 +30,13 @@ SECRET_KEY = os.getenv("SECRET_KEY", "")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 
+# Demo Mode Configuration
+# Enabled by default in local development (DEBUG=True); disabled by default in production.
+ENABLE_DEMO_MODE = os.getenv(
+    "ENABLE_DEMO_MODE",
+    "True" if DEBUG else "False",
+).strip().lower() in ("true", "1", "t", "yes")
+
 ALLOWED_HOSTS = [
     host.strip()
     for host in os.getenv(

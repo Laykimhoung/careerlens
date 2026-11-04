@@ -25,6 +25,7 @@ def api_root_view(request):
     return JsonResponse({
         "project": "CareerLens REST API",
         "status": "online",
+        "demo_mode": getattr(settings, "ENABLE_DEMO_MODE", False),
         "message": "Welcome to CareerLens API. The React frontend is running at http://localhost:5173/",
         "endpoints": {
             "admin": "/admin/",

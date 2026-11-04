@@ -28,6 +28,7 @@ import {
 import { fetchAdminDashboardData, getAdminNotifications } from '../../../services/adminService';
 import { extractResults } from '../../../services/api';
 import { resetDemoStore } from '../../../services/member3DemoStore';
+import { isDemoModeEnabled } from '../../../config/features';
 import { useAuth } from '../../../hooks/useAuth';
 import RecruitmentWorkspaceBanner from '../../../components/illustrations/RecruitmentWorkspaceBanner';
 import CandidateCareerSpotlight from '../../../components/illustrations/CandidateCareerSpotlight';
@@ -125,6 +126,7 @@ export default function AdminDashboard() {
   }, [loadData]);
 
   const handleResetDemoData = () => {
+    if (!isDemoModeEnabled()) return;
     resetDemoStore();
     loadData();
   };
@@ -423,9 +425,11 @@ export default function AdminDashboard() {
               <div className="modern-audit-box">
                 <div className="panel-title-row" style={{ marginTop: '16px', marginBottom: '8px' }}>
                   <h3 className="panel-heading" style={{ fontSize: '0.9375rem' }}>{t("common.nav.auditLogs", "Audit Log")}</h3>
-                  <button type="button" className="modern-reset-link" onClick={handleResetDemoData}>
-                    <RotateCcw size={13} /> {t("admin.resetDemoData", "Reset Demo Data")}
-                  </button>
+                  {isDemoModeEnabled() && (
+                    <button type="button" className="modern-reset-link" onClick={handleResetDemoData}>
+                      <RotateCcw size={13} /> {t("admin.resetDemoData", "Reset Demo Data")}
+                    </button>
+                  )}
                 </div>
 
                 <div className="audit-items-list">
