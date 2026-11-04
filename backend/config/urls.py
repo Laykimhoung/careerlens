@@ -34,6 +34,7 @@ def api_root_view(request):
             "skills": "/api/skills/",
             "saved_jobs": "/api/saved-jobs/",
             "recommendations": "/api/recommendations/",
+            "roadmap": "/api/roadmap/",
             "applications": "/api/applications/",
             "messages": "/api/messages/",
             "notifications": "/api/notifications/",
