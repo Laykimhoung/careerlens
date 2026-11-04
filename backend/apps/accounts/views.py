@@ -1,4 +1,5 @@
-from rest_framework import generics, viewsets
+from rest_framework import generics, viewsets, status, permissions
+from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -282,3 +283,75 @@ class AdminDashboardStatsView(generics.GenericAPIView):
         })
 
 
+
+
+class GeminiKeyView(APIView):
+    """
+    Manages the candidate's personal Google Gemini API key.
+    Allows students to plug in their own Gemini API key to power AI features.
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def _get_candidate(self, request):
+        if hasattr(request.user, "candidate_profile"):
+            return request.user.candidate_profile
+        if request.user.role == request.user.Role.ADMIN:
+            return CandidateProfile.objects.first()
+        return None
+
+    def get(self, request):
+        candidate = self._get_candidate(request)
+        if not candidate:
+            return Response({"detail": "Candidate profile required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        has_key = bool(candidate.gemini_api_key)
+        preview = ""
+        if has_key:
+            k = candidate.gemini_api_key.strip()
+            preview = f"{k[:6]}...{k[-4:]}" if len(k) > 10 else "••••••••"
+
+        return Response({
+            "has_key": has_key,
+            "key_preview": preview,
+            "model": "gemini-2.5-flash",
+            "status": "connected" if has_key else "not_configured",
+        })
+
+    def post(self, request):
+        candidate = self._get_candidate(request)
+        if not candidate:
+            return Response({"detail": "Candidate profile required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        api_key = (request.data.get("api_key") or "").strip()
+        if not api_key:
+            return Response({"detail": "API key cannot be blank."}, status=status.HTTP_400_BAD_REQUEST)
+
+        from apps.resumes.gemini_service import validate_gemini_key
+        is_valid, msg = validate_gemini_key(api_key)
+        if not is_valid:
+            return Response({
+                "detail": f"Gemini API validation failed: {msg}. Please ensure your key is active in Google AI Studio."
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        candidate.gemini_api_key = api_key
+        candidate.save()
+
+        preview = f"{api_key[:6]}...{api_key[-4:]}" if len(api_key) > 10 else "••••••••"
+        return Response({
+            "status": "connected",
+            "message": "Google Gemini API key verified and connected successfully! AI features are now powered by Gemini 2.5 Flash.",
+            "key_preview": preview,
+            "model": "gemini-2.5-flash",
+        })
+
+    def delete(self, request):
+        candidate = self._get_candidate(request)
+        if not candidate:
+            return Response({"detail": "Candidate profile required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        candidate.gemini_api_key = ""
+        candidate.save()
+        return Response({
+            "status": "disconnected",
+            "message": "Gemini API key removed. AI features will use built-in engine.",
+        })

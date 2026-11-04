@@ -107,3 +107,26 @@ class ProfileTests(APITestCase):
         response = self.client.patch(url, data, format='json')
         # company user cannot edit candidate profile
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_gemini_key_get_and_delete(self):
+        self.client.force_authenticate(user=self.candidate_user)
+        url = reverse('gemini_key')
+        get_res = self.client.get(url)
+        self.assertEqual(get_res.status_code, status.HTTP_200_OK)
+        self.assertFalse(get_res.data['has_key'])
+        self.assertEqual(get_res.data['status'], 'not_configured')
+
+        # Set key directly and test get preview + delete
+        self.candidate_profile.gemini_api_key = "AIzaSyFakeTestKey12345"
+        self.candidate_profile.save()
+
+        get_res2 = self.client.get(url)
+        self.assertEqual(get_res2.status_code, status.HTTP_200_OK)
+        self.assertTrue(get_res2.data['has_key'])
+        self.assertIn("...", get_res2.data['key_preview'])
+
+        del_res = self.client.delete(url)
+        self.assertEqual(del_res.status_code, status.HTTP_200_OK)
+        self.assertEqual(del_res.data['status'], 'disconnected')
+        self.candidate_profile.refresh_from_db()
+        self.assertEqual(self.candidate_profile.gemini_api_key, "")

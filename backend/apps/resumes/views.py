@@ -159,7 +159,13 @@ class ResumeAnalyzeView(APIView):
         target_role = request.data.get("target_role") or resume.target_role
         resume.target_role = target_role
 
-        analysis_data = analyze_resume_data(resume.parsed_data, target_role=target_role)
+        gemini_key = candidate.gemini_api_key or request.headers.get("X-Gemini-Api-Key")
+        if gemini_key:
+            from .gemini_service import gemini_analyze_cv
+            g_analysis = gemini_analyze_cv(resume.parsed_data, target_role=target_role, api_key=gemini_key)
+            analysis_data = g_analysis if g_analysis else analyze_resume_data(resume.parsed_data, target_role=target_role)
+        else:
+            analysis_data = analyze_resume_data(resume.parsed_data, target_role=target_role)
         resume.analysis = analysis_data
         resume.save()
 
@@ -225,14 +231,21 @@ class ImprovementGenerateView(APIView):
         target_role = data.get("target_role", "")
 
         latest_resume = Resume.objects.filter(candidate=candidate, is_active=True).first()
-        improved_content, reanalysis = generate_improved_version_content(
-            candidate=candidate,
-            latest_resume=latest_resume,
-            options=options,
-            answers=answers,
-            template=template,
-            target_role=target_role,
-        )
+        gemini_key = candidate.gemini_api_key or request.headers.get("X-Gemini-Api-Key")
+        if gemini_key:
+            from .gemini_service import gemini_improve_cv
+            curr_data = latest_resume.parsed_data if latest_resume else {}
+            g_content, g_reanalysis = gemini_improve_cv(curr_data, target_role, answers, options, gemini_key)
+            if g_content and g_reanalysis:
+                improved_content, reanalysis = g_content, g_reanalysis
+            else:
+                improved_content, reanalysis = generate_improved_version_content(
+                    candidate=candidate, latest_resume=latest_resume, options=options, answers=answers, template=template, target_role=target_role
+                )
+        else:
+            improved_content, reanalysis = generate_improved_version_content(
+                candidate=candidate, latest_resume=latest_resume, options=options, answers=answers, template=template, target_role=target_role
+            )
 
         # Determine next version number
         count = ResumeVersion.objects.filter(candidate=candidate).count()

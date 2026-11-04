@@ -34,6 +34,7 @@ class CandidateProfile(models.Model):
         blank=True,
         null=True,
     )
+    gemini_api_key = models.CharField(max_length=255, blank=True, default="")
 
     def __str__(self):
         return f"{self.user.username} - Candidate"
@@ -90,4 +91,4 @@ class AuditLog(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.actor} - {self.action} at {self.created_at}"
+        return f"{self.actor} - {self.action} at {self.created_at}"
