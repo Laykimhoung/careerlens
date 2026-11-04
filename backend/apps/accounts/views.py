@@ -295,6 +295,9 @@ class GeminiKeyView(APIView):
     def _get_candidate(self, request):
         if hasattr(request.user, "candidate_profile"):
             return request.user.candidate_profile
+        if request.user.role == request.user.Role.CANDIDATE:
+            profile, _ = CandidateProfile.objects.get_or_create(user=request.user)
+            return profile
         if request.user.role == request.user.Role.ADMIN:
             return CandidateProfile.objects.first()
         return None

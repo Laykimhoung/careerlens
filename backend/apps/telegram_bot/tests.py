@@ -300,3 +300,39 @@ class TelegramBotUnitTests(TestCase):
             args, kwargs = mock_send.call_args
             self.assertIn("Senior React Engineer", args[1])
             self.assertIn("Build scalable UI applications.", args[1])
+
+    # -------------------------------------------------------------
+    # 8. Natural Language & Free-Text Interaction (Prevents "no response")
+    # -------------------------------------------------------------
+    def test_bot_natural_text_search(self):
+        """Typing a keyword without slash command triggers smart job search."""
+        bot = create_bot()
+        msg = self._make_msg("React")
+
+        with patch.object(bot, "send_message") as mock_send:
+            bot.process_new_messages([msg])
+            self.assertGreaterEqual(mock_send.call_count, 2)
+            card_text = mock_send.call_args_list[1][0][1]
+            self.assertIn("Senior React Engineer", card_text)
+
+    def test_bot_natural_text_greeting(self):
+        """Greetings receive warm welcome and reply keyboard menu."""
+        bot = create_bot()
+        msg = self._make_msg("hello")
+
+        with patch.object(bot, "send_message") as mock_send:
+            bot.process_new_messages([msg])
+            mock_send.assert_called_once()
+            args, kwargs = mock_send.call_args
+            self.assertIn("Welcome to CareerLens", args[1])
+
+    def test_bot_natural_text_numeric_id(self):
+        """Typing a job ID directly (e.g. '1' or '#1') opens job details."""
+        bot = create_bot()
+        msg = self._make_msg(f"#{self.job_published.id}")
+
+        with patch.object(bot, "send_message") as mock_send:
+            bot.process_new_messages([msg])
+            mock_send.assert_called_once()
+            args, kwargs = mock_send.call_args
+            self.assertIn("Senior React Engineer", args[1])

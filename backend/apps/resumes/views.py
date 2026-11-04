@@ -20,6 +20,9 @@ from apps.accounts.models import CandidateProfile
 def _resolve_candidate(request):
     if hasattr(request.user, "candidate_profile"):
         return request.user.candidate_profile
+    if request.user.role == request.user.Role.CANDIDATE:
+        profile, _ = CandidateProfile.objects.get_or_create(user=request.user)
+        return profile
     if request.user.role == request.user.Role.ADMIN:
         cand_id = request.query_params.get("candidate_id") or (
             request.data.get("candidate_id") if isinstance(request.data, dict) else None
@@ -240,10 +243,6 @@ class ImprovementGenerateView(APIView):
             return Response({"detail": "Candidate profile required."}, status=status.HTTP_400_BAD_REQUEST)
 
         usage = _get_or_create_usage(candidate)
-        if usage.improvements_used >= usage.improvements_limit:
-            return Response({
-                "detail": "You have reached your CV improvement limit for this cycle. Please upgrade your plan for unlimited revisions."
-            }, status=status.HTTP_403_FORBIDDEN)
 
         data = request.data if isinstance(request.data, dict) else {}
         options = data.get("selected_improvements", [])

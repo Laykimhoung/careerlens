@@ -1,7 +1,13 @@
 import os
 import sys
+import time
+import logging
 from django.core.management.base import BaseCommand, CommandError
+from django.db import close_old_connections
+import telebot
 from apps.telegram_bot.bot import create_bot, get_web_url
+
+logger = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
@@ -16,6 +22,7 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
+        close_old_connections()
         token = options.get("token") or os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
         if not token:
             raise CommandError(
@@ -47,9 +54,17 @@ class Command(BaseCommand):
         except Exception as e:
             self.stdout.write(self.style.NOTICE(f"Note: delete_webhook notice: {e}"))
 
-        try:
-            bot.infinity_polling(timeout=20, long_polling_timeout=10)
-        except KeyboardInterrupt:
-            self.stdout.write(self.style.SUCCESS("\nTelegram bot stopped gracefully."))
-            sys.exit(0)
-
+        while True:
+            try:
+                close_old_connections()
+                bot.infinity_polling(timeout=20, long_polling_timeout=10)
+                break
+            except KeyboardInterrupt:
+                self.stdout.write(self.style.SUCCESS("\nTelegram bot stopped gracefully."))
+                sys.exit(0)
+            except telebot.apihelper.ApiTelegramException as api_err:
+                self.stdout.write(self.style.ERROR(f"Telegram API network error: {api_err}. Reconnecting in 5s..."))
+                time.sleep(5)
+            except Exception as err:
+                self.stdout.write(self.style.ERROR(f"Polling exception: {err}. Reconnecting in 5s..."))
+                time.sleep(5)
