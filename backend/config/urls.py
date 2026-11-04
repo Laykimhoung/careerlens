@@ -34,6 +34,8 @@ def api_root_view(request):
             "skills": "/api/skills/",
             "saved_jobs": "/api/saved-jobs/",
             "recommendations": "/api/recommendations/",
+            "roadmap": "/api/roadmap/",
+            "resumes": "/api/resumes/",
             "applications": "/api/applications/",
             "messages": "/api/messages/",
             "notifications": "/api/notifications/",
@@ -50,6 +52,7 @@ urlpatterns = [
     path('api/', include('apps.applications.urls')),
     path('api/', include('apps.messaging.urls')),
     path('api/telegram/', include('apps.telegram_bot.urls')),
+    path('api/resumes/', include('apps.resumes.urls')),
 ]
 
 if settings.DEBUG:
