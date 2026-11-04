@@ -106,3 +106,61 @@ class JobTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['target_role'], 'Job 1')
         self.assertIn('results', response.data)
+
+    def test_roadmap_options_get(self):
+        self.client.force_authenticate(user=self.candidate_user)
+        url = reverse('roadmap_options')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('popular_roles', response.data)
+        self.assertGreater(len(response.data['popular_roles']), 0)
+        self.assertIn('available_jobs', response.data)
+        self.assertGreaterEqual(len(response.data['available_jobs']), 1)
+
+    def test_generate_and_get_career_roadmap(self):
+        self.client.force_authenticate(user=self.candidate_user)
+        gen_url = reverse('generate_roadmap')
+        payload = {
+            'target_role': 'Frontend Developer',
+            'target_job_id': self.job1_published.id,
+            'weekly_hours': 12,
+        }
+        gen_res = self.client.post(gen_url, payload, format='json')
+        self.assertEqual(gen_res.status_code, status.HTTP_200_OK)
+        self.assertIn('roadmap', gen_res.data)
+        roadmap = gen_res.data['roadmap']
+        self.assertEqual(len(roadmap['stages']), 5)
+        self.assertEqual(roadmap['weekly_hours'], 12)
+
+        # Retrieve active roadmap
+        get_url = reverse('career_roadmap')
+        get_res = self.client.get(get_url)
+        self.assertEqual(get_res.status_code, status.HTTP_200_OK)
+        self.assertTrue(get_res.data['has_roadmap'])
+        self.assertEqual(get_res.data['roadmap']['target_role'], 'Frontend Developer')
+
+    def test_update_milestone_and_sync_skill(self):
+        self.client.force_authenticate(user=self.candidate_user)
+        # First generate
+        self.client.post(reverse('generate_roadmap'), {'target_role': 'Backend Developer', 'weekly_hours': 10}, format='json')
+
+        # Update milestone
+        ms_url = reverse('update_milestone')
+        ms_payload = {
+            'stage_id': 1,
+            'milestone_id': 101,
+            'status': 'completed',
+            'notes': 'Completed standard exercises',
+        }
+        ms_res = self.client.patch(ms_url, ms_payload, format='json')
+        self.assertEqual(ms_res.status_code, status.HTTP_200_OK)
+        self.assertGreaterEqual(ms_res.data['roadmap']['completed_milestones'], 1)
+
+        # Sync skill to profile
+        sync_url = reverse('sync_skill_to_profile')
+        sync_payload = {'skill_name': 'Docker', 'proficiency': 'EXPERT'}
+        sync_res = self.client.post(sync_url, sync_payload, format='json')
+        self.assertEqual(sync_res.status_code, status.HTTP_200_OK)
+        self.assertTrue(
+            self.candidate_profile.skills.filter(skill__name__iexact='Docker').exists()
+        )

@@ -62,3 +62,16 @@ class SavedJob(models.Model):
     def __str__(self):
         return f"{self.candidate.user.username} saved {self.job.title}"
 
+
+
+class CandidateRoadmap(models.Model):
+    candidate = models.OneToOneField(CandidateProfile, on_delete=models.CASCADE, related_name="career_roadmap")
+    target_role = models.CharField(max_length=255)
+    target_job = models.ForeignKey(Job, on_delete=models.SET_NULL, null=True, blank=True)
+    weekly_hours = models.PositiveIntegerField(default=10)
+    roadmap_data = models.JSONField(default=dict)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.candidate.user.username}'s Roadmap ({self.target_role})"
