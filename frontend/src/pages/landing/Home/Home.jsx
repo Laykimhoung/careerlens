@@ -172,7 +172,7 @@ export default function Home() {
       setScrolled(y > 20);
 
       // Section tracking
-      const sectionIds = ["companies", "how", "about"];
+      const sectionIds = ["how", "telegram-bot", "companies", "about"];
       let found = "";
       for (const id of sectionIds) {
         const el = document.getElementById(id);
@@ -261,20 +261,23 @@ export default function Home() {
             </Link>
             
             <nav className="landing-nav">
-              <Link to="/login" className="landing-nav__link">
-                <span>{t("common.nav.findJobs")}</span>
-              </Link>
-              <a 
-                href="#companies" 
-                className={`landing-nav__link ${activeSection === "companies" ? "active" : ""}`}
-              >
-                <span>{t("common.forCompanies")}</span>
-              </a>
               <a 
                 href="#how" 
                 className={`landing-nav__link ${activeSection === "how" ? "active" : ""}`}
               >
                 <span>{t("common.howItWorks")}</span>
+              </a>
+              <a 
+                href="#telegram-bot" 
+                className={`landing-nav__link ${activeSection === "telegram-bot" ? "active" : ""}`}
+              >
+                <span>{t("common.nav.findJobs")}</span>
+              </a>
+              <a 
+                href="#companies" 
+                className={`landing-nav__link ${activeSection === "companies" ? "active" : ""}`}
+              >
+                <span>{t("common.forCompanies")}</span>
               </a>
               <a 
                 href="#about" 
@@ -325,14 +328,14 @@ export default function Home() {
           {mobileMenuOpen && (
             <div className="landing-mobile-menu">
               <nav className="landing-mobile-nav">
-                <Link to="/login" className="landing-mobile-nav__link" onClick={() => setMobileMenuOpen(false)}>
-                  <span>{t("common.nav.findJobs")}</span>
-                </Link>
-                <a href="#companies" className={`landing-mobile-nav__link ${activeSection === "companies" ? "active" : ""}`} onClick={() => setMobileMenuOpen(false)}>
-                  <span>{t("common.forCompanies")}</span>
-                </a>
                 <a href="#how" className={`landing-mobile-nav__link ${activeSection === "how" ? "active" : ""}`} onClick={() => setMobileMenuOpen(false)}>
                   <span>{t("common.howItWorks")}</span>
+                </a>
+                <a href="#telegram-bot" className={`landing-mobile-nav__link ${activeSection === "telegram-bot" ? "active" : ""}`} onClick={() => setMobileMenuOpen(false)}>
+                  <span>{t("common.nav.findJobs")}</span>
+                </a>
+                <a href="#companies" className={`landing-mobile-nav__link ${activeSection === "companies" ? "active" : ""}`} onClick={() => setMobileMenuOpen(false)}>
+                  <span>{t("common.forCompanies")}</span>
                 </a>
                 <a href="#about" className={`landing-mobile-nav__link ${activeSection === "about" ? "active" : ""}`} onClick={() => setMobileMenuOpen(false)}>
                   <span>{t("common.about")}</span>
@@ -380,6 +383,23 @@ export default function Home() {
                 <Link to="/register" className="landing-btn landing-btn--hero-outline">
                   {t("common.postJob")}
                 </Link>
+              </div>
+
+              {/* Telegram Bot Quick Access Pill */}
+              <div className="landing-hero__telegram-wrap">
+                <a
+                  href="https://t.me/careerlens_jobs_bot"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="landing-hero__telegram-pill"
+                >
+                  <span className="landing-telegram-pill__badge">BOT</span>
+                  <span className="landing-telegram-pill__icon">✈️</span>
+                  <span className="landing-telegram-pill__text">
+                    {t("common.telegramQuickFind", "Prefer Telegram? Find jobs instantly with @careerlens_jobs_bot")}
+                  </span>
+                  <span className="landing-telegram-pill__arrow">→</span>
+                </a>
               </div>
             </div>
           </section>
@@ -495,6 +515,112 @@ export default function Home() {
                   <div className="landing-timeline__number landing-timeline__number--gold">04</div>
                   <h3 className="landing-timeline__title">{t("common.howStep4Title")}</h3>
                   <p className="landing-timeline__desc">{t("common.howStep4Desc")}</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* ── Instant Telegram Job Search Showcase ── */}
+          <section className="landing-section landing-telegram-section" id="telegram-bot">
+            <div className="landing-section__inner">
+              <div className="landing-telegram-card landing-animate-on-scroll">
+                {/* Left Column: Information & CTAs */}
+                <div className="landing-telegram-card__content">
+                  <div className="landing-telegram-badge">
+                    <span className="landing-telegram-badge__dot" />
+                    <span>TELEGRAM BOT • 24/7 LIVE</span>
+                  </div>
+
+                  <h2 className="landing-telegram-title">
+                    {t("common.telegramBotTitle", "Find Jobs Instantly via Telegram")}
+                  </h2>
+
+                  <p className="landing-telegram-desc">
+                    {t(
+                      "common.telegramBotSubtitle",
+                      "No need to sign up first. Browse active vacancies, search by skills, and get matched straight from Telegram."
+                    )}
+                  </p>
+
+                  <div className="landing-telegram-features">
+                    <div className="landing-telegram-feat-item">
+                      <span className="landing-telegram-feat-icon">⚡</span>
+                      <span>{t("common.telegramBotFeature1", "Search any role or skill (e.g. React, Python, Remote)")}</span>
+                    </div>
+                    <div className="landing-telegram-feat-item">
+                      <span className="landing-telegram-feat-icon">📍</span>
+                      <span>{t("common.telegramBotFeature2", "Real-time listings with salaries, locations & deadlines")}</span>
+                    </div>
+                    <div className="landing-telegram-feat-item">
+                      <span className="landing-telegram-feat-icon">🚀</span>
+                      <span>{t("common.telegramBotFeature3", "1-tap direct apply on CareerLens with your profile")}</span>
+                    </div>
+                  </div>
+
+                  <div className="landing-telegram-cta-row">
+                    <a
+                      href="https://t.me/careerlens_jobs_bot"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="landing-telegram-btn"
+                    >
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
+                      </svg>
+                      <span>{t("common.telegramBotCta", "Open @careerlens_jobs_bot")}</span>
+                      <span>→</span>
+                    </a>
+                    <span className="landing-telegram-subtext">Free • No installation • Instant search</span>
+                  </div>
+                </div>
+
+                {/* Right Column: Realistic Interactive Bot Preview */}
+                <div className="landing-telegram-card__preview">
+                  <div className="telegram-mock-phone">
+                    <div className="telegram-mock-header">
+                      <div className="telegram-mock-avatar">🤖</div>
+                      <div className="telegram-mock-meta">
+                        <strong className="telegram-mock-name">CareerLens Jobs</strong>
+                        <span className="telegram-mock-status">bot • always active</span>
+                      </div>
+                    </div>
+
+                    <div className="telegram-mock-chat">
+                      <div className="telegram-msg telegram-msg--user">
+                        <span>/start</span>
+                        <span className="telegram-msg-time">Just now</span>
+                      </div>
+
+                      <div className="telegram-msg telegram-msg--bot">
+                        <p className="telegram-bot-intro">👋 <b>Welcome to CareerLens Jobs Bot!</b></p>
+                        <p className="telegram-bot-text">Search high-impact tech, finance, and engineering jobs across Cambodia.</p>
+                      </div>
+
+                      <div className="telegram-msg telegram-msg--user">
+                        <span>React Developer</span>
+                        <span className="telegram-msg-time">Just now</span>
+                      </div>
+
+                      <div className="telegram-msg telegram-msg--bot telegram-msg--job">
+                        <div className="telegram-job-badge">💼 NEW MATCH</div>
+                        <strong className="telegram-job-title">Senior React Engineer</strong>
+                        <span className="telegram-job-company">🏢 KhmerFintech Solutions</span>
+                        <span className="telegram-job-salary">💰 $1,200 - $1,800 • Phnom Penh</span>
+                        <div className="telegram-job-inline-btn">🚀 Apply on CareerLens</div>
+                      </div>
+                    </div>
+
+                    <div className="telegram-mock-keyboard">
+                      <div className="telegram-kb-row">
+                        <button type="button" className="telegram-kb-btn">📋 Browse Jobs</button>
+                        <button type="button" className="telegram-kb-btn">🔍 Search Jobs</button>
+                      </div>
+                      <div className="telegram-kb-row">
+                        <button type="button" className="telegram-kb-btn">🌐 Remote Jobs</button>
+                        <button type="button" className="telegram-kb-btn">💡 Help & Guide</button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -762,6 +888,9 @@ export default function Home() {
                   <Link to="/login">{t("common.nav.findJobs")}</Link>
                   <Link to="/login">{t("common.forCompanies")}</Link>
                   <a href="#how">{t("common.howItWorks")}</a>
+                  <a href="https://t.me/careerlens_jobs_bot" target="_blank" rel="noopener noreferrer">
+                    Telegram Bot (@careerlens_jobs_bot)
+                  </a>
                 </div>
                 <div className="landing-footer__col">
                   <h4>Company</h4>

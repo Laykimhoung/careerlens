@@ -2147,3 +2147,536 @@ html {
   }
 }
 
+
+/* ═════════════════════════════════════════════════════════════════════
+   TELEGRAM BOT QUICK JOB FIND SHOWCASE & HERO PILL
+   ═════════════════════════════════════════════════════════════════════ */
+
+/* Hero Telegram Pill */
+.landing-hero__telegram-wrap {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.landing-hero__telegram-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(34, 158, 217, 0.12);
+  border: 1px solid rgba(34, 158, 217, 0.35);
+  color: #38bdf8;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 13.5px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 4px 16px rgba(34, 158, 217, 0.15);
+}
+
+.landing-hero__telegram-pill:hover {
+  background: rgba(34, 158, 217, 0.22);
+  border-color: #38bdf8;
+  color: #7dd3fc;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(34, 158, 217, 0.3);
+}
+
+.landing-telegram-pill__badge {
+  background: #229ED9;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  padding: 2px 7px;
+  border-radius: 6px;
+  text-transform: uppercase;
+}
+
+.landing-telegram-pill__icon {
+  font-size: 15px;
+}
+
+.landing-telegram-pill__text {
+  color: #e0f2fe;
+}
+
+.landing-telegram-pill__arrow {
+  color: #38bdf8;
+  transition: transform 0.2s ease;
+}
+
+.landing-hero__telegram-pill:hover .landing-telegram-pill__arrow {
+  transform: translateX(3px);
+}
+
+/* Telegram Showcase Section */
+.landing-telegram-section {
+  position: relative;
+  overflow: hidden;
+}
+
+.landing-telegram-card {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 40px;
+  align-items: center;
+  background: radial-gradient(circle at 10% 20%, rgba(34, 158, 217, 0.14) 0%, rgba(9, 15, 27, 0.94) 80%);
+  border: 1px solid rgba(34, 158, 217, 0.35);
+  border-radius: 28px;
+  padding: 48px 44px;
+  box-shadow: 
+    0 24px 60px rgba(0, 0, 0, 0.4),
+    0 0 50px rgba(34, 158, 217, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.landing-telegram-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(34, 158, 217, 0.15);
+  border: 1px solid rgba(34, 158, 217, 0.4);
+  color: #38bdf8;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+
+.landing-telegram-badge__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #229ED9;
+  box-shadow: 0 0 10px #229ED9, 0 0 16px #38bdf8;
+  animation: notFoundPulse 1.8s infinite;
+}
+
+.landing-telegram-title {
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 1.25;
+  color: #f8fafc;
+  margin: 0 0 14px 0;
+  letter-spacing: -0.4px;
+}
+
+.landing-telegram-desc {
+  font-size: 16px;
+  line-height: 1.65;
+  color: #94a3b8;
+  margin: 0 0 24px 0;
+}
+
+.landing-telegram-features {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.landing-telegram-feat-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14.5px;
+  color: #e2e8f0;
+}
+
+.landing-telegram-feat-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.landing-telegram-cta-row {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.landing-telegram-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg, #229ED9 0%, #0088cc 100%);
+  color: #ffffff;
+  padding: 13px 26px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  box-shadow: 0 8px 24px rgba(34, 158, 217, 0.4);
+}
+
+.landing-telegram-btn:hover {
+  background: linear-gradient(135deg, #28a8e5 0%, #0099e6 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(34, 158, 217, 0.55);
+}
+
+.landing-telegram-subtext {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+/* Simulated Telegram Mobile Client */
+.telegram-mock-phone {
+  background: #17212b;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.telegram-mock-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #242f3d;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.telegram-mock-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #229ED9, #0088cc);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.telegram-mock-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.telegram-mock-name {
+  color: #ffffff;
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.telegram-mock-status {
+  color: #64b5f6;
+  font-size: 11px;
+}
+
+.telegram-mock-chat {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: #0e1621;
+}
+
+.telegram-msg {
+  max-width: 85%;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 13px;
+  line-height: 1.45;
+  position: relative;
+}
+
+.telegram-msg--user {
+  align-self: flex-end;
+  background: #2b5278;
+  color: #ffffff;
+  border-bottom-right-radius: 3px;
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.telegram-msg-time {
+  font-size: 10px;
+  opacity: 0.6;
+  white-space: nowrap;
+}
+
+.telegram-msg--bot {
+  align-self: flex-start;
+  background: #182533;
+  color: #f1f5f9;
+  border-bottom-left-radius: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.telegram-bot-intro {
+  margin: 0 0 4px 0;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.telegram-bot-text {
+  margin: 0;
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+.telegram-msg--job {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.telegram-job-badge {
+  align-self: flex-start;
+  font-size: 10px;
+  font-weight: 700;
+  color: #38bdf8;
+  background: rgba(34, 158, 217, 0.15);
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-bottom: 2px;
+}
+
+.telegram-job-title {
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.telegram-job-company {
+  color: #cbd5e1;
+  font-size: 11.5px;
+}
+
+.telegram-job-salary {
+  color: #34d399;
+  font-size: 11.5px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.telegram-job-inline-btn {
+  background: #2b5278;
+  color: #ffffff;
+  padding: 7px 12px;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: 4px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.telegram-job-inline-btn:hover {
+  background: #366596;
+}
+
+.telegram-mock-keyboard {
+  background: #17212b;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.telegram-kb-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.telegram-kb-btn {
+  background: #242f3d;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: #e2e8f0;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 8px 6px;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: all 0.15s ease;
+}
+
+.telegram-kb-btn:hover {
+  background: #2b394a;
+  border-color: rgba(34, 158, 217, 0.3);
+  color: #38bdf8;
+}
+
+/* Telegram Responsive Design */
+@media (max-width: 900px) {
+  .landing-telegram-card {
+    grid-template-columns: 1fr;
+    padding: 32px 24px;
+    gap: 32px;
+  }
+
+  .landing-telegram-title {
+    font-size: 26px;
+  }
+}
+
+/* ── Section Scroll Margin for Fixed Header ── */
+.landing-section[id] {
+  scroll-margin-top: 80px;
+}
+
+/* ═════════════════════════════════════════════════════════════════════
+   LIGHT MODE ADAPTATIONS FOR TELEGRAM BOT SHOWCASE
+   ═════════════════════════════════════════════════════════════════════ */
+
+[data-theme="light"] .landing-hero__telegram-pill {
+  background: rgba(34, 158, 217, 0.1);
+  border-color: rgba(1, 107, 251, 0.28);
+  box-shadow: 0 4px 16px rgba(1, 107, 251, 0.08);
+}
+
+[data-theme="light"] .landing-hero__telegram-pill:hover {
+  background: rgba(34, 158, 217, 0.18);
+  border-color: #016BFB;
+  box-shadow: 0 6px 20px rgba(1, 107, 251, 0.18);
+}
+
+[data-theme="light"] .landing-telegram-pill__text {
+  color: #0f172a;
+  font-weight: 600;
+}
+
+[data-theme="light"] .landing-telegram-pill__arrow {
+  color: #016BFB;
+}
+
+[data-theme="light"] .landing-telegram-card {
+  background: linear-gradient(145deg, #ffffff 0%, #f0f7ff 60%, #e6f2ff 100%);
+  border-color: rgba(1, 107, 251, 0.24);
+  box-shadow: 
+    0 20px 50px rgba(1, 107, 251, 0.08),
+    0 4px 16px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+[data-theme="light"] .landing-telegram-badge {
+  background: rgba(1, 107, 251, 0.08);
+  border-color: rgba(1, 107, 251, 0.25);
+  color: #016BFB;
+}
+
+[data-theme="light"] .landing-telegram-title {
+  color: #0f172a;
+}
+
+[data-theme="light"] .landing-telegram-desc {
+  color: #475569;
+}
+
+[data-theme="light"] .landing-telegram-feat-item {
+  color: #1e293b;
+  font-weight: 500;
+}
+
+[data-theme="light"] .landing-telegram-subtext {
+  color: #64748b;
+}
+
+/* Light Mode Mock Telegram Phone Client */
+[data-theme="light"] .telegram-mock-phone {
+  background: #f8fafc;
+  border-color: rgba(1, 107, 251, 0.22);
+  box-shadow: 0 18px 45px rgba(1, 107, 251, 0.12), 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .telegram-mock-header {
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+[data-theme="light"] .telegram-mock-name {
+  color: #0f172a;
+}
+
+[data-theme="light"] .telegram-mock-status {
+  color: #0284c7;
+}
+
+[data-theme="light"] .telegram-mock-chat {
+  background: #f1f5f9;
+}
+
+[data-theme="light"] .telegram-msg--user {
+  background: #229ED9;
+  color: #ffffff;
+}
+
+[data-theme="light"] .telegram-msg--bot {
+  background: #ffffff;
+  color: #0f172a;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .telegram-bot-intro {
+  color: #0f172a;
+}
+
+[data-theme="light"] .telegram-bot-text {
+  color: #475569;
+}
+
+[data-theme="light"] .telegram-job-badge {
+  background: rgba(1, 107, 251, 0.1);
+  color: #016BFB;
+}
+
+[data-theme="light"] .telegram-job-title {
+  color: #0f172a;
+}
+
+[data-theme="light"] .telegram-job-company {
+  color: #475569;
+}
+
+[data-theme="light"] .telegram-job-salary {
+  color: #059669;
+}
+
+[data-theme="light"] .telegram-job-inline-btn {
+  background: #016BFB;
+  color: #ffffff;
+}
+
+[data-theme="light"] .telegram-job-inline-btn:hover {
+  background: #0058d4;
+}
+
+[data-theme="light"] .telegram-mock-keyboard {
+  background: #ffffff;
+  border-top: 1px solid #e2e8f0;
+}
+
+[data-theme="light"] .telegram-kb-btn {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+  color: #1e293b;
+}
+
+[data-theme="light"] .telegram-kb-btn:hover {
+  background: #eff6ff;
+  border-color: rgba(1, 107, 251, 0.35);
+  color: #016BFB;
+}

@@ -17,7 +17,7 @@ export default function AdminLayout() {
 
   const handleLogout = () => {
     logout();
-    navigate("/login");
+    window.location.replace("/");
   };
 
   return (
