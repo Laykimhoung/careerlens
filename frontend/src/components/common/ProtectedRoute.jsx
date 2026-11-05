@@ -22,7 +22,9 @@ export default function ProtectedRoute({ children, role, redirectTo = "/login" }
 
   // Not logged in → redirect to login, preserving the page they tried to visit
   if (!isAuthenticated) {
-    return <Navigate to={redirectTo} state={{ from: location }} replace />;
+    const fullTarget = location.pathname + location.search;
+    const loginUrl = `${redirectTo}${redirectTo.includes("?") ? "&" : "?"}redirect=${encodeURIComponent(fullTarget)}`;
+    return <Navigate to={loginUrl} state={{ from: location }} replace />;
   }
 
   // Logged in but wrong role → redirect to their own dashboard

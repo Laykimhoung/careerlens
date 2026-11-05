@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useParams } from "react-router-dom";
 import ProtectedRoute from "../components/common/ProtectedRoute";
 import MainLayout from "../layouts/MainLayout/MainLayout";
 import CandidateLayout from "../layouts/CandidateLayout/CandidateLayout";
@@ -48,6 +48,11 @@ import AdminAuditLogs from "../pages/admin/AuditLogs/AuditLogs";
 import AdminNotifications from "../pages/admin/Notifications/Notifications";
 import AdminSettings from "../pages/admin/Settings/Settings";
 
+function PublicJobRedirect() {
+  const { id } = useParams();
+  return <Navigate to={`/candidate/jobs/${id}`} replace />;
+}
+
 export default function AppRoutes() {
   return (
     <BrowserRouter>
@@ -60,6 +65,9 @@ export default function AppRoutes() {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password/:uid/:token" element={<ResetPassword />} />
         </Route>
+
+        {/* Public alias forwarding directly to candidate job detail view */}
+        <Route path="/jobs/:id" element={<PublicJobRedirect />} />
 
         <Route
           path="/candidate"
