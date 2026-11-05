@@ -41,6 +41,13 @@
   "rejected": "Rejected",
   "roleSwitcher": "ROLE SWITCHER",
   "logOut": "Log out",
+  "telegramBotTitle": "Find Jobs Instantly via Telegram",
+  "telegramBotSubtitle": "No need to sign up first. Browse active vacancies, search by skills, and get matched straight from Telegram.",
+  "telegramBotCta": "Open @careerlens_jobs_bot",
+  "telegramBotFeature1": "Search any role or skill (e.g. React, Python, Remote)",
+  "telegramBotFeature2": "Real-time listings with salaries, locations & deadlines",
+  "telegramBotFeature3": "1-tap direct apply on CareerLens with your profile",
+  "telegramQuickFind": "Prefer Telegram? Find jobs instantly with @careerlens_jobs_bot",
   "platformAdmin": "Platform Admin",
   "nav": {
     "dashboard": "Dashboard",
