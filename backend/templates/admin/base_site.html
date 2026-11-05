@@ -8,38 +8,17 @@
   <link rel="stylesheet" href="{% static 'admin/css/careerlens_admin.css' %}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 {% endblock %}
 
 {% block branding %}
-<div class="careerlens-admin-brand">
-  <div class="careerlens-brand-logo-wrap">
-    <img src="{% static 'admin/img/logo.webp' %}" alt="CareerLens Logo" class="careerlens-brand-logo" onerror="this.style.display='none'">
-  </div>
-  <div class="careerlens-brand-text">
-    <h1 id="site-name">
-      <a href="{% url 'admin:index' %}">
-        <span class="careerlens-logo-text">Career<span class="careerlens-accent">Lens</span></span>
-      </a>
-    </h1>
-    <span class="careerlens-brand-pill">
-      <span class="careerlens-status-dot"></span>
-      Database Command Center
-    </span>
-  </div>
-</div>
-{% endblock %}
-
-{% block nav-global %}
-<div class="careerlens-top-quicknav">
-  <a href="/" target="_blank" rel="noopener noreferrer" class="careerlens-nav-link" title="Open Frontend Web App">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-    Frontend App
-  </a>
-  <a href="https://t.me/careerlens_jobs_bot" target="_blank" rel="noopener noreferrer" class="careerlens-nav-link" title="Open Telegram Bot">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-    Telegram Bot
+<div class="cl-brand">
+  <a href="{% url 'admin:index' %}" class="cl-brand-link">
+    <img src="{% static 'admin/img/logo.webp' %}" alt="CareerLens Logo" class="cl-brand-logo" onerror="this.style.display='none'">
+    <span class="cl-brand-text">Career<span class="cl-brand-accent">Lens</span></span>
+    <span class="cl-brand-tag">Admin</span>
   </a>
 </div>
 {% endblock %}
 
+{% block nav-global %}{% endblock %}

@@ -1,165 +1,221 @@
 /* ==========================================================================
-   careerlens_admin.css — Custom Modern Theme for CareerLens Django Admin
-   Matches the React Frontend Workspace Design Language
+   CareerLens Django Admin Theme — Clean, Simple & Modern
+   Built on Django 5.2 CSS Custom Properties for maximum compatibility
    ========================================================================== */
 
-:root {
-  --cl-primary: #016BFB;
-  --cl-primary-hover: #0056D2;
-  --cl-primary-light: rgba(1, 107, 251, 0.08);
-  --cl-emerald: #10B981;
-  --cl-emerald-light: rgba(16, 185, 129, 0.12);
-  --cl-amber: #F59E0B;
-  --cl-purple: #8B5CF6;
-  --cl-dark: #0F172A;
-  --cl-dark-surface: #1E293B;
-  --cl-border: #E2E8F0;
-  --cl-bg: #F8FAFC;
-  --cl-text-primary: #0F172A;
-  --cl-text-muted: #64748B;
-  --cl-radius-sm: 8px;
-  --cl-radius-md: 12px;
-  --cl-radius-lg: 16px;
-  --cl-radius-full: 9999px;
-  --cl-shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.05);
-  --cl-shadow-md: 0 4px 14px -2px rgba(15, 23, 42, 0.08);
+/* ── 1. Color Palette & Django Theme Variables ──────────────────────────── */
+
+:root,
+html[data-theme="light"] {
+  --primary: #0284C7;
+  --primary-fg: #FFFFFF;
+  --secondary: #0F172A;
+  --accent: #38BDF8;
+
+  --body-bg: #F8FAFC;
+  --body-fg: #0F172A;
+  --body-quiet-color: #64748B;
+  --body-medium-color: #334155;
+  --body-loud-color: #020617;
+
+  --header-bg: #0F172A;
+  --header-color: #F8FAFC;
+  --header-branding-color: #FFFFFF;
+  --header-link-color: #94A3B8;
+
+  --breadcrumbs-bg: #FFFFFF;
+  --breadcrumbs-fg: #64748B;
+  --breadcrumbs-link-fg: #0284C7;
+
+  --link-fg: #0284C7;
+  --link-hover-color: #0369A1;
+  --link-selected-fg: #0284C7;
+
+  --hairline-color: #E2E8F0;
+  --border-color: #CBD5E1;
+
+  --darkened-bg: #F1F5F9;
+  --selected-bg: #F0F9FF;
+  --selected-row: #F0FDF4;
+
+  --button-bg: #0284C7;
+  --button-hover-bg: #0369A1;
+  --default-button-bg: #0F172A;
+  --default-button-hover-bg: #1E293B;
+
+  --font-family-primary: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
 }
 
-/* ── Global Typography & Reset ───────────────────────────────────────────── */
+html[data-theme="dark"] {
+  --primary: #38BDF8;
+  --primary-fg: #0F172A;
+  --secondary: #1E293B;
+  --accent: #0284C7;
+
+  --body-bg: #0B0F17;
+  --body-fg: #F1F5F9;
+  --body-quiet-color: #94A3B8;
+  --body-medium-color: #CBD5E1;
+  --body-loud-color: #FFFFFF;
+
+  --header-bg: #0B0F17;
+  --header-color: #F8FAFC;
+  --header-branding-color: #FFFFFF;
+  --header-link-color: #94A3B8;
+
+  --breadcrumbs-bg: #111827;
+  --breadcrumbs-fg: #94A3B8;
+  --breadcrumbs-link-fg: #38BDF8;
+
+  --link-fg: #38BDF8;
+  --link-hover-color: #7DD3FC;
+  --link-selected-fg: #38BDF8;
+
+  --hairline-color: #1E293B;
+  --border-color: #334155;
+
+  --darkened-bg: #131B2E;
+  --selected-bg: #1E293B;
+  --selected-row: #142738;
+
+  --button-bg: #0284C7;
+  --button-hover-bg: #0369A1;
+  --default-button-bg: #38BDF8;
+  --default-button-hover-bg: #0284C7;
+}
+
+/* ── 2. Global Resets & Typography ───────────────────────────────────────── */
 
 body {
-  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
-  background-color: var(--cl-bg) !important;
-  color: var(--cl-text-primary) !important;
-  -webkit-font-smoothing: antialiased;
+  font-family: var(--font-family-primary) !important;
+  font-size: 13.5px !important;
+  color: var(--body-fg) !important;
+  background: var(--body-bg) !important;
+  line-height: 1.5 !important;
 }
 
-/* ── Header & Branding Bar ───────────────────────────────────────────────── */
+/* ── 3. Clean Modern Header ──────────────────────────────────────────────── */
 
 #header {
-  background: linear-gradient(135deg, #0B1120 0%, #0F172A 100%) !important;
-  color: #FFFFFF !important;
-  padding: 14px 28px !important;
+  background: var(--header-bg) !important;
+  padding: 10px 24px !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18) !important;
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
+  min-height: 52px !important;
+  box-sizing: border-box !important;
 }
 
-.careerlens-admin-brand {
+#branding {
+  display: flex !important;
+  align-items: center !important;
+  float: none !important;
+}
+
+.cl-brand {
   display: flex;
   align-items: center;
-  gap: 14px;
 }
 
-.careerlens-brand-logo-wrap {
-  width: 44px;
-  height: 44px;
-  border-radius: var(--cl-radius-md);
-  background: rgba(255, 255, 255, 0.06);
-  padding: 4px;
+.cl-brand-link {
   display: flex;
   align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  gap: 10px;
+  text-decoration: none !important;
 }
 
-.careerlens-brand-logo {
-  width: 100%;
-  height: 100%;
+.cl-brand-logo {
+  width: 28px;
+  height: 28px;
   object-fit: contain;
   border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 2px;
 }
 
-.careerlens-brand-text {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.careerlens-brand-text h1 {
-  margin: 0 !important;
-  padding: 0 !important;
-  line-height: 1.1 !important;
-}
-
-.careerlens-logo-text {
-  font-size: 1.35rem;
+.cl-brand-text {
+  font-size: 1.15rem;
   font-weight: 800;
   color: #FFFFFF;
   letter-spacing: -0.02em;
-  text-decoration: none;
 }
 
-.careerlens-accent {
+.cl-brand-accent {
   color: #38BDF8;
 }
 
-.careerlens-brand-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
+.cl-brand-tag {
   font-size: 0.6875rem;
-  font-weight: 600;
-  color: #94A3B8;
-  letter-spacing: 0.03em;
+  font-weight: 700;
   text-transform: uppercase;
+  letter-spacing: 0.06em;
+  background: rgba(255, 255, 255, 0.1);
+  color: #CBD5E1;
+  padding: 2px 7px;
+  border-radius: 4px;
+  margin-left: 4px;
 }
 
-.careerlens-status-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--cl-emerald);
-  box-shadow: 0 0 6px var(--cl-emerald);
-}
-
-/* User Tools (Right Header) */
+/* User Tools */
 #user-tools {
+  float: none !important;
   font-size: 0.8125rem !important;
   color: #94A3B8 !important;
   display: flex !important;
   align-items: center !important;
-  gap: 12px !important;
+  gap: 8px !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 #user-tools strong {
   color: #FFFFFF !important;
-  font-weight: 700 !important;
+  font-weight: 600 !important;
 }
 
 #user-tools a {
-  color: #38BDF8 !important;
+  color: #94A3B8 !important;
   text-decoration: none !important;
-  padding: 4px 10px !important;
-  border-radius: var(--cl-radius-full) !important;
-  background: rgba(56, 189, 248, 0.1) !important;
-  border: 1px solid rgba(56, 189, 248, 0.2) !important;
-  transition: all 0.18s ease !important;
+  padding: 4px 8px !important;
+  border-radius: 4px !important;
+  transition: all 0.15s ease !important;
 }
 
 #user-tools a:hover {
-  background: rgba(56, 189, 248, 0.2) !important;
+  color: #FFFFFF !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+#user-tools form button {
+  background: transparent !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: #CBD5E1 !important;
+  padding: 3px 10px !important;
+  border-radius: 4px !important;
+  font-size: 0.75rem !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+}
+
+#user-tools form button:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
   color: #FFFFFF !important;
 }
 
-/* ── Breadcrumbs ─────────────────────────────────────────────────────────── */
+/* ── 4. Breadcrumbs Bar ──────────────────────────────────────────────────── */
 
 div.breadcrumbs {
-  background: #FFFFFF !important;
-  border-bottom: 1px solid var(--cl-border) !important;
-  color: var(--cl-text-muted) !important;
-  padding: 12px 28px !important;
+  background: var(--breadcrumbs-bg) !important;
+  border-bottom: 1px solid var(--hairline-color) !important;
+  padding: 10px 24px !important;
   font-size: 0.8125rem !important;
-  font-weight: 500 !important;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.02) !important;
+  color: var(--breadcrumbs-fg) !important;
 }
 
 div.breadcrumbs a {
-  color: var(--cl-primary) !important;
-  font-weight: 600 !important;
+  color: var(--breadcrumbs-link-fg) !important;
+  font-weight: 500 !important;
   text-decoration: none !important;
 }
 
@@ -167,155 +223,139 @@ div.breadcrumbs a:hover {
   text-decoration: underline !important;
 }
 
-/* ── Hero Banner (Index Page) ────────────────────────────────────────────── */
+/* ── 5. Main Content Area ────────────────────────────────────────────────── */
 
-.careerlens-admin-hero {
-  background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
-  border-radius: var(--cl-radius-lg);
-  padding: 24px 28px;
-  margin-bottom: 24px;
-  color: #FFFFFF;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: var(--cl-shadow-md);
+#content {
+  padding: 24px !important;
 }
 
-.careerlens-hero-text h2 {
+#content > h1 {
   font-size: 1.25rem !important;
-  font-weight: 800 !important;
-  color: #FFFFFF !important;
-  margin: 0 0 6px !important;
+  font-weight: 700 !important;
+  color: var(--body-fg) !important;
+  margin: 0 0 20px 0 !important;
   letter-spacing: -0.01em !important;
 }
 
-.careerlens-hero-text p {
-  font-size: 0.84375rem !important;
-  color: #94A3B8 !important;
-  margin: 0 0 16px !important;
-  max-width: 680px !important;
-}
-
-.careerlens-hero-badges {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.hero-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 5px 12px;
-  border-radius: var(--cl-radius-full);
-  font-size: 0.75rem;
-  font-weight: 600;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #E2E8F0;
-}
-
-.chip-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #38BDF8;
-}
-
-.chip-dot-amber {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--cl-amber);
-}
-
-.chip-dot-green {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--cl-emerald);
-}
-
-/* ── App List Cards (Index Modules) ──────────────────────────────────────── */
+/* ── 6. App Dashboard Cards (Index) ──────────────────────────────────────── */
 
 .module {
   background: #FFFFFF !important;
-  border-radius: var(--cl-radius-lg) !important;
-  border: 1px solid var(--cl-border) !important;
-  box-shadow: var(--cl-shadow-sm) !important;
+  border: 1px solid var(--hairline-color) !important;
+  border-radius: 8px !important;
   margin-bottom: 20px !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
   overflow: hidden !important;
+}
+
+html[data-theme="dark"] .module {
+  background: #111827 !important;
 }
 
 .module caption,
 .module h2 {
   background: #F8FAFC !important;
-  color: var(--cl-text-primary) !important;
-  font-size: 0.9375rem !important;
-  font-weight: 800 !important;
-  padding: 14px 20px !important;
-  border-bottom: 1px solid var(--cl-border) !important;
+  color: var(--body-fg) !important;
+  font-size: 0.875rem !important;
+  font-weight: 700 !important;
+  padding: 12px 18px !important;
+  border-bottom: 1px solid var(--hairline-color) !important;
   letter-spacing: -0.01em !important;
   text-transform: none !important;
 }
 
+html[data-theme="dark"] .module caption,
+html[data-theme="dark"] .module h2 {
+  background: #182234 !important;
+}
+
 .module table {
   width: 100% !important;
+  border-collapse: collapse !important;
 }
 
 .module th,
 .module td {
-  padding: 12px 20px !important;
+  padding: 11px 18px !important;
   font-size: 0.8125rem !important;
-  border-bottom: 1px solid #F1F5F9 !important;
+  border-bottom: 1px solid var(--hairline-color) !important;
 }
 
-.module tr:last-child td,
-.module tr:last-child th {
+.module tr:last-child th,
+.module tr:last-child td {
   border-bottom: none !important;
 }
 
-.module tr:hover td {
-  background-color: #F8FAFC !important;
+.module tr:hover td,
+.module tr:hover th {
+  background: #F8FAFC !important;
+}
+
+html[data-theme="dark"] .module tr:hover td,
+html[data-theme="dark"] .module tr:hover th {
+  background: #1E293B !important;
 }
 
 .module a {
-  color: var(--cl-primary) !important;
+  color: var(--body-fg) !important;
   font-weight: 600 !important;
   text-decoration: none !important;
 }
 
 .module a:hover {
-  text-decoration: underline !important;
+  color: var(--primary) !important;
 }
 
+/* Add / Change link buttons inside module table */
 .module .addlink,
-.module .changelink {
+.module .changelink,
+.module .viewlink {
   font-size: 0.75rem !important;
   font-weight: 600 !important;
-  padding: 4px 10px !important;
-  border-radius: var(--cl-radius-full) !important;
-  background: var(--cl-primary-light) !important;
-  color: var(--cl-primary) !important;
+  padding: 3px 8px !important;
+  border-radius: 4px !important;
   text-decoration: none !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  margin-left: 6px !important;
+  display: inline-block !important;
+  border: 1px solid var(--hairline-color) !important;
+  background: #FFFFFF !important;
+  color: var(--body-quiet-color) !important;
+}
+
+html[data-theme="dark"] .module .addlink,
+html[data-theme="dark"] .module .changelink {
+  background: #1E293B !important;
+}
+
+.module .addlink {
+  color: var(--primary) !important;
+  border-color: rgba(2, 132, 199, 0.25) !important;
+  background: rgba(2, 132, 199, 0.05) !important;
+  margin-right: 4px !important;
 }
 
 .module .addlink:hover {
-  background: var(--cl-primary) !important;
+  background: var(--primary) !important;
   color: #FFFFFF !important;
-  text-decoration: none !important;
+  border-color: var(--primary) !important;
 }
 
-/* ── Change List (Data Tables) ───────────────────────────────────────────── */
+.module .changelink:hover {
+  background: #F1F5F9 !important;
+  color: var(--body-fg) !important;
+}
+
+/* ── 7. Change List (Data Tables & Lists) ─────────────────────────────────── */
 
 #changelist {
   background: #FFFFFF !important;
-  border-radius: var(--cl-radius-lg) !important;
-  border: 1px solid var(--cl-border) !important;
-  box-shadow: var(--cl-shadow-sm) !important;
+  border: 1px solid var(--hairline-color) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
   overflow: hidden !important;
+}
+
+html[data-theme="dark"] #changelist {
+  background: #111827 !important;
 }
 
 #changelist table {
@@ -325,183 +365,248 @@ div.breadcrumbs a:hover {
 
 #changelist th {
   background: #F8FAFC !important;
-  color: var(--cl-text-muted) !important;
+  color: var(--body-quiet-color) !important;
   font-size: 0.75rem !important;
   font-weight: 700 !important;
   text-transform: uppercase !important;
-  letter-spacing: 0.05em !important;
-  padding: 12px 16px !important;
-  border-bottom: 1px solid var(--cl-border) !important;
+  letter-spacing: 0.04em !important;
+  padding: 10px 14px !important;
+  border-bottom: 1px solid var(--hairline-color) !important;
+}
+
+html[data-theme="dark"] #changelist th {
+  background: #182234 !important;
 }
 
 #changelist td {
-  padding: 12px 16px !important;
+  padding: 11px 14px !important;
   font-size: 0.8125rem !important;
-  border-bottom: 1px solid #F1F5F9 !important;
-  color: var(--cl-text-primary) !important;
+  border-bottom: 1px solid var(--hairline-color) !important;
+  color: var(--body-fg) !important;
 }
 
 #changelist tr:hover td {
-  background-color: #F8FAFC !important;
+  background: #F8FAFC !important;
 }
 
-/* Modern Search Bar */
+html[data-theme="dark"] #changelist tr:hover td {
+  background: #1E293B !important;
+}
+
+/* Toolbar & Search Bar */
 #toolbar {
   background: #F8FAFC !important;
-  border-bottom: 1px solid var(--cl-border) !important;
-  padding: 14px 20px !important;
+  border-bottom: 1px solid var(--hairline-color) !important;
+  padding: 12px 16px !important;
+}
+
+html[data-theme="dark"] #toolbar {
+  background: #182234 !important;
 }
 
 #changelist-search {
   display: flex !important;
   align-items: center !important;
-  gap: 10px !important;
+  gap: 8px !important;
 }
 
 #changelist-search input[type="text"] {
-  height: 38px !important;
-  border-radius: var(--cl-radius-full) !important;
-  border: 1px solid var(--cl-border) !important;
-  padding: 0 16px !important;
+  height: 34px !important;
+  border-radius: 6px !important;
+  border: 1px solid var(--border-color) !important;
+  padding: 0 12px !important;
   font-size: 0.8125rem !important;
   font-family: inherit !important;
-  outline: none !important;
-  width: 280px !important;
   background: #FFFFFF !important;
-  transition: all 0.18s ease !important;
+  color: var(--body-fg) !important;
+  outline: none !important;
+  min-width: 240px !important;
+}
+
+html[data-theme="dark"] #changelist-search input[type="text"] {
+  background: #0B0F17 !important;
 }
 
 #changelist-search input[type="text"]:focus {
-  border-color: var(--cl-primary) !important;
-  box-shadow: 0 0 0 3px rgba(1, 107, 251, 0.15) !important;
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.15) !important;
 }
 
 #changelist-search input[type="submit"] {
-  height: 38px !important;
-  border-radius: var(--cl-radius-full) !important;
-  background: var(--cl-primary) !important;
+  height: 34px !important;
+  border-radius: 6px !important;
+  background: var(--button-bg) !important;
   color: #FFFFFF !important;
   border: none !important;
-  padding: 0 18px !important;
-  font-weight: 600 !important;
+  padding: 0 14px !important;
   font-size: 0.8125rem !important;
+  font-weight: 600 !important;
   cursor: pointer !important;
-  transition: background 0.18s ease !important;
 }
 
 #changelist-search input[type="submit"]:hover {
-  background: var(--cl-primary-hover) !important;
+  background: var(--button-hover-bg) !important;
 }
 
-/* ── Filter Sidebar ──────────────────────────────────────────────────────── */
+/* ── 8. Actions Bar (Bulk Actions Dropdown) ───────────────────────────────── */
+
+.actions {
+  padding: 10px 16px !important;
+  background: #FFFFFF !important;
+  border-bottom: 1px solid var(--hairline-color) !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  font-size: 0.8125rem !important;
+  color: var(--body-quiet-color) !important;
+}
+
+html[data-theme="dark"] .actions {
+  background: #111827 !important;
+}
+
+.actions select {
+  height: 32px !important;
+  border-radius: 6px !important;
+  border: 1px solid var(--border-color) !important;
+  padding: 0 10px !important;
+  font-size: 0.8125rem !important;
+  font-family: inherit !important;
+  background: #FFFFFF !important;
+  color: var(--body-fg) !important;
+}
+
+html[data-theme="dark"] .actions select {
+  background: #0B0F17 !important;
+}
+
+.actions button.button {
+  height: 32px !important;
+  border-radius: 6px !important;
+  background: var(--secondary) !important;
+  color: #FFFFFF !important;
+  border: none !important;
+  padding: 0 14px !important;
+  font-size: 0.8125rem !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+}
+
+/* ── 9. Filter Sidebar ───────────────────────────────────────────────────── */
 
 #changelist-filter {
   background: #FAFAFA !important;
-  border-left: 1px solid var(--cl-border) !important;
+  border-left: 1px solid var(--hairline-color) !important;
+}
+
+html[data-theme="dark"] #changelist-filter {
+  background: #111827 !important;
 }
 
 #changelist-filter h2 {
+  font-size: 0.8125rem !important;
+  font-weight: 700 !important;
+  padding: 12px 16px !important;
+  border-bottom: 1px solid var(--hairline-color) !important;
+  color: var(--body-fg) !important;
   background: transparent !important;
-  color: var(--cl-text-primary) !important;
-  font-size: 0.84375rem !important;
-  font-weight: 800 !important;
-  padding: 14px 16px !important;
-  border-bottom: 1px solid var(--cl-border) !important;
+  letter-spacing: normal !important;
+  text-transform: uppercase !important;
 }
 
 #changelist-filter h3 {
   font-size: 0.75rem !important;
   font-weight: 700 !important;
-  color: var(--cl-text-muted) !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.05em !important;
-  margin: 14px 16px 6px !important;
+  color: var(--body-quiet-color) !important;
+  padding: 12px 16px 4px !important;
+  margin: 0 !important;
 }
 
 #changelist-filter ul {
-  padding: 0 16px 14px !important;
+  padding: 0 12px 10px !important;
+  margin: 0 !important;
 }
 
 #changelist-filter li {
-  margin-bottom: 4px !important;
+  margin-bottom: 2px !important;
 }
 
 #changelist-filter a {
-  color: var(--cl-text-muted) !important;
+  color: var(--body-quiet-color) !important;
   font-size: 0.8125rem !important;
   text-decoration: none !important;
   display: block !important;
-  padding: 3px 6px !important;
+  padding: 4px 8px !important;
   border-radius: 4px !important;
 }
 
 #changelist-filter a:hover {
   background: #F1F5F9 !important;
-  color: var(--cl-primary) !important;
+  color: var(--primary) !important;
+}
+
+html[data-theme="dark"] #changelist-filter a:hover {
+  background: #1E293B !important;
 }
 
 #changelist-filter li.selected a {
-  background: var(--cl-primary-light) !important;
-  color: var(--cl-primary) !important;
+  background: rgba(2, 132, 199, 0.1) !important;
+  color: var(--primary) !important;
   font-weight: 700 !important;
 }
 
-/* ── Buttons & Action Bar ────────────────────────────────────────────────── */
+/* ── 10. Forms, Inputs & Object Tools ────────────────────────────────────── */
 
-.button,
-input[type="submit"],
-input[type="button"],
-.submit-row input {
-  background: var(--cl-primary) !important;
+.object-tools {
+  float: right !important;
+  margin: 0 0 16px 0 !important;
+}
+
+.object-tools a {
+  background: var(--button-bg) !important;
   color: #FFFFFF !important;
-  border: none !important;
-  border-radius: var(--cl-radius-full) !important;
-  padding: 8px 20px !important;
-  font-weight: 600 !important;
+  padding: 7px 14px !important;
+  border-radius: 6px !important;
   font-size: 0.8125rem !important;
-  cursor: pointer !important;
-  transition: all 0.18s ease !important;
-  box-shadow: 0 2px 6px rgba(1, 107, 251, 0.25) !important;
-}
-
-.button:hover,
-input[type="submit"]:hover,
-.submit-row input:hover {
-  background: var(--cl-primary-hover) !important;
-  transform: translateY(-1px) !important;
-}
-
-.button.default,
-input[type="submit"].default {
-  background: var(--cl-emerald) !important;
-  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.25) !important;
-}
-
-.button.default:hover,
-input[type="submit"].default:hover {
-  background: #059669 !important;
-}
-
-.deletelink {
-  background: #FEE2E2 !important;
-  color: #DC2626 !important;
-  border-radius: var(--cl-radius-full) !important;
-  padding: 8px 18px !important;
   font-weight: 600 !important;
-  font-size: 0.8125rem !important;
   text-decoration: none !important;
+  box-shadow: none !important;
+  border: none !important;
 }
 
-.deletelink:hover {
-  background: #DC2626 !important;
-  color: #FFFFFF !important;
+.object-tools a:hover {
+  background: var(--button-hover-bg) !important;
 }
 
-/* ── Forms & Detail Views ────────────────────────────────────────────────── */
+fieldset {
+  background: #FFFFFF !important;
+  border: 1px solid var(--hairline-color) !important;
+  border-radius: 8px !important;
+  padding: 18px !important;
+  margin-bottom: 20px !important;
+}
+
+html[data-theme="dark"] fieldset {
+  background: #111827 !important;
+}
+
+fieldset h2 {
+  background: transparent !important;
+  color: var(--body-fg) !important;
+  font-size: 0.9375rem !important;
+  font-weight: 700 !important;
+  padding: 0 0 10px 0 !important;
+  border-bottom: 1px solid var(--hairline-color) !important;
+  margin: 0 0 14px 0 !important;
+}
 
 .form-row {
-  border-bottom: 1px solid #F1F5F9 !important;
-  padding: 14px 18px !important;
+  padding: 10px 0 !important;
+  border-bottom: 1px solid var(--hairline-color) !important;
+}
+
+.form-row:last-child {
+  border-bottom: none !important;
 }
 
 input[type="text"],
@@ -511,74 +616,98 @@ input[type="url"],
 input[type="number"],
 textarea,
 select {
-  border: 1px solid var(--cl-border) !important;
-  border-radius: var(--cl-radius-sm) !important;
-  padding: 8px 12px !important;
-  font-size: 0.84375rem !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 6px !important;
+  padding: 7px 10px !important;
+  font-size: 0.8125rem !important;
   font-family: inherit !important;
-  color: var(--cl-text-primary) !important;
-  outline: none !important;
-  transition: all 0.18s ease !important;
+  background: #FFFFFF !important;
+  color: var(--body-fg) !important;
+  box-sizing: border-box !important;
+}
+
+html[data-theme="dark"] input[type="text"],
+html[data-theme="dark"] input[type="password"],
+html[data-theme="dark"] input[type="email"],
+html[data-theme="dark"] input[type="url"],
+html[data-theme="dark"] input[type="number"],
+html[data-theme="dark"] textarea,
+html[data-theme="dark"] select {
+  background: #0B0F17 !important;
 }
 
 input[type="text"]:focus,
 input[type="password"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+input[type="number"]:focus,
 textarea:focus,
 select:focus {
-  border-color: var(--cl-primary) !important;
-  box-shadow: 0 0 0 3px rgba(1, 107, 251, 0.14) !important;
+  border-color: var(--primary) !important;
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.15) !important;
 }
 
-/* Status Badges */
-.cl-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 3px 9px;
-  border-radius: var(--cl-radius-full);
-  font-size: 0.6875rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
+.submit-row {
+  background: #FFFFFF !important;
+  border: 1px solid var(--hairline-color) !important;
+  border-radius: 8px !important;
+  padding: 12px 18px !important;
+  margin: 20px 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
 }
 
-.cl-badge-published,
-.cl-badge-verified,
-.cl-badge-accepted {
-  background: var(--cl-emerald-light);
-  color: var(--cl-emerald);
+html[data-theme="dark"] .submit-row {
+  background: #111827 !important;
 }
 
-.cl-badge-draft,
-.cl-badge-pending,
-.cl-badge-reviewing {
-  background: rgba(245, 158, 11, 0.12);
-  color: var(--cl-amber);
+.submit-row input[type="submit"] {
+  border-radius: 6px !important;
+  height: 36px !important;
+  padding: 0 16px !important;
+  font-size: 0.8125rem !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
 }
 
-.cl-badge-interview {
-  background: rgba(139, 92, 246, 0.12);
-  color: var(--cl-purple);
+.submit-row input[type="submit"].default {
+  background: var(--button-bg) !important;
+  color: #FFFFFF !important;
+  border: none !important;
 }
 
-.cl-badge-closed,
-.cl-badge-rejected {
-  background: rgba(239, 68, 68, 0.12);
-  color: #EF4444;
+.submit-row input[type="submit"].default:hover {
+  background: var(--button-hover-bg) !important;
 }
 
-.cl-badge-candidate {
-  background: rgba(2, 132, 199, 0.12);
-  color: #0284C7;
+.submit-row a.deletelink {
+  background: #FEE2E2 !important;
+  color: #DC2626 !important;
+  border-radius: 6px !important;
+  padding: 8px 14px !important;
+  font-size: 0.8125rem !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+  height: auto !important;
+  line-height: normal !important;
 }
 
-.cl-badge-company {
-  background: rgba(99, 102, 241, 0.12);
-  color: #6366F1;
+.submit-row a.deletelink:hover {
+  background: #FCA5A5 !important;
 }
 
-.cl-badge-admin {
-  background: rgba(220, 38, 38, 0.12);
-  color: #DC2626;
+/* ── 11. Pagination ──────────────────────────────────────────────────────── */
+
+.paginator {
+  background: #FFFFFF !important;
+  border-top: 1px solid var(--hairline-color) !important;
+  padding: 12px 16px !important;
+  font-size: 0.8125rem !important;
+  color: var(--body-quiet-color) !important;
 }
 
+html[data-theme="dark"] .paginator {
+  background: #111827 !important;
+}
