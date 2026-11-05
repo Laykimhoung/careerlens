@@ -16,9 +16,14 @@ class MessageAdmin(admin.ModelAdmin):
 
     def read_badge(self, obj):
         if obj.read_at:
-            return format_html('<span style="color:#10B981;font-weight:600;">Read ({})</span>', obj.read_at.strftime("%b %d"))
-        return format_html('<span style="color:#F59E0B;font-weight:600;">Unread</span>')
-    read_badge.short_description = "Read Status"
+            return format_html(
+                '<span style="background:#ECFDF5;color:#047857;border:1px solid #A7F3D0;padding:2px 8px;border-radius:9999px;font-size:11px;font-weight:600;">Read ({})</span>',
+                obj.read_at.strftime("%b %d")
+            )
+        return format_html(
+            '<span style="background:#FFFBEB;color:#B45309;border:1px solid #FDE68A;padding:2px 8px;border-radius:9999px;font-size:11px;font-weight:600;">Unread</span>'
+        )
+    read_badge.short_description = "Status"
 
 
 @admin.register(Notification)
@@ -34,16 +39,15 @@ class NotificationAdmin(admin.ModelAdmin):
     message_preview.short_description = "Content"
 
     def type_badge(self, obj):
-        colors = {
-            'INFO': '#0284C7',
-            'ALERT': '#EF4444',
-            'SUCCESS': '#10B981',
+        styles = {
+            'INFO': ('#EFF6FF', '#1D4ED8', '#BFDBFE'),
+            'ALERT': ('#FEF2F2', '#B91C1C', '#FECACA'),
+            'SUCCESS': ('#ECFDF5', '#047857', '#A7F3D0'),
         }
-        color = colors.get(obj.type, '#64748B')
+        bg, text, border = styles.get(obj.type, ('#F1F5F9', '#475569', '#E2E8F0'))
         return format_html(
-            '<span style="background:{};color:#fff;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:700;">{}</span>',
-            color,
-            obj.get_type_display()
+            '<span style="background:{};color:{};border:1px solid {};padding:2px 8px;border-radius:9999px;font-size:11px;font-weight:600;">{}</span>',
+            bg, text, border, obj.get_type_display()
         )
     type_badge.short_description = "Type"
 

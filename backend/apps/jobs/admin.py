@@ -32,16 +32,15 @@ class JobAdmin(admin.ModelAdmin):
     actions = ['publish_jobs', 'close_jobs', 'draft_jobs']
 
     def status_badge(self, obj):
-        colors = {
-            'PUBLISHED': '#10B981',  # emerald
-            'DRAFT': '#64748B',      # slate
-            'CLOSED': '#EF4444',     # red
+        styles = {
+            'PUBLISHED': ('#ECFDF5', '#047857', '#A7F3D0'),
+            'DRAFT': ('#F1F5F9', '#475569', '#E2E8F0'),
+            'CLOSED': ('#FEF2F2', '#B91C1C', '#FECACA'),
         }
-        color = colors.get(obj.status, '#64748B')
+        bg, text, border = styles.get(obj.status, ('#F1F5F9', '#475569', '#E2E8F0'))
         return format_html(
-            '<span style="background:{};color:#fff;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:700;">{}</span>',
-            color,
-            obj.get_status_display()
+            '<span style="background:{};color:{};border:1px solid {};padding:2px 8px;border-radius:9999px;font-size:11px;font-weight:600;">{}</span>',
+            bg, text, border, obj.get_status_display()
         )
     status_badge.short_description = "Status"
 
