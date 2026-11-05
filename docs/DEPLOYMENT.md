@@ -20,12 +20,12 @@ This guide provides step-by-step instructions for deploying the **CareerLens** p
               ▼                               ▼                                │
    [Vercel Global Edge CDN]       [Telegram Bot API Cloud]                     │
     React 19 + Vite 8 SPA          Webhook Event Publisher                     │
-  (careerlens-ivory-ten.vercel.app)           │                                │
+  (your-careerlens.vercel.app)           │                                │
               │                               │ HTTPS POST                     │
               │ REST API (Bearer JWT)         ▼                                │
               └─────────────────────► [Render Web Service] ◄───────────────────┘
                                    Django 5.2 + Gunicorn gthread
-                                  (careerlens-api-fh3x.onrender.com)
+                                  (your-careerlens-api.onrender.com)
                                          │                    │
                     PostgreSQL Wire (SSL)│                    │ Gemini REST API
                                          ▼                    ▼
@@ -43,7 +43,7 @@ This guide provides step-by-step instructions for deploying the **CareerLens** p
 | **Render** | Django Web Service | Free web services **spin down after 15 min of inactivity**. Cold start boot takes ~30–50s. Ephemeral filesystem. | **Solution: UptimeRobot 10-minute HTTP keep-alive ping**. Render grants **750 free hours/month**. A full 31-day month is **744 hours** ($31 \times 24 = 744$). Pinging keeps the server awake 24/7 with zero cold starts without exceeding the monthly allowance! |
 | **Vercel** | React Frontend | Global Edge CDN, instant loading, 100 GB monthly bandwidth. No cold starts. | Handles client-side routing; `vercel.json` provides wildcard rewrites to `/index.html` preventing 404s on deep links. |
 | **Telegram** | Bot API | Free, unlimited webhook delivery from Telegram servers. | Webhook must be accessible over public HTTPS with valid SSL. Handled via Render HTTPS endpoint. |
-| **UptimeRobot** | Keep-Alive Monitor | 50 free HTTP/HTTPS monitors with 5-minute or 10-minute intervals. | Configured to ping `https://careerlens-api-fh3x.onrender.com/api/telegram/webhook/` every 10 minutes. |
+| **UptimeRobot** | Keep-Alive Monitor | 50 free HTTP/HTTPS monitors with 5-minute or 10-minute intervals. | Configured to ping `https://your-careerlens-api.onrender.com/api/telegram/webhook/` every 10 minutes. |
 
 ---
 
@@ -78,7 +78,7 @@ gunicorn config.wsgi:application --workers 2 --threads 4 --worker-class gthread 
 3. In the Neon Console, navigate to **Dashboard** $\to$ **Connection Details**.
 4. Set the dropdown to **Connection string** and copy the full URI:
    ```text
-   postgresql://careerlens_owner:npg_SecretPass123@ep-cool-shadow-a5xyz.us-east-2.aws.neon.tech/careerlens_db?sslmode=require
+   postgresql://your_user:your_password@ep-sample-123456.us-east-2.aws.neon.tech/careerlens_db?sslmode=require
    ```
 5. Keep this URI safe; it will be used as `DATABASE_URL` in Render.
 
@@ -88,9 +88,9 @@ gunicorn config.wsgi:application --workers 2 --threads 4 --worker-class gthread 
 
 1. Log into [Render](https://render.com/).
 2. Click **New +** $\to$ **Web Service**.
-3. Connect your GitHub repository: `Laykimhoung/careerlens`.
+3. Connect your GitHub repository: `your-username/careerlens`.
 4. Configure the service settings:
-   * **Name:** `careerlens-api` (Generates `https://careerlens-api-fh3x.onrender.com`)
+   * **Name:** `careerlens-api` (Generates `https://your-careerlens-api.onrender.com`)
    * **Region:** Matching your Neon database region.
    * **Branch:** `backend/kimhoung` (or `main`)
    * **Root Directory:** `backend` *(Critical: points Render into the backend subfolder)*
@@ -112,11 +112,11 @@ gunicorn config.wsgi:application --workers 2 --threads 4 --worker-class gthread 
 | `PYTHON_VERSION` | `3.12.10` | Enforces Python 3.12 runtime. |
 | `SECRET_KEY` | *(50+ char random string)* | Django cryptographic signing key. |
 | `DEBUG` | `False` | Disables debug mode in production. |
-| `ALLOWED_HOSTS` | `careerlens-api-fh3x.onrender.com,127.0.0.1,localhost` | Permitted host headers. |
+| `ALLOWED_HOSTS` | `your-careerlens-api.onrender.com,127.0.0.1,localhost` | Permitted host headers. |
 | `DATABASE_URL` | `postgresql://...neon.tech/...?sslmode=require` | Connection string copied from Neon. |
-| `CORS_ALLOWED_ORIGINS` | `https://careerlens-ivory-ten.vercel.app` | Allows your deployed Vercel frontend to make API calls. |
-| `CSRF_TRUSTED_ORIGINS` | `https://careerlens-api-fh3x.onrender.com` | Protects Django Admin POST actions over HTTPS. |
-| `TELEGRAM_BOT_TOKEN` | `9206044602:AAEq18wfnGibirr56D-LEdKh9CdT88eSVCg` | BotFather token for `@careerlens_jobs_bot`. |
+| `CORS_ALLOWED_ORIGINS` | `https://your-careerlens.vercel.app` | Allows your deployed Vercel frontend to make API calls. |
+| `CSRF_TRUSTED_ORIGINS` | `https://your-careerlens-api.onrender.com` | Protects Django Admin POST actions over HTTPS. |
+| `TELEGRAM_BOT_TOKEN` | `your_bot_token_from_botfather` | BotFather token for `@careerlens_jobs_bot`. |
 | `TELEGRAM_WEBHOOK_SECRET` | *(Optional secret string)* | Enforces `X-Telegram-Bot-Api-Secret-Token` validation. |
 
 6. Click **Deploy Web Service**. Render will clone the repository, run the build command, apply migrations, collect static files, and launch Gunicorn.
@@ -146,7 +146,7 @@ Once the Render service is live:
 
 1. Log into [Vercel](https://vercel.com/).
 2. Click **Add New...** $\to$ **Project**.
-3. Import your GitHub repository: `Laykimhoung/careerlens`.
+3. Import your GitHub repository: `your-username/careerlens`.
 4. Configure the project:
    * **Framework Preset:** `Vite`
    * **Root Directory:** Click **Edit** and select `frontend`.
@@ -154,8 +154,8 @@ Once the Render service is live:
    * **Output Directory:** `dist`
 5. Under **Environment Variables**, add:
    * **Key:** `VITE_API_URL`
-   * **Value:** `https://careerlens-api-fh3x.onrender.com/api`
-6. Click **Deploy**. Vercel will bundle the React application and deploy it across its global Edge CDN (e.g., `https://careerlens-ivory-ten.vercel.app`).
+   * **Value:** `https://your-careerlens-api.onrender.com/api`
+6. Click **Deploy**. Vercel will bundle the React application and deploy it across its global Edge CDN (e.g., `https://your-careerlens.vercel.app`).
 
 ---
 
@@ -184,7 +184,7 @@ To connect the live Telegram Bot (`@careerlens_jobs_bot`) to the Render backend:
 
 1. Open your terminal (or run from anywhere):
    ```bash
-   curl "https://api.telegram.org/bot<YOUR_TELEGRAM_BOT_TOKEN>/setWebhook?url=https://careerlens-api-fh3x.onrender.com/api/telegram/webhook/"
+   curl "https://api.telegram.org/bot<YOUR_TELEGRAM_BOT_TOKEN>/setWebhook?url=https://your-careerlens-api.onrender.com/api/telegram/webhook/"
    ```
 2. **Expected Response:**
    ```json
@@ -199,7 +199,7 @@ To connect the live Telegram Bot (`@careerlens_jobs_bot`) to the Render backend:
    {
      "ok": true,
      "result": {
-       "url": "https://careerlens-api-fh3x.onrender.com/api/telegram/webhook/",
+       "url": "https://your-careerlens-api.onrender.com/api/telegram/webhook/",
        "has_custom_certificate": false,
        "pending_update_count": 0
      }
@@ -225,7 +225,7 @@ Render's free tier spins down web services after 15 minutes of inactivity, resul
 2. On the dashboard, click **+ Add New Monitor**:
    - **Monitor Type:** `HTTP(s)`
    - **Friendly Name:** `CareerLens Webhook` (or `CareerLens Backend Keep-Alive`)
-   - **URL (or IP):** `https://careerlens-api-fh3x.onrender.com/api/telegram/webhook/` (or `https://careerlens-api-fh3x.onrender.com/`)
+   - **URL (or IP):** `https://your-careerlens-api.onrender.com/api/telegram/webhook/` (or `https://your-careerlens-api.onrender.com/`)
    - **Monitoring Interval:** `Every 10 minutes`
    - **Monitor Timeout:** `30 seconds`
 3. Click **Create Monitor**.
@@ -238,8 +238,8 @@ Render's free tier spins down web services after 15 minutes of inactivity, resul
 
 ## 5. Production Verification Checklist
 
-- [x] **Backend Health Check:** `https://careerlens-api-fh3x.onrender.com/` returns JSON with `"status": "online"`.
-- [x] **Frontend Home:** `https://careerlens-ivory-ten.vercel.app` loads landing page with hero, Telegram showcase, and company logos.
+- [x] **Backend Health Check:** `https://your-careerlens-api.onrender.com/` returns JSON with `"status": "online"`.
+- [x] **Frontend Home:** `https://your-careerlens.vercel.app` loads landing page with hero, Telegram showcase, and company logos.
 - [x] **Cross-Origin Requests:** Logging in from the Vercel frontend receives JWT tokens from Render without CORS warnings.
 - [x] **Deep Linking:** Refreshing `/candidate/dashboard` or navigating to `/jobs/1` preserves routes without Vercel 404 errors.
 - [x] **Telegram Bot:** Sending `/jobs` to `@careerlens_jobs_bot` returns active job cards with direct link buttons.
@@ -254,6 +254,6 @@ Render's free tier spins down web services after 15 minutes of inactivity, resul
 | **Vercel returns `404 NOT_FOUND` on refresh** | Missing client-side route rewrite rule. | Add `vercel.json` with `{"rewrites": [{"source": "/(.*)", "destination": "/index.html"}]}` to the project root and redeploy. |
 | **Telegram `setWebhook` returns `401 Unauthorized`** | Expired or incorrect bot token. | Regenerate token via BotFather, update `TELEGRAM_BOT_TOKEN` in Render, and rerun the `setWebhook` curl command with the new token. |
 | **API calls hang or fail with `504 Gateway Timeout`** | Gunicorn running with single sync worker. | Update start command to use `--workers 2 --threads 4 --worker-class gthread` in `Procfile`. |
-| **`CORS Network Error` on Vercel** | Vercel domain not permitted in Django CORS origins. | Add `https://careerlens-ivory-ten.vercel.app` to `CORS_ALLOWED_ORIGINS` in Render environment variables. |
+| **`CORS Network Error` on Vercel** | Vercel domain not permitted in Django CORS origins. | Add `https://your-careerlens.vercel.app` to `CORS_ALLOWED_ORIGINS` in Render environment variables. |
 | **Initial request takes 45 seconds** | Render container was asleep due to inactivity. | Activate UptimeRobot 10-minute HTTP keep-alive monitor pointing to `/api/telegram/webhook/`. |
 | **Database SSL Error on Neon** | Connection string missing SSL mode parameter. | Append `?sslmode=require` to the Neon `DATABASE_URL`. |

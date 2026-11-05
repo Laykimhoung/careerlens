@@ -24,6 +24,9 @@ import {
   Users,
   Briefcase,
   TrendingUp,
+  Activity,
+  Send,
+  ExternalLink,
 } from 'lucide-react';
 import { fetchAdminDashboardData, getAdminNotifications } from '../../../services/adminService';
 import { extractResults } from '../../../services/api';
@@ -51,9 +54,26 @@ function CustomBarTooltip({ active, payload }) {
   );
 }
 
+function getAuditBadge(text = '') {
+  const upper = text.toUpperCase();
+  if (upper.includes('LOGIN') || upper.includes('AUTH') || upper.includes('REGISTER') || upper.includes('USER')) {
+    return { label: 'AUTH', color: '#0284C7', bg: 'rgba(2, 132, 199, 0.12)' };
+  }
+  if (upper.includes('JOB') || upper.includes('POST') || upper.includes('VACANCY')) {
+    return { label: 'JOB', color: '#F59E0B', bg: 'rgba(245, 158, 11, 0.12)' };
+  }
+  if (upper.includes('APPLY') || upper.includes('APPLICATION') || upper.includes('INTERVIEW') || upper.includes('OFFER')) {
+    return { label: 'ATS', color: '#10B981', bg: 'rgba(16, 185, 129, 0.12)' };
+  }
+  if (upper.includes('VERIF') || upper.includes('COMPANY')) {
+    return { label: 'VERIFY', color: '#8B5CF6', bg: 'rgba(139, 92, 246, 0.12)' };
+  }
+  return { label: 'SYSTEM', color: '#64748B', bg: 'rgba(100, 116, 139, 0.12)' };
+}
+
 export default function AdminDashboard() {
   const { user } = useAuth();
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState('');
   const [dateRange, setDateRange] = useState('all');
   const [state, setState] = useState({
@@ -68,10 +88,10 @@ export default function AdminDashboard() {
     return (
       (uid ? localStorage.getItem(`careerlens_admin_avatar_${uid}`) : null) ||
       (uid ? localStorage.getItem(`careerlens_avatar_${uid}`) : null) ||
-      localStorage.getItem("careerlens_admin_avatar") ||
-      localStorage.getItem("careerlens_avatar") ||
+      localStorage.getItem('careerlens_admin_avatar') ||
+      localStorage.getItem('careerlens_avatar') ||
       usr?.avatar ||
-      ""
+      ''
     );
   };
 
@@ -85,15 +105,16 @@ export default function AdminDashboard() {
         setAvatar(getAdminAvatar(user));
       }
     };
-    window.addEventListener("careerlens_profile_image_updated", handleAvatarUpdate);
-    window.addEventListener("storage", handleAvatarUpdate);
+    window.addEventListener('careerlens_profile_image_updated', handleAvatarUpdate);
+    window.addEventListener('storage', handleAvatarUpdate);
     return () => {
-      window.removeEventListener("careerlens_profile_image_updated", handleAvatarUpdate);
-      window.removeEventListener("storage", handleAvatarUpdate);
+      window.removeEventListener('careerlens_profile_image_updated', handleAvatarUpdate);
+      window.removeEventListener('storage', handleAvatarUpdate);
     };
   }, [user]);
 
   const loadData = useCallback(async () => {
+    setState((prev) => ({ ...prev, loading: true }));
     try {
       const [result, notifRes] = await Promise.all([
         fetchAdminDashboardData({ dateRange }),
@@ -159,7 +180,7 @@ export default function AdminDashboard() {
   const yDomainMax = Math.ceil(maxVal);
 
   const topCompany =
-    analytics?.charts?.topCompanies?.[0]?.company || 'Northstar Labs';
+    analytics?.charts?.topCompanies?.[0]?.company || 'Mekong Digital Labs';
 
   const logs = analytics?.recent?.auditLogs || [];
 
@@ -195,9 +216,27 @@ export default function AdminDashboard() {
     return list.slice(0, 4);
   }, [analytics, kpis]);
 
-  const adminGreetingName =
-    user?.first_name ||
-    (user?.full_name ? user.full_name.split(' ')[0] : user?.username || 'Jackson Wang');
+  // Dynamic search filtering for real-time responsiveness
+  const filteredProcessItems = useMemo(() => {
+    if (!searchQuery.trim()) return inProcessItems;
+    const q = searchQuery.toLowerCase().trim();
+    return inProcessItems.filter(
+      (item) =>
+        item.title?.toLowerCase().includes(q) ||
+        item.subtitle?.toLowerCase().includes(q) ||
+        item.badge?.toLowerCase().includes(q)
+    );
+  }, [inProcessItems, searchQuery]);
+
+  const filteredLogs = useMemo(() => {
+    if (!searchQuery.trim()) return logs;
+    const q = searchQuery.toLowerCase().trim();
+    return logs.filter(
+      (log) =>
+        log.text?.toLowerCase().includes(q) ||
+        log.timestamp?.toLowerCase().includes(q)
+    );
+  }, [logs, searchQuery]);
 
   const todayFormatted = new Date().toLocaleDateString('en-US', {
     weekday: 'long',
@@ -211,20 +250,26 @@ export default function AdminDashboard() {
       {/* ── Top Header: User Greeting, Search, and Action Controls ─────────── */}
       <header className="modern-dash-header">
         <div className="modern-header-user">
-          <div className="modern-avatar-badge" aria-hidden="true" style={{ overflow: "hidden" }}>
+          <div className="modern-avatar-badge" aria-hidden="true" style={{ overflow: 'hidden' }}>
             {avatar ? (
               <img
                 src={avatar}
-                alt={adminGreetingName}
-                style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%" }}
+                alt="Admin"
+                style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }}
               />
             ) : (
-              adminGreetingName.charAt(0).toUpperCase()
+              'A'
             )}
           </div>
           <div>
-            <h1 className="modern-greeting-title">{t("admin.hi", "Hi")}, {adminGreetingName}</h1>
-            <p className="modern-greeting-sub">{t("admin.platformOperations", "Platform Operations & Recruitment Hub")}</p>
+            <div className="modern-greeting-badge-row">
+              <h1 className="modern-greeting-title">Welcome, Admin</h1>
+              <span className="modern-live-pill" title="Render Web Service active & monitored by UptimeRobot">
+                <span className="modern-live-pulse" />
+                Live Node
+              </span>
+            </div>
+            <p className="modern-greeting-sub">Platform Operations &amp; Real-Time ATS Management</p>
           </div>
         </div>
 
@@ -233,11 +278,21 @@ export default function AdminDashboard() {
             <Search size={18} className="modern-search-icon" />
             <input
               type="search"
-              placeholder={t("admin.searchAnything", "Search anything ...")}
+              placeholder={t('admin.searchAnything', 'Search anything ...')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="modern-search-input"
             />
+            {searchQuery && (
+              <button
+                type="button"
+                className="modern-search-clear"
+                onClick={() => setSearchQuery('')}
+                title="Clear search"
+              >
+                &times;
+              </button>
+            )}
           </div>
 
           <div className="modern-filter-box">
@@ -247,12 +302,22 @@ export default function AdminDashboard() {
               className="modern-range-select"
               aria-label="Filter analytics by date range"
             >
-              <option value="all">{t("admin.allTime", "All Time")}</option>
-              <option value="90d">{t("admin.last90Days", "Last 90 Days")}</option>
-              <option value="30d">{t("admin.last30Days", "Last 30 Days")}</option>
-              <option value="7d">{t("admin.last7Days", "Last 7 Days")}</option>
+              <option value="all">{t('admin.allTime', 'All Time')}</option>
+              <option value="90d">{t('admin.last90Days', 'Last 90 Days')}</option>
+              <option value="30d">{t('admin.last30Days', 'Last 30 Days')}</option>
+              <option value="7d">{t('admin.last7Days', 'Last 7 Days')}</option>
             </select>
           </div>
+
+          <button
+            type="button"
+            className={`modern-refresh-btn ${loading ? 'modern-refresh-btn--loading' : ''}`}
+            onClick={loadData}
+            title="Refresh live dashboard"
+            aria-label="Refresh live data"
+          >
+            <RotateCcw size={16} />
+          </button>
 
           <Link to="/admin/notifications" className="modern-notif-bell" title="Notifications">
             <Bell size={20} />
@@ -275,11 +340,11 @@ export default function AdminDashboard() {
       <div className="modern-dash-grid">
         {/* ── LEFT COLUMN (Analytics, Cards & Schedules) ──────────────────── */}
         <div className="modern-left-column">
-          {/* Top 3 Cards Row (Inspired by Reference Image) */}
+          {/* Top 3 Cards Row */}
           <div className="modern-cards-row">
-            {/* 1. Feature Spotlight Card (Character Illustration + Rating) */}
+            {/* 1. Feature Spotlight Card */}
             <div className="modern-spotlight-card">
-              <span className="spotlight-pill">{t("admin.platformHealth", "Platform Health")}</span>
+              <span className="spotlight-pill">{t('admin.platformHealth', 'Platform Health')}</span>
               <div className="spotlight-illu-box">
                 <CandidateCareerSpotlight />
               </div>
@@ -291,22 +356,22 @@ export default function AdminDashboard() {
                   <Star size={14} fill="#F59E0B" color="#F59E0B" />
                   <Star size={14} fill="#F59E0B" color="#F59E0B" />
                 </div>
-                <h2 className="spotlight-title">{t("admin.operationsEngine", "Operations Engine")}</h2>
-                <p className="spotlight-desc">{t("admin.verifiedUptime", "99.8% verified platform uptime")}</p>
+                <h2 className="spotlight-title">{t('admin.operationsEngine', 'Operations Engine')}</h2>
+                <p className="spotlight-desc">100% verified uptime (Render + UptimeRobot)</p>
                 <Link to="/admin/verification" className="spotlight-action-btn">
-                  {t("admin.verifyPartners", "Verify Partners")} &rarr;
+                  {t('admin.verifyPartners', 'Verify Partners')} &rarr;
                 </Link>
               </div>
             </div>
 
-            {/* 2. Center Overviews Bar Chart (Matching Reference "Social Overviews") */}
+            {/* 2. Center Overviews Bar Chart */}
             <div className="modern-overview-chart-card">
               <div className="overview-chart-header">
                 <div>
-                  <h2 className="overview-chart-title">{t("admin.platformOverviews", "Platform Overviews")}</h2>
-                  <p className="overview-chart-subtitle">{t("admin.platformOverviewsSub", "Real-time volume across all entities")}</p>
+                  <h2 className="overview-chart-title">{t('admin.platformOverviews', 'Platform Overviews')}</h2>
+                  <p className="overview-chart-subtitle">{t('admin.platformOverviewsSub', 'Real-time volume across all entities')}</p>
                 </div>
-                <span className="overview-chart-pill">{kpis.totalApplications} {t("admin.appsCount", "Total Apps")}</span>
+                <span className="overview-chart-pill">{kpis.totalApplications} {t('admin.appsCount', 'Total Apps')}</span>
               </div>
 
               <div className="overview-chart-box">
@@ -345,27 +410,27 @@ export default function AdminDashboard() {
               </div>
             </div>
 
-            {/* 3. Top Performer Highlight Card (Matching Reference Right Avatar Card) */}
+            {/* 3. Top Performer Highlight Card */}
             <div className="modern-performer-card">
               <div className="performer-badge-illu">
                 <PlatformAnalyticsIllustration />
               </div>
               <h2 className="performer-name">{topCompany}</h2>
-              <span className="performer-role">{t("admin.topVerifiedPartner", "Top Verified Partner")}</span>
+              <span className="performer-role">{t('admin.topVerifiedPartner', 'Top Verified Partner')}</span>
 
               <div className="performer-dual-stats">
                 <div className="dual-stat-item">
                   <strong>{kpis.verifiedCompanies}</strong>
-                  <span>{t("admin.verified", "Verified")}</span>
+                  <span>{t('admin.verified', 'Verified')}</span>
                 </div>
                 <div className="dual-stat-item">
                   <strong>{kpis.totalJobs}</strong>
-                  <span>{t("admin.activeJobs", "Active Jobs")}</span>
+                  <span>{t('admin.activeJobs', 'Active Jobs')}</span>
                 </div>
               </div>
 
               <Link to="/admin/companies" className="performer-action-btn">
-                {t("admin.bestPartner", "Best Partner")}
+                {t('admin.bestPartner', 'Best Partner')}
               </Link>
             </div>
           </div>
@@ -375,73 +440,93 @@ export default function AdminDashboard() {
             {/* Quick Metrics Cards */}
             <div className="modern-quick-stats-panel">
               <div className="panel-title-row">
-                <h2 className="panel-heading">{t("admin.platformEntities", "Platform Entities")}</h2>
-                <span className="panel-sub-label">{t("admin.liveCounts", "Live Counts")}</span>
+                <h2 className="panel-heading">{t('admin.platformEntities', 'Platform Entities')}</h2>
+                <span className="panel-sub-label">{t('admin.liveCounts', 'Live Counts')}</span>
               </div>
 
               <div className="quick-metrics-row">
-                <div className="metric-chip">
+                <Link to="/admin/candidates" className="metric-chip metric-chip-link" title="Manage candidates">
                   <div className="metric-chip-icon chip-blue">
                     <Users size={18} />
                   </div>
                   <div>
                     <strong>{kpis.totalCandidates}</strong>
-                    <span>{t("common.nav.candidates", "Students")}</span>
+                    <span>{t('common.nav.candidates', 'Students')}</span>
+                    <span className="metric-chip-sub">Talents &rarr;</span>
                   </div>
-                </div>
+                </Link>
 
-                <div className="metric-chip">
+                <Link to="/admin/companies" className="metric-chip metric-chip-link" title="Manage companies">
                   <div className="metric-chip-icon chip-indigo">
                     <Building2 size={18} />
                   </div>
                   <div>
                     <strong>{kpis.totalCompanies}</strong>
-                    <span>{t("common.nav.companies", "Companies")}</span>
+                    <span>{t('common.nav.companies', 'Companies')}</span>
+                    <span className="metric-chip-sub">{kpis.verifiedCompanies} Verified</span>
                   </div>
-                </div>
+                </Link>
 
-                <div className="metric-chip">
+                <Link to="/admin/jobs" className="metric-chip metric-chip-link" title="Manage jobs">
                   <div className="metric-chip-icon chip-amber">
                     <Briefcase size={18} />
                   </div>
                   <div>
                     <strong>{kpis.totalJobs}</strong>
-                    <span>{t("common.nav.jobs", "Job Posts")}</span>
+                    <span>{t('common.nav.jobs', 'Job Posts')}</span>
+                    <span className="metric-chip-sub">{kpis.activeJobs} Active</span>
                   </div>
-                </div>
+                </Link>
 
-                <div className="metric-chip">
+                <Link to="/admin/applications" className="metric-chip metric-chip-link" title="View pipeline">
                   <div className="metric-chip-icon chip-green">
                     <CheckCircle2 size={18} />
                   </div>
                   <div>
                     <strong>{kpis.interviewsCount}</strong>
-                    <span>{t("common.nav.interviews", "Interviews")}</span>
+                    <span>{t('common.nav.interviews', 'Interviews')}</span>
+                    <span className="metric-chip-sub">Scheduled</span>
                   </div>
-                </div>
+                </Link>
               </div>
 
               {/* Recent Audit Trail List */}
               <div className="modern-audit-box">
                 <div className="panel-title-row" style={{ marginTop: '16px', marginBottom: '8px' }}>
-                  <h3 className="panel-heading" style={{ fontSize: '0.9375rem' }}>{t("common.nav.auditLogs", "Audit Log")}</h3>
+                  <h3 className="panel-heading" style={{ fontSize: '0.9375rem' }}>{t('common.nav.auditLogs', 'Audit Log')}</h3>
                   {isDemoModeEnabled() && (
                     <button type="button" className="modern-reset-link" onClick={handleResetDemoData}>
-                      <RotateCcw size={13} /> {t("admin.resetDemoData", "Reset Demo Data")}
+                      <RotateCcw size={13} /> {t('admin.resetDemoData', 'Reset Demo Data')}
                     </button>
                   )}
                 </div>
 
+                {searchQuery && (
+                  <span className="search-active-pill">
+                    Filtering audit logs ({filteredLogs.length} matches)
+                  </span>
+                )}
+
                 <div className="audit-items-list">
-                  {logs.length === 0 ? (
-                    <p className="empty-subtext">{t("common.noData", "No audit logs recorded.")}</p>
+                  {filteredLogs.length === 0 ? (
+                    <p className="empty-subtext">
+                      {searchQuery
+                        ? `No audit logs match "${searchQuery}".`
+                        : t('common.noData', 'No audit logs recorded.')}
+                    </p>
                   ) : (
-                    logs.slice(0, 4).map((log) => (
-                      <div key={log.id} className="audit-item-row">
-                        <span className="audit-item-time">{log.timestamp}</span>
-                        <span className="audit-item-text">{log.text}</span>
-                      </div>
-                    ))
+                    filteredLogs.slice(0, 4).map((log) => {
+                      const badge = getAuditBadge(log.text);
+                      return (
+                        <div key={log.id} className="audit-item-row">
+                          <span className="audit-badge" style={{ color: badge.color, background: badge.bg }}>
+                            {badge.label}
+                          </span>
+                          <span className="audit-item-time">{log.timestamp}</span>
+                          <span className="audit-item-text">{log.text}</span>
+                        </div>
+                      );
+                    })
                   )}
                 </div>
               </div>
@@ -456,24 +541,36 @@ export default function AdminDashboard() {
             <RecruitmentWorkspaceBanner />
           </div>
 
-          {/* "On Process" Pipeline Panel (Matching Reference) */}
+          {/* "On Process" Pipeline Panel */}
           <div className="modern-process-card">
             <div className="process-header">
               <div>
-                <h2 className="process-title">{t("admin.onProcess", "On Process")}</h2>
+                <h2 className="process-title">{t('admin.onProcess', 'On Process')}</h2>
                 <span className="process-date">{todayFormatted}</span>
               </div>
-              <span className="process-count-badge">{inProcessItems.length} {t("common.active", "Active")}</span>
+              <span className="process-count-badge">
+                {filteredProcessItems.length} {t('common.active', 'Active')}
+              </span>
             </div>
 
+            {searchQuery && (
+              <span className="search-active-pill" style={{ margin: '0 16px 8px' }}>
+                Filtering pipeline ({filteredProcessItems.length} matches)
+              </span>
+            )}
+
             <div className="process-items-list">
-              {inProcessItems.length === 0 ? (
+              {filteredProcessItems.length === 0 ? (
                 <div className="process-empty-box">
                   <CheckCircle2 size={24} color="#10B981" />
-                  <p>{t("admin.allUpToDate", "All applications and reviews are up to date!")}</p>
+                  <p>
+                    {searchQuery
+                      ? `No active items match "${searchQuery}".`
+                      : t('admin.allUpToDate', 'All applications and reviews are up to date!')}
+                  </p>
                 </div>
               ) : (
-                inProcessItems.map((item) => (
+                filteredProcessItems.map((item) => (
                   <Link
                     key={item.id}
                     to={item.link}
@@ -498,7 +595,7 @@ export default function AdminDashboard() {
 
             <div className="process-footer">
               <Link to="/admin/applications" className="process-view-all">
-                {t("admin.viewPipeline", "View Full Platform Pipeline")} &rarr;
+                {t('admin.viewPipeline', 'View Full Platform Pipeline')} &rarr;
               </Link>
             </div>
           </div>

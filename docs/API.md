@@ -2,7 +2,7 @@
 
 This document provides complete reference documentation for the **CareerLens REST API**, including authentication workflows, candidate and company portals, ATS lifecycle transitions, Google Gemini AI endpoints, and the Telegram Bot Webhook interface.
 
-**Base Production URL:** `https://careerlens-api-fh3x.onrender.com/api/`  
+**Base Production URL:** `https://your-careerlens-api.onrender.com/api/`  
 **Local Development URL:** `http://127.0.0.1:8000/api/`
 
 ---

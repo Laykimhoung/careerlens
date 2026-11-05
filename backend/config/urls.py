@@ -44,6 +44,10 @@ def api_root_view(request):
     })
 
 
+admin.site.site_header = "CareerLens — Database Command Center"
+admin.site.site_title = "CareerLens Admin"
+admin.site.index_title = "PostgreSQL System Records & Platform Administration"
+
 urlpatterns = [
     path('', api_root_view, name='api-root'),
     path('admin/', admin.site.urls),
