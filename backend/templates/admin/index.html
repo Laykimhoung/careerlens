@@ -1,0 +1,27 @@
+{% extends "admin/index.html" %}
+{% load i18n static %}
+
+{% block content %}
+<div class="careerlens-admin-hero">
+  <div class="careerlens-hero-content">
+    <div class="careerlens-hero-text">
+      <h2>PostgreSQL System Records &amp; Engine Management</h2>
+      <p>Direct low-level database control over all 20 CareerLens models, relational foreign keys, and audit event logs.</p>
+    </div>
+    <div class="careerlens-hero-badges">
+      <span class="hero-chip chip-engine">
+        <span class="chip-dot"></span> PostgreSQL 16 (Neon)
+      </span>
+      <span class="hero-chip chip-bot">
+        <span class="chip-dot-amber"></span> @careerlens_jobs_bot Active
+      </span>
+      <span class="hero-chip chip-keepalive">
+        <span class="chip-dot-green"></span> 24/7 Keep-Alive
+      </span>
+    </div>
+  </div>
+</div>
+
+{{ block.super }}
+{% endblock %}
+
