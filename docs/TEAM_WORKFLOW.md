@@ -13,7 +13,7 @@ This document defines each team member's responsibilities, file ownership, colla
 
 ## 1. Team Members and Core Responsibilities
 
-The CareerLens development team consists of **3 members**:
+The CareerLens development team consists of **4 members**:
 
 ```text
 ┌────────────────────────────────────────────────────────────────────────┐
