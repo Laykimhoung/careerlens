@@ -55,7 +55,7 @@ A modern full-stack recruitment platform engineered to connect university studen
 
 ## 👥 Development Team & Responsibilities
 
-The CareerLens platform was engineered by a specialized team of **3 developers**:
+The CareerLens platform was engineered by a specialized team of **4 members**:
 
 ```text
 ┌─────────────────────────────────────────────────────────────────────────┐
@@ -78,6 +78,7 @@ The CareerLens platform was engineered by a specialized team of **3 developers**
 | **Lay Kimhoung**<br>*(Team Leader)* | Lead Architect,<br>Backend & DevOps | • Django 5.2 REST API architecture & modular app design<br>• Database schema, indexing, migrations & idempotent seeders<br>• Telegram Bot integration (`@careerlens_jobs_bot`) & webhook<br>• Cloud deployment (Vercel, Render, Neon, UptimeRobot 24/7)<br>• Supporting Frontend: `safeLazy` code splitting, `ProtectedRoute` deep linking, BYOK Gemini AI validation | `backend/apps/` (all apps)<br>`backend/config/`<br>`backend/Procfile`<br>`frontend/src/routes/AppRoutes.jsx`<br>`frontend/src/components/common/ProtectedRoute.jsx`<br>`frontend/vercel.json`<br>`frontend/vite.config.js` |
 | **Eiv Youe** | Frontend Engineer | • Candidate ATS Dashboard (Applications, Status tracker, Saved jobs)<br>• Recruiter ATS Workspace (Job management, Applicant pipeline, Interview scheduler, Offer management)<br>• Administrator Management Portal (User directory, Platform KPIs, Audit logs) | `frontend/src/pages/candidate/`<br>`frontend/src/pages/company/`<br>`frontend/src/pages/admin/`<br>`frontend/src/components/candidate/`<br>`frontend/src/components/company/`<br>`frontend/src/components/admin/` |
 | **Sokun En** | Frontend Engineer | • Public Landing Page (`Home.jsx`) with responsive layout & dark/light theme<br>• Interactive Telegram Bot showcase with simulated chat<br>• Authentication flow (`AuthPage.jsx`: Login, Register, Password Reset, Role Switcher)<br>• Public navigation bar and footer | `frontend/src/pages/landing/Home/`<br>`frontend/src/pages/auth/`<br>`frontend/src/components/landing/`<br>`frontend/src/layouts/MainLayout.jsx` |
+| **Chhoung Chandana** | Project Tester & QA | • Quality assurance across all user journeys (Candidate, Company, Admin)<br>• End-to-end recruitment flow verification (Job posting, ATS stages, Interview scheduling)<br>• Telegram bot interaction & responsiveness testing<br>• Multi-language (EN/KM) and light/dark theme verification | `docs/TESTING.md`<br>Branch: `frontend/dana` |
 
 ---
 

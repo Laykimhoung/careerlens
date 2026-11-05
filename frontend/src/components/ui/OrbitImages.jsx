@@ -839,7 +839,17 @@ export default function OrbitImages({
           aria-label={interactive ? item.alt : undefined}
         >
           <div className="orbit-item-inner">
-            <img src={item.src} alt={item.alt} draggable={false} decoding="async" className="orbit-image" />
+            <img
+              src={item.src}
+              alt={item.alt}
+              draggable={false}
+              decoding="async"
+              className={`orbit-image ${item.className || ''}`.trim()}
+              style={{
+                objectPosition: item.objectPosition,
+                ...item.imageStyle,
+              }}
+            />
           </div>
           {(item.name || (item.details && item.details.length > 0) || item.role || item.age !== undefined) && (
             <div className="orbit-item-tooltip" role="tooltip">

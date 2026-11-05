@@ -209,3 +209,4 @@ The CareerLens frontend codebase is split cleanly between **2 specialized fronte
 | **All Dashboards & Workspaces** | **Eiv Youe** | `src/pages/candidate/`<br>`src/pages/company/`<br>`src/pages/admin/`<br>`src/components/candidate/`<br>`src/components/company/`<br>`src/components/admin/` |
 | **Landing Page & Authentication** | **Sokun En** | `src/pages/landing/Home/`<br>`src/pages/auth/`<br>`src/components/landing/`<br>`src/layouts/MainLayout.jsx` |
 | **Core Architecture & Routing** | **Lay Kimhoung**<br>*(Team Leader)* | `src/routes/AppRoutes.jsx`<br>`src/components/common/ProtectedRoute.jsx`<br>`src/pages/common/NotFound/`<br>`src/services/api.js`<br>`vite.config.js`<br>`vercel.json` |
+| **Quality Assurance & Testing** | **Chhoung Chandana** | End-to-end user journey validation, bilingual QA (EN/KM), dark/light theme testing, cross-device responsiveness verification |

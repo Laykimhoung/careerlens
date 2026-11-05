@@ -7,14 +7,14 @@ import ThemeLanguageToggle from "../../../components/common/ThemeLanguageToggle"
 import { useTheme } from "../../../context/ThemeContext";
 import { useLanguage } from "../../../context/LanguageContext";
 import logoImg from "../../../assets/logo/logo.webp";
-import coachImg from "../../../assets/images/Coach.webp";
-import enImg from "../../../assets/images/En.webp";
+import danaImg from "../../../assets/images/Dana.webp";
+import enImg from "../../../assets/images/Enn.webp";
 import youeImg from "../../../assets/images/Youe.webp";
 import kimhoungImg from "../../../assets/images/Kimhoung.webp";
 import "./Home.css";
 
 const ABOUT_ORBIT_IMAGES = [
-  { src: coachImg, alt: "Mentorship & Career Coaching" },
+  { src: danaImg, alt: "Quality Assurance & Testing" },
   { src: enImg, alt: "Tech & Software Engineering" },
   { src: youeImg, alt: "Student Journey & Success" },
   { src: kimhoungImg, alt: "Professional Leadership & Growth" },
@@ -86,13 +86,13 @@ export default function Home() {
   const aboutOrbitImages = useMemo(
     () => [
       {
-        src: coachImg,
-        alt: t("common.teamCoachName", "Coach"),
-        name: t("common.teamCoachName", "Coach"),
+        src: danaImg,
+        alt: t("common.teamDanaName", "Chhoung Chandana"),
+        name: t("common.teamDanaName", "Chhoung Chandana"),
         details: [
-          t("common.teamCoachRole", "Project Advisor"),
-          t("common.teamCoachTitle", "Career Coach"),
-          t("common.teamCoachAge", "28 years"),
+          t("common.teamDanaRole", "Project Tester"),
+          t("common.teamDanaTitle", "CS Student"),
+          t("common.teamDanaAge", "21 years"),
         ],
       },
       {

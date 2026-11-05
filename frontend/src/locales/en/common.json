@@ -216,5 +216,9 @@
     "searchContacts": "Search contacts by name, email, or role...",
     "online": "Online",
     "noChatSelected": "Select a conversation to start chatting"
-  }
+  },
+  "teamDanaName": "Chhoung Chandana",
+  "teamDanaRole": "Project Tester",
+  "teamDanaTitle": "CS Student",
+  "teamDanaAge": "21 years"
 }
