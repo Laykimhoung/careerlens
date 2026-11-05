@@ -19,32 +19,36 @@ The application uses one PostgreSQL database shared by the Django backend. Datab
 
 ## 1. Database Tables
 
-The design contains 16 application models. Django also provides built-in authentication and permission models, so we do not need to recreate them.
+The design contains 20 application models organized across 5 specialized Django apps. Django also provides built-in authentication and permission models, so we do not need to recreate them.
 
 | No. | Model | Django App | Description |
 |---|---|---|---|
-| 1 | `User` | `accounts` | User authentication, email, role, and account status. |
+| 1 | `User` | `accounts` | User authentication, email, role (`CANDIDATE`, `COMPANY`, `ADMIN`), and account status. |
 | 2 | `CandidateProfile` | `accounts` | Candidate education, major, graduation year, and profile details. |
 | 3 | `CompanyProfile` | `accounts` | Company information, industry, website, and verification status. |
 | 4 | `Job` | `jobs` | Job title, description, salary, location, employment type, and publishing status. |
 | 5 | `Skill` | `jobs` | Reusable skills, such as Python, SQL, and React. |
-| 6 | `JobSkill` | `jobs` | Connects jobs to their required skills. |
-| 7 | `CandidateSkill` | `accounts` | Connects candidates to their skills. |
-| 8 | `Application` | `applications` | Connects candidates to jobs and stores application details and current status. |
-| 9 | `ApplicationStatusHistory` | `applications` | Records application status changes and timestamps. |
-| 10 | `Interview` | `applications` | Stores interview schedules, meeting details, and status. |
-| 11 | `Offer` | `applications` | Stores job offers, proposed salary, and response status. |
-| 12 | `SavedJob` | `jobs` | Records jobs saved by candidates. |
-| 13 | `Message` | `messaging` | Stores messages between users. |
-| 14 | `Notification` | `messaging` | Stores user notifications and read/unread status. |
-| 15 | `ApplicationNote` | `applications` | Stores private recruiter notes attached to applications. |
-| 16 | `AuditLog` | `accounts` | Records important administrative actions. |
+| 6 | `JobSkill` | `jobs` | Connects jobs to their required skills (Many-to-Many through table). |
+| 7 | `CandidateSkill` | `accounts` | Connects candidates to their acquired skills. |
+| 8 | `SavedJob` | `jobs` | Records jobs bookmarked by candidates for later review. |
+| 9 | `CandidateRoadmap` | `jobs` | Stores personalized learning roadmap, target job, weekly commitment, and milestone JSON. |
+| 10 | `Application` | `applications` | Connects candidates to jobs and stores application details and current status. |
+| 11 | `ApplicationStatusHistory` | `applications` | Records application status changes and chronological audit timestamps. |
+| 12 | `Interview` | `applications` | Stores interview schedules, meeting details (Google Meet/Zoom), and notes. |
+| 13 | `Offer` | `applications` | Stores job offers, proposed salary, expiration, and response status (`ACCEPTED`/`REJECTED`). |
+| 14 | `ApplicationNote` | `applications` | Stores private recruiter evaluation notes attached to applications. |
+| 15 | `Message` | `messaging` | Stores bi-directional direct messages between candidates and recruiters. |
+| 16 | `Notification` | `messaging` | Stores user notifications and read/unread status. |
+| 17 | `AuditLog` | `accounts` | Records important administrative and authentication actions for compliance. |
+| 18 | `Resume` | `resumes` | Uploaded candidate CV files, parsed JSON data, and multi-dimensional analysis results. |
+| 19 | `ResumeVersion` | `resumes` | AI-generated CV versions (v1, v2), structured sections, and active approval status. |
+| 20 | `CandidateUsage` | `resumes` | Tracks AI resume improvements usage and quota limits per candidate. |
 
-This is the full-featured design. Models can be implemented in phases, but changes must remain consistent with this approved schema.
+This is the full-featured design implemented in production on Neon Serverless PostgreSQL.
 
 ## 2. Entity Relationship Diagram (ERD)
 
-The following diagram describes the relationships between the application's models.
+The following diagram describes the relationships between all 20 application models.
 
 ```mermaid
 erDiagram
@@ -69,6 +73,13 @@ erDiagram
 
     CANDIDATE_PROFILE ||--o{ SAVED_JOB : saves
     JOB ||--o{ SAVED_JOB : is_saved
+
+    CANDIDATE_PROFILE ||--o| CANDIDATE_ROADMAP : follows
+    JOB ||--o| CANDIDATE_ROADMAP : targets
+
+    CANDIDATE_PROFILE ||--o{ RESUME : uploads
+    CANDIDATE_PROFILE ||--o{ RESUME_VERSION : generates
+    CANDIDATE_PROFILE ||--o| CANDIDATE_USAGE : tracks_quota
 
     USER ||--o{ MESSAGE : sends
     USER ||--o{ MESSAGE : receives
@@ -416,7 +427,7 @@ Keep Django models, migrations, API serializers, views, and frontend API usage c
 
 ## Final Decision
 
-CareerLens will use one PostgreSQL database with a custom Django user model and 16 application models organized into four Django apps.
+CareerLens will use one PostgreSQL database with a custom Django user model and 20 application models organized into five Django apps (accounts, jobs, applications, messaging, resumes).
 
 There will be no separate `Admin` model because administrator accounts use the shared `User` model and Django permissions.
 
