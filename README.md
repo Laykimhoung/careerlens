@@ -450,7 +450,7 @@ CREATE DATABASE careerlens_db;
    DB_PORT=5432
 
    # Optional Telegram bot token (for local bot polling)
-   # TELEGRAM_BOT_TOKEN=9206044602:AAEq18wfnGibirr56D-LEdKh9CdT88eSVCg
+   # TELEGRAM_BOT_TOKEN=your_telegram_bot_token_from_botfather
    ```
 
 5. **Apply Database Migrations**:
