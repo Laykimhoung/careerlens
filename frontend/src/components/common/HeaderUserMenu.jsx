@@ -72,7 +72,7 @@ export default function HeaderUserMenu({ role = 'candidate' }) {
     } catch {
       // ignore API logout errors
     } finally {
-      navigate('/login');
+      window.location.replace('/');
     }
   };
 

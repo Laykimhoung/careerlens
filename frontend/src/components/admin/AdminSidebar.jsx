@@ -62,7 +62,13 @@ export default function AdminSidebar({ open, onClose, adminName, onLogout }) {
       isOpen={open}
       onClose={onClose}
       user={user}
-      onLogout={onLogout || logout}
+      onLogout={onLogout || (async () => {
+        try {
+          await logout();
+        } finally {
+          window.location.replace('/');
+        }
+      })}
       switchRole={switchRole}
       currentRole="admin"
     />

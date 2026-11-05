@@ -65,7 +65,13 @@ export default function CandidateSidebar({ isOpen, open, onClose }) {
       isOpen={isMenuOpen}
       onClose={onClose}
       user={user}
-      onLogout={logout}
+      onLogout={async () => {
+        try {
+          await logout();
+        } finally {
+          window.location.replace('/');
+        }
+      }}
       switchRole={switchRole}
       currentRole="candidate"
     />

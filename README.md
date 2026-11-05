@@ -1,86 +1,366 @@
-# CareerLens — University Recruitment & Applicant Tracking System (ATS)
+<p align="center">
+  <img src="docs/assets/logo.webp" alt="CareerLens Logo" width="130" />
+</p>
 
-CareerLens is a modern, full-stack recruitment platform designed to bridge university students, graduates, and tech employers. Built with **Django REST Framework** on the backend and **React + Vite** on the frontend, CareerLens streamlines the recruitment journey from job discovery and application tracking to technical interviews, job offers, and real-time candidate-recruiter messaging.
+# 🎓 CareerLens
+
+> **Full-Stack University Recruitment & Applicant Tracking System (ATS)**
+
+A modern full-stack recruitment platform engineered to connect university students, graduates, and tech employers. Streamlines the hiring lifecycle from job discovery and application tracking to technical interviews, job offers, resume diagnostics, and an interactive 24/7 Telegram recruitment bot.
+
+![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white) ![Django](https://img.shields.io/badge/Django-5.2-092E20?logo=django&logoColor=white) ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black) ![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white) ![Frontend](https://img.shields.io/badge/Frontend-Vercel-black?logo=vercel&logoColor=white) ![Backend](https://img.shields.io/badge/Backend-Render-46E3B7?logo=render&logoColor=black) ![Database](https://img.shields.io/badge/Database-Neon_PostgreSQL_16-4169E1?logo=postgresql&logoColor=white) ![Uptime](https://img.shields.io/badge/Uptime-100%25_Active-brightgreen?logo=uptimerobot&logoColor=white) ![Telegram Bot](https://img.shields.io/badge/Telegram_Bot-@careerlens__jobs__bot-26A5E4?logo=telegram&logoColor=white) ![AI](https://img.shields.io/badge/AI-Google_Gemini-4285F4?logo=google&logoColor=white)
 
 ---
 
-## Table of Contents
+## 📑 Table of Contents
 
-- [Key Features](#key-features)
-- [Technology Stack](#technology-stack)
-- [Project Architecture](#project-architecture)
-- [Prerequisites](#prerequisites)
-- [Quick Start Guide](#quick-start-guide)
-  - [Terminal Navigation Guide (Backend vs. Frontend)](#terminal-navigation-guide-backend-vs-frontend)
+- [🚀 Live Production Deployments](#-live-production-deployments)
+- [👥 Development Team & Responsibilities](#-development-team--responsibilities)
+- [🌟 Key Features](#-key-features)
+- [📐 System Architectures](#-system-architectures)
+  - [1. Full System Architecture](#1-full-system-architecture)
+  - [2. Frontend Architecture](#2-frontend-architecture)
+  - [3. Backend Architecture](#3-backend-architecture)
+  - [4. Telegram Bot Architecture](#4-telegram-bot-architecture)
+  - [5. Deployment & DevOps Architecture](#5-deployment--devops-architecture-with-uptimerobot-keep-alive)
+- [🛠️ Technology Stack](#️-technology-stack)
+- [📂 Project Architecture & Directory Structure](#-project-architecture--directory-structure)
+- [📋 Prerequisites](#-prerequisites)
+- [⚡ Quick Start Guide](#-quick-start-guide)
+  - [Terminal Navigation Guide](#terminal-navigation-guide-backend-vs-frontend)
   - [Step 1: Clone the Repository](#step-1-clone-the-repository)
   - [Step 2: Database Setup (PostgreSQL)](#step-2-database-setup-postgresql)
-  - [Step 3: Backend Setup (Terminal 1 — cd backend)](#step-3-backend-setup-terminal-1--cd-backend)
-  - [Step 4: Frontend Setup (Terminal 2 — cd frontend)](#step-4-frontend-setup-terminal-2--cd-frontend)
-- [Demo Accounts & Ready-to-Test Dataset](#demo-accounts--ready-to-test-dataset)
-  - [How to Run and Load the Demo Data](#how-to-run-and-load-the-demo-data)
-  - [Candidate Accounts](#1-candidate-accounts)
-  - [Company Recruiter Accounts](#2-company-recruiter-accounts)
-  - [Administrator Account](#3-administrator-account)
-- [Django Management Commands](#django-management-commands)
-- [Running Automated Tests](#running-automated-tests)
-- [Troubleshooting & Common Issues](#troubleshooting--common-issues)
-- [Documentation & Deep Dives](#documentation--deep-dives)
+  - [Step 3: Backend Setup](#step-3-backend-setup-terminal-1--cd-backend)
+  - [Step 4: Frontend Setup](#step-4-frontend-setup-terminal-2--cd-frontend)
+- [🎯 Demo Accounts & Ready-to-Test Dataset](#-demo-accounts--ready-to-test-dataset)
+- [🤖 Telegram Bot Quick Start](#-telegram-bot-quick-start)
+- [🛠️ Django Management Commands](#️-django-management-commands)
+- [🧪 Running Automated Tests](#-running-automated-tests)
+- [📚 In-Depth Documentation](#-in-depth-documentation)
+- [📄 License & University Context](#-license--university-context)
 
 ---
 
-## Key Features
+## 🚀 Live Production Deployments
 
-- **Role-Based Authentication & Permissions**: Secure stateless JWT authentication supporting dedicated roles: `CANDIDATE`, `COMPANY`, and `ADMIN`.
-- **Company & Candidate Profiles**: University educational records, resumes, portfolios, and company verification workflows.
-- **IT Job Board**: Rich catalogue across 5 domains (Software Development, Data & AI, Cybersecurity & Networking, Cloud & QA, and other specialized IT roles).
-- **End-to-End Application Workflow**: Track candidates through statuses: `APPLIED` $\to$ `REVIEWING` $\to$ `INTERVIEW` $\to$ `OFFERED` $\to$ `REJECTED`.
-- **Interviews & Offers**: Schedule technical interviews with meeting links and issue compensation offers with accept/decline responses.
-- **Direct Messaging & Notifications**: Bi-directional communication channel between recruiters and applicants with real-time notifications.
-- **Auditing & Safe Demo Seeding**: Built-in idempotent demo dataset seeding (`seed_demo_data`) and non-destructive reverse-dependency cleanup (`clear_demo_data`).
-
----
-
-## Technology Stack
-
-| Layer | Technologies |
-| :--- | :--- |
-| **Backend API** | Python 3.12, Django 5.2, Django REST Framework (DRF), SimpleJWT |
-| **Database** | PostgreSQL 14+, Psycopg 3 |
-| **Frontend UI** | React 19, Vite, Tailwind CSS v4, Axios, React Router v7 |
-| **Security & Auditing** | CORS Headers, Model-Level Audit Logging, Transaction Rollback Guards |
+| Component | Platform | Live URL / Handle | Status |
+| :--- | :--- | :--- | :--- |
+| **Frontend Web App** | Vercel (Edge CDN) | [https://careerlens-ivory-ten.vercel.app](https://careerlens-ivory-ten.vercel.app) | 🟢 Live |
+| **Backend REST API** | Render (Web Service) | [https://careerlens-api-fh3x.onrender.com](https://careerlens-api-fh3x.onrender.com) | 🟢 Live |
+| **Telegram Bot** | Telegram Cloud | [@careerlens_jobs_bot](https://t.me/careerlens_jobs_bot) | 🟢 Active |
+| **Database** | Neon Serverless | Hosted PostgreSQL 16 over SSL (`sslmode=require`) | 🟢 Connected |
+| **Keep-Alive Monitor** | UptimeRobot | Pings every 10 min (Prevents Render cold starts) | 🟢 Active (100% Uptime) |
 
 ---
 
-## Project Architecture
+## 👥 Development Team & Responsibilities
+
+The CareerLens platform was engineered by a specialized team of **3 developers**:
 
 ```text
-CareerLens/
-├── backend/                  # Django REST API
-│   ├── apps/
-│   │   ├── accounts/         # Users, CandidateProfile, CompanyProfile, AuditLog
-│   │   │   └── management/   # Custom commands (seed_demo_data, clear_demo_data)
-│   │   ├── jobs/             # Jobs, Skills, JobSkills, SavedJobs
-│   │   ├── applications/     # Applications, Status History, Interviews, Offers, Notes
-│   │   └── messaging/        # Direct Messages and Notifications
-│   ├── config/               # Django project settings, ASGI/WSGI, routing
-│   ├── media/                # User-uploaded files (resumes, media)
-│   ├── requirements.txt      # Python backend dependencies
-│   ├── .env.example          # Backend environment configuration template
-│   └── manage.py
-├── frontend/                 # React + Vite application
-│   ├── src/                  # Components, pages, router, API client
-│   ├── package.json          # Node dependencies and scripts
-│   ├── vite.config.js        # Vite bundler configuration
-│   └── .env.example          # Frontend environment template
-├── docs/                     # Detailed architectural specifications
-└── README.md                 # Root documentation and setup guide
+┌─────────────────────────────────────────────────────────────────────────┐
+│                    Lay Kimhoung (Team Leader)                           │
+│  Backend REST API • PostgreSQL Database • Telegram Bot • DevOps/Deploy  │
+│                   & Supporting Frontend Architecture                    │
+└───────────────────┬─────────────────────────────────┬───────────────────┘
+                    │                                 │
+                    ▼                                 ▼
+       ┌─────────────────────────┐       ┌─────────────────────────┐
+       │        Eiv Youe         │       │        Sokun En         │
+       │   Frontend Engineer     │       │   Frontend Engineer     │
+       │  All Dashboards & ATS   │       │ Landing Page & Auth Flow│
+       │(Candidate/Company/Admin)│       │  (Home, Login, Register)│
+       └─────────────────────────┘       └─────────────────────────┘
+```
+
+| Member | Role | Primary Responsibilities | Owned Scope & Key Files |
+| :--- | :--- | :--- | :--- |
+| **Lay Kimhoung**<br>*(Team Leader)* | Lead Architect,<br>Backend & DevOps | • Django 5.2 REST API architecture & modular app design<br>• Database schema, indexing, migrations & idempotent seeders<br>• Telegram Bot integration (`@careerlens_jobs_bot`) & webhook<br>• Cloud deployment (Vercel, Render, Neon, UptimeRobot 24/7)<br>• Supporting Frontend: `safeLazy` code splitting, `ProtectedRoute` deep linking, BYOK Gemini AI validation | `backend/apps/` (all apps)<br>`backend/config/`<br>`backend/Procfile`<br>`frontend/src/routes/AppRoutes.jsx`<br>`frontend/src/components/common/ProtectedRoute.jsx`<br>`frontend/vercel.json`<br>`frontend/vite.config.js` |
+| **Eiv Youe** | Frontend Engineer | • Candidate ATS Dashboard (Applications, Status tracker, Saved jobs)<br>• Recruiter ATS Workspace (Job management, Applicant pipeline, Interview scheduler, Offer management)<br>• Administrator Management Portal (User directory, Platform KPIs, Audit logs) | `frontend/src/pages/candidate/`<br>`frontend/src/pages/company/`<br>`frontend/src/pages/admin/`<br>`frontend/src/components/candidate/`<br>`frontend/src/components/company/`<br>`frontend/src/components/admin/` |
+| **Sokun En** | Frontend Engineer | • Public Landing Page (`Home.jsx`) with responsive layout & dark/light theme<br>• Interactive Telegram Bot showcase with simulated chat<br>• Authentication flow (`AuthPage.jsx`: Login, Register, Password Reset, Role Switcher)<br>• Public navigation bar and footer | `frontend/src/pages/landing/Home/`<br>`frontend/src/pages/auth/`<br>`frontend/src/components/landing/`<br>`frontend/src/layouts/MainLayout.jsx` |
+
+---
+
+## 🌟 Key Features
+
+- **Role-Based Access Control (RBAC)**: Secure stateless JWT authentication supporting dedicated roles: `CANDIDATE`, `COMPANY`, and `ADMIN`.
+- **Telegram Bot Assistant (`@careerlens_jobs_bot`)**:
+  - Live Telegram bot enabling students to discover jobs, browse vacancies, and search by keywords directly on mobile.
+  - Interactive deep links direct candidates straight to the job application page on the web app.
+  - Interactive landing page showcase with live status indicator and light/dark mode support.
+- **Google Gemini AI Integration (Bring-Your-Own-Key)**:
+  - Universal multi-model Gemini support (`gemini-3.5-flash-lite`, `gemini-3.8-flash`) for automated resume analysis and tailored career roadmaps.
+  - Zero-paywall BYOK architecture allowing candidates to input their own free Gemini API key.
+- **Enterprise-Grade ATS Pipeline**:
+  - Full candidate lifecycle: `APPLIED` $\to$ `REVIEWING` $\to$ `INTERVIEW` $\to$ `OFFERED` $\to$ `REJECTED`.
+  - Recruiter interview scheduling with Google Meet/Zoom links and formal offer generation.
+- **High-Performance Frontend**:
+  - Dynamic route code-splitting via `safeLazy` reduces initial bundle size from **1.36 MB down to 40.7 kB** (97% reduction).
+  - Rollup vendor chunking (`vendor-react`, `vendor-charts`, `vendor-icons`).
+  - Auto-recovering `<Suspense>` boundary protects against stale chunk hashes on new deployments.
+  - Smart post-auth deep-link preservation (`?redirect=...`).
+  - Futuristic Sci-Fi 404 page (`/404` and wildcard `*`) with role-aware return navigation.
+- **24/7 Cloud Architecture with Zero Cold Starts**:
+  - Multi-threaded Gunicorn (`gthread` with 2 workers and 4 threads = 8 concurrent request handlers).
+  - Continuous UptimeRobot keep-alive monitor pings the Render service every 10 minutes, keeping the server perpetually awake within the free 750 monthly hours limit.
+
+---
+
+## 📐 System Architectures
+
+### 1. Full System Architecture
+
+```mermaid
+flowchart TD
+    subgraph Clients["Clients & Edge Traffic"]
+        Browser["Desktop & Mobile Browsers<br>(Candidates / Recruiters / Admins)"]
+        TelegramUser["Telegram Mobile / Desktop App<br>(Job Seekers)"]
+        UptimeRobot["UptimeRobot Monitor<br>(HTTP Ping every 10 min)"]
+    end
+
+    subgraph CDN["Edge & Frontend Layer (Vercel)"]
+        VercelEdge["Vercel Global Edge CDN<br>(SPA Rewrites via vercel.json)"]
+        ReactApp["React 19 + Vite 8 SPA<br>(Code-Split Chunks: 40.7 kB initial)"]
+    end
+
+    subgraph BackendLayer["Application Layer (Render)"]
+        RenderService["Render Web Service (Linux Container)"]
+        Gunicorn["Gunicorn WSGI Server<br>(2 Workers x 4 Threads = 8 gthreads)"]
+        DjangoCore["Django 5.2 REST Framework<br>(JWT Auth • DRF Serializers • CORS)"]
+        WhiteNoise["WhiteNoise Static Engine"]
+    end
+
+    subgraph ExternalServices["External Cloud APIs"]
+        TelegramCloud["Telegram Bot API Cloud<br>(Webhook Push & Inline Keyboards)"]
+        GeminiAPI["Google Gemini AI API<br>(BYOK Multi-Model Validation)"]
+    end
+
+    subgraph DataLayer["Persistence Layer (Neon)"]
+        NeonDB[("Neon Serverless PostgreSQL 16<br>SSL Encrypted - Auto-Scale")]
+    end
+
+    Browser -->|"HTTPS"| VercelEdge
+    VercelEdge --> ReactApp
+    ReactApp -->|"REST API / Bearer JWT"| RenderService
+
+    TelegramUser -->|"Send /start or /jobs"| TelegramCloud
+    TelegramCloud -->|"Webhook POST: /api/telegram/webhook/"| RenderService
+
+    UptimeRobot -->|"HTTP GET: /api/telegram/webhook/"| RenderService
+
+    RenderService --> Gunicorn
+    Gunicorn --> WhiteNoise
+    Gunicorn --> DjangoCore
+
+    DjangoCore -->|"PostgreSQL Wire Protocol over SSL"| NeonDB
+    DjangoCore -->|"Telegram Bot Client: pyTelegramBotAPI"| TelegramCloud
+    DjangoCore -->|"Candidate Resume & Roadmap Prompts"| GeminiAPI
 ```
 
 ---
 
-## Prerequisites
+### 2. Frontend Architecture
 
-Before starting, ensure you have the following installed on your operating system:
+```mermaid
+flowchart TD
+    subgraph Core["Entry & State Layer"]
+        IndexHTML["index.html"] --> MainJSX["main.jsx"]
+        MainJSX --> AppJSX["App.jsx"]
+        AppJSX --> AuthProvider["AuthProvider<br>(localStorage Tokens & Current User State)"]
+    end
+
+    subgraph Router["Routing & Code Splitting (AppRoutes.jsx)"]
+        AuthProvider --> BrowserRouter["BrowserRouter"]
+        BrowserRouter --> SafeLazy["safeLazy Dynamic Importer<br>(Chunk auto-retry on deploy hashes)"]
+        SafeLazy --> Suspense["React.Suspense<br>(Global Loading Fallback)"]
+    end
+
+    subgraph Layouts["Layout Shells & Guards"]
+        Suspense --> MainLayout["MainLayout (Public Pages)"]
+        Suspense --> CandidateLayout["CandidateLayout (Protected ATS)"]
+        Suspense --> CompanyLayout["CompanyLayout (Protected Recruiter)"]
+        Suspense --> AdminLayout["AdminLayout (Protected Staff)"]
+        Suspense --> NotFound["NotFound (Sci-Fi 404 with Role Return)"]
+    end
+
+    subgraph Guards["Security Guards"]
+        CandidateLayout --- ProtectedRoute["ProtectedRoute.jsx<br>(Preserves ?redirect= deep links)"]
+        CompanyLayout --- ProtectedRoute
+        AdminLayout --- ProtectedRoute
+    end
+
+    subgraph Pages["Page Modules (Split Chunks)"]
+        MainLayout --> HomePage["Home.jsx (Hero • Telegram Showcase • FAQ)"]
+        MainLayout --> AuthPage["AuthPage.jsx (Login • Register • Reset)"]
+        CandidateLayout --> CandDashboard["Candidate Dashboard & Workspaces"]
+        CompanyLayout --> CompDashboard["Company Dashboard & Pipelines"]
+        AdminLayout --> AdminDashboard["Admin Dashboard & Audit Logs"]
+    end
+
+    subgraph Bundler["Vite 8 Rolldown Optimization"]
+        HomePage & AuthPage & CandDashboard & CompDashboard & AdminDashboard --> VendorReact["vendor-react (165 kB)"]
+        CompDashboard & AdminDashboard --> VendorCharts["vendor-charts (380 kB)"]
+        HomePage & CandDashboard --> VendorIcons["vendor-icons (17 kB)"]
+    end
+```
+
+---
+
+### 3. Backend Architecture
+
+```mermaid
+flowchart TD
+    subgraph Entry["Server Gateway"]
+        IncomingRequest["Incoming HTTP Request"] --> WhiteNoise["WhiteNoise Middleware<br>(Compressed Static Assets)"]
+        WhiteNoise --> CORSMiddleware["CORS Middleware<br>(Vercel Allowed Origins)"]
+        CORSMiddleware --> SecurityMiddleware["Security & SSL Redirect Middleware"]
+    end
+
+    subgraph Dispatcher["Django URL Routing (config/urls.py)"]
+        SecurityMiddleware --> RootRouter{"Route Dispatcher"}
+        RootRouter -->|/api/auth/| AppAccounts["apps.accounts<br>(User, CandidateProfile, CompanyProfile, AuditLog)"]
+        RootRouter -->|/api/jobs/| AppJobs["apps.jobs<br>(Job, Skill, JobSkill, SavedJob, Roadmap)"]
+        RootRouter -->|/api/applications/| AppApplications["apps.applications<br>(Application, StatusHistory, Interview, Offer, Notes)"]
+        RootRouter -->|/api/messages/| AppMessaging["apps.messaging<br>(Message, Notification)"]
+        RootRouter -->|/api/resumes/| AppResumes["apps.resumes<br>(Resume, ResumeVersion, Gemini AI Studio)"]
+        RootRouter -->|/api/telegram/| AppTelegram["apps.telegram_bot<br>(Webhook Handler & Bot Dispatcher)"]
+    end
+
+    subgraph Processing["Business & Security Logic"]
+        AppAccounts & AppJobs & AppApplications & AppResumes --> SimpleJWT["SimpleJWT Authenticator"]
+        AppAccounts & AppJobs & AppApplications & AppResumes --> RolePermissions["DRF Permissions<br>(IsCandidateUser, IsCompanyUser, IsAdminUserRole)"]
+        AppAccounts & AppJobs & AppApplications & AppResumes --> ModelAudit["Model Audit Logging"]
+    end
+
+    subgraph Database["Database Access"]
+        RolePermissions --> DjangoORM["Django ORM (dj-database-url)"]
+        DjangoORM --> NeonPostgres[("Neon PostgreSQL 16<br>(Transactions & Connection Pool)")]
+    end
+```
+
+---
+
+### 4. Telegram Bot Architecture
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Candidate as Job Seeker (Telegram App)
+    participant TeleCloud as Telegram Bot API Cloud
+    participant Webhook as Render: /api/telegram/webhook/
+    participant BotDispatcher as apps.telegram_bot.bot
+    participant DB as Neon PostgreSQL
+    actor WebApp as Vercel: CareerLens Web App
+
+    Candidate->>TeleCloud: Sends /jobs or searches "Python"
+    TeleCloud->>Webhook: HTTPS POST Update JSON (X-Telegram-Bot-Api-Secret-Token)
+    Webhook->>Webhook: Validate Secret Token Header
+    Webhook->>BotDispatcher: process_telegram_update(update_dict)
+    BotDispatcher->>DB: Query published active jobs (Filter by keyword / location)
+    DB-->>BotDispatcher: Returns Matching Job QuerySet
+    BotDispatcher->>BotDispatcher: Format HTML Cards (html.escape & safe truncate)
+    BotDispatcher->>BotDispatcher: Append Deep Link: https://careerlens-ivory-ten.vercel.app/jobs/{id}
+    BotDispatcher-->>TeleCloud: Send message with inline keyboard & persistent menu
+    TeleCloud-->>Candidate: Renders interactive Job Card
+    Candidate->>WebApp: Clicks "Apply on CareerLens 🌐"
+    WebApp->>Candidate: Directs to Job Details (Prompts login if unauthenticated, then auto-resumes application)
+```
+
+---
+
+### 5. Deployment & DevOps Architecture (with UptimeRobot Keep-Alive)
+
+```mermaid
+flowchart TD
+    subgraph Repo["Source Repository (GitHub)"]
+        GitRepo["Laykimhoung/careerlens<br>(Branch: backend/kimhoung)"]
+    end
+
+    subgraph VercelCI["Frontend Deployment (Vercel)"]
+        GitRepo -->|"Webhook Trigger on Push"| VercelBuild["Vercel Build Pipeline<br>(npm run build)"]
+        VercelBuild --> VercelCDN["Vercel Edge Network<br>(careerlens-ivory-ten.vercel.app)"]
+        VercelCDN --> Rewrites["SPA Wildcard Rewrites<br>(vercel.json to /index.html)"]
+    end
+
+    subgraph RenderCI["Backend Deployment (Render)"]
+        GitRepo -->|"Webhook Trigger on Push"| RenderBuild["Render Build Pipeline<br>(pip install & collectstatic)"]
+        RenderBuild --> RenderWeb["Render Web Service<br>(careerlens-api-fh3x.onrender.com)"]
+        RenderWeb --> GunicornProc["Procfile: gunicorn config.wsgi:application<br>(2 Workers x 4 Threads = 8 gthreads)"]
+    end
+
+    subgraph KeepAlive["Uptime & Keep-Alive System"]
+        UptimeRobot["UptimeRobot Cloud Monitor<br>(HTTP Ping Every 10 Minutes)"]
+        UptimeRobot -->|"HTTP GET: /api/telegram/webhook/"| RenderWeb
+        NoteKeepAlive["Prevents 15-min Render Inactivity Sleep<br>Math: 31 days x 24h = 744h / month<br>Fits safely within 750 free hours quota"] --- UptimeRobot
+    end
+
+    subgraph NeonCloud["Database Cloud (Neon)"]
+        RenderWeb -->|"Encrypted Connection Pool - SSL Required"| NeonDB[("Neon Serverless PostgreSQL 16")]
+    end
+```
+
+---
+
+## 🛠️ Technology Stack
+
+| Layer | Technologies | Description |
+| :--- | :--- | :--- |
+| **Backend API** | Python 3.12, Django 5.2, Django REST Framework, SimpleJWT | High-speed RESTful API with modular architecture and role-based permissions |
+| **Concurrency** | Gunicorn with `gthread` (2 workers $\times$ 4 threads) | Handles 8 concurrent requests simultaneously with 120s timeout |
+| **Database** | PostgreSQL 16 (Neon Serverless), Psycopg 3 | Serverless relational database with SSL encryption and automated branching |
+| **Frontend UI** | React 19, Vite 8, Tailwind CSS v4, Axios, React Router v7 | Single-page application with dynamic code-splitting and responsive layout |
+| **Telegram Bot** | pyTelegramBotAPI (`telebot`), Telegram Bot Webhook | Mobile recruitment bot with natural language search and deep links |
+| **Artificial Intelligence**| Google Gemini API (`@google/genai`, REST) | Multi-model Bring-Your-Own-Key resume analyzer and career roadmap generator |
+| **DevOps & Monitoring** | Vercel Edge CDN, Render Linux Web Service, UptimeRobot | Zero-cost production infrastructure with 24/7 uptime monitoring |
+
+---
+
+## 📂 Project Architecture & Directory Structure
+
+```text
+CareerLens/
+├── backend/                       # Django REST API application
+│   ├── apps/
+│   │   ├── accounts/              # User accounts, CandidateProfile, CompanyProfile, AuditLog
+│   │   │   └── management/        # Seeding commands (seed_demo_data, clear_demo_data)
+│   │   ├── jobs/                  # Jobs, Skills, JobSkills, SavedJobs, Career Roadmap
+│   │   ├── applications/          # Applications, Status History, Interviews, Offers, Notes
+│   │   ├── messaging/             # Direct Messages and Notifications
+│   │   ├── resumes/               # Resume upload, Gemini AI Analyzer, CV Studio, Versions
+│   │   └── telegram_bot/          # Telegram Bot webhook, command router, message formatters
+│   ├── config/                    # Django project configuration (settings.py, urls.py, wsgi.py)
+│   ├── media/                     # Uploaded media (resumes, avatars)
+│   ├── staticfiles/               # WhiteNoise collected static assets
+│   ├── Procfile                   # Multi-threaded Gunicorn production deployment command
+│   ├── requirements.txt           # Python dependencies
+│   ├── .env.example               # Backend environment variables template
+│   └── manage.py                  # Django CLI entry point
+├── frontend/                      # React 19 + Vite 8 frontend application
+│   ├── src/
+│   │   ├── components/            # Reusable UI components (candidate, company, admin, landing)
+│   │   ├── context/               # AuthContext global state
+│   │   ├── layouts/               # MainLayout, CandidateLayout, CompanyLayout, AdminLayout
+│   │   ├── pages/                 # Route pages (Home, AuthPage, Dashboards, Sci-Fi NotFound)
+│   │   ├── routes/                # AppRoutes.jsx with safeLazy dynamic code splitting
+│   │   └── services/              # API clients and HTTP interceptors
+│   ├── vercel.json                # Vercel SPA route rewrite rules
+│   ├── vite.config.js             # Vite 8 config with vendor chunk optimization
+│   ├── package.json               # Node.js dependencies
+│   └── .env.example               # Frontend environment template
+├── docs/                          # In-depth architectural documentation
+│   ├── DEPLOYMENT.md              # Vercel + Render + Neon + UptimeRobot guide
+│   ├── FRONTEND_ARCHITECTURE.md   # Component hierarchy, lazy loading, deep links
+│   ├── API.md                     # Comprehensive REST API and Telegram Webhook reference
+│   ├── DATABASE.md                # Relational schema, ERD, and table definitions
+│   └── TEAM_WORKFLOW.md           # 3-developer team workflow, ownership, and Git rules
+└── README.md                      # Root documentation and quick-start guide
+```
+
+---
+
+## 📋 Prerequisites
+
+Before running CareerLens locally, ensure you have installed:
 
 1. **Git**: [Download Git](https://git-scm.com/)
 2. **Python** (version 3.10 to 3.12+): [Download Python](https://www.python.org/downloads/)
@@ -89,12 +369,12 @@ Before starting, ensure you have the following installed on your operating syste
 
 ---
 
-## Quick Start Guide
+## ⚡ Quick Start Guide
 
 ### Terminal Navigation Guide (Backend vs. Frontend)
 
 > [!IMPORTANT]
-> **Understanding Full-Stack Terminals (Must Read Before Running Commands)**:
+> **Understanding Full-Stack Terminals**:
 > CareerLens consists of **two independent applications** that communicate over HTTP and must run at the same time:
 > 1. **Backend (Django REST API)** $\longrightarrow$ Located in `backend/`
 > 2. **Frontend (React + Vite UI)** $\longrightarrow$ Located in `frontend/`
@@ -105,16 +385,10 @@ Before starting, ensure you have the following installed on your operating syste
 > | :--- | :--- | :--- | :--- |
 > | **Python / Django / Database** | `cd backend` | **Terminal 1** (Backend) | `python manage.py migrate`<br>`python manage.py seed_demo_data`<br>`python manage.py runserver` |
 > | **Node / React / Vite UI** | `cd frontend` | **Terminal 2** (Frontend) | `npm install`<br>`npm run dev` |
->
-> ⚠️ **Common Beginner Pitfalls**:
-> - If you run `python manage.py ...` inside `frontend/` or the root folder, you will get: `can't open file 'manage.py': [Errno 2] No such file or directory`. Always `cd backend` first!
-> - If you run `npm run dev` inside `backend/`, you will get: `npm ERR! code ENOENT package.json not found`. Always `cd frontend` first!
 
 ---
 
 ### Step 1: Clone the Repository
-
-Open your terminal or command prompt:
 
 ```bash
 git clone https://github.com/Laykimhoung/careerlens.git
@@ -125,31 +399,22 @@ cd CareerLens
 
 ### Step 2: Database Setup (PostgreSQL)
 
-Make sure your PostgreSQL service is running. Create a dedicated database for CareerLens:
+Make sure your PostgreSQL service is running. Create a dedicated database:
 
-#### Option A: Using `psql` (Command Line)
 ```sql
 CREATE DATABASE careerlens_db;
 ```
 
-#### Option B: Using pgAdmin GUI
-1. Open pgAdmin.
-2. Right-click on **Databases** $\to$ **Create** $\to$ **Database...**
-3. Enter database name: `careerlens_db` and click **Save**.
-
 ---
 
-### Step 3: Backend Setup (Terminal 1 — cd backend)
-
-> [!NOTE]
-> Keep this terminal window dedicated to running the backend API and database commands.
+### Step 3: Backend Setup (Terminal 1 — `cd backend`)
 
 1. **Navigate to the backend directory**:
    ```bash
    cd backend
    ```
 
-2. **Create a Python virtual environment**:
+2. **Create and activate a virtual environment**:
    - **Windows**:
      ```bash
      python -m venv .venv
@@ -168,30 +433,24 @@ CREATE DATABASE careerlens_db;
    ```
 
 4. **Configure Environment Variables**:
-   Copy the example environment file to create your active `.env`:
-   - **Windows (PowerShell)**:
-     ```powershell
-     Copy-Item .env.example .env
-     ```
-   - **macOS / Linux**:
-     ```bash
-     cp .env.example .env
-     ```
+   Copy the example environment file:
+   - **Windows (PowerShell)**: `Copy-Item .env.example .env`
+   - **macOS / Linux**: `cp .env.example .env`
 
-   Open `backend/.env` in your text editor and fill in your PostgreSQL credentials:
+   Edit `backend/.env` with your database credentials:
    ```env
-   SECRET_KEY=generate-any-secret-key-string-here
+   SECRET_KEY=your-secure-random-secret-key
    DEBUG=True
    ALLOWED_HOSTS=localhost,127.0.0.1
 
    DB_NAME=careerlens_db
    DB_USER=postgres
-   DB_PASSWORD=your_actual_postgres_password
+   DB_PASSWORD=your_postgres_password
    DB_HOST=127.0.0.1
    DB_PORT=5432
 
-   # Optional: customize demo user passwords (defaults to: CareerLens2026!Demo)
-   DEMO_USER_PASSWORD=CareerLens2026!Demo
+   # Optional Telegram bot token (for local bot polling)
+   # TELEGRAM_BOT_TOKEN=9206044602:AAEq18wfnGibirr56D-LEdKh9CdT88eSVCg
    ```
 
 5. **Apply Database Migrations**:
@@ -200,54 +459,25 @@ CREATE DATABASE careerlens_db;
    ```
 
 6. **Seed Realistic Demo Data**:
-   Populate the database with a pre-configured, realistic dataset (24 IT jobs across 9 Cambodian and tech companies, 5 candidates, applications, interviews, offers, and direct messages):
+   Populate the database with a pre-configured, realistic dataset (24 IT jobs across 9 companies, 5 candidates, applications, interviews, offers, and direct messages):
    ```bash
    python manage.py seed_demo_data
    ```
-   *Expected Terminal Output:*
-   ```text
-   === CareerLens Demo Data Seeding ===
-   Environment: Safe demo seeding (Idempotent & non-destructive)
 
-   [SUCCESS] Demo seeding completed successfully!
-   ---------------------------------------------------------
-   Total Newly Created Records  : 231
-   Total Already Present Records: 3
-   ---------------------------------------------------------
-   Tracked Demo Jobs Count: 24 (Target: 24)
-   Tracked Demo Companies : 9 (Target: 9)
-   Tracked Demo Candidates: 5 (Target: 5)
-   ```
-   > [!TIP]
-   > **Idempotent (Safe to run anytime):** Running this command repeatedly will **never duplicate** jobs or accounts. It safely reports existing demo records as `Already Present`.
-
-7. **(Optional) Create Your Own Administrator Account**:
-   If you want to create your own personal superuser with custom credentials instead of (or in addition to) the pre-seeded demo admin:
-   ```bash
-   python manage.py createsuperuser
-   ```
-   Follow the prompts to enter your username, email, and password. This gives you full administrative access to the Django Admin panel at `http://127.0.0.1:8000/admin/`.
-
-8. **Start the Django Development Server**:
+7. **Start the Django Development Server**:
    ```bash
    python manage.py runserver
    ```
    The backend API is now running at: **`http://127.0.0.1:8000/`**
-   API base endpoint: **`http://127.0.0.1:8000/api/`**
 
 ---
 
-### Step 4: Frontend Setup (Terminal 2 — cd frontend)
+### Step 4: Frontend Setup (Terminal 2 — `cd frontend`)
 
-> [!NOTE]
-> **Do not stop Terminal 1!** Leave your backend server running (`python manage.py runserver`). Open a **NEW second terminal window** for these frontend commands.
-
-1. **Open a new terminal window** and navigate to the `frontend/` directory:
-   - **From project root (`CareerLens`)**:
-     ```bash
-     cd frontend
-     ```
-   - *(Or if your terminal is currently inside `backend/`, navigate back up first: `cd ../frontend`)*
+1. **Open a new terminal window** and navigate to `frontend/`:
+   ```bash
+   cd frontend
+   ```
 
 2. **Install Node dependencies**:
    ```bash
@@ -256,14 +486,8 @@ CREATE DATABASE careerlens_db;
 
 3. **Configure Frontend Environment**:
    Copy the example environment file:
-   - **Windows (PowerShell)**:
-     ```powershell
-     Copy-Item .env.example .env
-     ```
-   - **macOS / Linux**:
-     ```bash
-     cp .env.example .env
-     ```
+   - **Windows (PowerShell)**: `Copy-Item .env.example .env`
+   - **macOS / Linux**: `cp .env.example .env`
 
    Verify `frontend/.env` contains:
    ```env
@@ -274,58 +498,17 @@ CREATE DATABASE careerlens_db;
    ```bash
    npm run dev
    ```
-
    The frontend is now running at: **`http://localhost:5173/`**
 
 ---
 
-### 🎉 You're Ready to Explore!
+## 🎯 Demo Accounts & Ready-to-Test Dataset
 
-With both terminals running simultaneously, here is what each URL provides:
-
-| What You Want to Explore | URL to Visit in Browser | Which Server Handles It? | Description |
-| :--- | :--- | :--- | :--- |
-| **Main Web Application (UI)** | [http://localhost:5173/](http://localhost:5173/) | **Terminal 2 (`frontend`)**: `npm run dev` | Interactive React app: browse jobs, apply, manage applicants, chat |
-| **Backend API Health & Directory** | [http://127.0.0.1:8000/](http://127.0.0.1:8000/) | **Terminal 1 (`backend`)**: `python manage.py runserver` | Clean JSON status confirming API is online with an endpoint directory |
-| **Django Admin Dashboard** | [http://127.0.0.1:8000/admin/](http://127.0.0.1:8000/admin/) | **Terminal 1 (`backend`)**: `python manage.py runserver` | Administrator panel to manage database records, users, and audit logs |
-| **Browse Jobs REST API (JSON)** | [http://127.0.0.1:8000/api/jobs/](http://127.0.0.1:8000/api/jobs/) | **Terminal 1 (`backend`)**: `python manage.py runserver` | Direct JSON feed of the 24 IT jobs |
-| **Authentication API** | [http://127.0.0.1:8000/api/auth/login/](http://127.0.0.1:8000/api/auth/login/) | **Terminal 1 (`backend`)**: `python manage.py runserver` | JWT token authentication endpoints |
-
-> [!TIP]
-> **API Health Root (`http://127.0.0.1:8000/`)**:
-> Visiting `http://127.0.0.1:8000/` returns an instant HTTP 200 OK JSON response displaying the API status and links to all available endpoints, confirming your backend is operational!
-
----
-
-## Demo Accounts & Ready-to-Test Dataset
-
-When you run `python manage.py seed_demo_data` inside the `backend/` directory, the platform generates predefined demo accounts ready for immediate testing.
+When you run `python manage.py seed_demo_data`, the platform seeds predefined demo accounts:
 
 - **Universal Demo Password:** `CareerLens2026!Demo`
 
-### How to Run and Load the Demo Data
-
-If you haven't loaded the demo data yet, or if you want to re-seed it:
-
-1. Open **Terminal 1** and navigate to the backend directory:
-   ```bash
-   cd backend
-   ```
-2. Activate your virtual environment:
-   - **Windows**: `.venv\Scripts\activate`
-   - **macOS / Linux**: `source .venv/bin/activate`
-3. Run the seed command:
-   ```bash
-   python manage.py seed_demo_data
-   ```
-4. Ensure both dev servers are running:
-   - **Terminal 1 (`backend`)**: `python manage.py runserver`
-   - **Terminal 2 (`frontend`)**: `npm run dev`
-5. Visit **`http://localhost:5173/`** in your browser and log in with any demo account below!
-
 ### 1. Candidate Accounts
-Use these accounts to test job browsing, application submissions, interview schedules, and offer reviews:
-
 | Username | Candidate Name | Education / Major | Pre-loaded Features |
 | :--- | :--- | :--- | :--- |
 | `demo_cand_sreymom` | **Sreymom Meas** | RUPP — Computer Science | Scheduled interview & accepted job offer from Mekong Digital Labs |
@@ -335,124 +518,85 @@ Use these accounts to test job browsing, application submissions, interview sche
 | `demo_cand_piseth` | **Piseth Lim** | NUM — Information Technology | Active applications for IT Intern and Software Tester |
 
 ### 2. Company Recruiter Accounts
-Use these accounts to view candidate applications, schedule interviews, and post new jobs:
-
 | Username | Company | Category | Roles Posted |
 | :--- | :--- | :--- | :--- |
-| `demo_comp_mekong` | **Mekong Digital Labs** | Fictional Tech Studio | Frontend Dev, Full-Stack Dev, Junior Web Dev, UI/UX Designer |
-| `demo_comp_smart` | **Smart Axiata** | Real (*Simulated Vacancies*) | Network Engineer, System Administrator |
-| `demo_comp_cellcard` | **Cellcard** | Real (*Simulated Vacancies*) | Cybersecurity Analyst, IT Support Engineer |
-| `demo_comp_aba` | **ABA Bank** | Real (*Simulated Vacancies*) | Mobile App Developer, Security Engineer |
-| `demo_comp_wing` | **Wing Bank** | Real (*Simulated Vacancies*) | Backend Developer, DevOps Engineer |
-| `demo_comp_1byte` | **1Byte** | Real (*Simulated Vacancies*) | Cloud Engineer, Database Administrator |
-| `demo_comp_khmercloud`| **KhmerCloud Solutions** | Fictional Cloud Firm | Software Engineer, QA Engineer, Software Tester |
-| `demo_comp_angkor` | **Angkor AI Technologies** | Fictional AI Lab | Data Analyst, Data Engineer, ML Engineer, AI Engineer |
-| `demo_comp_ppcyber` | **Phnom Penh CyberSec** | Fictional Security Firm | BI Analyst, Technical Support Specialist, IT Intern |
+| `demo_comp_mekong` | **Mekong Digital Labs** | Tech Studio | Frontend Dev, Full-Stack Dev, Junior Web Dev, UI/UX Designer |
+| `demo_comp_smart` | **Smart Axiata** | Telecom | Network Engineer, System Administrator |
+| `demo_comp_cellcard` | **Cellcard** | Telecom | Cybersecurity Analyst, IT Support Engineer |
+| `demo_comp_aba` | **ABA Bank** | FinTech | Mobile App Developer, Security Engineer |
+| `demo_comp_wing` | **Wing Bank** | FinTech | Backend Developer, DevOps Engineer |
+| `demo_comp_1byte` | **1Byte** | Cloud Provider | Cloud Engineer, Database Administrator |
+| `demo_comp_khmercloud`| **KhmerCloud Solutions** | Cloud Firm | Software Engineer, QA Engineer, Software Tester |
+| `demo_comp_angkor` | **Angkor AI Technologies** | AI Lab | Data Analyst, Data Engineer, ML Engineer, AI Engineer |
+| `demo_comp_ppcyber` | **Phnom Penh CyberSec** | Cyber Security | BI Analyst, Technical Support Specialist, IT Intern |
 
 ### 3. Administrator Account
 | Username | Role | Permissions | Default Password |
 | :--- | :--- | :--- | :--- |
 | `demo_admin` | `ADMIN` (`is_staff=True`) | Superuser/Staff access for Django Admin and audit verification | `CareerLens2026!Demo` |
 
-> [!TIP]
-> **Want to create your own personal administrator account?**
-> You can register a personal superuser with your own username and password anytime:
-> ```bash
-> cd backend
-> python manage.py createsuperuser
-> ```
-> Then log into the Django Admin dashboard at **`http://127.0.0.1:8000/admin/`** with your credentials.
+---
+
+## 🤖 Telegram Bot Quick Start
+
+The CareerLens Telegram Bot (`@careerlens_jobs_bot`) allows mobile users to search and discover IT jobs instantly.
+
+1. Open Telegram and search for **`@careerlens_jobs_bot`** or visit: [t.me/careerlens_jobs_bot](https://t.me/careerlens_jobs_bot)
+2. Press **Start** or send `/start` to view the welcome guide and persistent keyboard.
+3. Available commands:
+   - `/jobs` — Browse latest 5 published IT vacancies.
+   - `/search <keyword>` — Search jobs by title, skill, or tech stack (e.g., `/search Python` or `/search React`).
+   - `/help` — View available commands and tips.
+4. Tap **Apply on CareerLens 🌐** on any job card to jump directly to the job application on the web app!
 
 ---
 
-## Django Management Commands
+## 🛠️ Django Management Commands
 
-CareerLens includes custom, production-safe management commands designed to simplify testing and presentation.
+All commands below must be executed from the **`backend/`** directory:
 
-> [!IMPORTANT]
-> **Directory Reminder**: All management commands below MUST be executed from the **`backend/`** directory with your virtual environment activated:
-> ```bash
-> cd backend
-> .venv\Scripts\activate   # (Windows) or source .venv/bin/activate (macOS/Linux)
-> ```
-
-### Seed Demo Data (Idempotent)
-Populates the complete 24-job catalogue, accounts, applications, and messages. Safe to execute repeatedly without generating duplicate records.
 ```bash
+# Seed complete 24-job demo dataset (safe and idempotent)
 python manage.py seed_demo_data
-```
 
-### Dry Run Cleanup
-Inspect exactly which records are tracked demo data and verify that unrelated records are protected:
-```bash
+# Inspect tracked demo records without modifying data
 python manage.py clear_demo_data --dry-run
-```
 
-### Clear Demo Data (Non-Destructive)
-Safely deletes only tracked demo records in reverse-dependency order, preserving all other users, real companies, and database migrations:
-```bash
-# Interactive confirmation prompt:
-python manage.py clear_demo_data
-
-# Automated non-interactive mode:
+# Safely delete demo records in reverse dependency order
 python manage.py clear_demo_data --no-input
-```
 
-### Reset Demo Dataset in One Command
-To reset the demo dataset to a fresh initial state at any time:
-```bash
+# Reset demo data to pristine initial state in one line
 python manage.py clear_demo_data --no-input && python manage.py seed_demo_data
+
+# Run Telegram bot in long-polling mode (for local testing without webhook)
+python manage.py run_telegram_bot
 ```
 
 ---
 
-## Running Automated Tests
+## 🧪 Running Automated Tests
 
-Run the comprehensive Django unit and integration test suite (covering accounts, authentication, jobs, applications, messaging, and management commands):
+Run the full Django test suite covering accounts, authentication, jobs, applications, messaging, and the Telegram bot:
 
 ```bash
 cd backend
 python manage.py test apps
 ```
 
-All 29 test suites should complete with `OK`.
+---
+
+## 📚 In-Depth Documentation
+
+For detailed architectural specifications and design guides, explore the [`docs/`](docs) directory:
+
+- [**Deployment Guide**](docs/DEPLOYMENT.md): Production deployment on Vercel, Render, Neon, and UptimeRobot keep-alive setup.
+- [**Frontend Architecture**](docs/FRONTEND_ARCHITECTURE.md): Component hierarchy, dynamic code-splitting, route guards, and theme styling.
+- [**API Specification**](docs/API.md): Full REST API endpoint reference, payloads, responses, and Telegram webhook contract.
+- [**Database Schema**](docs/DATABASE.md): Relational models, ER diagram, indexing, and cascade delete policies.
+- [**Team Workflow & Branching**](docs/TEAM_WORKFLOW.md): 3-developer team responsibilities, file ownership, and Git branching rules.
 
 ---
 
-## Troubleshooting & Common Issues
+## 📄 License & University Context
 
-### 1. PostgreSQL Connection Error (`OperationalError: connection to server at "127.0.0.1" failed`)
-- Ensure PostgreSQL service is active:
-  - **Windows**: Open `services.msc`, locate **postgresql-x64-XX**, and click **Start**.
-  - **macOS**: `brew services start postgresql`
-  - **Linux**: `sudo systemctl start postgresql`
-- Verify that `DB_NAME`, `DB_USER`, and `DB_PASSWORD` in `backend/.env` match your local PostgreSQL configuration.
-
-### 2. Windows PowerShell Script Execution Error (`activate.ps1 cannot be loaded`)
-If PowerShell prevents virtual environment activation:
-```powershell
-Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-.venv\Scripts\activate
-```
-
-### 3. CORS Error on Frontend (`Cross-Origin Request Blocked`)
-- Ensure the backend Django server is running on port `8000` (`http://127.0.0.1:8000`).
-- Ensure the frontend Vite server is running on port `5173` (`http://localhost:5173`).
-- Verify that `CORS_ALLOWED_ORIGINS` in `backend/config/settings.py` includes `http://localhost:5173`.
-
----
-
-## Documentation & Deep Dives
-
-For in-depth architectural and design documentation, explore the [`docs/`](file:///d:/Project/University/Website/CareerLens/docs) directory:
-- [**API Specification**](file:///d:/Project/University/Website/CareerLens/docs/API.md): Endpoint inventory, query parameters, payloads, and response formats.
-- [**Database Schema**](file:///d:/Project/University/Website/CareerLens/docs/DATABASE.md): Relational diagram, indexing, uniqueness constraints, and field definitions.
-- [**Frontend Architecture**](file:///d:/Project/University/Website/CareerLens/docs/FRONTEND_ARCHITECTURE.md): Component hierarchy, route structure, and state management.
-- [**Team Workflow & Branching**](file:///d:/Project/University/Website/CareerLens/docs/TEAM_WORKFLOW.md): Git branching conventions and merge procedures.
-- [**Advanced Developer Setup**](file:///d:/Project/University/Website/CareerLens/docs/SETUP.md): Advanced deployment and environment configurations.
-
----
-
-## License & University Context
-
-CareerLens is developed as a University Capstone Project demonstrating modern Web Application Architecture, REST API Design, and Database Engineering. Real company names mentioned in the demo dataset (Smart Axiata, Cellcard, ABA Bank, Wing Bank, 1Byte) are used solely for educational demonstration purposes; all associated job listings are simulated academic content.
+CareerLens is developed as a University Capstone Project demonstrating modern Web Application Architecture, REST API Design, Micro-services Integration, and Database Engineering. Real company names mentioned in the demo dataset (Smart Axiata, Cellcard, ABA Bank, Wing Bank, 1Byte) are used solely for educational demonstration purposes; all associated job listings are simulated academic content.

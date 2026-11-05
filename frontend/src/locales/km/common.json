@@ -41,6 +41,13 @@
   "rejected": "បានបដិសេធ",
   "roleSwitcher": "ប្តូរតួនាទី",
   "logOut": "ចាកចេញ",
+  "telegramBotTitle": "ស្វែងរកការងាររហ័សតាម Telegram",
+  "telegramBotSubtitle": "មិនចាំបាច់ចុះឈ្មោះមុនទេ។ ស្វែងរកឱកាសការងារសកម្ម ត្រួតពិនិត្យជំនាញ និងទទួលបានការងារសមស្របតាម Telegram ភ្លាមៗ។",
+  "telegramBotCta": "បើក @careerlens_jobs_bot",
+  "telegramBotFeature1": "ស្វែងរកជំនាញ ឬមុខតំណែងណាមួយ (ឧ. React, Python, Remote)",
+  "telegramBotFeature2": "ព័ត៌មានការងារផ្ទាល់ជាមួយប្រាក់ខែ ទីតាំង និងកាលបរិច្ឆេទ",
+  "telegramBotFeature3": "ចុចមួយដងដើម្បីដាក់ពាក្យផ្ទាល់លើ CareerLens ជាមួយប្រវត្តិរូបរបស់អ្នក",
+  "telegramQuickFind": "ចូលចិត្ត Telegram? ស្វែងរកការងារភ្លាមៗជាមួយ @careerlens_jobs_bot",
   "platformAdmin": "អ្នកគ្រប់គ្រងវេទិកា",
   "nav": {
     "dashboard": "ផ្ទាំងគ្រប់គ្រង",

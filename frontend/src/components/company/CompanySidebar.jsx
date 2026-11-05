@@ -57,7 +57,13 @@ export default function CompanySidebar({ isOpen = false, open, onClose }) {
       isOpen={isMenuOpen}
       onClose={onClose}
       user={user}
-      onLogout={logout}
+      onLogout={async () => {
+        try {
+          await logout();
+        } finally {
+          window.location.replace('/');
+        }
+      }}
       switchRole={switchRole}
       currentRole="company"
     />
