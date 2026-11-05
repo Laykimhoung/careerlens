@@ -29,19 +29,18 @@ class ApplicationAdmin(admin.ModelAdmin):
     actions = ['mark_reviewing', 'mark_interview', 'mark_offered', 'mark_rejected']
 
     def status_badge(self, obj):
-        colors = {
-            'APPLIED': '#0284C7',      # sky
-            'REVIEWING': '#F59E0B',    # amber
-            'SHORTLISTED': '#6366F1',  # indigo
-            'INTERVIEW': '#8B5CF6',    # violet
-            'OFFERED': '#10B981',      # emerald
-            'REJECTED': '#EF4444',     # rose
+        styles = {
+            'APPLIED': ('#EFF6FF', '#1D4ED8', '#BFDBFE'),
+            'REVIEWING': ('#FFFBEB', '#B45309', '#FDE68A'),
+            'SHORTLISTED': ('#F5F3FF', '#6D28D9', '#DDD6FE'),
+            'INTERVIEW': ('#EEF2FF', '#4338CA', '#C7D2FE'),
+            'OFFERED': ('#ECFDF5', '#047857', '#A7F3D0'),
+            'REJECTED': ('#FEF2F2', '#B91C1C', '#FECACA'),
         }
-        color = colors.get(obj.status, '#64748B')
+        bg, text, border = styles.get(obj.status, ('#F1F5F9', '#475569', '#E2E8F0'))
         return format_html(
-            '<span style="background:{};color:#fff;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:700;">{}</span>',
-            color,
-            obj.get_status_display()
+            '<span style="background:{};color:{};border:1px solid {};padding:2px 8px;border-radius:9999px;font-size:11px;font-weight:600;">{}</span>',
+            bg, text, border, obj.get_status_display()
         )
     status_badge.short_description = "Status"
 
@@ -88,20 +87,19 @@ class OfferAdmin(admin.ModelAdmin):
     search_fields = ('application__candidate__user__username', 'application__job__title')
 
     def salary_display(self, obj):
-        return f"{obj.salary:,.2f} {obj.currency}"
+        return f"${obj.salary:,.2f} {obj.currency}"
     salary_display.short_description = "Compensation"
 
     def status_badge(self, obj):
-        colors = {
-            'PENDING': '#F59E0B',
-            'ACCEPTED': '#10B981',
-            'DECLINED': '#EF4444',
+        styles = {
+            'PENDING': ('#FFFBEB', '#B45309', '#FDE68A'),
+            'ACCEPTED': ('#ECFDF5', '#047857', '#A7F3D0'),
+            'DECLINED': ('#FEF2F2', '#B91C1C', '#FECACA'),
         }
-        color = colors.get(obj.status, '#64748B')
+        bg, text, border = styles.get(obj.status, ('#F1F5F9', '#475569', '#E2E8F0'))
         return format_html(
-            '<span style="background:{};color:#fff;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:700;">{}</span>',
-            color,
-            obj.get_status_display()
+            '<span style="background:{};color:{};border:1px solid {};padding:2px 8px;border-radius:9999px;font-size:11px;font-weight:600;">{}</span>',
+            bg, text, border, obj.get_status_display()
         )
     status_badge.short_description = "Status"
 

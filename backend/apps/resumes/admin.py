@@ -29,14 +29,14 @@ class ResumeVersionAdmin(admin.ModelAdmin):
 
     def current_badge(self, obj):
         if obj.is_current:
-            return format_html('<span style="color:#10B981;font-weight:700;">Active</span>')
-        return format_html('<span style="color:#94A3B8;">Archive</span>')
+            return format_html('<span style="background:#ECFDF5;color:#047857;border:1px solid #A7F3D0;padding:2px 8px;border-radius:9999px;font-size:11px;font-weight:600;">Active</span>')
+        return format_html('<span style="background:#F1F5F9;color:#64748B;border:1px solid #E2E8F0;padding:2px 8px;border-radius:9999px;font-size:11px;font-weight:500;">Archive</span>')
     current_badge.short_description = "Current"
 
     def approved_badge(self, obj):
         if obj.is_approved:
-            return format_html('<span style="color:#10B981;font-weight:700;">Approved</span>')
-        return format_html('<span style="color:#F59E0B;font-weight:700;">Draft</span>')
+            return format_html('<span style="background:#ECFDF5;color:#047857;border:1px solid #A7F3D0;padding:2px 8px;border-radius:9999px;font-size:11px;font-weight:600;">Approved</span>')
+        return format_html('<span style="background:#FFFBEB;color:#B45309;border:1px solid #FDE68A;padding:2px 8px;border-radius:9999px;font-size:11px;font-weight:600;">Draft</span>')
     approved_badge.short_description = "Approval"
 
 
@@ -49,17 +49,17 @@ class CandidateUsageAdmin(admin.ModelAdmin):
 
     def plan_tier_badge(self, obj):
         if obj.plan_tier == 'PREMIUM':
-            return format_html('<span style="background:#8B5CF6;color:#fff;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:700;">PREMIUM</span>')
-        return format_html('<span style="background:#64748B;color:#fff;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:700;">FREE</span>')
+            return format_html('<span style="background:#EEF2FF;color:#4338CA;border:1px solid #C7D2FE;padding:2px 8px;border-radius:9999px;font-size:11px;font-weight:700;">PREMIUM</span>')
+        return format_html('<span style="background:#F1F5F9;color:#475569;border:1px solid #E2E8F0;padding:2px 8px;border-radius:9999px;font-size:11px;font-weight:600;">FREE</span>')
     plan_tier_badge.short_description = "Tier"
 
     def improvements_progress(self, obj):
         pct = min(100, int((obj.improvements_used / obj.improvements_limit) * 100)) if obj.improvements_limit else 0
-        bar_color = '#EF4444' if pct >= 100 else '#10B981'
+        bar_color = '#DC2626' if pct >= 100 else '#059669'
         return format_html(
             '<div style="min-width:110px;">'
-            '  <span style="font-size:11px;font-weight:600;">{}/{} used</span>'
-            '  <div style="background:#334155;height:5px;border-radius:3px;overflow:hidden;margin-top:2px;">'
+            '  <span style="font-size:11px;font-weight:600;color:#334155;">{}/{} used</span>'
+            '  <div style="background:#E2E8F0;height:5px;border-radius:3px;overflow:hidden;margin-top:2px;">'
             '    <div style="background:{};width:{}%;height:100%;"></div>'
             '  </div>'
             '</div>',
@@ -68,7 +68,7 @@ class CandidateUsageAdmin(admin.ModelAdmin):
             bar_color,
             pct
         )
-    improvements_progress.short_description = "Improvements Limit"
+    improvements_progress.short_description = "Usage"
 
     @admin.action(description="Upgrade selected candidates to PREMIUM")
     def upgrade_to_premium(self, request, queryset):
@@ -77,4 +77,3 @@ class CandidateUsageAdmin(admin.ModelAdmin):
     @admin.action(description="Reset improvements used to 0")
     def reset_usage(self, request, queryset):
         queryset.update(improvements_used=0)
-

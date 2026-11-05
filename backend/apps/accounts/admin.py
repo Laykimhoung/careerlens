@@ -20,16 +20,15 @@ class CustomUserAdmin(UserAdmin):
     )
 
     def role_badge(self, obj):
-        color_map = {
-            'ADMIN': '#DC2626',
-            'COMPANY': '#6366F1',
-            'CANDIDATE': '#0284C7',
+        styles = {
+            'ADMIN': ('#FEF2F2', '#991B1B', '#FECACA'),
+            'COMPANY': ('#EEF2FF', '#4338CA', '#C7D2FE'),
+            'CANDIDATE': ('#EFF6FF', '#1D4ED8', '#BFDBFE'),
         }
-        color = color_map.get(obj.role, '#64748B')
+        bg, text, border = styles.get(obj.role, ('#F1F5F9', '#475569', '#E2E8F0'))
         return format_html(
-            '<span style="background:{};color:#fff;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:700;">{}</span>',
-            color,
-            obj.role or 'NONE'
+            '<span style="background:{};color:{};border:1px solid {};padding:2px 8px;border-radius:9999px;font-size:11px;font-weight:600;">{}</span>',
+            bg, text, border, obj.role or 'NONE'
         )
     role_badge.short_description = "Role"
 
@@ -49,18 +48,17 @@ class CompanyProfileAdmin(admin.ModelAdmin):
     actions = ['verify_companies', 'reject_companies', 'set_pending_companies']
 
     def verification_badge(self, obj):
-        colors = {
-            'VERIFIED': ('#10B981', 'Verified'),
-            'PENDING': ('#F59E0B', 'Pending'),
-            'REJECTED': ('#EF4444', 'Rejected'),
+        styles = {
+            'VERIFIED': ('#ECFDF5', '#047857', '#A7F3D0', 'Verified'),
+            'PENDING': ('#FFFBEB', '#B45309', '#FDE68A', 'Pending'),
+            'REJECTED': ('#FEF2F2', '#B91C1C', '#FECACA', 'Rejected'),
         }
-        color, label = colors.get(obj.verification_status, ('#64748B', obj.verification_status))
+        bg, text, border, label = styles.get(obj.verification_status, ('#F1F5F9', '#475569', '#E2E8F0', obj.verification_status))
         return format_html(
-            '<span style="background:{};color:#fff;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:700;">{}</span>',
-            color,
-            label
+            '<span style="background:{};color:{};border:1px solid {};padding:2px 8px;border-radius:9999px;font-size:11px;font-weight:600;">{}</span>',
+            bg, text, border, label
         )
-    verification_badge.short_description = "Verification"
+    verification_badge.short_description = "Status"
 
     @admin.action(description="Verify selected companies")
     def verify_companies(self, request, queryset):
