@@ -32,6 +32,35 @@ export default function AuthPage() {
 
   const isLogin = location.pathname !== "/register";
 
+  // Check for redirect intent from query string, location state, or previous sessionStorage
+  const searchParams = new URLSearchParams(location.search);
+  const rawRedirect = searchParams.get("redirect") || location.state?.from?.pathname;
+
+  useEffect(() => {
+    if (rawRedirect) {
+      sessionStorage.setItem("post_auth_redirect", rawRedirect);
+    }
+  }, [rawRedirect]);
+
+  const targetRedirect = rawRedirect || sessionStorage.getItem("post_auth_redirect");
+  const isJobTarget = Boolean(
+    targetRedirect &&
+      (targetRedirect.includes("/jobs/") || targetRedirect.includes("/candidate/jobs/"))
+  );
+
+  const getFinalDestination = (role) => {
+    const saved = sessionStorage.getItem("post_auth_redirect") || rawRedirect;
+    const defaultDashboard = ROLE_DASHBOARD[role] || "/";
+    if (saved && (saved.startsWith("/candidate/") || saved.startsWith("/jobs/"))) {
+      sessionStorage.removeItem("post_auth_redirect");
+      if (saved.startsWith("/jobs/")) {
+        return `/candidate${saved}`;
+      }
+      return saved;
+    }
+    return defaultDashboard;
+  };
+
   // Password visibility states
   const [showLoginPassword, setShowLoginPassword] = useState(false);
   const [showRegisterPassword, setShowRegisterPassword] = useState(false);
@@ -147,7 +176,8 @@ export default function AuthPage() {
 
   useEffect(() => {
     if (isAuthenticated && user?.role) {
-      navigate(ROLE_DASHBOARD[user.role] || "/", { replace: true });
+      const destination = getFinalDestination(user.role);
+      navigate(destination, { replace: true });
     }
   }, [isAuthenticated, user, navigate]);
 
@@ -160,10 +190,8 @@ export default function AuthPage() {
     if (e) e.preventDefault();
     const result = await login(loginForm);
     if (result.success) {
-      const roleBase = ROLE_DASHBOARD[result.role] || "/";
-      const fromPath = location.state?.from?.pathname;
-      const target = fromPath && fromPath.startsWith(roleBase) ? fromPath : roleBase;
-      navigate(target, { replace: true });
+      const destination = getFinalDestination(result.role);
+      navigate(destination, { replace: true });
     }
   };
 
@@ -229,7 +257,8 @@ export default function AuthPage() {
     }
     const result = await register({ ...registerForm, role: registerRole });
     if (result.success) {
-      navigate(ROLE_DASHBOARD[result.role] || "/", { replace: true });
+      const destination = getFinalDestination(result.role);
+      navigate(destination, { replace: true });
     }
   };
 
@@ -281,11 +310,28 @@ export default function AuthPage() {
             {isLogin ? t("auth.signIn") : t("auth.createAccount")}
           </h1>
           <p className="tether-subtitle">
-            {isLogin
-              ? "Welcome back. Two fields stand between you and that button."
-              : "Join CareerLens to connect with opportunities across Cambodia."}
+            {isJobTarget ? (
+              isLogin
+                ? "Sign in to view job details and submit your application."
+                : "Create your candidate account to connect and apply directly."
+            ) : isLogin ? (
+              "Welcome back. Two fields stand between you and that button."
+            ) : (
+              "Join CareerLens to connect with opportunities across Cambodia."
+            )}
           </p>
         </div>
+
+        {isJobTarget && (
+          <div className="tether-redirect-notice">
+            <span className="tether-redirect-notice__icon">💼</span>
+            <span>
+              {isLogin
+                ? "Sign in to your account to continue to the job listing."
+                : "Register a free candidate profile to view and apply for this job."}
+            </span>
+          </div>
+        )}
 
         {error && <div className="tether-error">{error}</div>}
 
@@ -476,7 +522,14 @@ export default function AuthPage() {
 
             {/* Switch to Register */}
             <div className="tether-switch">
-              {t("auth.noAccount")} <Link to="/register">{t("auth.signUp")}</Link>
+              {t("auth.noAccount")}{" "}
+              <Link
+                to={`/register${
+                  targetRedirect ? `?redirect=${encodeURIComponent(targetRedirect)}` : ""
+                }`}
+              >
+                {t("auth.signUp")}
+              </Link>
             </div>
           </form>
         ) : (
@@ -719,7 +772,14 @@ export default function AuthPage() {
             </button>
 
             <div className="tether-switch">
-              {t("auth.hasAccount")} <Link to="/login">{t("auth.signIn")}</Link>
+              {t("auth.hasAccount")}{" "}
+              <Link
+                to={`/login${
+                  targetRedirect ? `?redirect=${encodeURIComponent(targetRedirect)}` : ""
+                }`}
+              >
+                {t("auth.signIn")}
+              </Link>
             </div>
           </form>
         )}
