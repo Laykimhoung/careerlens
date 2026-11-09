@@ -86,11 +86,11 @@ export default function AdminDashboard() {
   const getAdminAvatar = (usr) => {
     const uid = usr?.id;
     return (
+      usr?.avatar ||
       (uid ? localStorage.getItem(`careerlens_admin_avatar_${uid}`) : null) ||
       (uid ? localStorage.getItem(`careerlens_avatar_${uid}`) : null) ||
       localStorage.getItem('careerlens_admin_avatar') ||
       localStorage.getItem('careerlens_avatar') ||
-      usr?.avatar ||
       ''
     );
   };

@@ -1,6 +1,11 @@
 from rest_framework import serializers
-from .models import Skill, Job, JobSkill, SavedJob
+from .models import JobCategory, Skill, Job, JobSkill, SavedJob
 from apps.accounts.serializers import CompanyProfileSerializer
+
+class JobCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = JobCategory
+        fields = ('id', 'name', 'created_at')
 
 class SkillSerializer(serializers.ModelSerializer):
     class Meta:

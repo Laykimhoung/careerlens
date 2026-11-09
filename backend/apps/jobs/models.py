@@ -2,6 +2,19 @@ from django.db import models
 from django.utils import timezone
 from apps.accounts.models import CompanyProfile, CandidateProfile
 
+class JobCategory(models.Model):
+    name = models.CharField(max_length=150, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Job Category"
+        verbose_name_plural = "Job Categories"
+        ordering = ["name"]
+
+    def __str__(self):
+        return self.name
+
+
 class Skill(models.Model):
     name = models.CharField(max_length=255, unique=True)
 

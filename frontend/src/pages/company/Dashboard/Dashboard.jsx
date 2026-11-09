@@ -65,12 +65,12 @@ export default function CompanyDashboard() {
   const getCompanyLogo = (usr) => {
     const uid = usr?.id;
     return (
+      usr?.avatar ||
+      usr?.logo ||
       (uid ? localStorage.getItem(`careerlens_company_logo_${uid}`) : null) ||
       (uid ? localStorage.getItem(`careerlens_avatar_${uid}`) : null) ||
       localStorage.getItem("careerlens_company_logo") ||
       localStorage.getItem("careerlens_avatar") ||
-      usr?.avatar ||
-      usr?.logo ||
       ""
     );
   };

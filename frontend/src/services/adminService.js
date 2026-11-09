@@ -40,6 +40,15 @@ export const updateAdminApplication = (id, data) =>
 export const deleteAdminApplication = (id) =>
   api.delete(`/applications/${id}/`);
 
+export const getAdminCategories = (params = {}) =>
+  api.get("/categories/", { params });
+export const createAdminCategory = (data) =>
+  api.post("/categories/", data);
+export const updateAdminCategory = (id, data) =>
+  api.patch(`/categories/${id}/`, data);
+export const deleteAdminCategory = (id) =>
+  api.delete(`/categories/${id}/`);
+
 export const getAdminSkills = (params = {}) =>
   api.get("/skills/", { params });
 export const createAdminSkill = (data) =>

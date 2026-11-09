@@ -3,12 +3,24 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.utils import timezone
-from .models import Job, Skill, JobSkill, SavedJob, CandidateJobMatchCache
-from .serializers import JobSerializer, SkillSerializer, JobSkillSerializer, SavedJobSerializer
+from .models import JobCategory, Job, Skill, JobSkill, SavedJob, CandidateJobMatchCache
+from .serializers import JobCategorySerializer, JobSerializer, SkillSerializer, JobSkillSerializer, SavedJobSerializer
 from .permissions import IsJobOwnerOrReadOnly
 from .services import filter_jobs
 from apps.accounts.permissions import IsCompanyUser, IsCandidateUser, IsAdminUserRole, IsCompanyOrAdminUser
 from apps.accounts.models import CompanyProfile
+
+class JobCategoryViewSet(viewsets.ModelViewSet):
+    """
+    Job Categories are globally readable. Admins can create, update, or delete categories.
+    """
+    queryset = JobCategory.objects.all().order_by('name')
+    serializer_class = JobCategorySerializer
+
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve']:
+            return [permissions.AllowAny()]
+        return [permissions.IsAuthenticated(), IsAdminUserRole()]
 
 class SkillViewSet(viewsets.ModelViewSet):
     """

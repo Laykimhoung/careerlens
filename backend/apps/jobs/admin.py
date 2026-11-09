@@ -1,6 +1,13 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Skill, Job, JobSkill, SavedJob, CandidateRoadmap, CandidateJobMatchCache
+from .models import JobCategory, Skill, Job, JobSkill, SavedJob, CandidateRoadmap, CandidateJobMatchCache
+
+
+@admin.register(JobCategory)
+class JobCategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'created_at')
+    search_fields = ('name',)
+    ordering = ('name',)
 
 
 @admin.register(Skill)
