@@ -276,6 +276,64 @@ class ApplicationViewSet(viewsets.ModelViewSet):
             'detail': f"Candidate {action_desc}."
         })
 
+    @action(detail=True, methods=['get', 'post'], url_path='interview-prep')
+    def interview_prep(self, request, pk=None):
+        """
+        AI Interview Preparation Coach for candidates reaching the interview stage.
+        Generates preparation checklists, likely role-specific questions with model answers,
+        what to do, what not to do, and tactical advice powered by the Gemini API.
+        Persists results to PostgreSQL.
+        """
+        application = self.get_object()
+
+        user = request.user
+        if user.role == user.Role.CANDIDATE:
+            if not hasattr(user, 'candidate_profile') or application.candidate != user.candidate_profile:
+                raise permissions.exceptions.PermissionDenied("You are not authorized to view interview preparation for this application.")
+        elif user.role == user.Role.COMPANY:
+            if not hasattr(user, 'company_profile') or application.job.company != user.company_profile:
+                raise permissions.exceptions.PermissionDenied("You are not authorized to view this application's interview prep.")
+
+        has_reached_interview = (
+            application.status in [Application.Status.INTERVIEW, Application.Status.OFFERED]
+            or application.interviews.exists()
+        )
+        if not has_reached_interview:
+            return Response(
+                {
+                    "has_reached_interview": False,
+                    "detail": "Interview preparation becomes available once your application advances to the Interview stage."
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        from .interview_prep_service import get_or_generate_interview_prep
+
+        force = (
+            request.method == 'POST'
+            or str(request.query_params.get('force', '')).lower() in ['true', '1']
+        )
+        custom_key = request.headers.get("X-Gemini-Api-Key") or (
+            request.data.get("gemini_api_key") if isinstance(request.data, dict) else None
+        )
+
+        prep_data, is_ai = get_or_generate_interview_prep(
+            application=application,
+            force_regenerate=force,
+            custom_gemini_key=custom_key
+        )
+
+        return Response({
+            "application_id": application.id,
+            "job_id": application.job.id,
+            "job_title": application.job.title,
+            "company_name": application.job.company.company_name if hasattr(application.job, 'company') and application.job.company else "Company",
+            "has_reached_interview": True,
+            "is_ai_generated": is_ai,
+            "prep": prep_data,
+        })
+
+
 class ApplicationStatusHistoryViewSet(viewsets.ReadOnlyModelViewSet):
     """
     Read-only view for application status history.

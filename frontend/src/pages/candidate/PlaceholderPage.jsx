@@ -1,8 +1,10 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
+import { Sparkles } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 import { useLanguage } from "../../context/LanguageContext";
 import Button from "../../components/common/Button";
 import Input from "../../components/common/Input";
+import InterviewPrepModal from "../../components/candidate/InterviewPrepModal";
 import {
   getNotifications,
   markNotificationRead,
@@ -294,6 +296,7 @@ function CandidateInterviewsView() {
   const [interviews, setInterviews] = useState([]);
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [prepModalApp, setPrepModalApp] = useState(null);
 
   useEffect(() => {
     Promise.all([
@@ -366,20 +369,56 @@ function CandidateInterviewsView() {
                   </div>
                 )}
               </div>
-              {(iv.meeting_link || String(iv.location || "").toLowerCase().includes("video")) && (
-                <a
-                  href={iv.meeting_link || `https://meet.jit.si/CareerLens-Interview-${iv.application || iv.id}`}
-                  target="_blank"
-                  rel="noreferrer"
+              <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "center" }}>
+                <button
+                  type="button"
+                  className="workspace-button workspace-button-primary"
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    fontSize: "12.5px",
+                    padding: "6px 14px",
+                    borderRadius: "6px",
+                    cursor: "pointer",
+                  }}
+                  onClick={() =>
+                    setPrepModalApp({
+                      id: iv.application,
+                      jobTitle: iv.jobTitle,
+                      company: iv.company,
+                    })
+                  }
                 >
-                  <Button variant="primary" size="sm">
-                    🎥 Join Video Call
-                  </Button>
-                </a>
-              )}
+                  <Sparkles size={14} />
+                  <span>AI Interview Prep</span>
+                </button>
+
+                {(iv.meeting_link || String(iv.location || "").toLowerCase().includes("video")) && (
+                  <a
+                    href={iv.meeting_link || `https://meet.jit.si/CareerLens-Interview-${iv.application || iv.id}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <Button variant="outline" size="sm">
+                      🎥 Join Video Call
+                    </Button>
+                  </a>
+                )}
+              </div>
             </div>
           ))}
         </div>
+      )}
+
+      {prepModalApp && (
+        <InterviewPrepModal
+          applicationId={prepModalApp.id}
+          jobTitle={prepModalApp.jobTitle}
+          companyName={prepModalApp.company}
+          isOpen={Boolean(prepModalApp)}
+          onClose={() => setPrepModalApp(null)}
+        />
       )}
     </div>
   );

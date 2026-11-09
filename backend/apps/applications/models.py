@@ -79,3 +79,20 @@ class ApplicationNote(models.Model):
 
     def __str__(self):
         return f"Note by {self.author.username} on Application {self.application.id}"
+
+
+class InterviewPreparation(models.Model):
+    application = models.OneToOneField(Application, on_delete=models.CASCADE, related_name="interview_prep")
+    prep_data = models.JSONField(default=dict)
+    is_ai_generated = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Interview Preparation"
+        verbose_name_plural = "Interview Preparations"
+        ordering = ["-updated_at"]
+
+    def __str__(self):
+        return f"Interview Prep for Application #{self.application.id} ({self.application.job.title})"
+

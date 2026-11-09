@@ -1,7 +1,9 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Sparkles } from "lucide-react";
 import { useLanguage } from "../../../context/LanguageContext";
 import Button from "../../../components/common/Button";
+import InterviewPrepModal from "../../../components/candidate/InterviewPrepModal";
 import {
   getApplicationById,
   normalizeApplicationRecord,
@@ -16,6 +18,7 @@ import "./ApplicationDetails.css";
 
 export default function CandidateApplicationDetails() {
   const { id } = useParams();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { t } = useLanguage();
 
@@ -27,6 +30,13 @@ export default function CandidateApplicationDetails() {
   const [error, setError] = useState("");
   const [actionLoading, setActionLoading] = useState(false);
   const [statusMsg, setStatusMsg] = useState({ type: "", text: "" });
+  const [isPrepModalOpen, setIsPrepModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (searchParams.get("prep") === "1" || searchParams.get("prep") === "true") {
+      setIsPrepModalOpen(true);
+    }
+  }, [searchParams]);
 
   const loadApplicationDetails = useCallback(async () => {
     setLoading(true);
@@ -297,6 +307,77 @@ export default function CandidateApplicationDetails() {
         </div>
       </div>
 
+      {/* AI Interview Preparation Coach (Available when candidate reaches Interview stage) */}
+      {(["INTERVIEW", "OFFERED"].includes(app.rawStatus) || interviews.length > 0) && (
+        <div
+          className="app-details__section"
+          style={{
+            background: "linear-gradient(135deg, rgba(1, 107, 251, 0.08) 0%, rgba(56, 189, 248, 0.08) 100%)",
+            border: "1px solid rgba(1, 107, 251, 0.28)",
+            borderRadius: "14px",
+            padding: "22px 26px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: "20px",
+            flexWrap: "wrap",
+            boxShadow: "0 4px 16px rgba(1, 107, 251, 0.08)",
+          }}
+        >
+          <div style={{ flex: 1, minWidth: "260px" }}>
+            <div
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
+                background: "rgba(1, 107, 251, 0.14)",
+                color: "#016BFB",
+                fontSize: "12px",
+                fontWeight: 700,
+                padding: "3px 11px",
+                borderRadius: "9999px",
+                marginBottom: "10px",
+                border: "1px solid rgba(1, 107, 251, 0.25)",
+              }}
+            >
+              <Sparkles size={13} style={{ color: "#016BFB" }} />
+              {t("candidate.aiCoachBadge", "Gemini AI Interview Coach")}
+            </div>
+            <h3 style={{ margin: "0 0 6px", fontSize: "1.2rem", fontWeight: 700, color: "var(--color-text, #0F172A)" }}>
+              {t("candidate.prepBannerTitle", "You have reached the Interview Stage!")}
+            </h3>
+            <p style={{ margin: 0, fontSize: "13.5px", color: "var(--color-text-secondary, #475569)", lineHeight: 1.55 }}>
+              {t(
+                "candidate.prepBannerDesc",
+                "Your application successfully advanced to interviews. Access your AI interview preparation guide: probable questions with STAR model answers, checklist timeline, do's & don'ts, and tailored tactical advice for this job."
+              )}
+            </p>
+          </div>
+          <div>
+            <button
+              type="button"
+              className="workspace-button workspace-button-primary"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
+                padding: "11px 22px",
+                fontSize: "14px",
+                fontWeight: 600,
+                borderRadius: "10px",
+                boxShadow: "0 4px 14px rgba(1, 107, 251, 0.35)",
+                whiteSpace: "nowrap",
+                cursor: "pointer",
+              }}
+              onClick={() => setIsPrepModalOpen(true)}
+            >
+              <Sparkles size={16} />
+              {t("candidate.openPrepGuide", "Open AI Interview Prep")}
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Offer Section (if extended) */}
       {offer && (
         <div className="app-details__section">
@@ -376,8 +457,29 @@ export default function CandidateApplicationDetails() {
                     Location: {iv.location}
                   </div>
                 )}
-                {(iv.meeting_link || String(iv.location || "").toLowerCase().includes("video")) && (
-                  <div style={{ marginTop: "8px" }}>
+                <div style={{ marginTop: "10px", display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+                  <button
+                    type="button"
+                    onClick={() => setIsPrepModalOpen(true)}
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "6px",
+                      padding: "6px 14px",
+                      borderRadius: "6px",
+                      backgroundColor: "rgba(1, 107, 251, 0.12)",
+                      color: "#016BFB",
+                      border: "1px solid rgba(1, 107, 251, 0.25)",
+                      fontWeight: 600,
+                      fontSize: "13px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <Sparkles size={14} />
+                    <span>AI Interview Prep</span>
+                  </button>
+
+                  {(iv.meeting_link || String(iv.location || "").toLowerCase().includes("video")) && (
                     <a
                       href={iv.meeting_link || `https://meet.jit.si/CareerLens-Interview-${iv.application || iv.id}`}
                       target="_blank"
@@ -397,8 +499,8 @@ export default function CandidateApplicationDetails() {
                     >
                       <span>🎥 Join Video Call</span> &rarr;
                     </a>
-                  </div>
-                )}
+                  )}
+                </div>
                 {iv.feedback && (
                   <div style={{ fontSize: "13px", color: "#334155", marginTop: "6px" }}>
                     Feedback: {iv.feedback}
@@ -443,6 +545,14 @@ export default function CandidateApplicationDetails() {
           )}
         </div>
       </div>
+      {/* AI Interview Preparation Modal */}
+      <InterviewPrepModal
+        applicationId={id}
+        jobTitle={app?.jobTitle}
+        companyName={app?.company}
+        isOpen={isPrepModalOpen}
+        onClose={() => setIsPrepModalOpen(false)}
+      />
     </div>
   );
 }
