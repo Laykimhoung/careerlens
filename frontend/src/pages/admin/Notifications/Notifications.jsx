@@ -7,6 +7,7 @@ import { extractResults } from "../../../services/api";
 import {
   getAdminNotifications,
   updateAdminNotification,
+  markAllAdminNotificationsRead,
   deleteAdminNotification,
 } from "../../../services/adminService";
 import "./Notifications.css";
@@ -25,17 +26,22 @@ function Notifications() {
     try {
       const res = await getAdminNotifications();
       const raw = extractResults(res);
-      setNotifs(
-        raw.map((n) => ({
-          id: n.id,
-          text: n.message,
-          read: Boolean(n.is_read),
-          recipientName: n.recipient_name || "User",
-          type: n.type || "INFO",
-          t: n.created_at
-            ? String(n.created_at).replace("T", " ").slice(0, 16)
-            : "—",
-        }))
+      const items = raw.map((n) => ({
+        id: n.id,
+        text: n.message,
+        read: Boolean(n.is_read),
+        recipientName: n.recipient_name || "User",
+        type: n.type || "INFO",
+        t: n.created_at
+          ? String(n.created_at).replace("T", " ").slice(0, 16)
+          : "—",
+      }));
+      setNotifs(items);
+      const freshUnread = items.filter((n) => !n.read).length;
+      window.dispatchEvent(
+        new CustomEvent("careerlens_notifications_updated", {
+          detail: { unreadCount: freshUnread },
+        })
       );
     } catch (err) {
       setError(
@@ -55,9 +61,16 @@ function Notifications() {
   const markRead = async (id) => {
     try {
       await updateAdminNotification(id, { is_read: true });
-      setNotifs((prev) =>
-        prev.map((n) => (n.id === id ? { ...n, read: true } : n))
-      );
+      setNotifs((prev) => {
+        const next = prev.map((n) => (n.id === id ? { ...n, read: true } : n));
+        const newUnread = next.filter((n) => !n.read).length;
+        window.dispatchEvent(
+          new CustomEvent("careerlens_notifications_updated", {
+            detail: { unreadCount: newUnread },
+          })
+        );
+        return next;
+      });
     } catch (err) {
       setError(
         err.response?.data?.detail || "Failed to mark notification as read."
@@ -67,9 +80,19 @@ function Notifications() {
 
   const markAllRead = async () => {
     try {
-      const unread = notifs.filter((n) => !n.read);
-      await Promise.all(
-        unread.map((n) => updateAdminNotification(n.id, { is_read: true }))
+      try {
+        await markAllAdminNotificationsRead();
+      } catch {
+        const unread = notifs.filter((n) => !n.read);
+        await Promise.all(
+          unread.map((n) => updateAdminNotification(n.id, { is_read: true }))
+        );
+      }
+      setNotifs((prev) => prev.map((n) => ({ ...n, read: true })));
+      window.dispatchEvent(
+        new CustomEvent("careerlens_notifications_updated", {
+          detail: { unreadCount: 0 },
+        })
       );
       await loadNotifications();
     } catch (err) {
@@ -82,17 +105,26 @@ function Notifications() {
   const deleteNotif = async (id) => {
     try {
       await deleteAdminNotification(id);
-      setNotifs((prev) => prev.filter((n) => n.id !== id));
+      setNotifs((prev) => {
+        const next = prev.filter((n) => n.id !== id);
+        const newUnread = next.filter((n) => !n.read).length;
+        window.dispatchEvent(
+          new CustomEvent("careerlens_notifications_updated", {
+            detail: { unreadCount: newUnread },
+          })
+        );
+        return next;
+      });
     } catch (err) {
       setError(err.response?.data?.detail || "Failed to delete notification.");
     }
   };
 
   // Navigate directly to the main target entity when clicking the notification
-  const handleNotificationClick = (notif) => {
-    // 1. Mark as read immediately
+  const handleNotificationClick = async (notif) => {
+    // 1. Mark as read immediately and await database persistence
     if (!notif.read) {
-      markRead(notif.id);
+      await markRead(notif.id);
     }
 
     const text = (notif.text || "").toLowerCase();

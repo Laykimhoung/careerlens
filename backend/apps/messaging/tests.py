@@ -55,3 +55,15 @@ class MessagingTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.notification1.refresh_from_db()
         self.assertTrue(self.notification1.is_read)
+
+    def test_mark_all_notifications_as_read(self):
+        Notification.objects.create(user=self.user1, message="Alert 2", is_read=False)
+        Notification.objects.create(user=self.user2, message="User2 alert", is_read=False)
+        self.client.force_authenticate(user=self.user1)
+        url = reverse('notification-mark-all-read')
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # user1's notifications should now all be read
+        self.assertEqual(Notification.objects.filter(user=self.user1, is_read=False).count(), 0)
+        # user2's unread notification should NOT be affected
+        self.assertEqual(Notification.objects.filter(user=self.user2, is_read=False).count(), 1)

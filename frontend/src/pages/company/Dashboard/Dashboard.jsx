@@ -129,6 +129,18 @@ export default function CompanyDashboard() {
     loadDashboard();
   }, [loadDashboard]);
 
+  useEffect(() => {
+    const handleNotifUpdate = (e) => {
+      if (e?.detail?.unreadCount !== undefined) {
+        setUnreadNotifCount(e.detail.unreadCount);
+      }
+    };
+    window.addEventListener("careerlens_notifications_updated", handleNotifUpdate);
+    return () => {
+      window.removeEventListener("careerlens_notifications_updated", handleNotifUpdate);
+    };
+  }, []);
+
   const companyName =
     companyProfile?.company_name ||
     user?.full_name ||

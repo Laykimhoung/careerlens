@@ -60,6 +60,8 @@ export const createAdminNotification = (data) =>
   api.post("/notifications/", data);
 export const updateAdminNotification = (id, data) =>
   api.patch(`/notifications/${id}/`, data);
+export const markAllAdminNotificationsRead = () =>
+  api.post("/notifications/mark_all_read/");
 export const deleteAdminNotification = (id) =>
   api.delete(`/notifications/${id}/`);
 

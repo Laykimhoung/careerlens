@@ -46,13 +46,13 @@ export default function CollapsibleSidebar({
     if (typeof window === "undefined") return "";
     const uid = user?.id;
     return (
+      user?.avatar ||
       (uid ? localStorage.getItem(`careerlens_avatar_${uid}`) : null) ||
       (uid ? localStorage.getItem(`careerlens_admin_avatar_${uid}`) : null) ||
       (uid ? localStorage.getItem(`careerlens_company_logo_${uid}`) : null) ||
       localStorage.getItem("careerlens_avatar") ||
       localStorage.getItem("careerlens_admin_avatar") ||
       localStorage.getItem("careerlens_company_logo") ||
-      user?.avatar ||
       ""
     );
   };
@@ -179,16 +179,36 @@ export default function CollapsibleSidebar({
 
           {/* User Profile Info & Logout */}
           <div className="sidebar-user-row">
-            <div className="sidebar-user-avatar" title={displayName} style={{ overflow: "hidden" }}>
-              {customPhoto ? (
-                <img
-                  src={customPhoto}
-                  alt={displayName}
-                  style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%" }}
-                />
-              ) : (
-                avatarInitial
-              )}
+            <div className="sidebar-avatar-container" style={{ position: "relative", width: 44, height: 44, flexShrink: 0 }}>
+              <div
+                className="sidebar-user-avatar"
+                title={displayName}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: "50%",
+                  overflow: "hidden",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                {customPhoto ? (
+                  <img
+                    src={customPhoto}
+                    alt={displayName}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      display: "block",
+                      borderRadius: "50%",
+                    }}
+                  />
+                ) : (
+                  avatarInitial
+                )}
+              </div>
               <span className="sidebar-status-dot" aria-hidden="true" />
             </div>
 

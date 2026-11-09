@@ -10,6 +10,7 @@ import {
   getCurrentCompanyProfile,
   updateCompanyProfile,
 } from "../../../services/companyService";
+import { updateMeApi } from "../../../services/authService";
 import "./Profile.css";
 
 export default function Profile() {
@@ -33,6 +34,7 @@ export default function Profile() {
 
   const [companyLogo, setCompanyLogo] = useState(() => {
     return (
+      user?.avatar ||
       (user?.id ? localStorage.getItem(`careerlens_company_logo_${user.id}`) : null) ||
       localStorage.getItem("careerlens_company_logo") ||
       ""
@@ -47,9 +49,21 @@ export default function Profile() {
       return;
     }
     const reader = new FileReader();
-    reader.onload = () => {
+    reader.onload = async () => {
       const dataUrl = reader.result;
       setCompanyLogo(dataUrl);
+
+      // Persist directly to PostgreSQL database
+      try {
+        await Promise.all([
+          updateMeApi({ avatar: dataUrl }),
+          companyId ? updateCompanyProfile(companyId, { logo: dataUrl }) : Promise.resolve(),
+        ]);
+        if (refreshUser) refreshUser();
+      } catch (err) {
+        console.warn("Failed to persist company logo to database:", err);
+      }
+
       if (user?.id) {
         localStorage.setItem(`careerlens_company_logo_${user.id}`, dataUrl);
         localStorage.setItem(`careerlens_avatar_${user.id}`, dataUrl);
@@ -58,13 +72,22 @@ export default function Profile() {
       localStorage.setItem("careerlens_avatar", dataUrl);
       window.dispatchEvent(new CustomEvent("careerlens_profile_image_updated", { detail: { avatar: dataUrl } }));
       window.dispatchEvent(new Event("storage"));
-      setStatusMsg({ type: "success", text: t("company.logoUpdated", "Company logo uploaded successfully.") });
+      setStatusMsg({ type: "success", text: t("company.logoUpdated", "Company logo uploaded and saved to database successfully.") });
     };
     reader.readAsDataURL(file);
   };
 
-  const handleRemoveLogo = () => {
+  const handleRemoveLogo = async () => {
     setCompanyLogo("");
+    try {
+      await Promise.all([
+        updateMeApi({ avatar: "" }),
+        companyId ? updateCompanyProfile(companyId, { logo: "" }) : Promise.resolve(),
+      ]);
+      if (refreshUser) refreshUser();
+    } catch (err) {
+      console.warn("Failed to remove company logo from database:", err);
+    }
     if (user?.id) {
       localStorage.removeItem(`careerlens_company_logo_${user.id}`);
       localStorage.removeItem(`careerlens_avatar_${user.id}`);
@@ -82,6 +105,11 @@ export default function Profile() {
       const comp = await getCurrentCompanyProfile(user?.id);
       if (comp) {
         setCompanyId(comp.id);
+        if (comp.logo) {
+          setCompanyLogo(comp.logo);
+        } else if (comp.user?.avatar) {
+          setCompanyLogo(comp.user.avatar);
+        }
         setIsVerified(
           Boolean(comp.is_verified || comp.verification_status === "VERIFIED")
         );

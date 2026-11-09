@@ -69,6 +69,11 @@ export default function CandidateProfile() {
         const skillList = (cand.skills || [])
           .map((s) => (typeof s === "string" ? s : s?.name || s?.skill?.name))
           .filter(Boolean);
+        if (cand.avatar) {
+          setAvatar(cand.avatar);
+        } else if (u.avatar) {
+          setAvatar(u.avatar);
+        }
         setValues({
           full_name: fullName,
           email: u.email || user?.email || "",
@@ -182,6 +187,7 @@ export default function CandidateProfile() {
 
   const [avatar, setAvatar] = useState(() => {
     return (
+      user?.avatar ||
       (user?.id ? localStorage.getItem(`careerlens_avatar_${user.id}`) : null) ||
       localStorage.getItem("careerlens_avatar") ||
       ""
@@ -196,22 +202,43 @@ export default function CandidateProfile() {
       return;
     }
     const reader = new FileReader();
-    reader.onload = () => {
+    reader.onload = async () => {
       const dataUrl = reader.result;
       setAvatar(dataUrl);
+
+      // Persist directly to database
+      try {
+        await Promise.all([
+          updateMeApi({ avatar: dataUrl }),
+          profileId ? updateCandidateProfile(profileId, { avatar: dataUrl }) : Promise.resolve(),
+        ]);
+        if (refreshUser) refreshUser();
+      } catch (err) {
+        console.warn("Failed to persist avatar to database:", err);
+      }
+
       if (user?.id) {
         localStorage.setItem(`careerlens_avatar_${user.id}`, dataUrl);
       }
       localStorage.setItem("careerlens_avatar", dataUrl);
       window.dispatchEvent(new CustomEvent("careerlens_profile_image_updated", { detail: { avatar: dataUrl } }));
       window.dispatchEvent(new Event("storage"));
-      setStatusMsg({ type: "success", text: "Profile photo uploaded successfully." });
+      setStatusMsg({ type: "success", text: "Profile photo uploaded and saved to database successfully." });
     };
     reader.readAsDataURL(file);
   };
 
-  const handleRemoveAvatar = () => {
+  const handleRemoveAvatar = async () => {
     setAvatar("");
+    try {
+      await Promise.all([
+        updateMeApi({ avatar: "" }),
+        profileId ? updateCandidateProfile(profileId, { avatar: "" }) : Promise.resolve(),
+      ]);
+      if (refreshUser) refreshUser();
+    } catch (err) {
+      console.warn("Failed to remove avatar from database:", err);
+    }
     if (user?.id) {
       localStorage.removeItem(`careerlens_avatar_${user.id}`);
     }

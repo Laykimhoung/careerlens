@@ -142,8 +142,17 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     const onStorage = () => loadData();
+    const handleNotifUpdate = (e) => {
+      if (e?.detail?.unreadCount !== undefined) {
+        setUnreadNotifCount(e.detail.unreadCount);
+      }
+    };
     window.addEventListener('storage', onStorage);
-    return () => window.removeEventListener('storage', onStorage);
+    window.addEventListener('careerlens_notifications_updated', handleNotifUpdate);
+    return () => {
+      window.removeEventListener('storage', onStorage);
+      window.removeEventListener('careerlens_notifications_updated', handleNotifUpdate);
+    };
   }, [loadData]);
 
   const handleResetDemoData = () => {
