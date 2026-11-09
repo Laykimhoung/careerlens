@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { Sparkles } from "lucide-react";
 import Button from "../common/Button";
 import { useLanguage } from "../../context/LanguageContext";
 import "./ApplicationCard.css";
@@ -43,6 +44,26 @@ export default function ApplicationCard({ application }) {
         <span className={`app-badge app-badge--${application.status.toLowerCase()}`}>
           {getStatusLabel(application.status)}
         </span>
+        {["Interview", "Offered"].includes(application.status) && (
+          <Link to={`/candidate/applications/${application.id}?prep=1`}>
+            <Button
+              variant="primary"
+              size="sm"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "5px",
+                background: "linear-gradient(135deg, #016BFB 0%, #0ea5e9 100%)",
+                border: "none",
+                color: "#ffffff",
+                boxShadow: "0 2px 8px rgba(1, 107, 251, 0.25)",
+              }}
+            >
+              <Sparkles size={13} />
+              <span>AI Prep</span>
+            </Button>
+          </Link>
+        )}
         <Link to={`/candidate/applications/${application.id}`}>
           <Button variant="outline" size="sm">{t("candidate.viewDetails", "View Details")}</Button>
         </Link>

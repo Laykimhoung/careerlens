@@ -4,7 +4,7 @@ from rest_framework.test import APITestCase
 from django.contrib.auth import get_user_model
 from apps.accounts.models import CompanyProfile, CandidateProfile
 from apps.jobs.models import Job
-from .models import Application, ApplicationStatusHistory, Interview
+from .models import Application, ApplicationStatusHistory, Interview, InterviewPreparation
 
 User = get_user_model()
 
@@ -162,3 +162,40 @@ class ApplicationTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn('candidates', response.data)
         self.assertEqual(len(response.data['candidates']), 2)
+
+    def test_interview_prep_blocked_before_interview_stage(self):
+        self.client.force_authenticate(user=self.candidate_user1)
+        url = reverse('application-interview-prep', args=[self.application1.id])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertFalse(response.data.get('has_reached_interview'))
+
+    def test_interview_prep_success_at_interview_stage(self):
+        self.application1.status = Application.Status.INTERVIEW
+        self.application1.save()
+
+        self.client.force_authenticate(user=self.candidate_user1)
+        url = reverse('application-interview-prep', args=[self.application1.id])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(response.data.get('has_reached_interview'))
+        prep = response.data.get('prep', {})
+        self.assertIn('likely_questions', prep)
+        self.assertIn('preparation_checklist', prep)
+        self.assertIn('what_should_do', prep)
+        self.assertIn('what_not_to_do', prep)
+        self.assertIn('expert_advice', prep)
+
+        # Verify persisted in database
+        self.assertTrue(InterviewPreparation.objects.filter(application=self.application1).exists())
+
+    def test_interview_prep_unauthorized_candidate(self):
+        self.application1.status = Application.Status.INTERVIEW
+        self.application1.save()
+
+        # candidate2 tries to access candidate1's interview prep
+        self.client.force_authenticate(user=self.candidate_user2)
+        url = reverse('application-interview-prep', args=[self.application1.id])
+        response = self.client.get(url)
+        self.assertIn(response.status_code, [status.HTTP_403_FORBIDDEN, status.HTTP_404_NOT_FOUND])
+

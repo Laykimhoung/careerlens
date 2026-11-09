@@ -93,4 +93,20 @@ export async function toggleSavedJobBackend(jobId, currentSavedRecords = []) {
     const res = await createSavedJobApi(numericJobId);
     return [res.data, ...currentSavedRecords];
   }
-}
+}
+
+// ── AI Interview Preparation Coach (/api/applications/{id}/interview-prep/) ──
+
+export const getInterviewPrepApi = (applicationId, force = false, geminiApiKey = null) => {
+  const headers = geminiApiKey ? { "X-Gemini-Api-Key": geminiApiKey } : {};
+  return api.get(`/applications/${applicationId}/interview-prep/`, {
+    params: force ? { force: "true" } : {},
+    headers,
+  });
+};
+
+export const regenerateInterviewPrepApi = (applicationId, geminiApiKey = null) => {
+  const headers = geminiApiKey ? { "X-Gemini-Api-Key": geminiApiKey } : {};
+  return api.post(`/applications/${applicationId}/interview-prep/`, {}, { headers });
+};
+
