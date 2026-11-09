@@ -319,3 +319,21 @@ class AuditLogSerializer(serializers.ModelSerializer):
         fields = ('id', 'actor', 'actor_username', 'action', 'target_type', 'target_id', 'details', 'created_at')
         read_only_fields = ('actor', 'actor_username', 'action', 'target_type', 'target_id', 'details', 'created_at')
 
+
+class ForgotPasswordSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
+
+    def validate_email(self, value):
+        return value.strip().lower()
+
+
+class ResetPasswordSerializer(serializers.Serializer):
+    uid = serializers.CharField(required=True)
+    token = serializers.CharField(required=True)
+    password = serializers.CharField(required=True, min_length=8, write_only=True)
+
+    def validate_password(self, value):
+        validate_password(value)
+        return value
+
+
