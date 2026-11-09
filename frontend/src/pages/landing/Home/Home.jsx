@@ -166,25 +166,33 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const y = window.scrollY;
-      setShowScrollTop(y > 200);
-      setScrolled(y > 20);
+    let ticking = false;
 
-      // Section tracking
-      const sectionIds = ["how", "telegram-bot", "companies", "about"];
-      let found = "";
-      for (const id of sectionIds) {
-        const el = document.getElementById(id);
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          if (rect.top <= 260 && rect.bottom >= 120) {
-            found = id;
-            break;
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const y = window.scrollY;
+          setShowScrollTop(y > 200);
+          setScrolled(y > 20);
+
+          // Throttled section tracking
+          const sectionIds = ["how", "telegram-bot", "companies", "about"];
+          let found = "";
+          for (const id of sectionIds) {
+            const el = document.getElementById(id);
+            if (el) {
+              const rect = el.getBoundingClientRect();
+              if (rect.top <= 260 && rect.bottom >= 120) {
+                found = id;
+                break;
+              }
+            }
           }
-        }
+          setActiveSection(found);
+          ticking = false;
+        });
+        ticking = true;
       }
-      setActiveSection(found);
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
@@ -243,6 +251,7 @@ export default function Home() {
           brightness={isMobile ? (theme === "dark" ? 0.85 : 1.05) : (theme === "dark" ? 1.1 : 1.3)}
           gridOpacity={isMobile ? 1.1 : 1.8}
           lineWidth={isMobile ? 1.1 : 1.5}
+          dpr={isMobile ? 1 : Math.min(typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1, 1.25)}
         />
       </div>
 
