@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Application, ApplicationStatusHistory, Interview, Offer, ApplicationNote
+from .models import Application, ApplicationStatusHistory, Interview, Offer, ApplicationNote, InterviewPreparation
 from apps.jobs.serializers import JobSerializer
 from apps.accounts.serializers import CandidateProfileSerializer
 
@@ -7,14 +7,18 @@ class ApplicationSerializer(serializers.ModelSerializer):
     job_details = JobSerializer(source='job', read_only=True)
     candidate_details = CandidateProfileSerializer(source='candidate', read_only=True)
     job_id = serializers.IntegerField(write_only=True)
+    has_interview_prep = serializers.SerializerMethodField()
     
     class Meta:
         model = Application
         fields = (
             'id', 'candidate', 'candidate_details', 'job_id', 'job_details', 'status', 
-            'resume_file', 'cover_letter', 'applied_at', 'updated_at'
+            'resume_file', 'cover_letter', 'has_interview_prep', 'applied_at', 'updated_at'
         )
-        read_only_fields = ('candidate', 'candidate_details', 'applied_at', 'updated_at', 'status')
+        read_only_fields = ('candidate', 'candidate_details', 'applied_at', 'updated_at', 'status', 'has_interview_prep')
+
+    def get_has_interview_prep(self, obj):
+        return hasattr(obj, 'interview_prep') and bool(getattr(obj.interview_prep, 'prep_data', None))
 
 class ApplicationUpdateSerializer(serializers.ModelSerializer):
     note = serializers.CharField(write_only=True, required=False, allow_blank=True)
@@ -45,4 +49,12 @@ class ApplicationNoteSerializer(serializers.ModelSerializer):
         model = ApplicationNote
         fields = ('id', 'application', 'author', 'note', 'created_at', 'updated_at')
         read_only_fields = ('author', 'created_at', 'updated_at')
+
+
+class InterviewPreparationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InterviewPreparation
+        fields = ('id', 'application', 'prep_data', 'is_ai_generated', 'created_at', 'updated_at')
+        read_only_fields = ('id', 'application', 'created_at', 'updated_at')
+
 

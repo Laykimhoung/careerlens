@@ -2,6 +2,19 @@ from django.db import models
 from django.utils import timezone
 from apps.accounts.models import CompanyProfile, CandidateProfile
 
+class JobCategory(models.Model):
+    name = models.CharField(max_length=150, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Job Category"
+        verbose_name_plural = "Job Categories"
+        ordering = ["name"]
+
+    def __str__(self):
+        return self.name
+
+
 class Skill(models.Model):
     name = models.CharField(max_length=255, unique=True)
 
@@ -75,3 +88,18 @@ class CandidateRoadmap(models.Model):
 
     def __str__(self):
         return f"{self.candidate.user.username}'s Roadmap ({self.target_role})"
+
+
+class CandidateJobMatchCache(models.Model):
+    candidate = models.OneToOneField(CandidateProfile, on_delete=models.CASCADE, related_name="job_match_cache")
+    results = models.JSONField(default=list)
+    top_score = models.IntegerField(default=0)
+    target_role = models.CharField(max_length=255, blank=True)
+    preferred_location = models.CharField(max_length=255, blank=True)
+    preferred_employment_type = models.CharField(max_length=50, blank=True)
+    preferred_workplace_type = models.CharField(max_length=50, blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Job Match Cache for {self.candidate.user.username} ({len(self.results)} jobs)"
+

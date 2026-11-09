@@ -13,6 +13,8 @@ from .views import (
     AuditLogViewSet,
     AdminDashboardStatsView,
     GeminiKeyView,
+    ForgotPasswordView,
+    ResetPasswordView,
 )
 
 router = DefaultRouter()
@@ -25,6 +27,8 @@ urlpatterns = [
     path('login/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('login/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('register/', RegisterView.as_view(), name='register'),
+    path('forgot-password/', ForgotPasswordView.as_view(), name='forgot_password'),
+    path('reset-password/', ResetPasswordView.as_view(), name='reset_password'),
     path('me/', CurrentUserView.as_view(), name='current_user'),
     path('gemini-key/', GeminiKeyView.as_view(), name='gemini_key'),
     path('admin/dashboard/', AdminDashboardStatsView.as_view(), name='admin_dashboard_stats'),

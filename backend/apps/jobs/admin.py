@@ -1,6 +1,13 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Skill, Job, JobSkill, SavedJob, CandidateRoadmap
+from .models import JobCategory, Skill, Job, JobSkill, SavedJob, CandidateRoadmap, CandidateJobMatchCache
+
+
+@admin.register(JobCategory)
+class JobCategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'created_at')
+    search_fields = ('name',)
+    ordering = ('name',)
 
 
 @admin.register(Skill)
@@ -86,3 +93,15 @@ class CandidateRoadmapAdmin(admin.ModelAdmin):
     list_display = ('candidate', 'target_role', 'weekly_hours', 'created_at', 'updated_at')
     search_fields = ('candidate__user__username', 'target_role')
     readonly_fields = ('created_at', 'updated_at')
+
+
+@admin.register(CandidateJobMatchCache)
+class CandidateJobMatchCacheAdmin(admin.ModelAdmin):
+    list_display = ('candidate', 'target_role', 'top_score', 'matches_count', 'updated_at')
+    search_fields = ('candidate__user__username', 'target_role')
+    readonly_fields = ('updated_at',)
+
+    def matches_count(self, obj):
+        return len(obj.results) if isinstance(obj.results, list) else 0
+    matches_count.short_description = "Cached Jobs"
+

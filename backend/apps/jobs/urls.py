@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import JobViewSet, SkillViewSet, SavedJobViewSet, PlatformStatsView, JobRecommendationView
+from .views import JobCategoryViewSet, JobViewSet, SkillViewSet, SavedJobViewSet, PlatformStatsView, JobRecommendationView
 from .roadmap_views import (
     RoadmapOptionsView,
     CareerRoadmapView,
@@ -12,6 +12,7 @@ from .roadmap_views import (
 )
 
 router = DefaultRouter()
+router.register(r'categories', JobCategoryViewSet, basename='category')
 router.register(r'jobs', JobViewSet, basename='job')
 router.register(r'skills', SkillViewSet, basename='skill')
 router.register(r'saved-jobs', SavedJobViewSet, basename='saved-job')

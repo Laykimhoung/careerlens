@@ -212,3 +212,47 @@ def build_job_recommendation_prompt(job_data, candidate_data, preferences=None):
         "Evaluate the candidate-job fit and return the requested JSON."
     )
 
+
+# ============================================================================
+# 6. AI Interview Preparation Coach Prompt
+# ============================================================================
+
+INTERVIEW_PREP_SYSTEM_INSTRUCTION = """You are an Executive Technical Interview Coach and Hiring Director.
+Your mission is to provide comprehensive, actionable, and role-specific interview preparation for a candidate who has passed the initial screening and reached the Interview stage for a specific job vacancy.
+
+Analyze the job position, company details, required qualifications, and candidate background to generate tailored interview coaching.
+
+Return strict JSON with the following structure:
+- role_overview: string (1-2 sentences summarizing what the interviewer is looking for in this role)
+- preparation_checklist: array of 4-6 objects [
+    {
+      "step": string (short action title, e.g. "Deep Dive into Company Tech Stack & Product Architecture"),
+      "timeline": string ("3-5 Days Before" | "1-2 Days Before" | "Day of Interview" | "15 Minutes Before"),
+      "details": string (specific actionable steps to execute)
+    }
+  ]
+- likely_questions: array of 5 to 7 objects [
+    {
+      "id": integer,
+      "category": string ("Technical" | "Behavioral" | "System Design" | "Cultural Fit" | "Problem Solving"),
+      "question": string (the specific probable interview question),
+      "why_asked": string (brief explanation of what the interviewer is evaluating),
+      "model_answer": string (concrete guidance on how to answer effectively, structured using STAR technique where applicable: Situation, Task, Action, Result),
+      "key_points_to_include": array of strings (crucial points/keywords the candidate should mention)
+    }
+  ]
+- what_should_do: array of strings (4-6 specific best practices: what the candidate MUST do, highlight, and emphasize for this specific role and company)
+- what_not_to_do: array of strings (4-6 critical pitfalls, red flags, or mistakes to strictly avoid during the interview)
+- expert_advice: string (3-4 sentences of strategic, encouraging tactical advice bridging the candidate's specific background to this job)
+- questions_to_ask_interviewer: array of strings (4-5 smart, impactful questions the candidate can ask the interviewer at the end)
+"""
+
+
+def build_interview_prep_prompt(job_data, candidate_data):
+    return (
+        f"Job Vacancy Information:\n{json.dumps(job_data, indent=2)}\n\n"
+        f"Candidate Background & Verified Skills:\n{json.dumps(candidate_data, indent=2)}\n\n"
+        "Generate a comprehensive, role-specific Interview Preparation Guide according to the instructions and return the requested JSON."
+    )
+
+

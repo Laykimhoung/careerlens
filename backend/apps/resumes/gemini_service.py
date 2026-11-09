@@ -13,6 +13,8 @@ from .prompts import (
     build_career_roadmap_prompt,
     JOB_RECOMMENDATION_SYSTEM_INSTRUCTION,
     build_job_recommendation_prompt,
+    INTERVIEW_PREP_SYSTEM_INSTRUCTION,
+    build_interview_prep_prompt,
 )
 
 logger = logging.getLogger(__name__)
@@ -255,3 +257,25 @@ def gemini_recommend_job(job_data, candidate_data, preferences, api_key):
     if ok and isinstance(result, dict) and "match_score" in result:
         return result
     return None
+
+
+# ============================================================================
+# 6. AI Interview Preparation Coach
+# ============================================================================
+
+def gemini_generate_interview_prep(job_data, candidate_data, api_key):
+    """
+    Builds personalized interview preparation (checklist, likely questions with model answers,
+    what to do, what not to do, expert advice, and questions to ask the interviewer) using Prompt 6.
+    """
+    prompt = build_interview_prep_prompt(job_data, candidate_data)
+    ok, result = call_gemini_api(
+        prompt=prompt,
+        api_key=api_key,
+        system_instruction=INTERVIEW_PREP_SYSTEM_INSTRUCTION,
+        response_json=True,
+    )
+    if ok and isinstance(result, dict) and "likely_questions" in result:
+        return result
+    return None
+

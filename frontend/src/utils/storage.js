@@ -6,6 +6,16 @@ export const setToken = (token) => localStorage.setItem("access_token", token);
 export const getToken = () => localStorage.getItem("access_token");
 export const removeToken = () => localStorage.removeItem("access_token");
 
+export const setRefreshToken = (token) => localStorage.setItem("refresh_token", token);
+export const getRefreshToken = () => localStorage.getItem("refresh_token");
+export const removeRefreshToken = () => localStorage.removeItem("refresh_token");
+
+export const clearAuthStorage = () => {
+  removeToken();
+  removeRefreshToken();
+  removeUser();
+};
+
 export const setUser = (user) => localStorage.setItem("user", JSON.stringify(user));
 export const getUser = () => {
   const raw = localStorage.getItem("user");

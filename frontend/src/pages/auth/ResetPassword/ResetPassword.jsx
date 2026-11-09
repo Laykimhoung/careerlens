@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useSearchParams, useNavigate } from "react-router-dom";
+import { Link, useSearchParams, useParams, useNavigate } from "react-router-dom";
 import { resetPasswordApi } from "../../../services/authService";
 import SideRays from "../../../components/ui/SideRays";
 import CurvyInput from "../../../components/common/CurvyInput";
@@ -36,11 +36,12 @@ const CheckIcon = () => (
 const INITIAL = { password: "", confirm_password: "" };
 
 export default function ResetPassword() {
+  const { uid: paramUid, token: paramToken } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { t } = useLanguage();
-  const token = searchParams.get("token");
-  const uid = searchParams.get("uid");
+  const token = paramToken || searchParams.get("token") || "";
+  const uid = paramUid || searchParams.get("uid") || "";
 
   const [values, setValues] = useState(INITIAL);
   const [showPassword, setShowPassword] = useState(false);

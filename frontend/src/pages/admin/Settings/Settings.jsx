@@ -20,11 +20,18 @@ function Settings() {
   );
   const [adminAvatar, setAdminAvatar] = useState(() => {
     return (
+      user?.avatar ||
       (user?.id ? localStorage.getItem(`careerlens_admin_avatar_${user.id}`) : null) ||
       localStorage.getItem("careerlens_admin_avatar") ||
       ""
     );
   });
+
+  useEffect(() => {
+    if (user?.avatar) {
+      setAdminAvatar(user.avatar);
+    }
+  }, [user?.avatar]);
 
   const handleAvatarChange = (e) => {
     const file = e.target.files?.[0];
@@ -34,9 +41,18 @@ function Settings() {
       return;
     }
     const reader = new FileReader();
-    reader.onload = () => {
+    reader.onload = async () => {
       const dataUrl = reader.result;
       setAdminAvatar(dataUrl);
+
+      // Persist directly to PostgreSQL database
+      try {
+        await updateMeApi({ avatar: dataUrl });
+        if (refreshUser) await refreshUser();
+      } catch (err) {
+        console.warn("Failed to persist admin avatar to database:", err);
+      }
+
       if (user?.id) {
         localStorage.setItem(`careerlens_admin_avatar_${user.id}`, dataUrl);
         localStorage.setItem(`careerlens_avatar_${user.id}`, dataUrl);
@@ -49,8 +65,14 @@ function Settings() {
     reader.readAsDataURL(file);
   };
 
-  const handleRemoveAvatar = () => {
+  const handleRemoveAvatar = async () => {
     setAdminAvatar("");
+    try {
+      await updateMeApi({ avatar: "" });
+      if (refreshUser) await refreshUser();
+    } catch (err) {
+      console.warn("Failed to remove admin avatar from database:", err);
+    }
     if (user?.id) {
       localStorage.removeItem(`careerlens_admin_avatar_${user.id}`);
       localStorage.removeItem(`careerlens_avatar_${user.id}`);
@@ -118,6 +140,7 @@ function Settings() {
         first_name: firstName.trim(),
         last_name: lastName.trim(),
         email: email.trim(),
+        avatar: adminAvatar || "",
       });
       localStorage.setItem("careerlens_admin_session_timeout", session);
       await refreshUser();

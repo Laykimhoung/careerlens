@@ -3,7 +3,7 @@ import "./CompanyProfileCard.css";
 export default function CompanyProfileCard({ profile, logo }) {
 	if (!profile) return null;
 
-	const companyLogo = logo || (typeof window !== "undefined" ? localStorage.getItem("careerlens_company_logo") : null);
+	const companyLogo = logo || profile?.logo || profile?.avatar || (typeof window !== "undefined" ? localStorage.getItem("careerlens_company_logo") : null);
 
 	return (
 		<section className="workspace-panel">

@@ -43,6 +43,9 @@ export const getNotifications = (params = {}) =>
 export const markNotificationRead = (id, isRead = true) =>
   api.patch(`/notifications/${id}/`, { is_read: isRead });
 
+export const markAllNotificationsRead = () =>
+  api.post("/notifications/mark_all_read/");
+
 export const createNotification = (data) =>
   api.post("/notifications/", data);
 
@@ -90,4 +93,20 @@ export async function toggleSavedJobBackend(jobId, currentSavedRecords = []) {
     const res = await createSavedJobApi(numericJobId);
     return [res.data, ...currentSavedRecords];
   }
-}
+}
+
+// ── AI Interview Preparation Coach (/api/applications/{id}/interview-prep/) ──
+
+export const getInterviewPrepApi = (applicationId, force = false, geminiApiKey = null) => {
+  const headers = geminiApiKey ? { "X-Gemini-Api-Key": geminiApiKey } : {};
+  return api.get(`/applications/${applicationId}/interview-prep/`, {
+    params: force ? { force: "true" } : {},
+    headers,
+  });
+};
+
+export const regenerateInterviewPrepApi = (applicationId, geminiApiKey = null) => {
+  const headers = geminiApiKey ? { "X-Gemini-Api-Key": geminiApiKey } : {};
+  return api.post(`/applications/${applicationId}/interview-prep/`, {}, { headers });
+};
+

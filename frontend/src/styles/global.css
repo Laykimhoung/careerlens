@@ -181,7 +181,7 @@ body,
               box-shadow 0.28s ease;
 }
 
-/* ── Cosmic Nebula Layer ─────────────────────────────────────────────────── */
+/* ── Cosmic Nebula Layer (GPU Hardware-Accelerated) ───────────────────────── */
 html[data-theme="dark"] body {
   background-color: #050814 !important;
   position: relative;
@@ -202,11 +202,13 @@ html[data-theme="dark"] body::before {
     radial-gradient(circle 750px at 92% 75%, rgba(56, 189, 248, 0.28), transparent 65%),
     radial-gradient(circle 550px at 50% 65%, rgba(1, 107, 251, 0.25), transparent 70%),
     linear-gradient(180deg, #050814 0%, #070C1E 45%, #0B112C 100%);
-  background-attachment: fixed;
+  transform: translateZ(0);
+  will-change: opacity;
+  contain: strict;
   animation: galaxyNebulaBreathe 12s ease-in-out infinite alternate;
 }
 
-/* ── High-Density Glittering Alive Galaxy Dots & Stars Layer ─────────────── */
+/* ── High-Density Glittering Alive Galaxy Dots & Stars Layer (Zero-Refilter) ── */
 html[data-theme="dark"] body::after {
   content: "";
   position: fixed;
@@ -246,44 +248,33 @@ html[data-theme="dark"] body::after {
     300px 300px, 300px 300px, 300px 300px, 300px 300px, 300px 300px, 300px 300px, 300px 300px, 300px 300px,
     460px 460px, 460px 460px, 460px 460px, 460px 460px, 460px 460px, 460px 460px, 460px 460px,
     680px 680px, 680px 680px, 680px 680px, 680px 680px;
-  animation: galaxyStarsAlive 5s ease-in-out infinite alternate;
+  transform: translateZ(0);
+  will-change: opacity;
+  contain: strict;
+  animation: galaxyStarsAlive 6s ease-in-out infinite alternate;
 }
 
 @keyframes galaxyStarsAlive {
   0% {
     opacity: 0.65;
-    transform: scale(1) translateY(0);
-    filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.85)) drop-shadow(0 0 6px rgba(1, 107, 251, 0.75));
   }
-  30% {
-    opacity: 1;
-    transform: scale(1.015) translateY(-2px);
-    filter: drop-shadow(0 0 5px #ffffff) drop-shadow(0 0 10px rgba(56, 189, 248, 0.95)) drop-shadow(0 0 16px rgba(1, 107, 251, 0.85));
-  }
-  65% {
-    opacity: 0.75;
-    transform: scale(0.99) translateY(1px);
-    filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.9)) drop-shadow(0 0 8px rgba(168, 85, 247, 0.85));
+  50% {
+    opacity: 0.98;
   }
   100% {
-    opacity: 0.98;
-    transform: scale(1.02) translateY(-3px);
-    filter: drop-shadow(0 0 6px #ffffff) drop-shadow(0 0 12px rgba(1, 107, 251, 1)) drop-shadow(0 0 20px rgba(99, 142, 203, 0.85));
+    opacity: 0.75;
   }
 }
 
 @keyframes galaxyNebulaBreathe {
   0% {
     opacity: 0.82;
-    transform: scale(1);
   }
   50% {
     opacity: 1;
-    transform: scale(1.03);
   }
   100% {
     opacity: 0.88;
-    transform: scale(1.01);
   }
 }
 
@@ -494,6 +485,15 @@ html[data-theme="dark"] body::after {
   background: rgba(99, 142, 203, 0.25) !important;
   border: 1px solid rgba(99, 142, 203, 0.4) !important;
   color: #ffffff !important;
+}
+
+/* Header Count/Progress Pills */
+[data-theme="dark"] .cand-process-pill,
+[data-theme="dark"] .comp-process-pill,
+[data-theme="dark"] .process-count-badge {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #CBD5E1 !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
 }
 
 /* ── Bright & Crisp High-Contrast Text in Dark Mode ─────────────────────── */

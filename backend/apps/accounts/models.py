@@ -14,6 +14,7 @@ class User(AbstractUser):
         choices=Role.choices,
         default=Role.CANDIDATE,
     )
+    avatar = models.TextField(blank=True, default="")
 
     def __str__(self):
         return self.username
@@ -35,6 +36,7 @@ class CandidateProfile(models.Model):
         null=True,
     )
     gemini_api_key = models.CharField(max_length=255, blank=True, default="")
+    avatar = models.TextField(blank=True, default="")
 
     def __str__(self):
         return f"{self.user.username} - Candidate"
@@ -56,6 +58,7 @@ class CompanyProfile(models.Model):
     size = models.CharField(max_length=100, blank=True)
     location = models.CharField(max_length=255, blank=True)
     website = models.URLField(blank=True)
+    logo = models.TextField(blank=True, default="")
     verification_status = models.CharField(
         max_length=20,
         choices=VerificationStatus.choices,

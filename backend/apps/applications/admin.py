@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Application, ApplicationStatusHistory, Interview, Offer, ApplicationNote
+from .models import Application, ApplicationStatusHistory, Interview, Offer, ApplicationNote, InterviewPreparation
 
 
 class ApplicationStatusHistoryInline(admin.TabularInline):
@@ -113,3 +113,15 @@ class ApplicationNoteAdmin(admin.ModelAdmin):
     def short_note(self, obj):
         return obj.note[:60] + ('...' if len(obj.note) > 60 else '')
     short_note.short_description = "Note Preview"
+
+
+@admin.register(InterviewPreparation)
+class InterviewPreparationAdmin(admin.ModelAdmin):
+    list_display = ('application', 'is_ai_generated', 'created_at', 'updated_at')
+    list_filter = ('is_ai_generated', 'created_at')
+    search_fields = (
+        'application__candidate__user__username',
+        'application__job__title',
+        'application__job__company__company_name',
+    )
+
