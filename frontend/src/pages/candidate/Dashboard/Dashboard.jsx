@@ -121,9 +121,9 @@ export default function CandidateDashboard() {
 
   const [avatar, setAvatar] = useState(() => {
     return (
+      user?.avatar ||
       (user?.id ? localStorage.getItem(`careerlens_avatar_${user.id}`) : null) ||
       localStorage.getItem("careerlens_avatar") ||
-      user?.avatar ||
       ""
     );
   });
@@ -134,9 +134,9 @@ export default function CandidateDashboard() {
         setAvatar(e.detail.avatar);
       } else {
         setAvatar(
+          user?.avatar ||
           (user?.id ? localStorage.getItem(`careerlens_avatar_${user.id}`) : null) ||
           localStorage.getItem("careerlens_avatar") ||
-          user?.avatar ||
           ""
         );
       }
@@ -193,6 +193,18 @@ export default function CandidateDashboard() {
   useEffect(() => {
     loadDashboard();
   }, [loadDashboard]);
+
+  useEffect(() => {
+    const handleNotifUpdate = (e) => {
+      if (e?.detail?.unreadCount !== undefined) {
+        setUnreadNotifCount(e.detail.unreadCount);
+      }
+    };
+    window.addEventListener("careerlens_notifications_updated", handleNotifUpdate);
+    return () => {
+      window.removeEventListener("careerlens_notifications_updated", handleNotifUpdate);
+    };
+  }, []);
 
   const handleSaveGeminiKey = async (e) => {
     if (e) e.preventDefault();

@@ -34,7 +34,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'first_name', 'last_name', 'role', 'is_active', 'date_joined', 'password')
+        fields = ('id', 'username', 'email', 'first_name', 'last_name', 'role', 'avatar', 'is_active', 'date_joined', 'password')
         read_only_fields = ('username', 'role', 'is_active', 'date_joined')
 
     def update(self, instance, validated_data):
@@ -52,7 +52,7 @@ class AdminUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'first_name', 'last_name', 'role', 'is_active', 'date_joined', 'password')
+        fields = ('id', 'username', 'email', 'first_name', 'last_name', 'role', 'avatar', 'is_active', 'date_joined', 'password')
         read_only_fields = ('date_joined',)
 
     def create(self, validated_data):
@@ -103,17 +103,22 @@ class CandidateProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CandidateProfile
-        fields = ('id', 'user', 'university', 'major', 'graduation_year', 'bio', 'resume_file', 'skills')
+        fields = ('id', 'user', 'university', 'major', 'graduation_year', 'bio', 'resume_file', 'avatar', 'skills')
         read_only_fields = ('user',)
 
     def update(self, instance, validated_data):
         request = self.context.get('request')
         is_admin = bool(request and request.user and request.user.is_authenticated and request.user.role == User.Role.ADMIN)
 
-        # Allow updating user first_name / last_name (and email / is_active for admin)
+        # Allow updating user first_name / last_name / avatar (and email / is_active for admin)
         if hasattr(self, 'initial_data') and isinstance(self.initial_data, dict):
             user = instance.user
             user_changed = False
+            if 'avatar' in self.initial_data:
+                avatar_val = self.initial_data['avatar'] or ""
+                instance.avatar = avatar_val
+                user.avatar = avatar_val
+                user_changed = True
             if 'first_name' in self.initial_data:
                 user.first_name = self.initial_data['first_name']
                 user_changed = True
@@ -177,7 +182,7 @@ class CompanyProfileSerializer(serializers.ModelSerializer):
         model = CompanyProfile
         fields = (
             'id', 'user', 'company_name', 'industry', 'size', 'company_size',
-            'location', 'website', 'verification_status', 'is_verified'
+            'location', 'website', 'logo', 'verification_status', 'is_verified'
         )
         read_only_fields = ('user', 'verification_status', 'is_verified', 'company_size')
 
@@ -191,6 +196,14 @@ class CompanyProfileSerializer(serializers.ModelSerializer):
         if hasattr(self, 'initial_data') and isinstance(self.initial_data, dict):
             if 'company_size' in self.initial_data and 'size' not in validated_data:
                 instance.size = self.initial_data['company_size'] or ''
+
+            user = instance.user
+            user_changed = False
+            if 'logo' in self.initial_data:
+                logo_val = self.initial_data['logo'] or ""
+                instance.logo = logo_val
+                user.avatar = logo_val
+                user_changed = True
 
             if is_admin:
                 if 'verification_status' in self.initial_data:
@@ -318,4 +331,22 @@ class AuditLogSerializer(serializers.ModelSerializer):
         model = AuditLog
         fields = ('id', 'actor', 'actor_username', 'action', 'target_type', 'target_id', 'details', 'created_at')
         read_only_fields = ('actor', 'actor_username', 'action', 'target_type', 'target_id', 'details', 'created_at')
+
+
+class ForgotPasswordSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
+
+    def validate_email(self, value):
+        return value.strip().lower()
+
+
+class ResetPasswordSerializer(serializers.Serializer):
+    uid = serializers.CharField(required=True)
+    token = serializers.CharField(required=True)
+    password = serializers.CharField(required=True, min_length=8, write_only=True)
+
+    def validate_password(self, value):
+        validate_password(value)
+        return value
+
 

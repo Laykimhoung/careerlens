@@ -400,10 +400,17 @@
   min-height: 44px;
 }
 
+.sidebar-avatar-container {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+}
+
 .sidebar-user-avatar {
   width: 44px;
   height: 44px;
-  border-radius: 12px;
+  border-radius: 50%;
   background: linear-gradient(135deg, #016BFB 0%, #38BDF8 100%);
   color: #FFFFFF;
   font-weight: 700;
@@ -413,17 +420,28 @@
   justify-content: center;
   position: relative;
   flex-shrink: 0;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(1, 107, 251, 0.25);
+}
+
+.sidebar-user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
 }
 
 .sidebar-status-dot {
   position: absolute;
-  bottom: -2px;
-  right: -2px;
-  width: 10px;
-  height: 10px;
+  bottom: 0px;
+  right: 0px;
+  width: 11px;
+  height: 11px;
   border-radius: 50%;
   background: #10B981;
   border: 2px solid #0F172A;
+  z-index: 2;
 }
 
 .sidebar-user-meta {

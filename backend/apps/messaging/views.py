@@ -51,7 +51,7 @@ class NotificationViewSet(viewsets.ModelViewSet):
         target_user = serializer.validated_data.get('user') or self.request.user
         serializer.save(user=target_user)
 
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=['post', 'patch'])
     def mark_as_read(self, request, pk=None):
         notification = self.get_object()
         if notification.user == request.user or request.user.role == request.user.Role.ADMIN:
@@ -59,5 +59,11 @@ class NotificationViewSet(viewsets.ModelViewSet):
             notification.save()
             return Response({'status': 'Notification marked as read'})
         return Response({'detail': 'Not authorized'}, status=status.HTTP_403_FORBIDDEN)
+
+    @action(detail=False, methods=['post', 'patch'])
+    def mark_all_read(self, request):
+        qs = self.get_queryset().filter(is_read=False)
+        updated_count = qs.update(is_read=True)
+        return Response({'status': 'All notifications marked as read', 'updated': updated_count})
 
 

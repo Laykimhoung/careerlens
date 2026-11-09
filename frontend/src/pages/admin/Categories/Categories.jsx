@@ -4,24 +4,12 @@ import { extractResults } from "../../../services/api";
 import {
   getAdminJobs,
   getAdminCompanies,
+  getAdminCategories,
+  createAdminCategory,
+  deleteAdminCategory,
 } from "../../../services/adminService";
 import "./Categories.css";
 import "../../../styles/adminForms.css";
-
-const CUSTOM_CATS_KEY = "careerlens_admin_custom_categories";
-
-function loadCustomCategories() {
-  try {
-    const raw = localStorage.getItem(CUSTOM_CATS_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch {
-    return [];
-  }
-}
-
-function saveCustomCategories(list) {
-  localStorage.setItem(CUSTOM_CATS_KEY, JSON.stringify(list));
-}
 
 function Modal({ title, onClose, children }) {
   return (
@@ -42,8 +30,11 @@ function Modal({ title, onClose, children }) {
 function Categories() {
   const { t } = useLanguage();
   const [categories, setCategories] = useState([]);
+  const [categoryMap, setCategoryMap] = useState({});
   const [jobCounts, setJobCounts] = useState({});
   const [loading, setLoading] = useState(true);
+  const [actionLoading, setActionLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [search, setSearch] = useState("");
   const [modal, setModal] = useState(false);
   const [newCat, setNewCat] = useState("");
@@ -51,16 +42,27 @@ function Categories() {
 
   const loadCategories = useCallback(async () => {
     setLoading(true);
+    setError(null);
     try {
-      const [jobsRes, compsRes] = await Promise.all([
-        getAdminJobs(),
-        getAdminCompanies(),
+      const [jobsRes, compsRes, catsRes] = await Promise.all([
+        getAdminJobs().catch(() => ({ data: [] })),
+        getAdminCompanies().catch(() => ({ data: [] })),
+        getAdminCategories().catch(() => ({ data: [] })),
       ]);
       const jobs = extractResults(jobsRes);
       const companies = extractResults(compsRes);
+      const dbCategories = extractResults(catsRes);
 
       const counts = {};
-      const catSet = new Set(loadCustomCategories());
+      const catSet = new Set();
+      const map = {};
+
+      dbCategories.forEach((cat) => {
+        if (cat.name) {
+          catSet.add(cat.name);
+          map[cat.name.toLowerCase()] = cat.id;
+        }
+      });
 
       companies.forEach((c) => {
         if (c.industry) catSet.add(c.industry);
@@ -73,8 +75,11 @@ function Categories() {
         }
       });
 
+      setCategoryMap(map);
       setJobCounts(counts);
-      setCategories(Array.from(catSet).sort());
+      setCategories(Array.from(catSet).sort((a, b) => a.localeCompare(b)));
+    } catch (err) {
+      setError(err?.response?.data?.detail || "Failed to load categories from database.");
     } finally {
       setLoading(false);
     }
@@ -84,25 +89,44 @@ function Categories() {
     loadCategories();
   }, [loadCategories]);
 
-  const handleAdd = (e) => {
+  const handleAdd = async (e) => {
     e.preventDefault();
     const trimmed = newCat.trim();
     if (!trimmed) return;
+    setActionLoading(true);
+    setError(null);
 
-    if (!categories.map((c) => c.toLowerCase()).includes(trimmed.toLowerCase())) {
-      const custom = loadCustomCategories();
-      saveCustomCategories([...custom, trimmed]);
-      setCategories((prev) => [...prev, trimmed].sort());
+    try {
+      if (!categories.map((c) => c.toLowerCase()).includes(trimmed.toLowerCase())) {
+        await createAdminCategory({ name: trimmed });
+      }
+      setModal(false);
+      setNewCat("");
+      await loadCategories();
+    } catch (err) {
+      setError(err?.response?.data?.detail || err?.response?.data?.name?.[0] || "Failed to create category in database.");
+    } finally {
+      setActionLoading(false);
     }
-    setModal(false);
-    setNewCat("");
   };
 
-  const confirmDelete = () => {
-    const custom = loadCustomCategories().filter((c) => c !== deleteTarget);
-    saveCustomCategories(custom);
-    setCategories((prev) => prev.filter((c) => c !== deleteTarget));
-    setDeleteTarget(null);
+  const confirmDelete = async () => {
+    if (!deleteTarget) return;
+    setActionLoading(true);
+    setError(null);
+
+    try {
+      const catId = categoryMap[deleteTarget.toLowerCase()];
+      if (catId) {
+        await deleteAdminCategory(catId);
+      }
+      setDeleteTarget(null);
+      await loadCategories();
+    } catch (err) {
+      setError(err?.response?.data?.detail || "Failed to delete category from database.");
+    } finally {
+      setActionLoading(false);
+    }
   };
 
   const filtered = categories.filter((c) =>
@@ -126,6 +150,13 @@ function Categories() {
           {t("admin.addNewCategory", "+ Add Category")}
         </button>
       </div>
+
+      {error && (
+        <div className="admin-alert-banner admin-alert-error" style={{ marginBottom: "16px" }}>
+          <span>{error}</span>
+          <button type="button" onClick={() => setError(null)} style={{ background: "none", border: "none", cursor: "pointer", color: "inherit", fontWeight: 700 }}>✕</button>
+        </div>
+      )}
 
       <div className="workspace-toolbar">
         <input
@@ -221,8 +252,9 @@ function Categories() {
               <button
                 type="submit"
                 className="workspace-button workspace-button-primary"
+                disabled={actionLoading}
               >
-                {t("admin.createCategory", "Create Category")}
+                {actionLoading ? t("common.saving", "Saving...") : t("admin.createCategory", "Create Category")}
               </button>
             </div>
           </form>
@@ -239,6 +271,7 @@ function Categories() {
             <button
               type="button"
               className="workspace-button"
+              disabled={actionLoading}
               onClick={() => setDeleteTarget(null)}
             >
               {t("common.cancel", "Cancel")}
@@ -246,9 +279,10 @@ function Categories() {
             <button
               type="button"
               className="workspace-button workspace-button-danger"
+              disabled={actionLoading}
               onClick={confirmDelete}
             >
-              {t("admin.yesDelete", "Yes, Delete")}
+              {actionLoading ? t("common.deleting", "Deleting...") : t("admin.yesDelete", "Yes, Delete")}
             </button>
           </div>
         </Modal>

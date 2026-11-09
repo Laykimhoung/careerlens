@@ -1,3 +1,4 @@
+import logging
 from rest_framework import generics, viewsets, status, permissions
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -5,6 +6,12 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth import get_user_model
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.template.loader import render_to_string
+from django.core.mail import EmailMultiAlternatives
+from django.conf import settings
 from .serializers import (
     CustomTokenObtainPairSerializer,
     RegisterSerializer, 
@@ -12,11 +19,15 @@ from .serializers import (
     AdminUserSerializer,
     CandidateProfileSerializer, 
     CompanyProfileSerializer,
-    AuditLogSerializer
+    AuditLogSerializer,
+    ForgotPasswordSerializer,
+    ResetPasswordSerializer,
 )
 from .models import CandidateProfile, CompanyProfile, AuditLog
 from .permissions import IsOwnerOrReadOnly, IsAdminUserRole
 from .utils import log_audit_action
+
+logger = logging.getLogger(__name__)
 
 User = get_user_model()
 
@@ -358,3 +369,134 @@ class GeminiKeyView(APIView):
             "status": "disconnected",
             "message": "Gemini API key removed. AI features will use built-in engine.",
         })
+
+
+class ForgotPasswordView(APIView):
+    """
+    Initiate password reset: receives email, generates a secure one-time token,
+    and sends a branded reset link via Gmail SMTP.
+    """
+    permission_classes = (AllowAny,)
+
+    def post(self, request):
+        serializer = ForgotPasswordSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        email = serializer.validated_data["email"]
+
+        user = User.objects.filter(email__iexact=email).first()
+        if user and user.is_active:
+            token = default_token_generator.make_token(user)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            frontend_url = getattr(settings, "FRONTEND_URL", "http://localhost:5173").rstrip("/")
+            reset_url = f"{frontend_url}/reset-password/{uid}/{token}"
+
+            subject = "CareerLens — Password Reset Request"
+            valid_hours = int(getattr(settings, "PASSWORD_RESET_TIMEOUT", 86400) // 3600)
+            context = {
+                "user": user,
+                "reset_url": reset_url,
+                "valid_hours": valid_hours,
+            }
+
+            try:
+                html_content = render_to_string("emails/password_reset_email.html", context)
+            except Exception as e:
+                logger.warning("Failed to render HTML email template: %s", e)
+                html_content = None
+
+            try:
+                text_content = render_to_string("emails/password_reset_email.txt", context)
+            except Exception:
+                text_content = (
+                    f"Hello {user.first_name or user.username},\n\n"
+                    f"We received a request to reset your password for CareerLens.\n"
+                    f"Please visit the following link to reset your password:\n\n"
+                    f"{reset_url}\n\n"
+                    f"This link expires in {valid_hours} hours. If you did not make this request, please ignore this email.\n\n"
+                    f"— The CareerLens Team"
+                )
+
+            try:
+                msg = EmailMultiAlternatives(
+                    subject=subject,
+                    body=text_content,
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    to=[user.email],
+                )
+                if html_content:
+                    msg.attach_alternative(html_content, "text/html")
+                msg.send(fail_silently=False)
+
+                log_audit_action(
+                    actor=user,
+                    action="PASSWORD_RESET_REQUESTED",
+                    target_type="User",
+                    target_id=user.id,
+                    details=f"Password reset link emailed to {user.email}"
+                )
+            except Exception as exc:
+                logger.exception("Failed to send password reset email via SMTP: %s", exc)
+                if settings.DEBUG:
+                    return Response(
+                        {
+                            "detail": f"Failed to send email: {str(exc)}. Please check your EMAIL_HOST_USER and EMAIL_HOST_PASSWORD in backend/.env."
+                        },
+                        status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    )
+                return Response(
+                    {"detail": "Unable to send password reset email at this moment. Please try again later."},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                )
+
+        # Standard security practice: return identical friendly response to prevent email enumeration
+        return Response(
+            {"detail": "If an account with that email exists, a password reset link has been sent to your inbox."},
+            status=status.HTTP_200_OK,
+        )
+
+
+class ResetPasswordView(APIView):
+    """
+    Complete password reset: verifies token, updates user password, and logs the security audit.
+    """
+    permission_classes = (AllowAny,)
+
+    def post(self, request):
+        serializer = ResetPasswordSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        uid_b64 = serializer.validated_data["uid"]
+        token = serializer.validated_data["token"]
+        password = serializer.validated_data["password"]
+
+        try:
+            user_id = force_str(urlsafe_base64_decode(uid_b64))
+            user = User.objects.get(pk=user_id)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            return Response(
+                {"detail": "This password reset link is invalid or has expired."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if not default_token_generator.check_token(user, token):
+            return Response(
+                {"detail": "This password reset link is invalid or has expired."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        user.set_password(password)
+        user.save()
+
+        log_audit_action(
+            actor=user,
+            action="PASSWORD_RESET_COMPLETED",
+            target_type="User",
+            target_id=user.id,
+            details=f"Password successfully reset for {user.username}"
+        )
+
+        return Response(
+            {"detail": "Your password has been reset successfully. You can now log in with your new password."},
+            status=status.HTTP_200_OK,
+        )
+

@@ -12,11 +12,11 @@ import Loading from "./Loading";
  *  - redirectTo : optional — where to send an unauthorized user (default: "/login")
  */
 export default function ProtectedRoute({ children, role, redirectTo = "/login" }) {
-  const { isAuthenticated, user, loading } = useAuth();
+  const { isAuthenticated, user, loading, token } = useAuth();
   const location = useLocation();
 
-  // While auth state is resolving (e.g. on first load), show a spinner
-  if (loading) {
+  // While auth state is resolving (e.g. on first load / page refresh), show a spinner
+  if (loading || (token && !user)) {
     return <Loading />;
   }
 

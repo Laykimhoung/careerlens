@@ -92,6 +92,7 @@ export default function AppRoutes() {
             <Route path="/login" element={<AuthPage />} />
             <Route path="/register" element={<AuthPage />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/reset-password/:uid/:token" element={<ResetPassword />} />
           </Route>
 

@@ -43,6 +43,9 @@ export const getNotifications = (params = {}) =>
 export const markNotificationRead = (id, isRead = true) =>
   api.patch(`/notifications/${id}/`, { is_read: isRead });
 
+export const markAllNotificationsRead = () =>
+  api.post("/notifications/mark_all_read/");
+
 export const createNotification = (data) =>
   api.post("/notifications/", data);
 

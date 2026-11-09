@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 from django.contrib.auth import get_user_model
 from apps.accounts.models import CompanyProfile, CandidateProfile
-from .models import Job, Skill, JobSkill, SavedJob
+from .models import JobCategory, Job, Skill, JobSkill, SavedJob
 
 User = get_user_model()
 
@@ -164,3 +164,41 @@ class JobTests(APITestCase):
         self.assertTrue(
             self.candidate_profile.skills.filter(skill__name__iexact='Docker').exists()
         )
+
+
+class JobCategoryTests(APITestCase):
+    def setUp(self):
+        self.admin_user = User.objects.create_user(
+            username="admin_cat_test", email="admin_cat@test.com", password="pw", role=User.Role.ADMIN
+        )
+        self.candidate_user = User.objects.create_user(
+            username="candidate_cat_test", email="cand_cat@test.com", password="pw", role=User.Role.CANDIDATE
+        )
+        self.cat1 = JobCategory.objects.create(name="Cybersecurity")
+
+    def test_list_categories(self):
+        url = reverse('category-list')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        names = [c['name'] for c in response.data.get('results', response.data)]
+        self.assertIn("Cybersecurity", names)
+
+    def test_create_category_as_admin(self):
+        self.client.force_authenticate(user=self.admin_user)
+        url = reverse('category-list')
+        response = self.client.post(url, {"name": "Cloud Architecture"}, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(JobCategory.objects.filter(name="Cloud Architecture").exists())
+
+    def test_create_category_as_candidate_forbidden(self):
+        self.client.force_authenticate(user=self.candidate_user)
+        url = reverse('category-list')
+        response = self.client.post(url, {"name": "Forbidden Category"}, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_delete_category_as_admin(self):
+        self.client.force_authenticate(user=self.admin_user)
+        url = reverse('category-detail', kwargs={'pk': self.cat1.id})
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(JobCategory.objects.filter(id=self.cat1.id).exists())

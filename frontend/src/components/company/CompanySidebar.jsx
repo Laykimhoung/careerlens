@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useLocation } from 'react-router-dom';
 import {
   LayoutDashboard,
   Briefcase,
@@ -21,9 +22,10 @@ export default function CompanySidebar({ isOpen = false, open, onClose }) {
   const isMenuOpen = Boolean(open || isOpen);
   const { user, switchRole, logout } = useAuth();
   const { t } = useLanguage();
+  const location = useLocation();
   const [unreadCount, setUnreadCount] = useState(0);
 
-  useEffect(() => {
+  const fetchUnread = useCallback(() => {
     getNotifications()
       .then((res) => {
         const list = extractResults(res);
@@ -31,6 +33,25 @@ export default function CompanySidebar({ isOpen = false, open, onClose }) {
       })
       .catch(() => {});
   }, []);
+
+  useEffect(() => {
+    fetchUnread();
+
+    const handleUpdate = (e) => {
+      if (e?.detail?.unreadCount !== undefined) {
+        setUnreadCount(e.detail.unreadCount);
+      } else {
+        fetchUnread();
+      }
+    };
+
+    window.addEventListener("careerlens_notifications_updated", handleUpdate);
+    window.addEventListener("focus", fetchUnread);
+    return () => {
+      window.removeEventListener("careerlens_notifications_updated", handleUpdate);
+      window.removeEventListener("focus", fetchUnread);
+    };
+  }, [fetchUnread, location.pathname]);
 
   const items = [
     { to: '/company', label: t('nav.dashboard', 'Dashboard'), end: true, icon: LayoutDashboard },

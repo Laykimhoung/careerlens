@@ -86,11 +86,11 @@ export default function AdminDashboard() {
   const getAdminAvatar = (usr) => {
     const uid = usr?.id;
     return (
+      usr?.avatar ||
       (uid ? localStorage.getItem(`careerlens_admin_avatar_${uid}`) : null) ||
       (uid ? localStorage.getItem(`careerlens_avatar_${uid}`) : null) ||
       localStorage.getItem('careerlens_admin_avatar') ||
       localStorage.getItem('careerlens_avatar') ||
-      usr?.avatar ||
       ''
     );
   };
@@ -142,8 +142,17 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     const onStorage = () => loadData();
+    const handleNotifUpdate = (e) => {
+      if (e?.detail?.unreadCount !== undefined) {
+        setUnreadNotifCount(e.detail.unreadCount);
+      }
+    };
     window.addEventListener('storage', onStorage);
-    return () => window.removeEventListener('storage', onStorage);
+    window.addEventListener('careerlens_notifications_updated', handleNotifUpdate);
+    return () => {
+      window.removeEventListener('storage', onStorage);
+      window.removeEventListener('careerlens_notifications_updated', handleNotifUpdate);
+    };
   }, [loadData]);
 
   const handleResetDemoData = () => {

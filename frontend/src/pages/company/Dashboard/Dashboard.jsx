@@ -65,12 +65,12 @@ export default function CompanyDashboard() {
   const getCompanyLogo = (usr) => {
     const uid = usr?.id;
     return (
+      usr?.avatar ||
+      usr?.logo ||
       (uid ? localStorage.getItem(`careerlens_company_logo_${uid}`) : null) ||
       (uid ? localStorage.getItem(`careerlens_avatar_${uid}`) : null) ||
       localStorage.getItem("careerlens_company_logo") ||
       localStorage.getItem("careerlens_avatar") ||
-      usr?.avatar ||
-      usr?.logo ||
       ""
     );
   };
@@ -128,6 +128,18 @@ export default function CompanyDashboard() {
   useEffect(() => {
     loadDashboard();
   }, [loadDashboard]);
+
+  useEffect(() => {
+    const handleNotifUpdate = (e) => {
+      if (e?.detail?.unreadCount !== undefined) {
+        setUnreadNotifCount(e.detail.unreadCount);
+      }
+    };
+    window.addEventListener("careerlens_notifications_updated", handleNotifUpdate);
+    return () => {
+      window.removeEventListener("careerlens_notifications_updated", handleNotifUpdate);
+    };
+  }, []);
 
   const companyName =
     companyProfile?.company_name ||

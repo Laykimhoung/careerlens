@@ -21,15 +21,15 @@ export default function HeaderUserMenu({ role = 'candidate' }) {
     if (typeof window === 'undefined') return '';
     const uid = usr?.id;
     return (
+      usr?.avatar ||
+      usr?.profile_picture ||
+      usr?.logo ||
       (uid ? localStorage.getItem(`careerlens_avatar_${uid}`) : null) ||
       (uid ? localStorage.getItem(`careerlens_admin_avatar_${uid}`) : null) ||
       (uid ? localStorage.getItem(`careerlens_company_logo_${uid}`) : null) ||
       localStorage.getItem('careerlens_avatar') ||
       localStorage.getItem('careerlens_admin_avatar') ||
       localStorage.getItem('careerlens_company_logo') ||
-      usr?.avatar ||
-      usr?.profile_picture ||
-      usr?.logo ||
       ''
     );
   };

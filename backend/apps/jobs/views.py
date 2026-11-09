@@ -3,12 +3,24 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.utils import timezone
-from .models import Job, Skill, JobSkill, SavedJob
-from .serializers import JobSerializer, SkillSerializer, JobSkillSerializer, SavedJobSerializer
+from .models import JobCategory, Job, Skill, JobSkill, SavedJob, CandidateJobMatchCache
+from .serializers import JobCategorySerializer, JobSerializer, SkillSerializer, JobSkillSerializer, SavedJobSerializer
 from .permissions import IsJobOwnerOrReadOnly
 from .services import filter_jobs
 from apps.accounts.permissions import IsCompanyUser, IsCandidateUser, IsAdminUserRole, IsCompanyOrAdminUser
 from apps.accounts.models import CompanyProfile
+
+class JobCategoryViewSet(viewsets.ModelViewSet):
+    """
+    Job Categories are globally readable. Admins can create, update, or delete categories.
+    """
+    queryset = JobCategory.objects.all().order_by('name')
+    serializer_class = JobCategorySerializer
+
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve']:
+            return [permissions.AllowAny()]
+        return [permissions.IsAuthenticated(), IsAdminUserRole()]
 
 class SkillViewSet(viewsets.ModelViewSet):
     """
@@ -179,6 +191,24 @@ class JobRecommendationView(APIView):
                 "detail": "Job recommendations are designed for candidates. Switch to a candidate account to view personalized matches."
             }, status=status.HTTP_400_BAD_REQUEST)
 
+        force_refresh = str(request.query_params.get("refresh", "")).lower() in ("true", "1", "yes")
+
+        # Check if candidate has persisted job match results in PostgreSQL database
+        cache = CandidateJobMatchCache.objects.filter(candidate=candidate).first() if candidate else None
+
+        if cache and cache.results and not force_refresh:
+            return Response({
+                "count": len(cache.results),
+                "top_score": cache.top_score,
+                "target_role": cache.target_role or (candidate.major if candidate else ""),
+                "preferred_location": cache.preferred_location,
+                "preferred_employment_type": cache.preferred_employment_type,
+                "preferred_workplace_type": cache.preferred_workplace_type,
+                "results": cache.results,
+                "from_database": True,
+                "last_scanned_at": cache.updated_at.isoformat() if cache.updated_at else None,
+            })
+
         preferences = {
             "target_role": request.query_params.get("target_role", ""),
             "preferred_location": request.query_params.get("location", ""),
@@ -199,6 +229,20 @@ class JobRecommendationView(APIView):
         top_score = results[0]["match_score"] if results else 0
         target_role = preferences["target_role"] or (candidate.major if candidate else "")
 
+        # Persist results in PostgreSQL database for instant retrieval on any device
+        if candidate:
+            CandidateJobMatchCache.objects.update_or_create(
+                candidate=candidate,
+                defaults={
+                    "results": results,
+                    "top_score": top_score,
+                    "target_role": target_role,
+                    "preferred_location": preferences["preferred_location"],
+                    "preferred_employment_type": preferences["preferred_employment_type"],
+                    "preferred_workplace_type": preferences["preferred_workplace_type"],
+                }
+            )
+
         return Response({
             "count": len(results),
             "top_score": top_score,
@@ -207,6 +251,7 @@ class JobRecommendationView(APIView):
             "preferred_employment_type": preferences["preferred_employment_type"],
             "preferred_workplace_type": preferences["preferred_workplace_type"],
             "results": results,
+            "from_database": False,
         })
 
     def post(self, request):
@@ -235,13 +280,29 @@ class JobRecommendationView(APIView):
         )
 
         top_score = results[0]["match_score"] if results else 0
+        target_role = preferences["target_role"] or (candidate.major if candidate else "")
+
+        # Persist recalculated results in database
+        if candidate:
+            CandidateJobMatchCache.objects.update_or_create(
+                candidate=candidate,
+                defaults={
+                    "results": results,
+                    "top_score": top_score,
+                    "target_role": target_role,
+                    "preferred_location": preferences["preferred_location"],
+                    "preferred_employment_type": preferences["preferred_employment_type"],
+                    "preferred_workplace_type": preferences["preferred_workplace_type"],
+                }
+            )
 
         return Response({
             "count": len(results),
             "top_score": top_score,
-            "target_role": preferences["target_role"] or (candidate.major if candidate else ""),
+            "target_role": target_role,
             "preferred_location": preferences["preferred_location"],
             "preferred_employment_type": preferences["preferred_employment_type"],
             "preferred_workplace_type": preferences["preferred_workplace_type"],
             "results": results,
+            "from_database": True,
         })
