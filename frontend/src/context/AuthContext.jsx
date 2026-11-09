@@ -3,6 +3,10 @@ import {
   setToken,
   getToken,
   removeToken,
+  setRefreshToken,
+  getRefreshToken,
+  removeRefreshToken,
+  clearAuthStorage,
   setUser as saveUser,
   getUser as loadUser,
   removeUser,
@@ -48,23 +52,30 @@ function extractApiError(err, fallback) {
 }
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(() => {
-    const storedToken = getToken();
-    if (!storedToken || storedToken === "demo-jwt-token" || storedToken === "fake-jwt") {
-      removeToken();
-      removeUser();
-      return null;
-    }
-    return normalizeAuthUser(loadUser());
-  });
   const [token, setTokenState] = useState(() => {
     const storedToken = getToken();
     if (!storedToken || storedToken === "demo-jwt-token" || storedToken === "fake-jwt") {
+      clearAuthStorage();
       return null;
     }
     return storedToken;
   });
-  const [loading, setLoading] = useState(false);
+
+  const [user, setUser] = useState(() => {
+    const storedToken = getToken();
+    if (!storedToken || storedToken === "demo-jwt-token" || storedToken === "fake-jwt") {
+      return null;
+    }
+    const loaded = loadUser();
+    return loaded ? normalizeAuthUser(loaded) : null;
+  });
+
+  // If a token exists in storage but user has not been loaded into memory yet, keep loading true
+  const [loading, setLoading] = useState(() => {
+    const storedToken = getToken();
+    const storedUser = loadUser();
+    return Boolean(storedToken && !storedUser);
+  });
   const [error, setError] = useState(null);
 
   // Keep localStorage in sync whenever user/token changes
@@ -94,9 +105,17 @@ export function AuthProvider({ children }) {
 
   // Verify token and refresh user profile on initial mount
   useEffect(() => {
+    let isMounted = true;
     if (token) {
-      refreshUser();
+      refreshUser().finally(() => {
+        if (isMounted) setLoading(false);
+      });
+    } else {
+      setLoading(false);
     }
+    return () => {
+      isMounted = false;
+    };
   }, [token, refreshUser]);
 
   const login = useCallback(async (credentials) => {
@@ -109,9 +128,10 @@ export function AuthProvider({ children }) {
         email: identifier,
         password: credentials.password,
       });
-      const { access } = response.data;
+      const { access, refresh } = response.data;
       setToken(access);
       setTokenState(access);
+      if (refresh) setRefreshToken(refresh);
 
       const meRes = await getMeApi();
       const normalizedUser = normalizeAuthUser(meRes.data);
@@ -120,8 +140,7 @@ export function AuthProvider({ children }) {
 
       return { success: true, role: normalizedUser.role, user: normalizedUser };
     } catch (err) {
-      removeToken();
-      removeUser();
+      clearAuthStorage();
       setTokenState(null);
       setUser(null);
       const message = extractApiError(
@@ -205,9 +224,10 @@ export function AuthProvider({ children }) {
         username: payload.username,
         password: payload.password,
       });
-      const { access } = loginRes.data;
+      const { access, refresh } = loginRes.data;
       setToken(access);
       setTokenState(access);
+      if (refresh) setRefreshToken(refresh);
 
       const meRes = await getMeApi();
       const normalizedUser = normalizeAuthUser(meRes.data);
@@ -234,8 +254,7 @@ export function AuthProvider({ children }) {
     } catch {
       // ignore logout API errors — still clear local state
     } finally {
-      removeToken();
-      removeUser();
+      clearAuthStorage();
       setTokenState(null);
       setUser(null);
       setLoading(false);
