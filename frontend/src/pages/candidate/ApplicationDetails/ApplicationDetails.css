@@ -186,3 +186,323 @@
   border: 1px solid #e5e7eb;
   border-radius: 8px;
 }
+
+/* ── Status Message Alert ────────────────────────────────────────────────── */
+.app-details__status-msg {
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.app-details__status-msg--success {
+  background-color: #f0fdf4;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+}
+
+.app-details__status-msg--error {
+  background-color: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}
+
+/* ── AI Interview Preparation Banner ─────────────────────────────────────── */
+.app-prep-banner {
+  background: linear-gradient(135deg, rgba(1, 107, 251, 0.08) 0%, rgba(56, 189, 248, 0.08) 100%);
+  border: 1px solid rgba(1, 107, 251, 0.28);
+  border-radius: 14px;
+  padding: 22px 26px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  box-shadow: 0 4px 16px rgba(1, 107, 251, 0.08);
+}
+
+.app-prep-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(1, 107, 251, 0.14);
+  color: #016BFB;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 11px;
+  border-radius: 9999px;
+  margin-bottom: 10px;
+  border: 1px solid rgba(1, 107, 251, 0.25);
+}
+
+.app-prep-title {
+  margin: 0 0 6px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #0F172A;
+}
+
+.app-prep-desc {
+  margin: 0;
+  font-size: 13.5px;
+  color: #475569;
+  line-height: 1.55;
+}
+
+/* ── Job Offer Box ───────────────────────────────────────────────────────── */
+.app-offer-box {
+  background-color: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.28);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.app-offer-amount {
+  margin: 0 0 8px 0;
+  font-weight: 600;
+  color: #166534;
+}
+
+.app-offer-msg {
+  margin: 0 0 12px 0;
+  color: #15803d;
+  font-size: 14px;
+}
+
+.app-offer-status {
+  margin: 0 0 12px 0;
+  font-size: 13px;
+  color: #475569;
+}
+
+/* ── Scheduled Interviews Card ───────────────────────────────────────────── */
+.app-interview-card {
+  padding: 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background-color: #f8fafc;
+  transition: all 0.15s ease;
+}
+
+.app-interview-card__date {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.app-interview-card__loc {
+  font-size: 13px;
+  color: #475569;
+  margin-top: 4px;
+}
+
+.app-interview-card__feedback {
+  font-size: 13px;
+  color: #334155;
+  margin-top: 6px;
+}
+
+.app-interview-card__prep-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 6px;
+  background-color: rgba(1, 107, 251, 0.12);
+  color: #016BFB;
+  border: 1px solid rgba(1, 107, 251, 0.25);
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.app-interview-card__prep-btn:hover {
+  background-color: rgba(1, 107, 251, 0.22);
+}
+
+.app-interview-card__video-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 6px;
+  background-color: #016BFB;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 13px;
+  text-decoration: none;
+  transition: opacity 0.15s ease;
+}
+
+.app-interview-card__video-btn:hover {
+  opacity: 0.92;
+}
+
+/* ── Dark Mode Overrides ─────────────────────────────────────────────────── */
+[data-theme="dark"] .app-details__back {
+  color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .app-details__back:hover {
+  color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .app-details__hero {
+  background: rgba(13, 21, 48, 0.82) !important;
+  border-color: rgba(99, 142, 203, 0.32) !important;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45), 0 0 1px 1px rgba(99, 142, 203, 0.15) !important;
+  backdrop-filter: blur(16px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(160%) !important;
+}
+
+[data-theme="dark"] .app-details__hero h1 {
+  color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .app-details__hero p {
+  color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .app-details__section {
+  background: rgba(13, 21, 48, 0.82) !important;
+  border-color: rgba(99, 142, 203, 0.32) !important;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45), 0 0 1px 1px rgba(99, 142, 203, 0.15) !important;
+  backdrop-filter: blur(16px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(160%) !important;
+}
+
+[data-theme="dark"] .app-details__section-title {
+  color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .progress-tracker::before {
+  background-color: rgba(99, 142, 203, 0.25) !important;
+}
+
+[data-theme="dark"] .progress-step__circle {
+  background-color: #0F172A !important;
+  border-color: #475569 !important;
+  color: #64748B !important;
+}
+
+[data-theme="dark"] .progress-step--active .progress-step__circle {
+  border-color: #10B981 !important;
+  background-color: #10B981 !important;
+  color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .progress-step--rejected .progress-step__circle {
+  border-color: #EF4444 !important;
+  background-color: #EF4444 !important;
+  color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .progress-step__label {
+  color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .progress-step--active .progress-step__label {
+  color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .progress-step__date {
+  color: #64748B !important;
+}
+
+[data-theme="dark"] .app-details__notes {
+  background-color: rgba(15, 23, 42, 0.7) !important;
+  border-left-color: #38BDF8 !important;
+  color: #E2E8F0 !important;
+}
+
+[data-theme="dark"] .app-details__notes strong {
+  color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .app-details__notes p {
+  color: #CBD5E1 !important;
+}
+
+[data-theme="dark"] .app-not-found {
+  background: rgba(13, 21, 48, 0.82) !important;
+  border-color: rgba(99, 142, 203, 0.32) !important;
+  color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .app-details__status-msg--success {
+  background-color: rgba(16, 185, 129, 0.15) !important;
+  color: #34D399 !important;
+  border-color: rgba(16, 185, 129, 0.35) !important;
+}
+
+[data-theme="dark"] .app-details__status-msg--error {
+  background-color: rgba(239, 68, 68, 0.15) !important;
+  color: #F87171 !important;
+  border-color: rgba(239, 68, 68, 0.35) !important;
+}
+
+[data-theme="dark"] .app-prep-banner {
+  background: linear-gradient(135deg, rgba(1, 107, 251, 0.18) 0%, rgba(99, 102, 241, 0.18) 100%) !important;
+  border-color: rgba(99, 142, 203, 0.45) !important;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45), 0 0 16px rgba(1, 107, 251, 0.25) !important;
+}
+
+[data-theme="dark"] .app-prep-badge {
+  background: rgba(1, 107, 251, 0.25) !important;
+  color: #60A5FA !important;
+  border-color: rgba(99, 142, 203, 0.45) !important;
+}
+
+[data-theme="dark"] .app-prep-title {
+  color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .app-prep-desc {
+  color: #CBD5E1 !important;
+}
+
+[data-theme="dark"] .app-offer-box {
+  background-color: rgba(16, 185, 129, 0.15) !important;
+  border-color: rgba(16, 185, 129, 0.35) !important;
+}
+
+[data-theme="dark"] .app-offer-amount {
+  color: #34D399 !important;
+}
+
+[data-theme="dark"] .app-offer-msg {
+  color: #A7F3D0 !important;
+}
+
+[data-theme="dark"] .app-offer-status {
+  color: #CBD5E1 !important;
+}
+
+[data-theme="dark"] .app-interview-card {
+  background-color: rgba(18, 30, 68, 0.72) !important;
+  border-color: rgba(99, 142, 203, 0.28) !important;
+}
+
+[data-theme="dark"] .app-interview-card__date {
+  color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .app-interview-card__loc {
+  color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .app-interview-card__feedback {
+  color: #CBD5E1 !important;
+}
+
+[data-theme="dark"] .app-interview-card__prep-btn {
+  background-color: rgba(1, 107, 251, 0.22) !important;
+  color: #60A5FA !important;
+  border-color: rgba(99, 142, 203, 0.4) !important;
+}
+
+[data-theme="dark"] .app-interview-card__prep-btn:hover {
+  background-color: rgba(1, 107, 251, 0.35) !important;
+  color: #93C5FD !important;
+}

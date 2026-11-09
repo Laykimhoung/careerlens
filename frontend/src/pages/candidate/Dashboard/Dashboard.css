@@ -1634,3 +1634,151 @@
   color: #CBD5E1;
   border-color: #475569;
 }
+
+[data-theme="dark"] .cand-gemini-badge.badge-connected {
+  background: rgba(16, 185, 129, 0.18) !important;
+  color: #34D399 !important;
+  border: 1px solid rgba(16, 185, 129, 0.35) !important;
+}
+
+[data-theme="dark"] .cand-gemini-model-tag {
+  background: rgba(99, 102, 241, 0.22) !important;
+  color: #A5B4FC !important;
+  border: 1px solid rgba(99, 102, 241, 0.4) !important;
+}
+
+[data-theme="dark"] .cand-btn-gemini-danger {
+  border-color: rgba(239, 68, 68, 0.45) !important;
+  color: #F87171 !important;
+  background: rgba(239, 68, 68, 0.08) !important;
+}
+
+[data-theme="dark"] .cand-btn-gemini-danger:hover {
+  background: rgba(239, 68, 68, 0.2) !important;
+  border-color: #EF4444 !important;
+  color: #FCA5A5 !important;
+}
+
+[data-theme="dark"] .cand-btn-gemini-cancel {
+  border-color: #475569 !important;
+  color: #94A3B8 !important;
+  background: transparent !important;
+}
+
+[data-theme="dark"] .cand-btn-gemini-cancel:hover {
+  background: #334155 !important;
+  color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .cand-gemini-notice.notice-success {
+  background: rgba(16, 185, 129, 0.15) !important;
+  color: #34D399 !important;
+  border: 1px solid rgba(16, 185, 129, 0.35) !important;
+}
+
+[data-theme="dark"] .cand-gemini-notice.notice-error {
+  background: rgba(239, 68, 68, 0.15) !important;
+  color: #F87171 !important;
+  border: 1px solid rgba(239, 68, 68, 0.35) !important;
+}
+
+[data-theme="dark"] .cand-gemini-notice.notice-info {
+  background: rgba(1, 107, 251, 0.15) !important;
+  color: #38BDF8 !important;
+  border: 1px solid rgba(56, 189, 248, 0.35) !important;
+}
+
+[data-theme="dark"] .cand-gemini-free-link {
+  color: #38BDF8 !important;
+}
+
+[data-theme="dark"] .cand-gemini-free-link:hover {
+  color: #93C5FD !important;
+}
+
+/* ── "On Process" Dark Mode Overrides ────────────────────────────────────── */
+[data-theme="dark"] .cand-process-card {
+  background: rgba(13, 21, 48, 0.82) !important;
+  backdrop-filter: blur(16px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(160%) !important;
+  border: 1px solid rgba(99, 142, 203, 0.32) !important;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45), 0 0 1px 1px rgba(99, 142, 203, 0.15) !important;
+}
+
+[data-theme="dark"] .cand-process-title {
+  color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .cand-process-date {
+  color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .cand-process-pill {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #CBD5E1 !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+}
+
+[data-theme="dark"] .cand-process-item {
+  background: rgba(18, 30, 68, 0.72) !important;
+  border: 1px solid rgba(99, 142, 203, 0.28) !important;
+}
+
+[data-theme="dark"] .cand-process-item:hover {
+  background: rgba(25, 42, 95, 0.9) !important;
+  border-color: rgba(147, 197, 253, 0.55) !important;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="dark"] .cand-process-job {
+  color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .cand-process-co {
+  color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .cand-status-pill {
+  background: rgba(99, 142, 203, 0.25) !important;
+  border: 1px solid rgba(99, 142, 203, 0.4) !important;
+  color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .cand-process-foot {
+  border-top-color: rgba(99, 142, 203, 0.2) !important;
+}
+
+[data-theme="dark"] .cand-view-all-apps {
+  color: #38BDF8 !important;
+}
+
+[data-theme="dark"] .cand-view-all-apps:hover {
+  color: #93C5FD !important;
+}
+
+[data-theme="dark"] .cand-empty-process p {
+  color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .cand-interviews-box {
+  background: rgba(16, 185, 129, 0.12) !important;
+  border-color: rgba(16, 185, 129, 0.3) !important;
+}
+
+[data-theme="dark"] .cand-interviews-title {
+  color: #34D399 !important;
+}
+
+[data-theme="dark"] .cand-interview-row strong {
+  color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .cand-interview-row small {
+  color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .cand-time-chip {
+  background: rgba(15, 23, 42, 0.8) !important;
+  border-color: rgba(16, 185, 129, 0.35) !important;
+  color: #34D399 !important;
+}

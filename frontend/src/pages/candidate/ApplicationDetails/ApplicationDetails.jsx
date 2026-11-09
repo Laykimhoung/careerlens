@@ -229,16 +229,7 @@ export default function CandidateApplicationDetails() {
       </div>
 
       {statusMsg.text && (
-        <div
-          style={{
-            marginBottom: "16px",
-            padding: "12px 16px",
-            borderRadius: "8px",
-            backgroundColor: statusMsg.type === "error" ? "#fef2f2" : "#f0fdf4",
-            color: statusMsg.type === "error" ? "#b91c1c" : "#15803d",
-            fontSize: "14px",
-          }}
-        >
+        <div className={`app-details__status-msg app-details__status-msg--${statusMsg.type}`}>
           {statusMsg.text}
         </div>
       )}
@@ -309,44 +300,16 @@ export default function CandidateApplicationDetails() {
 
       {/* AI Interview Preparation Coach (Available when candidate reaches Interview stage) */}
       {(["INTERVIEW", "OFFERED"].includes(app.rawStatus) || interviews.length > 0) && (
-        <div
-          className="app-details__section"
-          style={{
-            background: "linear-gradient(135deg, rgba(1, 107, 251, 0.08) 0%, rgba(56, 189, 248, 0.08) 100%)",
-            border: "1px solid rgba(1, 107, 251, 0.28)",
-            borderRadius: "14px",
-            padding: "22px 26px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: "20px",
-            flexWrap: "wrap",
-            boxShadow: "0 4px 16px rgba(1, 107, 251, 0.08)",
-          }}
-        >
+        <div className="app-details__section app-prep-banner">
           <div style={{ flex: 1, minWidth: "260px" }}>
-            <div
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "6px",
-                background: "rgba(1, 107, 251, 0.14)",
-                color: "#016BFB",
-                fontSize: "12px",
-                fontWeight: 700,
-                padding: "3px 11px",
-                borderRadius: "9999px",
-                marginBottom: "10px",
-                border: "1px solid rgba(1, 107, 251, 0.25)",
-              }}
-            >
+            <div className="app-prep-badge">
               <Sparkles size={13} style={{ color: "#016BFB" }} />
               {t("candidate.aiCoachBadge", "Gemini AI Interview Coach")}
             </div>
-            <h3 style={{ margin: "0 0 6px", fontSize: "1.2rem", fontWeight: 700, color: "var(--color-text, #0F172A)" }}>
+            <h3 className="app-prep-title">
               {t("candidate.prepBannerTitle", "You have reached the Interview Stage!")}
             </h3>
-            <p style={{ margin: 0, fontSize: "13.5px", color: "var(--color-text-secondary, #475569)", lineHeight: 1.55 }}>
+            <p className="app-prep-desc">
               {t(
                 "candidate.prepBannerDesc",
                 "Your application successfully advanced to interviews. Access your AI interview preparation guide: probable questions with STAR model answers, checklist timeline, do's & don'ts, and tailored tactical advice for this job."
@@ -382,24 +345,17 @@ export default function CandidateApplicationDetails() {
       {offer && (
         <div className="app-details__section">
           <h2 className="app-details__section-title">{t("candidate.jobOfferDetails", "Job Offer Details")}</h2>
-          <div
-            style={{
-              backgroundColor: "rgba(16, 185, 129, 0.12)",
-              border: "1px solid rgba(16, 185, 129, 0.28)",
-              borderRadius: "8px",
-              padding: "16px",
-            }}
-          >
-            <p style={{ margin: "0 0 8px 0", fontWeight: 600, color: "#166534" }}>
+          <div className="app-offer-box">
+            <p className="app-offer-amount">
               {t("candidate.offeredCompensation", "Offered Compensation")}: {offer.currency || "USD"}{" "}
               {Number(offer.salary || 0).toLocaleString()} / month
             </p>
             {offer.message && (
-              <p style={{ margin: "0 0 12px 0", color: "#15803d", fontSize: "14px" }}>
+              <p className="app-offer-msg">
                 {offer.message}
               </p>
             )}
-            <p style={{ margin: "0 0 12px 0", fontSize: "13px", color: "var(--color-text-secondary)" }}>
+            <p className="app-offer-status">
               {t("common.status", "Status")}: <strong>{offer.status}</strong>
             </p>
             {offer.status === "PENDING" && (
@@ -432,16 +388,8 @@ export default function CandidateApplicationDetails() {
           <h2 className="app-details__section-title">{t("candidate.scheduledInterviews", "Scheduled Interviews")}</h2>
           <div style={{ display: "grid", gap: "12px" }}>
             {interviews.map((iv) => (
-              <div
-                key={iv.id}
-                style={{
-                  padding: "14px",
-                  border: "1px solid #e2e8f0",
-                  borderRadius: "8px",
-                  backgroundColor: "#f8fafc",
-                }}
-              >
-                <div style={{ fontWeight: 600, color: "#0f172a" }}>
+              <div key={iv.id} className="app-interview-card">
+                <div className="app-interview-card__date">
                   Date:{" "}
                   {new Date(iv.scheduled_at).toLocaleString("en-US", {
                     month: "short",
@@ -453,7 +401,7 @@ export default function CandidateApplicationDetails() {
                   ({iv.status})
                 </div>
                 {iv.location && (
-                  <div style={{ fontSize: "13px", color: "#475569", marginTop: "4px" }}>
+                  <div className="app-interview-card__loc">
                     Location: {iv.location}
                   </div>
                 )}
@@ -461,19 +409,7 @@ export default function CandidateApplicationDetails() {
                   <button
                     type="button"
                     onClick={() => setIsPrepModalOpen(true)}
-                    style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: "6px",
-                      padding: "6px 14px",
-                      borderRadius: "6px",
-                      backgroundColor: "rgba(1, 107, 251, 0.12)",
-                      color: "#016BFB",
-                      border: "1px solid rgba(1, 107, 251, 0.25)",
-                      fontWeight: 600,
-                      fontSize: "13px",
-                      cursor: "pointer",
-                    }}
+                    className="app-interview-card__prep-btn"
                   >
                     <Sparkles size={14} />
                     <span>AI Interview Prep</span>
@@ -484,25 +420,14 @@ export default function CandidateApplicationDetails() {
                       href={iv.meeting_link || `https://meet.jit.si/CareerLens-Interview-${iv.application || iv.id}`}
                       target="_blank"
                       rel="noreferrer"
-                      style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: "6px",
-                        padding: "6px 14px",
-                        borderRadius: "6px",
-                        backgroundColor: "#016BFB",
-                        color: "#ffffff",
-                        fontWeight: 600,
-                        fontSize: "13px",
-                        textDecoration: "none",
-                      }}
+                      className="app-interview-card__video-btn"
                     >
                       <span>🎥 Join Video Call</span> &rarr;
                     </a>
                   )}
                 </div>
                 {iv.feedback && (
-                  <div style={{ fontSize: "13px", color: "#334155", marginTop: "6px" }}>
+                  <div className="app-interview-card__feedback">
                     Feedback: {iv.feedback}
                   </div>
                 )}
