@@ -837,4 +837,27 @@ html[data-theme="dark"] body::after {
 [data-theme="dark"] .btn--outline:hover {
   background-color: rgba(99, 142, 203, 0.25) !important;
   border-color: var(--color-primary-light) !important;
+}
+
+/* ── Theme View Transition (Circular Clip-Path Reveal) ───────────────────── */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* Scoped to theme toggle — active only while a theme view transition is in flight */
+html[data-magicui-theme-vt="active"]::view-transition-group(root) {
+  animation-duration: var(--magicui-theme-toggle-vt-duration, 400ms);
+}
+
+html[data-magicui-theme-vt="active"]::view-transition-new(root) {
+  clip-path: var(--magicui-theme-vt-clip-from);
+}
+
+/* Prevent per-element CSS transitions from fighting the GPU view-transition snapshot */
+html[data-magicui-theme-vt="active"] *,
+html[data-magicui-theme-vt="active"] *::before,
+html[data-magicui-theme-vt="active"] *::after {
+  transition: none !important;
 }
