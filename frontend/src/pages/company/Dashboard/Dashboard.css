@@ -802,7 +802,7 @@
 }
 
 [data-theme="dark"] .comp-greeting-sub {
-  color: #f1f5f9;
+  color: #94a3b8;
 }
 
 [data-theme="dark"] .comp-search-input {
@@ -878,13 +878,13 @@
 }
 
 [data-theme="dark"] .comp-job-row-meta {
-  color: #f1f5f9;
+  color: #94a3b8;
 }
 
 [data-theme="dark"] .comp-job-status-pill {
-  background: rgba(99, 142, 203, 0.25);
-  border-color: rgba(99, 142, 203, 0.4);
-  color: #ffffff;
+  background: rgba(16, 185, 129, 0.16);
+  border: 1px solid rgba(16, 185, 129, 0.32);
+  color: #34d399;
 }
 
 [data-theme="dark"] .comp-process-item {
@@ -902,7 +902,7 @@
 }
 
 [data-theme="dark"] .comp-process-role {
-  color: #f1f5f9;
+  color: #94a3b8;
 }
 
 [data-theme="dark"] .comp-status-pill {
@@ -924,5 +924,56 @@
 [data-theme="dark"] .comp-empty-process,
 [data-theme="dark"] .comp-empty-box {
   color: #94a3b8;
+}
+
+/* ── Additional Dark Mode Conflict Fixes (Company Dashboard) ──────────────── */
+[data-theme="dark"] .comp-notif-badge {
+  border-color: #0d152e;
+}
+
+[data-theme="dark"] .comp-error-banner {
+  background: rgba(239, 68, 68, 0.14);
+  border-color: rgba(239, 68, 68, 0.35);
+  color: #FCA5A5;
+}
+
+[data-theme="dark"] .comp-spotlight-desc,
+[data-theme="dark"] .comp-overview-sub,
+[data-theme="dark"] .comp-panel-sub,
+[data-theme="dark"] .comp-performer-role,
+[data-theme="dark"] .comp-process-date {
+  color: #94A3B8;
+}
+
+[data-theme="dark"] .comp-performer-name,
+[data-theme="dark"] .comp-process-title,
+[data-theme="dark"] .comp-job-row-info strong {
+  color: #F8FAFC;
+}
+
+[data-theme="dark"] .comp-dash-tooltip {
+  background: #0f172a;
+  border-color: rgba(99, 142, 203, 0.35);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] .comp-dash-tooltip-label {
+  color: #94A3B8;
+}
+
+[data-theme="dark"] .comp-dash-tooltip-val {
+  color: #F8FAFC;
+}
+
+[data-theme="dark"] .comp-see-all,
+[data-theme="dark"] .comp-manage-link,
+[data-theme="dark"] .comp-view-all-apps {
+  color: #60A5FA;
+}
+
+[data-theme="dark"] .comp-see-all:hover,
+[data-theme="dark"] .comp-manage-link:hover,
+[data-theme="dark"] .comp-view-all-apps:hover {
+  color: #93C5FD;
 }
 

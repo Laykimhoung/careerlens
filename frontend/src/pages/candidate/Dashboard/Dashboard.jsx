@@ -762,7 +762,7 @@ export default function CandidateDashboard() {
                     margin={{ top: 10, right: 12, left: -24, bottom: 0 }}
                     barCategoryGap="20%"
                   >
-                    <CartesianGrid stroke="#F1F5F9" vertical={false} strokeDasharray="3 3" />
+                    <CartesianGrid stroke="var(--chart-grid-stroke, #F1F5F9)" vertical={false} strokeDasharray="3 3" />
                     <XAxis
                       dataKey="name"
                       axisLine={false}

@@ -405,9 +405,9 @@
   background: var(--color-surface-hover);
 }
 
-/* ── Galaxy Dark Mode Scoped Overrides for Company Layout ──────────────────── */
+/* ── Dark Mode Scoped Overrides for Company Layout ─────────────────────────── */
 [data-theme="dark"] .company-shell {
-  background: transparent;
+  background: var(--color-bg-primary, #060a19);
   color: #ffffff;
 }
 

@@ -1782,3 +1782,73 @@
   border-color: rgba(16, 185, 129, 0.35) !important;
   color: #34D399 !important;
 }
+
+/* ── Additional Dark Mode Conflict Fixes (Candidate Dashboard) ────────────── */
+[data-theme="dark"] .cand-notif-badge {
+  border-color: #0d152e;
+}
+
+[data-theme="dark"] .cand-error-banner {
+  background: rgba(239, 68, 68, 0.14);
+  border-color: rgba(239, 68, 68, 0.35);
+  color: #FCA5A5;
+}
+
+[data-theme="dark"] .cand-spotlight-desc,
+[data-theme="dark"] .cand-overview-sub,
+[data-theme="dark"] .cand-panel-sub,
+[data-theme="dark"] .cand-performer-role,
+[data-theme="dark"] .cand-empty-msg,
+[data-theme="dark"] .cand-gemini-subtitle {
+  color: #94A3B8;
+}
+
+[data-theme="dark"] .cand-performer-name {
+  color: #F8FAFC;
+}
+
+[data-theme="dark"] .candidate-dash-tooltip {
+  background: #0f172a;
+  border-color: rgba(99, 142, 203, 0.35);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] .candidate-dash-tooltip-label {
+  color: #94A3B8;
+}
+
+[data-theme="dark"] .candidate-dash-tooltip-val {
+  color: #F8FAFC;
+}
+
+[data-theme="dark"] .cand-see-all,
+[data-theme="dark"] .cand-explore-link {
+  color: #60A5FA;
+}
+
+[data-theme="dark"] .cand-see-all:hover,
+[data-theme="dark"] .cand-explore-link:hover {
+  color: #93C5FD;
+}
+
+[data-theme="dark"] .cand-tier-badge-premium strong,
+[data-theme="dark"] .cand-gemini-notice span,
+[data-theme="dark"] .cand-btn-gemini-danger span,
+[data-theme="dark"] .cand-gemini-free-link span,
+[data-theme="dark"] .cand-interviews-title span {
+  color: inherit;
+}
+
+[data-theme="dark"] .cand-gemini-badge.badge-heuristic {
+  background: rgba(148, 163, 184, 0.16);
+  color: #CBD5E1;
+  border-color: rgba(148, 163, 184, 0.32);
+}
+
+[data-theme="dark"] .cand-ai-link-item {
+  color: #CBD5E1;
+}
+
+[data-theme="dark"] .cand-ai-link-item:hover {
+  color: #60A5FA;
+}
