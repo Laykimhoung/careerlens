@@ -1,5 +1,6 @@
 from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
 from django.utils import timezone
 from django.db.models import Q
@@ -9,6 +10,7 @@ from .serializers import MessageSerializer, NotificationSerializer
 class MessageViewSet(viewsets.ModelViewSet):
     serializer_class = MessageSerializer
     permission_classes = [permissions.IsAuthenticated]
+    throttle_scope = "messaging"
 
     def get_queryset(self):
         user = self.request.user
@@ -27,6 +29,25 @@ class MessageViewSet(viewsets.ModelViewSet):
                 message=f"New message from {sender_name}: {msg.text[:50]}",
                 type=Notification.Type.INFO
             )
+
+    def perform_update(self, serializer):
+        instance = self.get_object()
+        user = self.request.user
+        if user.role != user.Role.ADMIN:
+            if instance.recipient == user and instance.sender != user:
+                # Recipients may only toggle read status, never rewrite message text or recipient
+                attempted_keys = set(serializer.validated_data.keys())
+                if attempted_keys - {'is_read'}:
+                    raise PermissionDenied("Recipients can only mark a message as read.")
+            elif instance.sender != user:
+                raise PermissionDenied("You are not authorized to modify this message.")
+        serializer.save()
+
+    def perform_destroy(self, instance):
+        user = self.request.user
+        if user.role != user.Role.ADMIN and instance.sender != user:
+            raise PermissionDenied("Only the sender or an admin can delete this message.")
+        instance.delete()
 
     @action(detail=True, methods=['post'])
     def mark_as_read(self, request, pk=None):
@@ -48,7 +69,10 @@ class NotificationViewSet(viewsets.ModelViewSet):
         return Notification.objects.select_related('user').filter(user=user).order_by('-created_at')
 
     def perform_create(self, serializer):
-        target_user = serializer.validated_data.get('user') or self.request.user
+        if self.request.user.role == self.request.user.Role.ADMIN:
+            target_user = serializer.validated_data.get('user') or self.request.user
+        else:
+            target_user = self.request.user
         serializer.save(user=target_user)
 
     @action(detail=True, methods=['post', 'patch'])

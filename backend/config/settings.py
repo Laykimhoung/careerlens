@@ -13,7 +13,10 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os
 from datetime import timedelta
 from pathlib import Path
+from urllib.parse import urlparse
 import dj_database_url
+from corsheaders.defaults import default_headers
+from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -26,10 +29,15 @@ load_dotenv(BASE_DIR / ".env")
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("SECRET_KEY", "")
+SECRET_KEY = os.getenv("SECRET_KEY", "").strip()
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False").lower() == "true"
+
+if not DEBUG and (not SECRET_KEY or SECRET_KEY == "your-secret-key-here"):
+    raise ImproperlyConfigured(
+        "SECRET_KEY must be set to a strong non-default secret when DEBUG=False."
+    )
 
 # Demo Mode Configuration
 # Enabled by default in local development (DEBUG=True); disabled by default in production.
@@ -54,26 +62,40 @@ if "testserver" not in ALLOWED_HOSTS:
     ALLOWED_HOSTS.append("testserver")
 
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "http://localhost:5174",
-    "http://127.0.0.1:5174",
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-]
+CORS_ALLOWED_ORIGINS = []
+if DEBUG:
+    CORS_ALLOWED_ORIGINS.extend([
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:5174",
+        "http://127.0.0.1:5174",
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+    ])
+
 cors_extra = os.getenv("CORS_ALLOWED_ORIGINS", "")
 if cors_extra:
     for origin in cors_extra.split(","):
-        origin_clean = origin.strip()
+        origin_clean = origin.strip().rstrip("/")
         if origin_clean and origin_clean not in CORS_ALLOWED_ORIGINS:
             CORS_ALLOWED_ORIGINS.append(origin_clean)
 
+for env_url_key in ("FRONTEND_URL", "CAREERLENS_WEB_URL"):
+    raw_url = os.getenv(env_url_key, "").strip()
+    if raw_url:
+        parsed = urlparse(raw_url)
+        if parsed.scheme and parsed.netloc:
+            parsed_origin = f"{parsed.scheme}://{parsed.netloc}"
+            if (DEBUG or parsed.hostname not in ("localhost", "127.0.0.1")) and parsed_origin not in CORS_ALLOWED_ORIGINS:
+                CORS_ALLOWED_ORIGINS.append(parsed_origin)
+
 CORS_ALLOW_ALL_ORIGINS = DEBUG
+CORS_ALLOW_HEADERS = list(default_headers) + ["x-gemini-api-key"]
+CORS_PREFLIGHT_MAX_AGE = 86400
 
 # CSRF Trusted Origins (required for Django Admin forms over HTTPS on production domains)
 CSRF_TRUSTED_ORIGINS = [
-    origin.strip()
+    origin.strip().rstrip("/")
     for origin in os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",")
     if origin.strip()
 ]
@@ -82,6 +104,29 @@ if render_external_hostname:
     if render_origin not in CSRF_TRUSTED_ORIGINS:
         CSRF_TRUSTED_ORIGINS.append(render_origin)
 
+# Bounded in-memory cache for rate-limiting & throttle counters
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "careerlens-default-cache",
+        "OPTIONS": {
+            "MAX_ENTRIES": 10000,
+            "CULL_FREQUENCY": 3,
+        },
+    }
+}
+
+# Reverse-proxy & payload / DDoS limits
+DRF_NUM_PROXIES = int(os.getenv("DRF_NUM_PROXIES", "1"))
+MAX_REQUEST_BODY_BYTES = int(os.getenv("MAX_REQUEST_BODY_BYTES", str(10 * 1024 * 1024)))
+DATA_UPLOAD_MAX_MEMORY_SIZE = int(os.getenv("DATA_UPLOAD_MAX_MEMORY_SIZE", str(5 * 1024 * 1024)))
+FILE_UPLOAD_MAX_MEMORY_SIZE = int(os.getenv("FILE_UPLOAD_MAX_MEMORY_SIZE", str(5 * 1024 * 1024)))
+DATA_UPLOAD_MAX_NUMBER_FIELDS = int(os.getenv("DATA_UPLOAD_MAX_NUMBER_FIELDS", "1000"))
+
+RATE_LIMIT_MIDDLEWARE_ENABLED = os.getenv("RATE_LIMIT_MIDDLEWARE_ENABLED", "True").lower() == "true"
+GLOBAL_IP_BURST_LIMIT = int(os.getenv("GLOBAL_IP_BURST_LIMIT", "300"))
+ADMIN_LOGIN_RATE_LIMIT = int(os.getenv("ADMIN_LOGIN_RATE_LIMIT", "10"))
+WEBHOOK_RATE_LIMIT = int(os.getenv("WEBHOOK_RATE_LIMIT", "120"))
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
@@ -90,9 +135,30 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
     ],
-    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "DEFAULT_PAGINATION_CLASS": "config.pagination.BoundedPageNumberPagination",
     "PAGE_SIZE": 100,
+    "DEFAULT_THROTTLE_CLASSES": [
+        "config.throttles.ProxySafeAnonRateThrottle",
+        "config.throttles.ProxySafeUserRateThrottle",
+        "config.throttles.ProxySafeScopedRateThrottle",
+    ],
+    "DEFAULT_THROTTLE_RATES": {
+        "anon": os.getenv("THROTTLE_RATE_ANON", "60/min"),
+        "user": os.getenv("THROTTLE_RATE_USER", "180/min"),
+        "auth_login": os.getenv("THROTTLE_RATE_AUTH_LOGIN", "10/min"),
+        "auth_register": os.getenv("THROTTLE_RATE_AUTH_REGISTER", "10/min"),
+        "auth_password_reset": os.getenv("THROTTLE_RATE_AUTH_RESET", "5/min"),
+        "ai_generation": os.getenv("THROTTLE_RATE_AI", "15/min"),
+        "resume_upload": os.getenv("THROTTLE_RATE_UPLOAD", "10/min"),
+        "messaging": os.getenv("THROTTLE_RATE_MESSAGING", "60/min"),
+    },
+    "NUM_PROXIES": DRF_NUM_PROXIES,
 }
+
+if not DEBUG:
+    REST_FRAMEWORK["DEFAULT_RENDERER_CLASSES"] = (
+        "rest_framework.renderers.JSONRenderer",
+    )
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=7),
@@ -133,6 +199,7 @@ MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
 
     "django.middleware.security.SecurityMiddleware",
+    "config.middleware.ProductionSecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -241,8 +308,18 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # Production cookie and browser security (activated when DEBUG=False)
 if not DEBUG:
+    SECURE_SSL_REDIRECT = os.getenv("SECURE_SSL_REDIRECT", "True").lower() == "true"
+    SECURE_HSTS_SECONDS = int(os.getenv("SECURE_HSTS_SECONDS", "31536000"))
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
+    SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin"
+    X_FRAME_OPTIONS = "DENY"
     SESSION_COOKIE_SECURE = True
+    SESSION_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SAMESITE = "Lax"
     CSRF_COOKIE_SECURE = True
+    CSRF_COOKIE_SAMESITE = "Lax"
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
 

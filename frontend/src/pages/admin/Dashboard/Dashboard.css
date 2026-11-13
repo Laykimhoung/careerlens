@@ -881,7 +881,7 @@
 }
 
 [data-theme="dark"] .modern-greeting-sub {
-  color: #f1f5f9;
+  color: #94a3b8;
 }
 
 [data-theme="dark"] .modern-search-input {
@@ -976,18 +976,22 @@
   border-color: rgba(99, 142, 203, 0.5);
 }
 
-[data-theme="dark"] .audit-name {
-  color: #ffffff;
+[data-theme="dark"] .audit-name,
+[data-theme="dark"] .audit-item-text {
+  color: #e2e8f0;
 }
 
-[data-theme="dark"] .audit-time {
-  color: #f1f5f9;
+[data-theme="dark"] .audit-time,
+[data-theme="dark"] .audit-item-time {
+  color: #94a3b8;
 }
 
 [data-theme="dark"] .audit-badge {
-  background: rgba(99, 142, 203, 0.25);
-  border-color: rgba(99, 142, 203, 0.4);
-  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .modern-audit-box {
+  border-top-color: rgba(99, 142, 203, 0.22);
 }
 
 [data-theme="dark"] .process-item-card {
@@ -1005,13 +1009,12 @@
 }
 
 [data-theme="dark"] .process-item-sub {
-  color: #f1f5f9;
+  color: #94a3b8;
 }
 
 [data-theme="dark"] .process-time-pill {
-  background: rgba(99, 142, 203, 0.25);
-  border-color: rgba(99, 142, 203, 0.4);
-  color: #ffffff;
+  background: rgba(15, 23, 42, 0.85);
+  border-color: rgba(99, 142, 203, 0.32);
 }
 
 [data-theme="dark"] .process-footer {
@@ -1190,4 +1193,120 @@
   background: rgba(255, 255, 255, 0.08) !important;
   color: #CBD5E1 !important;
   border: 1px solid rgba(255, 255, 255, 0.14) !important;
+}
+
+/* ── Additional Dark Mode Conflict Fixes (Admin Dashboard) ────────────────── */
+[data-theme="dark"] .modern-notif-count {
+  border-color: #0d152e;
+}
+
+[data-theme="dark"] .modern-error-banner {
+  background: rgba(239, 68, 68, 0.14);
+  border-color: rgba(239, 68, 68, 0.35);
+  color: #FCA5A5;
+}
+
+[data-theme="dark"] .modern-retry-btn {
+  border-color: rgba(248, 113, 113, 0.5);
+  color: #FCA5A5;
+}
+
+[data-theme="dark"] .modern-live-pill {
+  background: rgba(16, 185, 129, 0.14);
+  color: #34D399;
+  border-color: rgba(16, 185, 129, 0.32);
+}
+
+[data-theme="dark"] .spotlight-pill {
+  background: rgba(249, 115, 22, 0.16);
+  color: #FB923C;
+  border-color: rgba(249, 115, 22, 0.35);
+}
+
+[data-theme="dark"] .spotlight-title,
+[data-theme="dark"] .overview-chart-title,
+[data-theme="dark"] .performer-name,
+[data-theme="dark"] .panel-heading,
+[data-theme="dark"] .process-title,
+[data-theme="dark"] .metric-chip strong {
+  color: #F8FAFC;
+}
+
+[data-theme="dark"] .spotlight-desc,
+[data-theme="dark"] .overview-chart-subtitle,
+[data-theme="dark"] .performer-role,
+[data-theme="dark"] .panel-sub-label,
+[data-theme="dark"] .process-date,
+[data-theme="dark"] .empty-subtext {
+  color: #94A3B8;
+}
+
+[data-theme="dark"] .metric-chip span:not(.metric-chip-sub) {
+  color: #CBD5E1;
+}
+
+[data-theme="dark"] .metric-chip .metric-chip-sub {
+  color: #94A3B8;
+}
+
+[data-theme="dark"] .metric-chip-icon.chip-blue {
+  background: rgba(1, 107, 251, 0.2);
+  color: #60A5FA;
+}
+
+[data-theme="dark"] .metric-chip-icon.chip-indigo {
+  background: rgba(99, 142, 203, 0.2);
+  color: #93C5FD;
+}
+
+[data-theme="dark"] .metric-chip-icon.chip-amber {
+  background: rgba(245, 158, 11, 0.16);
+  color: #FBBF24;
+}
+
+[data-theme="dark"] .metric-chip-icon.chip-green {
+  background: rgba(34, 197, 94, 0.16);
+  color: #4ADE80;
+}
+
+[data-theme="dark"] .overview-chart-pill {
+  background: rgba(56, 189, 248, 0.14);
+  color: #7DD3FC;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+[data-theme="dark"] .modern-dash-tooltip {
+  background: #0f172a;
+  border-color: rgba(99, 142, 203, 0.35);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] .modern-dash-tooltip-label {
+  color: #94A3B8;
+}
+
+[data-theme="dark"] .modern-dash-tooltip-val {
+  color: #F8FAFC;
+}
+
+[data-theme="dark"] .modern-reset-link {
+  color: #94A3B8;
+}
+
+[data-theme="dark"] .modern-reset-link:hover {
+  color: #F8FAFC;
+  background: rgba(99, 142, 203, 0.16);
+}
+
+[data-theme="dark"] .search-active-pill {
+  background: rgba(56, 189, 248, 0.14);
+  color: #7DD3FC;
+}
+
+[data-theme="dark"] .process-view-all {
+  color: #60A5FA;
+}
+
+[data-theme="dark"] .process-view-all:hover {
+  color: #93C5FD;
 }

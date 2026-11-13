@@ -181,105 +181,18 @@ body,
               box-shadow 0.28s ease;
 }
 
-/* ── Cosmic Nebula Layer (GPU Hardware-Accelerated) ───────────────────────── */
+/* ── Dark Mode Base Background (Solid, Clean, Zero Stars) ─────────────────── */
+html[data-theme="dark"] {
+  --chart-grid-stroke: rgba(99, 142, 203, 0.16);
+}
+
 html[data-theme="dark"] body {
-  background-color: #050814 !important;
+  background-color: var(--color-bg-primary, #060a19) !important;
   position: relative;
   min-height: 100vh;
 }
 
-html[data-theme="dark"] body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: 100vh;
-  pointer-events: none;
-  z-index: 0;
-  background:
-    radial-gradient(ellipse 90% 60% at 50% -10%, rgba(99, 142, 203, 0.42), transparent 75%),
-    radial-gradient(circle 800px at 8% 25%, rgba(139, 92, 246, 0.32), transparent 70%),
-    radial-gradient(circle 750px at 92% 75%, rgba(56, 189, 248, 0.28), transparent 65%),
-    radial-gradient(circle 550px at 50% 65%, rgba(1, 107, 251, 0.25), transparent 70%),
-    linear-gradient(180deg, #050814 0%, #070C1E 45%, #0B112C 100%);
-  transform: translateZ(0);
-  will-change: opacity;
-  contain: strict;
-  animation: galaxyNebulaBreathe 12s ease-in-out infinite alternate;
-}
-
-/* ── High-Density Glittering Alive Galaxy Dots & Stars Layer (Zero-Refilter) ── */
-html[data-theme="dark"] body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: 100vh;
-  pointer-events: none;
-  z-index: 0;
-  background-image:
-    /* Layer 1: Bright Crisp Starlight Dots (White & Diamond Blue) */
-    radial-gradient(2px 2px at 25px 35px, #ffffff, transparent),
-    radial-gradient(2.5px 2.5px at 110px 160px, #ffffff, transparent),
-    radial-gradient(2px 2px at 210px 75px, #a5f3fc, transparent),
-    radial-gradient(3px 3px at 170px 270px, #ffffff, transparent),
-    radial-gradient(1.5px 1.5px at 290px 180px, #ffffff, transparent),
-    radial-gradient(2.5px 2.5px at 320px 50px, #ffffff, transparent),
-    radial-gradient(2px 2px at 390px 310px, #c084fc, transparent),
-    radial-gradient(2.5px 2.5px at 450px 140px, #ffffff, transparent),
-    
-    /* Layer 2: Medium Sparkling Starlight with Celestial Glow */
-    radial-gradient(3px 3px at 65px 210px, #ffffff, rgba(99, 142, 203, 0.9) 1.5px, transparent 4px),
-    radial-gradient(3.5px 3.5px at 250px 105px, #ffffff, rgba(56, 189, 248, 0.95) 1.5px, transparent 5px),
-    radial-gradient(2.5px 2.5px at 370px 230px, #ffffff, transparent 3px),
-    radial-gradient(3.5px 3.5px at 510px 85px, #ffffff, rgba(168, 85, 247, 0.9) 1.5px, transparent 5px),
-    radial-gradient(2.5px 2.5px at 590px 270px, #ffffff, transparent 3px),
-    radial-gradient(3px 3px at 700px 150px, #a5f3fc, transparent 3.5px),
-    radial-gradient(2.5px 2.5px at 810px 330px, #ffffff, transparent 3px),
-
-    /* Layer 3: Brilliant Focal Stars with Soft Halos */
-    radial-gradient(4px 4px at 140px 65px, #ffffff, rgba(255, 255, 255, 0.95) 1.5px, rgba(1, 107, 251, 0.7) 3px, transparent 7px),
-    radial-gradient(4px 4px at 440px 200px, #ffffff, rgba(255, 255, 255, 0.95) 1.5px, rgba(56, 189, 248, 0.7) 3px, transparent 7px),
-    radial-gradient(3.5px 3.5px at 750px 75px, #ffffff, rgba(192, 132, 252, 0.8) 1.5px, transparent 6px),
-    radial-gradient(4.5px 4.5px at 920px 240px, #ffffff, rgba(255, 255, 255, 0.95) 2px, rgba(1, 107, 251, 0.75) 3.5px, transparent 8px);
-
-  background-repeat: repeat;
-  background-size: 
-    300px 300px, 300px 300px, 300px 300px, 300px 300px, 300px 300px, 300px 300px, 300px 300px, 300px 300px,
-    460px 460px, 460px 460px, 460px 460px, 460px 460px, 460px 460px, 460px 460px, 460px 460px,
-    680px 680px, 680px 680px, 680px 680px, 680px 680px;
-  transform: translateZ(0);
-  will-change: opacity;
-  contain: strict;
-  animation: galaxyStarsAlive 6s ease-in-out infinite alternate;
-}
-
-@keyframes galaxyStarsAlive {
-  0% {
-    opacity: 0.65;
-  }
-  50% {
-    opacity: 0.98;
-  }
-  100% {
-    opacity: 0.75;
-  }
-}
-
-@keyframes galaxyNebulaBreathe {
-  0% {
-    opacity: 0.82;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0.88;
-  }
-}
-
-/* ── Transparent Shells & Layouts (allow galaxy starfield to shine through) ── */
-[data-theme="dark"] #root,
+/* ── Dashboard & Workspace Shells ─────────────────────────────────────────── */
 [data-theme="dark"] .company-shell,
 [data-theme="dark"] .admin-layout,
 [data-theme="dark"] .candidate-layout,
@@ -292,11 +205,15 @@ html[data-theme="dark"] body::after {
 [data-theme="dark"] .company-content,
 [data-theme="dark"] .workspace-page,
 [data-theme="dark"] .cand-dash-container,
+[data-theme="dark"] .comp-dash-container,
 [data-theme="dark"] .modern-dashboard-layout {
+  background: var(--color-bg-primary, #060a19) !important;
+  background-color: var(--color-bg-primary, #060a19) !important;
+}
+
+[data-theme="dark"] #root {
   background: transparent !important;
   background-color: transparent !important;
-  position: relative;
-  z-index: 1;
 }
 
 /* ── Luminous Glassmorphism Boxes & Panels across Admin, Candidate & Company ─────── */
@@ -355,7 +272,6 @@ html[data-theme="dark"] body::after {
 [data-theme="dark"] .modern-card,
 [data-theme="dark"] .modern-overview-chart-card,
 [data-theme="dark"] .modern-quick-stats-panel,
-[data-theme="dark"] .modern-audit-box,
 [data-theme="dark"] .scenic-banner-card,
 [data-theme="dark"] .modern-process-card,
 [data-theme="dark"] .crud-modal,
@@ -389,7 +305,6 @@ html[data-theme="dark"] body::after {
 [data-theme="dark"] .comp-overview-card:hover,
 [data-theme="dark"] .modern-overview-chart-card:hover,
 [data-theme="dark"] .modern-quick-stats-panel:hover,
-[data-theme="dark"] .modern-audit-box:hover,
 [data-theme="dark"] .modern-process-card:hover,
 [data-theme="dark"] .comp-jobs-panel:hover,
 [data-theme="dark"] .comp-process-card:hover {
@@ -434,19 +349,34 @@ html[data-theme="dark"] body::after {
 /* Process rows, audit rows, job rows & activity items */
 [data-theme="dark"] .cand-process-item,
 [data-theme="dark"] .comp-process-item,
-[data-theme="dark"] .process-item-card,
+[data-theme="dark"] .process-item-card {
+  background: rgba(16, 26, 60, 0.78) !important;
+  border-top: 1px solid rgba(99, 142, 203, 0.25) !important;
+  border-right: 1px solid rgba(99, 142, 203, 0.25) !important;
+  border-bottom: 1px solid rgba(99, 142, 203, 0.25) !important;
+  border-left-width: 4px !important;
+  border-left-style: solid !important;
+  color: #ffffff !important;
+}
+
 [data-theme="dark"] .audit-item-row,
 [data-theme="dark"] .quick-stat-row,
 [data-theme="dark"] .comp-job-row-card {
   background: rgba(16, 26, 60, 0.78) !important;
   border: 1px solid rgba(99, 142, 203, 0.25) !important;
-  border-left: 4px solid var(--color-primary, #016BFB) !important;
   color: #ffffff !important;
 }
 
 [data-theme="dark"] .cand-process-item:hover,
 [data-theme="dark"] .comp-process-item:hover,
-[data-theme="dark"] .process-item-card:hover,
+[data-theme="dark"] .process-item-card:hover {
+  background: rgba(24, 38, 86, 0.92) !important;
+  border-top-color: rgba(99, 142, 203, 0.5) !important;
+  border-right-color: rgba(99, 142, 203, 0.5) !important;
+  border-bottom-color: rgba(99, 142, 203, 0.5) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35) !important;
+}
+
 [data-theme="dark"] .audit-item-row:hover,
 [data-theme="dark"] .quick-stat-row:hover,
 [data-theme="dark"] .comp-job-row-card:hover {
@@ -475,16 +405,18 @@ html[data-theme="dark"] body::after {
   color: #f1f5f9 !important;
 }
 
-/* Luminous Status Pills across all roles */
+/* Luminous Status Pills across all roles (preserve semantic color pills) */
 [data-theme="dark"] .cand-status-pill,
 [data-theme="dark"] .comp-status-pill,
-[data-theme="dark"] .process-time-pill,
-[data-theme="dark"] .comp-job-status-pill,
-[data-theme="dark"] .audit-badge,
 [data-theme="dark"] .metric-chip-trend {
   background: rgba(99, 142, 203, 0.25) !important;
   border: 1px solid rgba(99, 142, 203, 0.4) !important;
   color: #ffffff !important;
+}
+
+[data-theme="dark"] .process-time-pill {
+  background: rgba(15, 23, 42, 0.85) !important;
+  border: 1px solid rgba(99, 142, 203, 0.32) !important;
 }
 
 /* Header Count/Progress Pills */
@@ -497,14 +429,15 @@ html[data-theme="dark"] body::after {
 }
 
 /* ── Bright & Crisp High-Contrast Text in Dark Mode ─────────────────────── */
-[data-theme="dark"] h1,
-[data-theme="dark"] h2,
-[data-theme="dark"] h3,
-[data-theme="dark"] h4,
-[data-theme="dark"] h5,
-[data-theme="dark"] h6,
-[data-theme="dark"] strong,
-[data-theme="dark"] b,
+/* Zero-specificity defaults for unstyled elements so component/badge colors win cleanly */
+[data-theme="dark"] :where(h1, h2, h3, h4, h5, h6, strong, b, label) {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] :where(p, span):not(.badge):not(.status-badge):not(.cand-avatar-circle):not(.comp-avatar-circle):not(.modern-avatar-badge):not(.stat-val) {
+  color: #cbd5e1;
+}
+
 [data-theme="dark"] .stat-val,
 [data-theme="dark"] .cand-stat-num,
 [data-theme="dark"] .comp-stat-num,
@@ -541,13 +474,10 @@ html[data-theme="dark"] body::after {
 [data-theme="dark"] .crud-modal-header h2,
 [data-theme="dark"] .applicant-name,
 [data-theme="dark"] .applications-list__header,
-[data-theme="dark"] .saved-jobs__count,
-[data-theme="dark"] label {
+[data-theme="dark"] .saved-jobs__count {
   color: #ffffff !important;
 }
 
-[data-theme="dark"] p,
-[data-theme="dark"] span:not(.badge):not(.status-badge):not(.cand-avatar-circle):not(.comp-avatar-circle):not(.modern-avatar-badge):not(.cand-dual-stat-item strong):not(.stat-val),
 [data-theme="dark"] .text-muted,
 [data-theme="dark"] .workspace-muted,
 [data-theme="dark"] .stat-label,
@@ -580,7 +510,7 @@ html[data-theme="dark"] body::after {
 [data-theme="dark"] .comp-empty-process,
 [data-theme="dark"] .comp-empty-box,
 [data-theme="dark"] .applicant-title {
-  color: #f1f5f9 !important;
+  color: #94a3b8 !important;
 }
 
 [data-theme="dark"] .admin-breadcrumb {
@@ -837,4 +767,27 @@ html[data-theme="dark"] body::after {
 [data-theme="dark"] .btn--outline:hover {
   background-color: rgba(99, 142, 203, 0.25) !important;
   border-color: var(--color-primary-light) !important;
+}
+
+/* ── Theme View Transition (Circular Clip-Path Reveal) ───────────────────── */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* Scoped to theme toggle — active only while a theme view transition is in flight */
+html[data-magicui-theme-vt="active"]::view-transition-group(root) {
+  animation-duration: var(--magicui-theme-toggle-vt-duration, 400ms);
+}
+
+html[data-magicui-theme-vt="active"]::view-transition-new(root) {
+  clip-path: var(--magicui-theme-vt-clip-from);
+}
+
+/* Prevent per-element CSS transitions from fighting the GPU view-transition snapshot */
+html[data-magicui-theme-vt="active"] *,
+html[data-magicui-theme-vt="active"] *::before,
+html[data-magicui-theme-vt="active"] *::after {
+  transition: none !important;
 }

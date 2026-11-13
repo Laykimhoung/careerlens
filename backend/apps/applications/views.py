@@ -276,6 +276,11 @@ class ApplicationViewSet(viewsets.ModelViewSet):
             'detail': f"Candidate {action_desc}."
         })
 
+    def initial(self, request, *args, **kwargs):
+        if getattr(self, 'action', None) == 'interview_prep':
+            self.throttle_scope = 'ai_generation'
+        super().initial(request, *args, **kwargs)
+
     @action(detail=True, methods=['get', 'post'], url_path='interview-prep')
     def interview_prep(self, request, pk=None):
         """
@@ -459,8 +464,26 @@ class OfferViewSet(viewsets.ModelViewSet):
         return super().update(request, *args, **kwargs)
 
     def perform_update(self, serializer):
+        if self.request.user.role == self.request.user.Role.CANDIDATE:
+            allowed_keys = {'status'}
+            attempted_keys = set(serializer.validated_data.keys())
+            if attempted_keys - allowed_keys:
+                raise PermissionDenied("Candidates may only accept or decline an offer's status.")
+            new_status = serializer.validated_data.get('status')
+            if new_status not in (Offer.Status.ACCEPTED, Offer.Status.DECLINED):
+                raise PermissionDenied("Candidates may only set offer status to ACCEPTED or DECLINED.")
         instance = serializer.save(responded_at=timezone.now())
         return instance
+
+    def perform_destroy(self, instance):
+        if self.request.user.role not in (self.request.user.Role.COMPANY, self.request.user.Role.ADMIN):
+            raise PermissionDenied("Only companies or admins can delete offers.")
+        if (
+            self.request.user.role == self.request.user.Role.COMPANY
+            and instance.application.job.company != self.request.user.company_profile
+        ):
+            raise PermissionDenied("You do not own this offer.")
+        instance.delete()
 
 class ApplicationNoteViewSet(viewsets.ModelViewSet):
     serializer_class = ApplicationNoteSerializer

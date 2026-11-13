@@ -78,6 +78,7 @@ class GenerateRoadmapView(APIView):
     Generates or switches a staged learning roadmap for the candidate.
     """
     permission_classes = [permissions.IsAuthenticated]
+    throttle_scope = "ai_generation"
 
     def post(self, request):
         candidate = _resolve_candidate(request)

@@ -42,6 +42,7 @@ class UserSerializer(serializers.ModelSerializer):
         for attr, val in validated_data.items():
             setattr(instance, attr, val)
         if password:
+            validate_password(password, user=instance)
             instance.set_password(password)
         instance.save()
         return instance
@@ -245,6 +246,13 @@ class RegisterSerializer(serializers.ModelSerializer):
         write_only=True,
         required=True,
         validators=[validate_password]
+    )
+    role = serializers.ChoiceField(
+        choices=[
+            (User.Role.CANDIDATE, "Candidate"),
+            (User.Role.COMPANY, "Company"),
+        ],
+        default=User.Role.CANDIDATE,
     )
 
     class Meta:

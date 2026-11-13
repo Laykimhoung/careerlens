@@ -6,7 +6,7 @@
   background-color: rgba(15, 23, 42, 0.72);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  z-index: 1000;
+  z-index: 1200;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -42,6 +42,7 @@
   padding: 24px 28px 18px;
   border-bottom: 1px solid var(--color-border, #E2E8F0);
   gap: 16px;
+  flex-shrink: 0;
 }
 
 [data-theme="dark"] .ip-modal-header {
@@ -112,6 +113,14 @@
   color: var(--color-text-secondary, #64748B);
 }
 
+[data-theme="dark"] .ip-modal-subtitle {
+  color: #94A3B8;
+}
+
+[data-theme="dark"] .ip-modal-subtitle strong {
+  color: #E2E8F0;
+}
+
 .ip-modal-header-actions {
   display: flex;
   align-items: center;
@@ -172,6 +181,7 @@
   padding: 24px 28px;
   overflow-y: auto;
   flex: 1;
+  min-height: 0;
 }
 
 /* Tabs */
@@ -776,6 +786,7 @@
   border-top: 1px solid var(--color-border, #E2E8F0);
   background: var(--color-surface, #FFFFFF);
   gap: 16px;
+  flex-shrink: 0;
 }
 
 [data-theme="dark"] .ip-modal-footer {
@@ -887,37 +898,38 @@
   }
 }
 
-/* Print Styles */
-@media print {
-  body * {
-    visibility: hidden;
-  }
-  .ip-modal-overlay {
-    position: static;
-    background: none;
-    padding: 0;
-  }
-  .ip-modal-dialog,
-  .ip-modal-dialog * {
-    visibility: visible;
-  }
-  .ip-modal-dialog {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    max-width: 100%;
-    box-shadow: none;
-    border: none;
-  }
-  .ip-modal-header-actions,
-  .ip-modal-close,
-  .ip-tabs-nav,
-  .ip-modal-footer {
-    display: none !important;
-  }
-  .ip-question-body {
-    display: block !important;
-  }
+/* Dark mode contrast refinements */
+[data-theme="dark"] .ip-tab-btn {
+  color: #94A3B8;
+}
+
+[data-theme="dark"] .ip-tab-btn:hover {
+  color: #F8FAFC;
+}
+
+[data-theme="dark"] .ip-role-overview,
+[data-theme="dark"] .ip-section-desc,
+[data-theme="dark"] .ip-checklist-metric,
+[data-theme="dark"] .ip-step-details,
+[data-theme="dark"] .ip-cat-pill,
+[data-theme="dark"] .ip-question-toggle,
+[data-theme="dark"] .ip-why-asked,
+[data-theme="dark"] .ip-why-asked strong,
+[data-theme="dark"] .ip-key-points-label,
+[data-theme="dark"] .ip-footer-note,
+[data-theme="dark"] .ip-loading-state p {
+  color: #94A3B8;
+}
+
+[data-theme="dark"] .ip-role-overview {
+  border-top-color: rgba(56, 189, 248, 0.25);
+}
+
+[data-theme="dark"] .ip-error-state h3 {
+  color: #F8FAFC;
+}
+
+[data-theme="dark"] .ip-error-state p {
+  color: #CBD5E1;
 }
 
