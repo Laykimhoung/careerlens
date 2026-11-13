@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useRef } from "react";
 import { ThemeContext } from "../../context/ThemeContext";
 import { LanguageContext } from "../../context/LanguageContext";
 import "./ThemeLanguageToggle.css";
@@ -11,14 +11,16 @@ import "./ThemeLanguageToggle.css";
 export default function ThemeLanguageToggle() {
   const { theme, toggleTheme } = useContext(ThemeContext);
   const { language, setLanguage } = useContext(LanguageContext);
+  const themeBtnRef = useRef(null);
 
   return (
     <div className="tlt-bar" aria-label="Theme and language controls">
       {/* Theme toggle */}
       <button
+        ref={themeBtnRef}
         type="button"
         className={`tlt-theme-btn ${theme === "dark" ? "tlt-theme-btn--galaxy" : ""}`}
-        onClick={toggleTheme}
+        onClick={() => toggleTheme(themeBtnRef.current)}
         aria-label={theme === "dark" ? "Switch to light mode" : "Switch to galaxy dark mode"}
         title={theme === "dark" ? "Galaxy Dark Mode (Active) — Click for Light Mode" : "Light Mode (Active) — Click for Galaxy Dark Mode"}
       >

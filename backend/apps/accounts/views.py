@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -34,12 +34,18 @@ User = get_user_model()
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
+    throttle_scope = "auth_login"
+
+
+class ThrottledTokenRefreshView(TokenRefreshView):
+    throttle_scope = "auth_login"
 
 
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     permission_classes = (AllowAny,)
     serializer_class = RegisterSerializer
+    throttle_scope = "auth_register"
 
 
 class CurrentUserView(generics.RetrieveUpdateAPIView):
@@ -303,6 +309,11 @@ class GeminiKeyView(APIView):
     """
     permission_classes = [permissions.IsAuthenticated]
 
+    def initial(self, request, *args, **kwargs):
+        if request.method == "POST":
+            self.throttle_scope = "ai_generation"
+        super().initial(request, *args, **kwargs)
+
     def _get_candidate(self, request):
         if hasattr(request.user, "candidate_profile"):
             return request.user.candidate_profile
@@ -377,6 +388,7 @@ class ForgotPasswordView(APIView):
     and sends a branded reset link via Gmail SMTP.
     """
     permission_classes = (AllowAny,)
+    throttle_scope = "auth_password_reset"
 
     def post(self, request):
         serializer = ForgotPasswordSerializer(data=request.data)
@@ -460,6 +472,7 @@ class ResetPasswordView(APIView):
     Complete password reset: verifies token, updates user password, and logs the security audit.
     """
     permission_classes = (AllowAny,)
+    throttle_scope = "auth_password_reset"
 
     def post(self, request):
         serializer = ResetPasswordSerializer(data=request.data)

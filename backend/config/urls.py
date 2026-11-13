@@ -22,6 +22,12 @@ from django.http import JsonResponse
 
 
 def api_root_view(request):
+    if not settings.DEBUG:
+        return JsonResponse({
+            "project": "CareerLens REST API",
+            "status": "online",
+            "demo_mode": getattr(settings, "ENABLE_DEMO_MODE", False),
+        })
     return JsonResponse({
         "project": "CareerLens REST API",
         "status": "online",

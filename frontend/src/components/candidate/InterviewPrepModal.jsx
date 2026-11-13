@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import {
   Sparkles,
   CheckCircle2,
@@ -8,7 +9,6 @@ import {
   ChevronDown,
   ChevronUp,
   RefreshCw,
-  Printer,
   X,
   Briefcase,
   Building2,
@@ -91,10 +91,6 @@ export default function InterviewPrepModal({
     }));
   };
 
-  const handlePrint = () => {
-    window.print();
-  };
-
   const checklist = prepData?.preparation_checklist || [];
   const questions = prepData?.likely_questions || [];
   const whatShouldDo = prepData?.what_should_do || [];
@@ -108,7 +104,7 @@ export default function InterviewPrepModal({
   const progressPct =
     checklist.length > 0 ? Math.round((checkedCount / checklist.length) * 100) : 0;
 
-  return (
+  return createPortal(
     <div className="ip-modal-overlay" onClick={onClose} role="dialog" aria-modal="true">
       <div className="ip-modal-dialog" onClick={(e) => e.stopPropagation()}>
         {/* Header */}
@@ -136,15 +132,6 @@ export default function InterviewPrepModal({
           </div>
 
           <div className="ip-modal-header-actions">
-            <button
-              type="button"
-              className="ip-btn-header ip-btn-header-ghost"
-              onClick={handlePrint}
-              title={t("candidate.printPrep", "Print or Save as PDF")}
-            >
-              <Printer size={16} />
-              <span className="ip-hide-mobile">{t("candidate.print", "Print")}</span>
-            </button>
             <button
               type="button"
               className="ip-btn-header ip-btn-header-ghost"
@@ -469,7 +456,8 @@ export default function InterviewPrepModal({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 

@@ -745,9 +745,9 @@
   }
 }
 
-/* ── Galaxy Dark Mode Scoped Overrides for Admin Layout ────────────────────── */
+/* ── Dark Mode Scoped Overrides for Admin Layout ───────────────────────────── */
 [data-theme="dark"] .admin-layout {
-  background: transparent;
+  background: var(--color-bg-primary, #060a19);
   color: #ffffff;
 }
 
