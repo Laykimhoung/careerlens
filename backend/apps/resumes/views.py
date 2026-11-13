@@ -1,9 +1,11 @@
 import io
+import os
 from rest_framework import permissions, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
+from django.utils.text import get_valid_filename
 
 from .models import Resume, ResumeVersion, CandidateUsage
 from .serializers import ResumeSerializer, ResumeVersionSerializer, CandidateUsageSerializer
@@ -41,12 +43,42 @@ def _get_or_create_usage(candidate):
     return usage
 
 
+MAX_RESUME_UPLOAD_BYTES = 5 * 1024 * 1024
+ALLOWED_RESUME_EXTENSIONS = {".pdf", ".doc", ".docx", ".txt", ".md"}
+
+
+def _validate_resume_upload(uploaded_file):
+    """Validate extension, size, filename, and magic bytes for uploaded resumes."""
+    raw_name = os.path.basename(getattr(uploaded_file, "name", "") or "")
+    _, ext = os.path.splitext(raw_name.lower())
+    if ext not in ALLOWED_RESUME_EXTENSIONS:
+        return "Unsupported file type. Allowed formats: PDF, DOC, DOCX, TXT, MD."
+
+    file_size = getattr(uploaded_file, "size", None)
+    if file_size is None or file_size <= 0:
+        return "Uploaded file cannot be empty."
+    if file_size > MAX_RESUME_UPLOAD_BYTES:
+        return "File size exceeds the 5 MB upload limit."
+
+    head = uploaded_file.read(8)
+    uploaded_file.seek(0)
+    if ext == ".pdf" and not head.startswith(b"%PDF-"):
+        return "Invalid PDF file signature."
+    if ext == ".docx" and head[:4] not in (b"PK\x03\x04", b"PK\x05\x06", b"PK\x07\x08"):
+        return "Invalid DOCX file signature."
+
+    safe_name = get_valid_filename(raw_name) or f"resume{ext}"
+    uploaded_file.name = safe_name
+    return None
+
+
 class ResumeUploadView(APIView):
     """
     POST /api/resumes/upload/
     Uploads a CV file, parses structured sections, and runs initial analysis.
     """
     permission_classes = [permissions.IsAuthenticated]
+    throttle_scope = "resume_upload"
 
     def post(self, request):
         candidate = _resolve_candidate(request)
@@ -56,6 +88,10 @@ class ResumeUploadView(APIView):
         uploaded_file = request.FILES.get("file")
         if not uploaded_file:
             return Response({"file": ["Please select a file to upload."]}, status=status.HTTP_400_BAD_REQUEST)
+
+        upload_error = _validate_resume_upload(uploaded_file)
+        if upload_error:
+            return Response({"file": [upload_error]}, status=status.HTTP_400_BAD_REQUEST)
 
         target_role = (request.data.get("target_role") or "").strip()
         parsed_data = parse_resume_content(uploaded_file.name, candidate, target_role=target_role)
@@ -160,6 +196,7 @@ class ResumeAnalyzeView(APIView):
     Triggers quality scoring analysis out of 10.
     """
     permission_classes = [permissions.IsAuthenticated]
+    throttle_scope = "ai_generation"
 
     def post(self, request, pk):
         candidate = _resolve_candidate(request)
@@ -187,6 +224,7 @@ class ImprovementDiagnosisView(APIView):
     Fetches weaknesses diagnosis & selectable improvement options using Prompt 2.
     """
     permission_classes = [permissions.IsAuthenticated]
+    throttle_scope = "ai_generation"
 
     def get(self, request):
         candidate = _resolve_candidate(request)
@@ -212,6 +250,7 @@ class ImprovementQuestionnaireView(APIView):
     Personalized missing-information questionnaire based on actual gaps using Prompt 2.
     """
     permission_classes = [permissions.IsAuthenticated]
+    throttle_scope = "ai_generation"
 
     def get(self, request):
         candidate = _resolve_candidate(request)
@@ -236,6 +275,7 @@ class ImprovementGenerateView(APIView):
     Generates improved CV version, deducting 1 credit from quota.
     """
     permission_classes = [permissions.IsAuthenticated]
+    throttle_scope = "ai_generation"
 
     def post(self, request):
         candidate = _resolve_candidate(request)
@@ -380,6 +420,7 @@ class ReanalyzeResumeVersionView(APIView):
     Re-evaluates the version with scoring rubric.
     """
     permission_classes = [permissions.IsAuthenticated]
+    throttle_scope = "ai_generation"
 
     def post(self, request, pk):
         candidate = _resolve_candidate(request)

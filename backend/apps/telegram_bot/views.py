@@ -1,6 +1,8 @@
+import hmac
 import os
 import json
 import logging
+from django.conf import settings
 from django.views import View
 from django.http import HttpResponse, JsonResponse, HttpResponseForbidden, HttpResponseBadRequest
 from django.utils.decorators import method_decorator
@@ -9,6 +11,7 @@ from telebot import types
 from .bot import create_bot
 
 logger = logging.getLogger(__name__)
+MAX_WEBHOOK_BODY_BYTES = 1024 * 1024  # 1 MB
 
 # Single instance of configured bot for webhook processing
 _bot_instance = None
@@ -32,21 +35,30 @@ class TelegramWebhookView(View):
     def get(self, request, *args, **kwargs):
         bot_token_set = bool(os.getenv("TELEGRAM_BOT_TOKEN", "").strip())
         secret_set = bool(os.getenv("TELEGRAM_WEBHOOK_SECRET", "").strip())
-        return JsonResponse({
+        payload = {
             "service": "CareerLens Telegram Bot Webhook",
             "status": "ready" if bot_token_set else "unconfigured",
-            "bot_configured": bot_token_set,
-            "secret_configured": secret_set,
-        })
+        }
+        if settings.DEBUG:
+            payload["bot_configured"] = bot_token_set
+            payload["secret_configured"] = secret_set
+        return JsonResponse(payload)
 
     def post(self, request, *args, **kwargs):
-        # 1. Validate Secret Token if configured
+        # 1. Validate Secret Token (fail closed in production when unconfigured)
         expected_secret = os.getenv("TELEGRAM_WEBHOOK_SECRET", "").strip()
-        if expected_secret:
+        if not expected_secret:
+            if not settings.DEBUG:
+                logger.error("TELEGRAM_WEBHOOK_SECRET is not configured in production.")
+                return HttpResponseForbidden("Forbidden: Webhook secret not configured.")
+        else:
             incoming_secret = request.headers.get("X-Telegram-Bot-Api-Secret-Token", "")
-            if incoming_secret != expected_secret:
+            if not hmac.compare_digest(incoming_secret, expected_secret):
                 logger.warning("Telegram webhook received request with invalid secret token.")
                 return HttpResponseForbidden("Forbidden: Invalid secret token.")
+
+        if len(request.body or b"") > MAX_WEBHOOK_BODY_BYTES:
+            return HttpResponse("Payload too large.", status=413)
 
         # 2. Parse JSON Payload
         try:
