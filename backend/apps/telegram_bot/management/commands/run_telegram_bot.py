@@ -5,7 +5,7 @@ import logging
 from django.core.management.base import BaseCommand, CommandError
 from django.db import close_old_connections
 import telebot
-from apps.telegram_bot.bot import create_bot, get_web_url
+from apps.telegram_bot.bot import create_bot, get_web_url, sync_bot_commands
 
 logger = logging.getLogger(__name__)
 
@@ -36,6 +36,7 @@ class Command(BaseCommand):
         try:
             bot = create_bot(token=token)
             bot_info = bot.get_me()
+            sync_bot_commands(bot)
         except Exception as exc:
             raise CommandError(f"Failed to authenticate with Telegram API: {exc}")
 

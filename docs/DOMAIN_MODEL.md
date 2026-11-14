@@ -1,9 +1,9 @@
 # CareerLens — Domain & Conceptual Model
 
 > **Document Type:** Domain Modeling & Entity-Relationship Specification  
-> **Target Audience:** Software Architects, Data Engineers, Full-Stack Developers  
+> **Target Audience:** Software Architects, Data Engineers, Full-Stack Developers, Security Engineers  
 > **Status:** Fully Verified Against Django ORM Models and Database Migrations  
-> **Last Updated:** 2026-11-11  
+> **Last Updated:** 2026-11-14  
 
 ---
 
@@ -132,9 +132,10 @@ erDiagram
   - `avatar` (TextField, optional image URL or Base64 string)
   - `is_active` (BooleanField, default=True)
   - `date_joined` (DateTimeField, auto_now_add=True)
-- **Business Rules:**
+- **Business & Security Rules:**
   - Email addresses must be strictly unique across the platform.
   - The `role` determines which profile table (`CandidateProfile` or `CompanyProfile`) is linked.
+  - Registration rejects `role=ADMIN` attempts to prevent privilege escalation.
 
 #### `CandidateProfile` (`accounts.CandidateProfile`)
 - **Table Name:** `accounts_candidateprofile`
@@ -178,7 +179,7 @@ erDiagram
   - `target_id` (CharField, max_length=255)
   - `details` (TextField, descriptive log entry)
   - `created_at` (DateTimeField, auto_now_add=True)
-- **Constraints:** Append-only; no update or deletion views exist.
+- **Constraints:** Strictly append-only; no deletion or edit endpoints exist.
 
 ---
 
@@ -186,7 +187,7 @@ erDiagram
 
 #### `JobCategory` (`jobs.JobCategory`)
 - **Table Name:** `jobs_jobcategory`
-- **Primary Responsibilities:** Standardized grouping of job openings (e.g. "Software Engineering", "Data Science", "Design").
+- **Primary Responsibilities:** Standardized taxonomy of job vacancy categories (e.g. "Software Engineering", "Design", "DevOps").
 - **Attributes:** `id`, `name` (unique, max_length=150), `created_at`.
 
 #### `Skill` (`jobs.Skill`)
@@ -200,6 +201,7 @@ erDiagram
 - **Attributes:**
   - `id` (BigAutoField, PK)
   - `company` (ForeignKey to `CompanyProfile`, on_delete=CASCADE, related_name="jobs")
+  - `category` (ForeignKey to `JobCategory`, on_delete=SET_NULL, null=True, related_name="jobs")
   - `title` (CharField, max_length=255)
   - `description` (TextField)
   - `location` (CharField, max_length=255, blank=True)
@@ -210,7 +212,7 @@ erDiagram
   - `deadline` (DateTimeField, nullable)
   - `created_at` & `updated_at` (DateTimeField)
 - **Business Rules:**
-  - Unauthenticated visitors and candidates can only inspect jobs in `PUBLISHED` status.
+  - Public visitors and candidates can only inspect jobs in `PUBLISHED` status.
   - Only the owning company or administrators can modify job details.
 
 #### `JobSkill` (`jobs.JobSkill`)
@@ -221,7 +223,7 @@ erDiagram
 
 #### `CandidateSkill` (`accounts.CandidateSkill`)
 - **Table Name:** `accounts_candidateskill`
-- **Primary Responsibilities:** Junction table capturing candidate proficiencies.
+- **Primary Responsibilities:** Junction table capturing candidate skill proficiencies.
 - **Attributes:**
   - `id` (BigAutoField, PK)
   - `candidate` (ForeignKey to `CandidateProfile`, on_delete=CASCADE, related_name="skills")
@@ -290,6 +292,9 @@ erDiagram
   - `status` (CharField, choices=`PENDING`, `ACCEPTED`, `DECLINED`, default=`PENDING`)
   - `sent_at` (DateTimeField, auto_now_add=True)
   - `responded_at` (DateTimeField, nullable)
+- **Business & Security Rules:**
+  - Candidates may only mutate `status` to `ACCEPTED` or `DECLINED`. Attempting to modify salary, currency, or terms raises `PermissionDenied`.
+  - Only the owning company or an administrator may delete offers.
 
 #### `ApplicationNote` (`applications.ApplicationNote`)
 - **Table Name:** `applications_applicationnote`
@@ -303,11 +308,11 @@ erDiagram
 
 #### `InterviewPreparation` (`applications.InterviewPreparation`)
 - **Table Name:** `applications_interviewpreparation`
-- **Primary Responsibilities:** AI-generated tailored interview preparation kit customized to the specific candidate and job vacancy.
+- **Primary Responsibilities:** Tailored AI interview preparation kit synthesized by Google Gemini AI customized to the candidate's CV and job requirements.
 - **Attributes:**
   - `id` (BigAutoField, PK)
   - `application` (OneToOneField to `Application`, on_delete=CASCADE, related_name="interview_prep")
-  - `prep_data` (JSONField, default=dict, containing technical questions, behavioral tips, and company research)
+  - `prep_data` (JSONField, default=dict, containing technical questions, behavioral frameworks, and preparation checklist)
   - `is_ai_generated` (BooleanField, default=True)
   - `created_at` & `updated_at` (DateTimeField)
 
@@ -387,8 +392,12 @@ erDiagram
   - `sender` (ForeignKey to `User`, on_delete=CASCADE, related_name="sent_messages")
   - `recipient` (ForeignKey to `User`, on_delete=CASCADE, related_name="received_messages")
   - `text` (TextField)
+  - `is_read` (BooleanField, default=False)
   - `sent_at` (DateTimeField, auto_now_add=True)
   - `read_at` (DateTimeField, nullable)
+- **Security Rules:**
+  - Recipients can only toggle `is_read`. Attempting to alter message text or change recipient raises `PermissionDenied`.
+  - Only the original sender or an administrator may delete messages.
 
 #### `Notification` (`messaging.Notification`)
 - **Table Name:** `messaging_notification`
@@ -400,6 +409,8 @@ erDiagram
   - `type` (CharField, choices=`INFO`, `ALERT`, `SUCCESS`, default=`INFO`)
   - `is_read` (BooleanField, default=False)
   - `created_at` (DateTimeField, auto_now_add=True)
+- **Security Rules:**
+  - Non-admin users cannot create notifications targeting other users.
 
 ---
 
@@ -420,7 +431,7 @@ stateDiagram-v2
 ```
 
 1. **Application Uniqueness Invariant:**
-   A student candidate can submit exactly one application to a given job vacancy (`unique_together = ('candidate', 'job')`). Retrying application submission raises HTTP 400 validation error.
+   A student candidate can submit exactly one application to a given job vacancy (`unique_together = ('candidate', 'job')`). Retrying application submission raises an HTTP 400 validation error.
 2. **Deterministic ATS State Transitions:**
    Whenever an application transitions between statuses, an atomic transaction:
    - Updates `Application.status`.
@@ -430,7 +441,6 @@ stateDiagram-v2
 3. **Role Exclusivity:**
    A user account cannot be both a `CANDIDATE` and a `COMPANY`. Profiles are mutually exclusive one-to-one extensions of `accounts.User`.
 4. **Freemium AI Quota Invariant:**
-   Free plan candidates are constrained to 5 improvements in `CandidateUsage`. Any subsequent generation request is rejected unless upgraded or approved.
+   Free plan candidates are constrained to 5 improvements in `CandidateUsage`. Any subsequent generation request is rejected unless upgraded.
 5. **BYOK Security:**
    Candidates supply their own Google Gemini API key. Before persisting, the key is actively verified against Google's `ListModels` API endpoint.
-
