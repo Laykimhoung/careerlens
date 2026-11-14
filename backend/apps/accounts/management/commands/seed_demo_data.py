@@ -158,7 +158,7 @@ class Command(BaseCommand):
                     "industry": "Digital Banking & FinTech",
                     "size": "500-1000 employees",
                     "location": "Phnom Penh, Cambodia",
-                    "website": "https://www.wingmoney.com",
+                    "website": "https://www.wingbank.com.kh/",
                     "is_real": True,
                 },
                 {
@@ -250,6 +250,28 @@ class Command(BaseCommand):
                 # Company Profile
                 profile = CompanyProfile.objects.filter(user=user).first()
                 if profile:
+                    updated_fields = []
+                    if profile.company_name != cdata["company_name"]:
+                        profile.company_name = cdata["company_name"]
+                        updated_fields.append("company_name")
+                    if profile.website != cdata["website"]:
+                        profile.website = cdata["website"]
+                        updated_fields.append("website")
+                    if profile.industry != cdata["industry"]:
+                        profile.industry = cdata["industry"]
+                        updated_fields.append("industry")
+                    if profile.size != cdata["size"]:
+                        profile.size = cdata["size"]
+                        updated_fields.append("size")
+                    if profile.location != cdata["location"]:
+                        profile.location = cdata["location"]
+                        updated_fields.append("location")
+                    if profile.verification_status != CompanyProfile.VerificationStatus.VERIFIED:
+                        profile.verification_status = CompanyProfile.VerificationStatus.VERIFIED
+                        updated_fields.append("verification_status")
+                    if updated_fields:
+                        profile.save(update_fields=updated_fields)
+
                     if tracker.is_instance_tracked(profile):
                         record_stat("CompanyProfile", "already_present")
                     else:

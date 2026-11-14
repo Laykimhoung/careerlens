@@ -258,7 +258,7 @@ Both tiers rely on `.env` configuration files derived from their committed `.env
   - `SECRET_KEY`: Django cryptographic signing key.
   - `DEBUG`: Boolean flag (`True` in development, `False` in production).
   - `DATABASE_URL`: Connection string for Neon Serverless PostgreSQL (`postgresql://...sslmode=require`).
-  - `CORS_ALLOWED_ORIGINS`: Permitted frontend origins (e.g. `http://localhost:5173,https://careerlens-ivory-ten.vercel.app`).
+  - `CORS_ALLOWED_ORIGINS`: Permitted frontend origins (e.g. `http://localhost:5173,https://careerlens-2k26.vercel.app`).
   - `TELEGRAM_BOT_TOKEN` & `TELEGRAM_WEBHOOK_SECRET`: Credentials for Telegram Bot API.
   - `EMAIL_HOST_USER` & `EMAIL_HOST_PASSWORD`: SMTP credentials for password reset delivery.
   - `DRF_NUM_PROXIES`: Number of reverse proxy hops to trust (default `1` for Render).
