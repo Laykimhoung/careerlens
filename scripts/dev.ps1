@@ -2,11 +2,16 @@
 .SYNOPSIS
     CareerLens Local Development Environment Launcher
 .DESCRIPTION
-    Launches both Django REST Framework backend and Vite React frontend
-    in synchronized development mode.
+    Launches Django REST Framework backend and Vite React frontend
+    in synchronized development mode. Pass -WithBot to also launch the
+    Telegram bot in local polling mode.
 .USAGE
     .\scripts\dev.ps1
+    .\scripts\dev.ps1 -WithBot
 #>
+param(
+    [switch]$WithBot
+)
 
 $RootPath = Split-Path -Parent $PSScriptRoot
 
@@ -36,15 +41,26 @@ if (-not (Test-Path $NodeModules)) {
     Pop-Location
 }
 
-Write-Host "`n[1/2] Starting Django Backend on http://127.0.0.1:8000/ ..." -ForegroundColor Green
+$TotalSteps = if ($WithBot) { 3 } else { 2 }
+
+Write-Host "`n[1/$TotalSteps] Starting Django Backend on http://127.0.0.1:8000/ ..." -ForegroundColor Green
 $BackendCmd = "cd '$BackendPath'; & '$VenvPython' manage.py runserver"
 Start-Process powershell -ArgumentList "-NoExit", "-Command", "$BackendCmd"
 
-Write-Host "[2/2] Starting Vite Frontend on http://localhost:5173/ ..." -ForegroundColor Green
+Write-Host "[2/$TotalSteps] Starting Vite Frontend on http://localhost:5173/ ..." -ForegroundColor Green
 $FrontendCmd = "cd '$FrontendPath'; npm run dev"
 Start-Process powershell -ArgumentList "-NoExit", "-Command", "$FrontendCmd"
 
-Write-Host "`nBoth services launched in separate windows!" -ForegroundColor Green
+if ($WithBot) {
+    Write-Host "[3/$TotalSteps] Starting Telegram Bot (polling mode) ..." -ForegroundColor Green
+    $BotCmd = "cd '$BackendPath'; & '$VenvPython' manage.py run_telegram_bot"
+    Start-Process powershell -ArgumentList "-NoExit", "-Command", "$BotCmd"
+}
+
+Write-Host "`nServices launched in separate windows!" -ForegroundColor Green
 Write-Host "- Backend API:  http://127.0.0.1:8000/" -ForegroundColor Gray
 Write-Host "- Frontend App: http://localhost:5173/" -ForegroundColor Gray
-Write-Host "Press Ctrl+C in either window to terminate that service.`n" -ForegroundColor Gray
+if ($WithBot) {
+    Write-Host "- Telegram Bot: Polling mode (note: clears any active webhook)" -ForegroundColor Gray
+}
+Write-Host "Press Ctrl+C in any window to terminate that service.`n" -ForegroundColor Gray

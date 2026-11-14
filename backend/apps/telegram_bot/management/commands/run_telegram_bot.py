@@ -59,7 +59,7 @@ class Command(BaseCommand):
             try:
                 close_old_connections()
                 bot.infinity_polling(timeout=20, long_polling_timeout=10)
-                break
+                time.sleep(2)
             except KeyboardInterrupt:
                 self.stdout.write(self.style.SUCCESS("\nTelegram bot stopped gracefully."))
                 sys.exit(0)
