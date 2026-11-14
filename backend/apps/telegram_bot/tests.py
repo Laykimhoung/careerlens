@@ -14,6 +14,10 @@ from .bot import (
     format_job_details,
     build_job_buttons,
     build_details_buttons,
+    build_list_keyboard,
+    clean_html_to_telegram,
+    validate_http_url,
+    encode_search_query,
     get_web_url,
 )
 
@@ -254,21 +258,22 @@ class TelegramBotUnitTests(TestCase):
         bot = create_bot()
         msg = self._make_msg("/jobs")
 
-        with patch.object(bot, "send_message") as mock_send:
+        with patch.object(bot, "send_message") as mock_send, patch.object(bot, "send_chat_action"):
             bot.process_new_messages([msg])
-            self.assertGreaterEqual(mock_send.call_count, 2)
-            first_call_text = mock_send.call_args_list[0][0][1]
-            self.assertIn("Latest Published Jobs", first_call_text)
+            mock_send.assert_called_once()
+            args, kwargs = mock_send.call_args
+            self.assertIn("Latest Published Jobs", args[1])
+            self.assertIn("Senior React Engineer", args[1])
 
     def test_bot_search_handler_with_results(self):
         bot = create_bot()
         msg = self._make_msg("/search React")
 
-        with patch.object(bot, "send_message") as mock_send:
+        with patch.object(bot, "send_message") as mock_send, patch.object(bot, "send_chat_action"):
             bot.process_new_messages([msg])
-            self.assertGreaterEqual(mock_send.call_count, 2)
-            card_text = mock_send.call_args_list[1][0][1]
-            self.assertIn("Senior React Engineer", card_text)
+            mock_send.assert_called_once()
+            args, kwargs = mock_send.call_args
+            self.assertIn("Senior React Engineer", args[1])
 
     def test_bot_search_handler_empty_query_shows_usage(self):
         bot = create_bot()
@@ -284,22 +289,41 @@ class TelegramBotUnitTests(TestCase):
         bot = create_bot()
         msg = self._make_msg("/job 999999")
 
-        with patch.object(bot, "send_message") as mock_send:
+        with patch.object(bot, "send_message") as mock_send, patch.object(bot, "send_chat_action"):
             bot.process_new_messages([msg])
             mock_send.assert_called_once()
             args, kwargs = mock_send.call_args
-            self.assertIn("Job #999999 not found", args[1])
+            self.assertIn("Job #999999 is no longer available", args[1])
 
     def test_bot_callback_query_job_details(self):
         bot = create_bot()
+        cb = self._make_callback(f"job:{self.job_published.id}:all:0")
+
+        with patch.object(bot, "edit_message_text") as mock_edit, patch.object(bot, "answer_callback_query"):
+            bot.process_new_callback_query([cb])
+            mock_edit.assert_called_once()
+            kwargs = mock_edit.call_args.kwargs
+            self.assertIn("Senior React Engineer", kwargs["text"])
+            self.assertIn("Build scalable UI applications.", kwargs["text"])
+            # Back button should restore the exact list context
+            back_buttons = [
+                b for row in kwargs["reply_markup"].keyboard for b in row if b.callback_data == "list:all:0"
+            ]
+            self.assertEqual(len(back_buttons), 1)
+
+    def test_bot_callback_edit_fallback_to_send_message(self):
+        """If edit_message_text fails (e.g. message deleted), bot falls back to send_message."""
+        bot = create_bot()
         cb = self._make_callback(f"job_{self.job_published.id}")
 
-        with patch.object(bot, "send_message") as mock_send, patch.object(bot, "answer_callback_query"):
+        with (
+            patch.object(bot, "edit_message_text", side_effect=RuntimeError("message to edit not found")),
+            patch.object(bot, "send_message") as mock_send,
+            patch.object(bot, "answer_callback_query"),
+        ):
             bot.process_new_callback_query([cb])
             mock_send.assert_called_once()
-            args, kwargs = mock_send.call_args
-            self.assertIn("Senior React Engineer", args[1])
-            self.assertIn("Build scalable UI applications.", args[1])
+            self.assertIn("Senior React Engineer", mock_send.call_args[0][1])
 
     # -------------------------------------------------------------
     # 8. Natural Language & Free-Text Interaction (Prevents "no response")
@@ -309,11 +333,10 @@ class TelegramBotUnitTests(TestCase):
         bot = create_bot()
         msg = self._make_msg("React")
 
-        with patch.object(bot, "send_message") as mock_send:
+        with patch.object(bot, "send_message") as mock_send, patch.object(bot, "send_chat_action"):
             bot.process_new_messages([msg])
-            self.assertGreaterEqual(mock_send.call_count, 2)
-            card_text = mock_send.call_args_list[1][0][1]
-            self.assertIn("Senior React Engineer", card_text)
+            mock_send.assert_called_once()
+            self.assertIn("Senior React Engineer", mock_send.call_args[0][1])
 
     def test_bot_natural_text_greeting(self):
         """Greetings receive warm welcome and reply keyboard menu."""
@@ -331,8 +354,121 @@ class TelegramBotUnitTests(TestCase):
         bot = create_bot()
         msg = self._make_msg(f"#{self.job_published.id}")
 
-        with patch.object(bot, "send_message") as mock_send:
+        with patch.object(bot, "send_message") as mock_send, patch.object(bot, "send_chat_action"):
             bot.process_new_messages([msg])
             mock_send.assert_called_once()
             args, kwargs = mock_send.call_args
             self.assertIn("Senior React Engineer", args[1])
+
+    def test_bot_unknown_slash_command_responds_gracefully(self):
+        bot = create_bot()
+        msg = self._make_msg("/nonexistent_cmd")
+
+        with patch.object(bot, "send_message") as mock_send:
+            bot.process_new_messages([msg])
+            mock_send.assert_called_once()
+            self.assertIn("Unknown command", mock_send.call_args[0][1])
+
+    # -------------------------------------------------------------
+    # 9. Modern UX, Filtering, Pagination & Formatting Reliability
+    # -------------------------------------------------------------
+    def test_clean_html_to_telegram_preserves_paragraphs_and_bullets(self):
+        raw = "<p>First paragraph.</p><ul><li>Item one</li><li>Item two &amp; more</li></ul>"
+        cleaned, truncated = clean_html_to_telegram(raw)
+        self.assertFalse(truncated)
+        self.assertIn("First paragraph.", cleaned)
+        self.assertIn("• Item one", cleaned)
+        self.assertIn("• Item two &amp; more", cleaned)
+
+    def test_validate_http_url_rejects_unsafe_or_malformed_urls(self):
+        self.assertEqual(validate_http_url("https://mekonglabs.com"), "https://mekonglabs.com")
+        self.assertIsNone(validate_http_url("javascript:alert(1)"))
+        self.assertIsNone(validate_http_url("not a url"))
+        self.assertIsNone(validate_http_url(""))
+
+    def test_verified_company_badge_rendered_on_details(self):
+        self.company.verification_status = CompanyProfile.VerificationStatus.VERIFIED
+        self.company.industry = "FinTech"
+        self.company.website = "https://mekonglabs.example.com"
+        self.company.save()
+
+        details = format_job_details(self.job_published)
+        self.assertIn("Verified ✓", details)
+        self.assertIn("FinTech", details)
+
+        markup = build_details_buttons(
+            self.job_published.id,
+            back_callback="list:all:0",
+            company_website=self.company.website,
+        )
+        site_buttons = [
+            b for row in markup.keyboard for b in row if b.text == "🌐 Company Website"
+        ]
+        self.assertEqual(len(site_buttons), 1)
+        self.assertEqual(site_buttons[0].url, "https://mekonglabs.example.com")
+
+    def test_callback_data_never_exceeds_64_bytes_for_long_unicode_search(self):
+        long_query = "អ្នកអភិវឌ្ឍន៍ Python Backend Engineer Phnom Penh Remote Full Stack " * 3
+        q_hash = encode_search_query(long_query)
+        markup = build_list_keyboard(
+            [self.job_published],
+            page=0,
+            total_pages=3,
+            query_hash=q_hash,
+        )
+        for row in markup.keyboard:
+            for btn in row:
+                if btn.callback_data:
+                    self.assertLessEqual(len(btn.callback_data.encode("utf-8")), 64)
+
+    def test_remote_and_internship_filters_match_real_model_fields(self):
+        remote_job = Job.objects.create(
+            company=self.company,
+            title="Cloud Architect",
+            description="Work from anywhere.",
+            location="Anywhere",
+            employment_type=Job.EmploymentType.FULL_TIME,
+            workplace_type=Job.WorkplaceType.REMOTE,
+            status=Job.Status.PUBLISHED,
+        )
+        intern_job = Job.objects.create(
+            company=self.company,
+            title="Junior QA Trainee",
+            description="Learn automated testing.",
+            location="Phnom Penh",
+            employment_type=Job.EmploymentType.INTERNSHIP,
+            workplace_type=Job.WorkplaceType.ON_SITE,
+            status=Job.Status.PUBLISHED,
+        )
+
+        bot = create_bot()
+        with patch.object(bot, "send_message") as mock_send, patch.object(bot, "send_chat_action"):
+            bot.process_new_messages([self._make_msg("/remote")])
+            remote_text = mock_send.call_args[0][1]
+            self.assertIn(remote_job.title, remote_text)
+            self.assertNotIn(intern_job.title, remote_text)
+
+        with patch.object(bot, "send_message") as mock_send, patch.object(bot, "send_chat_action"):
+            bot.process_new_messages([self._make_msg("/internships")])
+            intern_text = mock_send.call_args[0][1]
+            self.assertIn(intern_job.title, intern_text)
+            self.assertNotIn(remote_job.title, intern_text)
+
+    def test_pagination_navigates_to_second_page(self):
+        for i in range(6):
+            Job.objects.create(
+                company=self.company,
+                title=f"Software Engineer #{i}",
+                description="Build great systems.",
+                location="Phnom Penh",
+                status=Job.Status.PUBLISHED,
+            )
+
+        bot = create_bot()
+        cb = self._make_callback("list:all:1")
+        with patch.object(bot, "edit_message_text") as mock_edit, patch.object(bot, "answer_callback_query"):
+            bot.process_new_callback_query([cb])
+            mock_edit.assert_called_once()
+            text = mock_edit.call_args.kwargs["text"]
+            self.assertIn("Page 2/2", text)
+            self.assertIn("Showing 6–7 of 7", text)
