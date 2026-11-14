@@ -1,3 +1,4 @@
+import os
 from unittest.mock import patch, MagicMock
 from telebot import types
 from django.test import TestCase, override_settings
@@ -385,6 +386,17 @@ class TelegramBotUnitTests(TestCase):
         self.assertIsNone(validate_http_url("javascript:alert(1)"))
         self.assertIsNone(validate_http_url("not a url"))
         self.assertIsNone(validate_http_url(""))
+        self.assertIsNone(validate_http_url("http://localhost:5173"))
+        self.assertIsNone(validate_http_url("http://127.0.0.1:8000"))
+        self.assertIsNone(validate_http_url("http://localhost/jobs"))
+
+    def test_get_web_url_falls_back_when_configured_with_localhost(self):
+        with patch.dict(os.environ, {"CAREERLENS_WEB_URL": "http://localhost:5173"}):
+            self.assertEqual(get_web_url(), "https://careerlens-2k26.vercel.app")
+        with patch.dict(os.environ, {"CAREERLENS_WEB_URL": '"http://localhost:5173"'}):
+            self.assertEqual(get_web_url(), "https://careerlens-2k26.vercel.app")
+        with patch.dict(os.environ, {"CAREERLENS_WEB_URL": "https://mycustomdomain.com/"}):
+            self.assertEqual(get_web_url(), "https://mycustomdomain.com")
 
     def test_verified_company_badge_rendered_on_details(self):
         self.company.verification_status = CompanyProfile.VerificationStatus.VERIFIED
@@ -472,3 +484,68 @@ class TelegramBotUnitTests(TestCase):
             text = mock_edit.call_args.kwargs["text"]
             self.assertIn("Page 2/2", text)
             self.assertIn("Showing 6–7 of 7", text)
+
+
+class SetTelegramWebhookCommandTest(TestCase):
+    def test_requires_https_url_and_secret(self):
+        from django.core.management import call_command
+        from django.core.management.base import CommandError
+
+        with patch.dict(os.environ, {"TELEGRAM_BOT_TOKEN": "123:abc", "TELEGRAM_WEBHOOK_SECRET": ""}):
+            with patch("apps.telegram_bot.management.commands.set_telegram_webhook.create_bot"):
+                with self.assertRaises(CommandError):
+                    call_command("set_telegram_webhook", url="http://insecure.example.com/hook", secret="sec")
+
+                with self.assertRaises(CommandError):
+                    call_command("set_telegram_webhook", url="https://example.com/api/telegram/webhook/")
+
+    def test_registers_webhook_with_secret_and_syncs_commands(self):
+        from io import StringIO
+        from django.core.management import call_command
+
+        mock_bot = MagicMock()
+        out = StringIO()
+        with patch.dict(os.environ, {"TELEGRAM_BOT_TOKEN": "123:abc"}):
+            with patch(
+                "apps.telegram_bot.management.commands.set_telegram_webhook.create_bot",
+                return_value=mock_bot,
+            ), patch(
+                "apps.telegram_bot.management.commands.set_telegram_webhook.sync_bot_commands"
+            ) as mock_sync:
+                call_command(
+                    "set_telegram_webhook",
+                    url="https://api.example.com/api/telegram/webhook/",
+                    secret="my-secret",
+                    drop_pending=True,
+                    stdout=out,
+                )
+
+        mock_bot.set_webhook.assert_called_once_with(
+            url="https://api.example.com/api/telegram/webhook/",
+            secret_token="my-secret",
+            drop_pending_updates=True,
+        )
+        mock_sync.assert_called_once_with(mock_bot)
+        self.assertIn("Webhook registered:", out.getvalue())
+
+    def test_info_and_delete_flags(self):
+        from io import StringIO
+        from django.core.management import call_command
+
+        mock_bot = MagicMock()
+        mock_bot.get_webhook_info.return_value = MagicMock(
+            url="https://api.example.com/api/telegram/webhook/",
+            pending_update_count=0,
+            last_error_message="",
+        )
+        out = StringIO()
+        with patch.dict(os.environ, {"TELEGRAM_BOT_TOKEN": "123:abc"}):
+            with patch(
+                "apps.telegram_bot.management.commands.set_telegram_webhook.create_bot",
+                return_value=mock_bot,
+            ):
+                call_command("set_telegram_webhook", info=True, stdout=out)
+                self.assertIn("https://api.example.com/api/telegram/webhook/", out.getvalue())
+
+                call_command("set_telegram_webhook", delete=True, stdout=out)
+                mock_bot.delete_webhook.assert_called_once_with(drop_pending_updates=False)

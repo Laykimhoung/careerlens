@@ -69,29 +69,43 @@ BOT_COMMANDS = [
 ]
 
 
+DEFAULT_WEB_URL = "https://careerlens-2k26.vercel.app"
+
+
 def validate_http_url(raw_url):
-    """Validates and normalizes an HTTP/HTTPS URL for Telegram buttons and links."""
+    """
+    Validates and normalizes an HTTP/HTTPS URL for Telegram buttons and links.
+    Rejects localhost, local IP addresses, and invalid hostnames because
+    Telegram Bot API strictly rejects them as 'Wrong HTTP URL'.
+    """
     if not raw_url or not isinstance(raw_url, str):
         return None
-    cleaned = raw_url.strip()
+    cleaned = raw_url.strip().strip("\"'")
     if not cleaned or any(ch.isspace() for ch in cleaned):
         return None
     parsed = urlparse(cleaned)
     if parsed.scheme not in ("http", "https") or not parsed.netloc:
         return None
+    hostname = (parsed.hostname or "").lower()
+    if hostname in ("localhost", "127.0.0.1", "0.0.0.0", "::1") or "." not in hostname:
+        return None
     return cleaned
 
 
 def get_web_url():
-    """Returns the configured public frontend URL, defaulting to production URL."""
+    """
+    Returns the configured public frontend URL.
+    If the environment variable points to a local/invalid URL (e.g. localhost during local dev),
+    it safely falls back to the production deployment URL so Telegram buttons never fail.
+    """
     raw_url = os.getenv(
         "CAREERLENS_WEB_URL",
-        "https://careerlens-ivory-ten.vercel.app",
-    ).strip()
+        DEFAULT_WEB_URL,
+    ).strip().strip("\"'")
     if "," in raw_url:
-        raw_url = raw_url.split(",")[0].strip()
+        raw_url = raw_url.split(",")[0].strip().strip("\"'")
     validated = validate_http_url(raw_url.rstrip("/"))
-    return (validated or "https://careerlens-ivory-ten.vercel.app").rstrip("/")
+    return (validated or DEFAULT_WEB_URL).rstrip("/")
 
 
 def format_salary(salary_min, salary_max):
@@ -528,12 +542,24 @@ def send_safe_message(
             exc,
         )
         plain_text = _strip_html_to_plain(text)
-        return bot.send_message(
-            chat_id,
-            plain_text,
-            reply_markup=reply_markup,
-            disable_web_page_preview=disable_web_page_preview,
-        )
+        try:
+            return bot.send_message(
+                chat_id,
+                plain_text,
+                reply_markup=reply_markup,
+                disable_web_page_preview=disable_web_page_preview,
+            )
+        except Exception as retry_exc:
+            logger.warning(
+                "Telegram send_message retry with markup failed: %s. Sending plain text without markup.",
+                retry_exc,
+            )
+            return bot.send_message(
+                chat_id,
+                plain_text,
+                reply_markup=None,
+                disable_web_page_preview=disable_web_page_preview,
+            )
 
 
 def edit_or_send_message(

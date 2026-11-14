@@ -277,7 +277,7 @@ sequenceDiagram
     User->>Telegram: Tap job button or [🚀 Apply Now]
     Bot->>Telegram: edit_message_text with detailed HTML view (verified badge, blockquote, company & Apply URL)
     User->>Browser: Click [🚀 Apply Now]
-    Browser->>Browser: Open https://careerlens-ivory-ten.vercel.app/candidate/jobs/42
+    Browser->>Browser: Open https://careerlens-2k26.vercel.app/candidate/jobs/42
     Browser->>Browser: ProtectedRoute checks auth -> Preserves redirect URL
 ```
 
