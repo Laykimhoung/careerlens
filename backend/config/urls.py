@@ -14,11 +14,16 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+import logging
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.db import connection
 from django.http import JsonResponse
+from django.views.decorators.http import require_GET
+
+logger = logging.getLogger(__name__)
 
 
 def api_root_view(request):
@@ -51,12 +56,45 @@ def api_root_view(request):
     })
 
 
+@require_GET
+def health_check_view(request):
+    """Lightweight unauthenticated health endpoint verifying backend & PostgreSQL readiness."""
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT 1")
+            cursor.fetchone()
+    except Exception as exc:
+        logger.warning("Health check database probe failed (%s).", type(exc).__name__)
+        response = JsonResponse(
+            {
+                "status": "unhealthy",
+                "service": "CareerLens API",
+                "database": "unavailable",
+            },
+            status=503,
+        )
+        response["Cache-Control"] = "no-store"
+        return response
+
+    response = JsonResponse(
+        {
+            "status": "ok",
+            "service": "CareerLens API",
+            "database": "connected",
+        },
+        status=200,
+    )
+    response["Cache-Control"] = "no-store"
+    return response
+
+
 admin.site.site_header = "CareerLens Admin"
 admin.site.site_title = "CareerLens Admin"
 admin.site.index_title = "Platform Administration"
 
 urlpatterns = [
     path('', api_root_view, name='api-root'),
+    path('api/health/', health_check_view, name='api-health'),
     path('admin/', admin.site.urls),
     path('api/auth/', include('apps.accounts.urls')),
     path('api/', include('apps.jobs.urls')),

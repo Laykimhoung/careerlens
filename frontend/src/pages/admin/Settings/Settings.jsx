@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../../../hooks/useAuth";
 import { useLanguage } from "../../../context/LanguageContext";
 import { getMeApi, updateMeApi } from "../../../services/authService";
+import { clearLegacyImageStorage } from "../../../utils/storage";
 import { extractResults } from "../../../services/api";
 import {
   fetchAdminDashboardData,
@@ -18,14 +19,7 @@ function Settings() {
   const [session, setSession] = useState(
     () => localStorage.getItem("careerlens_admin_session_timeout") || "60"
   );
-  const [adminAvatar, setAdminAvatar] = useState(() => {
-    return (
-      user?.avatar ||
-      (user?.id ? localStorage.getItem(`careerlens_admin_avatar_${user.id}`) : null) ||
-      localStorage.getItem("careerlens_admin_avatar") ||
-      ""
-    );
-  });
+  const [adminAvatar, setAdminAvatar] = useState(() => user?.avatar || "");
 
   useEffect(() => {
     if (user?.avatar) {
@@ -45,7 +39,8 @@ function Settings() {
       const dataUrl = reader.result;
       setAdminAvatar(dataUrl);
 
-      // Persist directly to PostgreSQL database
+      // Persist directly to PostgreSQL database; keep image data out of localStorage
+      clearLegacyImageStorage();
       try {
         await updateMeApi({ avatar: dataUrl });
         if (refreshUser) await refreshUser();
@@ -53,34 +48,21 @@ function Settings() {
         console.warn("Failed to persist admin avatar to database:", err);
       }
 
-      if (user?.id) {
-        localStorage.setItem(`careerlens_admin_avatar_${user.id}`, dataUrl);
-        localStorage.setItem(`careerlens_avatar_${user.id}`, dataUrl);
-      }
-      localStorage.setItem("careerlens_admin_avatar", dataUrl);
-      localStorage.setItem("careerlens_avatar", dataUrl);
       window.dispatchEvent(new CustomEvent("careerlens_profile_image_updated", { detail: { avatar: dataUrl } }));
-      window.dispatchEvent(new Event("storage"));
     };
     reader.readAsDataURL(file);
   };
 
   const handleRemoveAvatar = async () => {
     setAdminAvatar("");
+    clearLegacyImageStorage();
     try {
       await updateMeApi({ avatar: "" });
       if (refreshUser) await refreshUser();
     } catch (err) {
       console.warn("Failed to remove admin avatar from database:", err);
     }
-    if (user?.id) {
-      localStorage.removeItem(`careerlens_admin_avatar_${user.id}`);
-      localStorage.removeItem(`careerlens_avatar_${user.id}`);
-    }
-    localStorage.removeItem("careerlens_admin_avatar");
-    localStorage.removeItem("careerlens_avatar");
     window.dispatchEvent(new CustomEvent("careerlens_profile_image_updated", { detail: { avatar: "" } }));
-    window.dispatchEvent(new Event("storage"));
   };
   const [counts, setCounts] = useState({
     users: 0,

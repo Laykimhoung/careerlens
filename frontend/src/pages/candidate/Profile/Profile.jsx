@@ -8,6 +8,7 @@ import {
   updateCandidateProfile,
 } from "../../../services/candidateService";
 import { updateMeApi } from "../../../services/authService";
+import { clearLegacyImageStorage } from "../../../utils/storage";
 import { useLanguage } from "../../../context/LanguageContext";
 import "./Profile.css";
 
@@ -185,14 +186,13 @@ export default function CandidateProfile() {
     }
   };
 
-  const [avatar, setAvatar] = useState(() => {
-    return (
-      user?.avatar ||
-      (user?.id ? localStorage.getItem(`careerlens_avatar_${user.id}`) : null) ||
-      localStorage.getItem("careerlens_avatar") ||
-      ""
-    );
-  });
+  const [avatar, setAvatar] = useState(() => user?.avatar || "");
+
+  useEffect(() => {
+    if (user?.avatar) {
+      setAvatar(user.avatar);
+    }
+  }, [user?.avatar]);
 
   const handleAvatarChange = (e) => {
     const file = e.target.files?.[0];
@@ -206,23 +206,19 @@ export default function CandidateProfile() {
       const dataUrl = reader.result;
       setAvatar(dataUrl);
 
-      // Persist directly to database
+      // Persist directly to database; keep image data out of localStorage to avoid quota errors
+      clearLegacyImageStorage();
       try {
         await Promise.all([
           updateMeApi({ avatar: dataUrl }),
           profileId ? updateCandidateProfile(profileId, { avatar: dataUrl }) : Promise.resolve(),
         ]);
-        if (refreshUser) refreshUser();
+        if (refreshUser) await refreshUser();
       } catch (err) {
         console.warn("Failed to persist avatar to database:", err);
       }
 
-      if (user?.id) {
-        localStorage.setItem(`careerlens_avatar_${user.id}`, dataUrl);
-      }
-      localStorage.setItem("careerlens_avatar", dataUrl);
       window.dispatchEvent(new CustomEvent("careerlens_profile_image_updated", { detail: { avatar: dataUrl } }));
-      window.dispatchEvent(new Event("storage"));
       setStatusMsg({ type: "success", text: "Profile photo uploaded and saved to database successfully." });
     };
     reader.readAsDataURL(file);
@@ -230,21 +226,17 @@ export default function CandidateProfile() {
 
   const handleRemoveAvatar = async () => {
     setAvatar("");
+    clearLegacyImageStorage();
     try {
       await Promise.all([
         updateMeApi({ avatar: "" }),
         profileId ? updateCandidateProfile(profileId, { avatar: "" }) : Promise.resolve(),
       ]);
-      if (refreshUser) refreshUser();
+      if (refreshUser) await refreshUser();
     } catch (err) {
       console.warn("Failed to remove avatar from database:", err);
     }
-    if (user?.id) {
-      localStorage.removeItem(`careerlens_avatar_${user.id}`);
-    }
-    localStorage.removeItem("careerlens_avatar");
     window.dispatchEvent(new CustomEvent("careerlens_profile_image_updated", { detail: { avatar: "" } }));
-    window.dispatchEvent(new Event("storage"));
     setStatusMsg({ type: "success", text: "Profile photo removed." });
   };
 

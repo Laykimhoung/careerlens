@@ -2,9 +2,11 @@ import "./Input.css";
 
 export default function Input({
   id,
+  name,
   label,
   type = "text",
   value,
+  defaultValue,
   onChange,
   onBlur,
   placeholder,
@@ -13,6 +15,13 @@ export default function Input({
   required = false,
   className = "",
 }) {
+  const valueProps =
+    value !== undefined
+      ? { value }
+      : defaultValue !== undefined
+      ? { defaultValue }
+      : {};
+
   return (
     <div className={`input-wrapper ${className}`}>
       {label && (
@@ -23,9 +32,9 @@ export default function Input({
       )}
       <input
         id={id}
-        name={id}
+        name={name || id}
         type={type}
-        value={value}
+        {...valueProps}
         onChange={onChange}
         onBlur={onBlur}
         placeholder={placeholder}

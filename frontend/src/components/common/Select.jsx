@@ -2,8 +2,10 @@ import "./Select.css";
 
 export default function Select({
   id,
+  name,
   label,
   value,
+  defaultValue,
   onChange,
   onBlur,
   options = [],
@@ -12,6 +14,13 @@ export default function Select({
   required = false,
   className = "",
 }) {
+  const valueProps =
+    value !== undefined
+      ? { value }
+      : defaultValue !== undefined
+      ? { defaultValue }
+      : {};
+
   return (
     <div className={`select-wrapper ${className}`}>
       {label && (
@@ -22,8 +31,8 @@ export default function Select({
       )}
       <select
         id={id}
-        name={id}
-        value={value}
+        name={name || id}
+        {...valueProps}
         onChange={onChange}
         onBlur={onBlur}
         disabled={disabled}

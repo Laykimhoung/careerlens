@@ -4,6 +4,8 @@
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
+  box-sizing: border-box;
+  min-width: 0;
 }
 
 .cj-title {
@@ -29,6 +31,7 @@
 
 .cj-search {
   width: 100%;
+  box-sizing: border-box;
   padding: 12px 16px;
   border: 1px solid var(--color-border-strong, #cbd5e1);
   border-radius: 8px;
@@ -214,6 +217,8 @@
 
 .cj-select {
   width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   padding: 12px 16px;
   border: 1px solid var(--color-border-strong, #cbd5e1);
   border-radius: 8px;
@@ -262,6 +267,7 @@
 
 .cj-card__left {
   flex: 1;
+  min-width: 0;
 }
 
 .cj-card__title {
