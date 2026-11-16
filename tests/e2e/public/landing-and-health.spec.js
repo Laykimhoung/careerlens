@@ -14,6 +14,12 @@ test.describe('Stage 1 — Public Landing & Health Smoke Tests', () => {
     });
   });
 
+  test('HEAD /api/health/ returns HTTP 200 with empty body for UptimeRobot', async ({ request }) => {
+    const res = await request.head(`${API_BASE}/health/`);
+    expect(res.status()).toBe(200);
+    expect(await res.text()).toBe('');
+  });
+
   test('POST /api/health/ is rejected (HTTP 403 CSRF or 405 Method Not Allowed)', async ({ request }) => {
     const res = await request.post(`${API_BASE}/health/`);
     expect([403, 405]).toContain(res.status());

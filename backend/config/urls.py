@@ -20,8 +20,8 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.db import connection
-from django.http import JsonResponse
-from django.views.decorators.http import require_GET
+from django.http import HttpResponse, JsonResponse
+from django.views.decorators.http import require_safe
 
 logger = logging.getLogger(__name__)
 
@@ -56,34 +56,32 @@ def api_root_view(request):
     })
 
 
-@require_GET
+@require_safe
 def health_check_view(request):
     """Lightweight unauthenticated health endpoint verifying backend & PostgreSQL readiness."""
     try:
         with connection.cursor() as cursor:
             cursor.execute("SELECT 1")
             cursor.fetchone()
-    except Exception as exc:
-        logger.warning("Health check database probe failed (%s).", type(exc).__name__)
-        response = JsonResponse(
-            {
-                "status": "unhealthy",
-                "service": "CareerLens API",
-                "database": "unavailable",
-            },
-            status=503,
-        )
-        response["Cache-Control"] = "no-store"
-        return response
-
-    response = JsonResponse(
-        {
+        status_code = 200
+        payload = {
             "status": "ok",
             "service": "CareerLens API",
             "database": "connected",
-        },
-        status=200,
-    )
+        }
+    except Exception as exc:
+        logger.warning("Health check database probe failed (%s).", type(exc).__name__)
+        status_code = 503
+        payload = {
+            "status": "unhealthy",
+            "service": "CareerLens API",
+            "database": "unavailable",
+        }
+
+    if request.method == "HEAD":
+        response = HttpResponse(status=status_code, content_type="application/json")
+    else:
+        response = JsonResponse(payload, status=status_code)
     response["Cache-Control"] = "no-store"
     return response
 
