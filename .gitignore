@@ -52,7 +52,7 @@ backend-api-test/
 
 # Local batch scripts
 run_servers.bat
-*.bat
+bat
 
 # Archify and Graphify output directories
 .archify/
