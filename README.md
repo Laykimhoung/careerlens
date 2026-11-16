@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/logo.webp" alt="CareerLens Logo" width="130" />
+  <img src="frontend/public/favicon.svg" alt="CareerLens Logo" width="130" />
 </p>
 
 # 🎓 CareerLens

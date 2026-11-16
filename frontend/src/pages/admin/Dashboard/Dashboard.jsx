@@ -105,6 +105,7 @@ export default function AdminDashboard() {
         setAvatar(getAdminAvatar(user));
       }
     };
+    handleAvatarUpdate();
     window.addEventListener('careerlens_profile_image_updated', handleAvatarUpdate);
     window.addEventListener('storage', handleAvatarUpdate);
     return () => {

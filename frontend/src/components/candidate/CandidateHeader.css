@@ -22,6 +22,22 @@
   }
 }
 
+@media (max-width: 640px) {
+  .header {
+    padding: 0 12px;
+    gap: 8px;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  .header__left {
+    gap: 8px;
+    min-width: 0;
+  }
+  .header__right {
+    gap: 6px;
+  }
+}
+
 .header__left {
   display: flex;
   align-items: center;

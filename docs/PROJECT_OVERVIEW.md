@@ -197,7 +197,7 @@ CareerLens/
 ├── docs/                           # Architectural, Database, API, and Operational Documentation
 ├── scripts/                        # Development & Deployment Automation Scripts
 │   ├── build.sh                    # Production build script for Render container deployment
-│   └── dev.ps1                     # Synchronized PowerShell developer launch script
+│   └── dev.bat                     # Synchronized Windows batch developer launch script
 ├── .gitignore                      # Git exclusion rules (.archify/ and graphify-out/ ignored)
 ├── Procfile                        # Root Procfile alias for deployment platforms
 ├── README.md                       # High-level project documentation and onboarding guide
@@ -225,11 +225,11 @@ CareerLens/
 
 ### Local Development Quick Start
 
-The platform provides a synchronized launch script `scripts/dev.ps1` that spins up both the backend API and frontend dev server:
+The platform provides a synchronized launch script `scripts/dev.bat` that spins up both the backend API and frontend dev server:
 
-```powershell
-# Automated Synchronized Start (Windows PowerShell)
-.\scripts\dev.ps1
+```bat
+:: Automated Synchronized Start (Windows)
+scripts\dev.bat
 ```
 
 Alternatively, services can be launched individually:

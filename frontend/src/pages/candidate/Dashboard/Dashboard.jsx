@@ -141,6 +141,7 @@ export default function CandidateDashboard() {
         );
       }
     };
+    handleUpdate();
     window.addEventListener("careerlens_profile_image_updated", handleUpdate);
     window.addEventListener("storage", handleUpdate);
     return () => {

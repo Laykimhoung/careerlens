@@ -85,6 +85,7 @@ export default function CompanyDashboard() {
         setCompanyLogo(getCompanyLogo(user));
       }
     };
+    handleLogoUpdate();
     window.addEventListener("careerlens_profile_image_updated", handleLogoUpdate);
     window.addEventListener("storage", handleLogoUpdate);
     return () => {

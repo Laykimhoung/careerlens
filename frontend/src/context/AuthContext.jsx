@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, useCallback } from "react";
+import { createContext, useState, useEffect, useCallback, useRef } from "react";
 import {
   setToken,
   getToken,
@@ -77,6 +77,7 @@ export function AuthProvider({ children }) {
     return Boolean(storedToken && !storedUser);
   });
   const [error, setError] = useState(null);
+  const skipNextTokenRefreshRef = useRef(false);
 
   // Keep localStorage in sync whenever user/token changes
   useEffect(() => {
@@ -103,10 +104,17 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
-  // Verify token and refresh user profile on initial mount
+  // Verify token and refresh user profile on initial mount (or external token change)
   useEffect(() => {
     let isMounted = true;
     if (token) {
+      if (skipNextTokenRefreshRef.current) {
+        skipNextTokenRefreshRef.current = false;
+        setLoading(false);
+        return () => {
+          isMounted = false;
+        };
+      }
       refreshUser().finally(() => {
         if (isMounted) setLoading(false);
       });
@@ -129,6 +137,7 @@ export function AuthProvider({ children }) {
         password: credentials.password,
       });
       const { access, refresh } = response.data;
+      skipNextTokenRefreshRef.current = true;
       setToken(access);
       setTokenState(access);
       if (refresh) setRefreshToken(refresh);
@@ -140,6 +149,7 @@ export function AuthProvider({ children }) {
 
       return { success: true, role: normalizedUser.role, user: normalizedUser };
     } catch (err) {
+      skipNextTokenRefreshRef.current = false;
       clearAuthStorage();
       setTokenState(null);
       setUser(null);
@@ -225,6 +235,7 @@ export function AuthProvider({ children }) {
         password: payload.password,
       });
       const { access, refresh } = loginRes.data;
+      skipNextTokenRefreshRef.current = true;
       setToken(access);
       setTokenState(access);
       if (refresh) setRefreshToken(refresh);

@@ -83,6 +83,15 @@
   white-space: nowrap;
 }
 
+@media (max-width: 520px) {
+  .module-back-btn {
+    padding: 0 10px;
+  }
+  .module-back-btn__label {
+    display: none;
+  }
+}
+
 /* ── Galaxy Dark Mode ── */
 [data-theme="dark"] .header-dashboard-welcome__sparkle {
   color: #638ECB;

@@ -11,6 +11,7 @@ import {
   updateCompanyProfile,
 } from "../../../services/companyService";
 import { updateMeApi } from "../../../services/authService";
+import { clearLegacyImageStorage } from "../../../utils/storage";
 import "./Profile.css";
 
 export default function Profile() {
@@ -32,14 +33,13 @@ export default function Profile() {
     description: "",
   });
 
-  const [companyLogo, setCompanyLogo] = useState(() => {
-    return (
-      user?.avatar ||
-      (user?.id ? localStorage.getItem(`careerlens_company_logo_${user.id}`) : null) ||
-      localStorage.getItem("careerlens_company_logo") ||
-      ""
-    );
-  });
+  const [companyLogo, setCompanyLogo] = useState(() => user?.avatar || "");
+
+  useEffect(() => {
+    if (user?.avatar) {
+      setCompanyLogo(user.avatar);
+    }
+  }, [user?.avatar]);
 
   const handleLogoChange = (e) => {
     const file = e.target.files?.[0];
@@ -53,25 +53,19 @@ export default function Profile() {
       const dataUrl = reader.result;
       setCompanyLogo(dataUrl);
 
-      // Persist directly to PostgreSQL database
+      // Persist directly to PostgreSQL database; keep image data out of localStorage
+      clearLegacyImageStorage();
       try {
         await Promise.all([
           updateMeApi({ avatar: dataUrl }),
           companyId ? updateCompanyProfile(companyId, { logo: dataUrl }) : Promise.resolve(),
         ]);
-        if (refreshUser) refreshUser();
+        if (refreshUser) await refreshUser();
       } catch (err) {
         console.warn("Failed to persist company logo to database:", err);
       }
 
-      if (user?.id) {
-        localStorage.setItem(`careerlens_company_logo_${user.id}`, dataUrl);
-        localStorage.setItem(`careerlens_avatar_${user.id}`, dataUrl);
-      }
-      localStorage.setItem("careerlens_company_logo", dataUrl);
-      localStorage.setItem("careerlens_avatar", dataUrl);
       window.dispatchEvent(new CustomEvent("careerlens_profile_image_updated", { detail: { avatar: dataUrl } }));
-      window.dispatchEvent(new Event("storage"));
       setStatusMsg({ type: "success", text: t("company.logoUpdated", "Company logo uploaded and saved to database successfully.") });
     };
     reader.readAsDataURL(file);
@@ -79,23 +73,17 @@ export default function Profile() {
 
   const handleRemoveLogo = async () => {
     setCompanyLogo("");
+    clearLegacyImageStorage();
     try {
       await Promise.all([
         updateMeApi({ avatar: "" }),
         companyId ? updateCompanyProfile(companyId, { logo: "" }) : Promise.resolve(),
       ]);
-      if (refreshUser) refreshUser();
+      if (refreshUser) await refreshUser();
     } catch (err) {
       console.warn("Failed to remove company logo from database:", err);
     }
-    if (user?.id) {
-      localStorage.removeItem(`careerlens_company_logo_${user.id}`);
-      localStorage.removeItem(`careerlens_avatar_${user.id}`);
-    }
-    localStorage.removeItem("careerlens_company_logo");
-    localStorage.removeItem("careerlens_avatar");
     window.dispatchEvent(new CustomEvent("careerlens_profile_image_updated", { detail: { avatar: "" } }));
-    window.dispatchEvent(new Event("storage"));
     setStatusMsg({ type: "success", text: t("company.logoRemoved", "Company logo removed.") });
   };
 
