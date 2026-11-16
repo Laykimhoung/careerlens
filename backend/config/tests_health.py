@@ -25,6 +25,15 @@ class HealthCheckTests(TestCase):
         )
         self.assertEqual(response["Cache-Control"], "no-store")
 
+    def test_health_check_head_healthy_returns_200_with_empty_body(self):
+        url = reverse("api-health")
+        with override_settings(DEBUG=False):
+            response = self.client.head(url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content, b"")
+        self.assertEqual(response["Cache-Control"], "no-store")
+
     def test_health_check_db_failure_returns_503_without_leaking_details(self):
         mock_cursor = MagicMock()
         mock_cursor.__enter__.return_value.execute.side_effect = OperationalError(
@@ -50,7 +59,22 @@ class HealthCheckTests(TestCase):
         self.assertNotIn("secret_pass", "\n".join(captured.output))
         self.assertEqual(response["Cache-Control"], "no-store")
 
-    def test_health_check_rejects_non_get_methods(self):
+    def test_health_check_head_db_failure_returns_503_with_empty_body(self):
+        mock_cursor = MagicMock()
+        mock_cursor.__enter__.return_value.execute.side_effect = OperationalError(
+            "postgresql://secret_user:secret_pass@neon.tech/db connection refused"
+        )
+
+        with patch("config.urls.connection.cursor", return_value=mock_cursor):
+            with self.assertLogs("config.urls", level="WARNING") as captured:
+                response = self.client.head(reverse("api-health"))
+
+        self.assertEqual(response.status_code, 503)
+        self.assertEqual(response.content, b"")
+        self.assertNotIn("secret_pass", "\n".join(captured.output))
+        self.assertEqual(response["Cache-Control"], "no-store")
+
+    def test_health_check_rejects_unsafe_methods(self):
         url = reverse("api-health")
         for method_fn in (self.client.post, self.client.put, self.client.patch, self.client.delete):
             resp = method_fn(url)
