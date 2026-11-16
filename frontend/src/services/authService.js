@@ -13,7 +13,7 @@ export const getGeminiKeyStatus = () => api.get("/auth/gemini-key/");
 export const saveGeminiKey = (apiKey) => api.post("/auth/gemini-key/", { api_key: apiKey });
 export const deleteGeminiKey = () => api.delete("/auth/gemini-key/");
 
-export function normalizeAuthUser(rawUser) {
+export function serializeAuthUser(rawUser) {
   if (!rawUser) return null;
   const rawRole = String(rawUser.role || "CANDIDATE").toLowerCase();
   const fullName =
@@ -22,11 +22,27 @@ export function normalizeAuthUser(rawUser) {
     rawUser.username ||
     rawUser.email ||
     "User";
+
   return {
-    ...rawUser,
-    role: rawRole,
-    rawRole: String(rawUser.role || rawRole).toUpperCase(),
+    id: rawUser.id ?? null,
+    username: rawUser.username || "",
+    email: rawUser.email || "",
+    first_name: rawUser.first_name || "",
+    last_name: rawUser.last_name || "",
     full_name: fullName,
     name: fullName,
+    role: rawRole,
+    rawRole: String(rawUser.rawRole || rawUser.role || rawRole).toUpperCase(),
+    is_active: rawUser.is_active ?? true,
+    date_joined: rawUser.date_joined || null,
   };
+}
+
+export function normalizeAuthUser(rawUser) {
+  const essential = serializeAuthUser(rawUser);
+  if (!essential) return null;
+  if (typeof rawUser.avatar === "string" && rawUser.avatar) {
+    return { ...essential, avatar: rawUser.avatar };
+  }
+  return essential;
 }
