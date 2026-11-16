@@ -470,13 +470,15 @@ export default function CVStudio() {
             </p>
 
             <div className="improvement-options-grid">
-              {(diagnosis?.improvement_options || []).map((opt) => {
-                const isSelected = selectedImprovements.includes(opt.id);
+              {(diagnosis?.improvement_options || []).map((opt, idx) => {
+                const optionId = opt.id || opt.key || `opt-${idx}`;
+                const optionLabel = opt.label || opt.title || "Improvement Option";
+                const isSelected = selectedImprovements.includes(optionId);
                 return (
                   <div
-                    key={opt.id}
+                    key={optionId}
                     className={`improvement-checkbox-card ${isSelected ? "selected" : ""}`}
-                    onClick={() => toggleImprovement(opt.id)}
+                    onClick={() => toggleImprovement(optionId)}
                   >
                     <div className="checkbox-wrap">
                       <div className={`checkbox-box ${isSelected ? "checked" : ""}`}>
@@ -484,7 +486,7 @@ export default function CVStudio() {
                       </div>
                     </div>
                     <div className="improvement-meta">
-                      <h5>{opt.label}</h5>
+                      <h5>{optionLabel}</h5>
                       <p>{opt.description}</p>
                     </div>
                   </div>

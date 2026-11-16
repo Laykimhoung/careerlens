@@ -20,11 +20,16 @@ export default function JobForm({
     onSubmit?.(raw);
   };
 
-  const initialSkills = Array.isArray(initialJob.tags)
-    ? initialJob.tags.join(", ")
-    : Array.isArray(initialJob.skills)
+  const initialSkills = Array.isArray(initialJob.skills)
     ? initialJob.skills.join(", ")
+    : Array.isArray(initialJob.tags)
+    ? initialJob.tags.join(", ")
     : initialJob.skills || "";
+
+  const rawDeadlineSource = initialJob.rawDeadline || initialJob.deadline || "";
+  const initialDeadline = /^\d{4}-\d{2}-\d{2}/.test(String(rawDeadlineSource))
+    ? String(rawDeadlineSource).slice(0, 10)
+    : "";
 
   return (
     <form className="workspace-panel company-job-form" onSubmit={handleSubmit}>
@@ -64,7 +69,7 @@ export default function JobForm({
           name="salary_min"
           type="number"
           label={t("company.minSalaryLabel")}
-          defaultValue={initialJob.salaryMin ?? ""}
+          defaultValue={initialJob.salary_min ?? initialJob.salaryMin ?? ""}
           placeholder="e.g. 600"
         />
         <Input
@@ -72,7 +77,7 @@ export default function JobForm({
           name="salary_max"
           type="number"
           label={t("company.maxSalaryLabel")}
-          defaultValue={initialJob.salaryMax ?? ""}
+          defaultValue={initialJob.salary_max ?? initialJob.salaryMax ?? ""}
           placeholder="e.g. 1200"
         />
         <Select
@@ -87,7 +92,7 @@ export default function JobForm({
           name="deadline"
           type="date"
           label={t("company.deadlineLabel")}
-          defaultValue={initialJob.deadline || ""}
+          defaultValue={initialDeadline}
         />
       </div>
 

@@ -57,8 +57,13 @@ test.describe('Stage 3 — Company Feature Workflows', () => {
     expect(created, 'Created job should be returned by backend API').toBeTruthy();
     createdJobIds.push(created.id);
 
-    // Edit job page
+    // Edit job page — verify existing values are pre-filled before editing (BUG-01 regression check)
     await page.goto(`/company/jobs/${created.id}/edit`);
+    await expect(page.getByLabel(/job title|title/i).first()).toHaveValue(uniqueTitle);
+    await expect(page.getByLabel(/location/i).first()).toHaveValue('Phnom Penh');
+    await expect(page.locator('textarea').first()).toHaveValue(
+      'Automated Playwright QA lifecycle test job description.'
+    );
     const editedTitle = `${uniqueTitle} (Edited)`;
     await page.getByLabel(/job title|title/i).first().fill(editedTitle);
     await page.getByRole('button', { name: /save|update/i }).first().click();

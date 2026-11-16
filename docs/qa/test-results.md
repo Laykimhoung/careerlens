@@ -7,17 +7,17 @@
 
 ---
 
-## Execution Summary
+## Execution Summary (Post-Fix Regression Run)
 
 | Metric | Count |
 | :--- | :---: |
 | **Total Tests** | 25 |
-| **Passed** | 22 |
-| **Failed** | 3 |
+| **Passed** | 25 |
+| **Failed** | 0 |
 | **Skipped** | 0 |
 | **Blocked** | 0 |
 
-> All 3 failures represent genuine, reproducible application bugs (`BUG-01`, `BUG-02`, `BUG-03`), not flaky tests or environment issues.
+> Initial QA discovery run (`22 passed, 3 failed`) identified `BUG-01`, `BUG-02`, and `BUG-03`. After applying approved fixes and rebuilding (`vite build`), the full 25-test regression suite passed (`25 passed in 2.7m`, exit code `0`).
 
 ---
 
@@ -47,14 +47,14 @@
 - Candidate is redirected away from `/company` & `/admin`, and receives `403` on admin/job-creation endpoints.
 - Company is redirected away from `/admin`, and receives `403` when attempting to `PATCH`/`DELETE` another company's published job.
 
-### 5. Candidate Workflows (`tests/e2e/candidate/workflows.spec.js`) — **2/3 Passed, 1 Failed (`BUG-03`)**
+### 5. Candidate Workflows (`tests/e2e/candidate/workflows.spec.js`) — **3/3 Passed**
 - **Passed:** Candidate Dashboard loads stats/links cleanly.
-- **Passed:** Candidate Jobs search, filtering, and `/candidate/jobs/:id` match backend API data.
-- **Failed (`BUG-03`):** All 10 secondary routes load and settle without 5xx errors, **but** `/candidate/cv-studio` emits a React missing `key` prop console error (`CVStudio`).
+- **Passed:** Candidate Jobs search, filter, and `/candidate/jobs/:id` match backend API data.
+- **Passed:** All 10 secondary routes (including `/candidate/cv-studio`) load and settle with zero console errors and zero 5xx responses (`BUG-03` fixed).
 
-### 6. Company Workflows (`tests/e2e/company/workflows.spec.js`) — **1/2 Passed, 1 Failed (`BUG-01`)**
+### 6. Company Workflows (`tests/e2e/company/workflows.spec.js`) — **2/2 Passed**
 - **Passed:** Company secondary pages (`/company`, `/company/profile`, `/company/jobs`, `/company/applicants`, `/company/interviews`, `/company/messages`, `/company/notifications`) load cleanly.
-- **Failed (`BUG-01`):** Company job creation (`/company/jobs/create`) succeeds and appears in `/company/jobs`, **but** `/company/jobs/:id/edit` renders empty `Location*`/`Job Description*` inputs because `Input`/`Textarea`/`Select` drop `defaultValue`, blocking edit submission.
+- **Passed:** Company job lifecycle (`/company/jobs/create` -> `/company/jobs` -> `/company/jobs/:id/edit` with pre-filled values verified -> update & delete cleanup) succeeds (`BUG-01` fixed).
 
 ### 7. Admin Workflows (`tests/e2e/admin/workflows.spec.js`) — **1/1 Passed**
 - All 13 admin routes (`/admin`, `users`, `candidates`, `companies`, `verification`, `jobs`, `applications`, `reports`, `categories`, `skills`, `audit-logs`, `notifications`, `settings`) load with zero console errors and zero 5xx responses.
@@ -62,6 +62,6 @@
 ### 8. End-to-End Application & Messaging Lifecycle (`tests/e2e/e2e-lifecycle.spec.js`) — **1/1 Passed**
 - Company creates published test job -> Candidate discovers & applies in UI -> Duplicate application blocked (`400`) -> Company inspects applicant & shortlists -> Candidate sees `Shortlisted` status in `/candidate/applications` -> Empty message rejected (`400`) -> Test job cleaned up.
 
-### 9. Responsive & Placeholder Audit (`tests/e2e/shared/navigation-and-responsive.spec.js`) — **1/2 Passed, 1 Failed (`BUG-02`)**
+### 9. Responsive & Placeholder Audit (`tests/e2e/shared/navigation-and-responsive.spec.js`) — **2/2 Passed**
 - **Passed:** Placeholder routes render non-empty fallback views.
-- **Failed (`BUG-02`):** Landing (`/`), Login (`/login`), and Desktop Candidate Jobs (`1440x900`) have `<= 4px` overflow, **but** `/candidate/jobs` at `390x844` has **`111px` horizontal overflow**.
+- **Passed:** Landing (`/`), Login (`/login`), Desktop Candidate Jobs (`1440x900`), and Mobile Candidate Jobs (`390x844`) all have `<= 4px` horizontal overflow (`BUG-02` fixed).

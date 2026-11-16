@@ -8,18 +8,19 @@
 
 ## Summary by Severity
 
-| Severity | Count | Bug IDs |
-| :--- | :---: | :--- |
-| **Critical** | 0 | — |
-| **High** | 1 | `BUG-01` |
-| **Medium** | 2 | `BUG-02`, `BUG-03` |
-| **Low / Observation** | 1 | `OBS-01` |
+| Severity | Found | Fixed & Verified | Open | Bug IDs |
+| :--- | :---: | :---: | :---: | :--- |
+| **Critical** | 0 | 0 | 0 | — |
+| **High** | 1 | 1 | 0 | `BUG-01` (Fixed) |
+| **Medium** | 2 | 2 | 0 | `BUG-02` (Fixed), `BUG-03` (Fixed) |
+| **Low / Observation** | 1 | 0 | 1 | `OBS-01` (Demo note) |
 
 ---
 
-## Confirmed Bugs
+## Resolved Bugs
 
-### `BUG-01` — Company Edit Job Form (`/company/jobs/:id/edit`) Renders Blank Fields and Blocks Saving
+### `BUG-01` [FIXED] — Company Edit Job Form (`/company/jobs/:id/edit`) Renders Blank Fields and Blocks Saving
+- **Status:** **Fixed & Verified** (Playwright regression `company/workflows.spec.js` verified pre-filled `title`, `location`, `description` and successful UI save).
 - **Severity:** High
 - **Affected User Role:** Company
 - **Affected Page / Files:** `/company/jobs/:id/edit` (`frontend/src/pages/company/EditJob/EditJob.jsx`, `frontend/src/components/company/JobForm.jsx`, `frontend/src/components/common/Input.jsx`, `frontend/src/components/common/Textarea.jsx`, `frontend/src/components/common/Select.jsx`, `frontend/src/services/jobService.js`)
@@ -42,7 +43,8 @@
 
 ---
 
-### `BUG-02` — Mobile Horizontal Overflow (`111px`) on `/candidate/jobs`
+### `BUG-02` [FIXED] — Mobile Horizontal Overflow (`111px`) on `/candidate/jobs`
+- **Status:** **Fixed & Verified** (Updated `CandidateHeader.css`, `ModuleBackButton.css`, and `Jobs.css`; Playwright responsive test passed with `<= 4px` overflow at `390x844`).
 - **Severity:** Medium
 - **Affected User Role:** Candidate (Mobile viewport `390x844`)
 - **Affected Page / Files:** `/candidate/jobs` (`frontend/src/pages/candidate/Jobs/Jobs.css`, `frontend/src/pages/candidate/Jobs/Jobs.jsx`)
@@ -61,7 +63,8 @@
 
 ---
 
-### `BUG-03` — React Missing `key` Prop Console Error in `CVStudio`
+### `BUG-03` [FIXED] — React Missing `key` Prop Console Error in `CVStudio`
+- **Status:** **Fixed & Verified** (Updated `CVStudio.jsx` improvement option key/label fallback `opt.id || opt.key || idx` and `opt.label || opt.title`; zero console errors in Playwright run).
 - **Severity:** Medium
 - **Affected User Role:** Candidate
 - **Affected Page / Files:** `/candidate/cv-studio` (`frontend/src/pages/candidate/CVStudio/CVStudio.jsx`)

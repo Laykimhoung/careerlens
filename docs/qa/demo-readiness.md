@@ -1,15 +1,17 @@
 # CareerLens — Classroom Demo Readiness Assessment (Phase 9)
 
 **Assessment Date:** 2026-11-16  
-**Overall Readiness:** **CONDITIONAL GO (Ready for Demo if Job Editing is avoided OR `BUG-01` is fixed first)**
+**Overall Readiness:** **GO (Ready for Classroom Demonstration)**
 
 ---
 
 ## 1. Critical Blockers
-- **None (0 Critical bugs).** Backend, PostgreSQL (`/api/health/`), authentication, RBAC security, landing page, candidate job search/apply, and admin dashboards all work reliably.
+- **None (0 Critical / 0 High bugs remaining).** All 25 automated Playwright E2E, RBAC, lifecycle, responsive, and health checks pass after the bug-fix regression run.
 
-## 2. High-Priority Issues
-- **`BUG-01` (High): Company Edit Job (`/company/jobs/:id/edit`) is broken.** Opening the edit page clears existing fields (`Location`, `Description`, `Salary`, `Skills`, dropdowns) and blocks saving. **Fix this before demonstrating Company Job Editing.**
+## 2. Resolved High & Medium Issues
+- **`BUG-01` (High) [FIXED]:** Company Edit Job (`/company/jobs/:id/edit`) now pre-fills all existing job fields (`defaultValue` forwarded in `Input`, `Textarea`, `Select`; `salary_min`/`salary_max`, `skills`, and `deadline` mapped cleanly in `JobForm`) and saves updates.
+- **`BUG-02` (Medium) [FIXED]:** Mobile horizontal overflow (`111px`) on `/candidate/jobs` at `390x844` resolved via responsive header/back-button/job-page CSS rules.
+- **`BUG-03` (Medium) [FIXED]:** `CVStudio.jsx` improvement options now render with unique fallback keys and titles (`opt.id || opt.key`, `opt.label || opt.title`) with zero React console errors.
 
 ## 3. Verified Working Demo Workflows
 - **Public & Health:** Landing page (`/`), 404 handling, and `GET /api/health/` (`200` + PostgreSQL `SELECT 1`).

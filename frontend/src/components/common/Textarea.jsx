@@ -2,8 +2,10 @@ import "./Textarea.css";
 
 export default function Textarea({
   id,
+  name,
   label,
   value,
+  defaultValue,
   onChange,
   onBlur,
   placeholder,
@@ -13,6 +15,13 @@ export default function Textarea({
   required = false,
   className = "",
 }) {
+  const valueProps =
+    value !== undefined
+      ? { value }
+      : defaultValue !== undefined
+      ? { defaultValue }
+      : {};
+
   return (
     <div className={`textarea-wrapper ${className}`}>
       {label && (
@@ -23,8 +32,8 @@ export default function Textarea({
       )}
       <textarea
         id={id}
-        name={id}
-        value={value}
+        name={name || id}
+        {...valueProps}
         onChange={onChange}
         onBlur={onBlur}
         placeholder={placeholder}
