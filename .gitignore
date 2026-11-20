@@ -64,3 +64,7 @@ graphify-out/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+
+# Architecture masterclass
+explain/
+
