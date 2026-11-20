@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { User, Building2 } from "lucide-react";
 import { useLanguage } from "../../context/LanguageContext";
 import Input from "../common/Input";
 import Button from "../common/Button";
@@ -76,8 +77,8 @@ export default function RegisterForm({ onSubmit, loading, error, onClearError })
         </p>
         <div className="register-form__role-grid">
           {[
-            { value: "candidate", emoji: "👤", label: t("auth.roleCandidate") },
-            { value: "company",   emoji: "🏢", label: t("auth.roleCompany") },
+            { value: "candidate", Icon: User, label: t("auth.roleCandidate") },
+            { value: "company",   Icon: Building2, label: t("auth.roleCompany") },
           ].map((opt) => (
             <label
               key={opt.value}
@@ -85,7 +86,8 @@ export default function RegisterForm({ onSubmit, loading, error, onClearError })
             >
               <input type="radio" name="role" value={opt.value} checked={values.role === opt.value}
                 onChange={handleChange} disabled={loading} />
-              {opt.emoji} {opt.label}
+              <opt.Icon size={16} className="register-form__role-icon" />
+              <span>{opt.label}</span>
             </label>
           ))}
         </div>

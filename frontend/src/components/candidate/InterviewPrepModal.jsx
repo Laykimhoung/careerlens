@@ -386,7 +386,7 @@ export default function InterviewPrepModal({
                       <ul className="ip-dos-list">
                         {whatShouldDo.map((item, idx) => (
                           <li key={idx}>
-                            <span className="ip-dos-check">✓</span>
+                            <span className="ip-dos-check"><Check size={13} /></span>
                             <span>{item}</span>
                           </li>
                         ))}
@@ -404,7 +404,7 @@ export default function InterviewPrepModal({
                       <ul className="ip-donts-list">
                         {whatNotToDo.map((item, idx) => (
                           <li key={idx}>
-                            <span className="ip-donts-cross">✕</span>
+                            <span className="ip-donts-cross"><X size={13} /></span>
                             <span>{item}</span>
                           </li>
                         ))}

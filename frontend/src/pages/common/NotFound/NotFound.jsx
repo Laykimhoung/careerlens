@@ -1,5 +1,6 @@
 import { useState, useTransition } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Radio, Search, Home, Briefcase, ArrowLeft, Send } from "lucide-react";
 import { useAuth } from "../../../hooks/useAuth";
 import { useLanguage } from "../../../context/LanguageContext";
 import SideRays from "../../../components/ui/SideRays";
@@ -107,14 +108,14 @@ export default function NotFound() {
         {/* Display Attempted Route */}
         {location.pathname && (
           <div className="not-found-target-pill">
-            <span className="not-found-target-icon">📡</span>
+            <span className="not-found-target-icon"><Radio size={14} /></span>
             <code className="not-found-target-code">{location.pathname}</code>
           </div>
         )}
 
         {/* Quick Search Input */}
         <form className="not-found-search-box" onSubmit={handleSearchSubmit}>
-          <span className="not-found-search-icon">🔍</span>
+          <span className="not-found-search-icon"><Search size={16} /></span>
           <input
             type="text"
             className="not-found-search-input"
@@ -134,7 +135,7 @@ export default function NotFound() {
         {/* Action Buttons */}
         <div className="not-found-actions">
           <Link to={homePath} className="not-found-btn not-found-btn-primary">
-            <span>🏠</span>
+            <Home size={16} />
             <span>
               {isAuthenticated
                 ? isKhmer
@@ -154,7 +155,7 @@ export default function NotFound() {
             }
             className="not-found-btn not-found-btn-secondary"
           >
-            <span>💼</span>
+            <Briefcase size={16} />
             <span>{isKhmer ? "ស្វែងរកការងារ" : "Explore Jobs"}</span>
           </Link>
 
@@ -163,7 +164,7 @@ export default function NotFound() {
             onClick={() => navigate(-1)}
             className="not-found-btn not-found-btn-ghost"
           >
-            <span>↩</span>
+            <ArrowLeft size={16} />
             <span>{isKhmer ? "ត្រឡប់ក្រោយ" : "Go Back"}</span>
           </button>
         </div>
@@ -192,7 +193,9 @@ export default function NotFound() {
             rel="noopener noreferrer"
             className="not-found-chip not-found-chip-tg"
           >
-            🤖 Telegram Bot
+            <span style={{ display: "inline-flex", alignItems: "center", gap: "5px" }}>
+              <Send size={13} /> Telegram Bot
+            </span>
           </a>
         </div>
       </div>

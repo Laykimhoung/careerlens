@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
+import { Briefcase, Lock, Check, GraduationCap, Building2, ShieldCheck } from "lucide-react";
 import { useAuth } from "../../../hooks/useAuth";
 import SideRays from "../../../components/ui/SideRays";
 import CurvyInput from "../../../components/common/CurvyInput";
@@ -324,7 +325,7 @@ export default function AuthPage() {
 
         {isJobTarget && (
           <div className="tether-redirect-notice">
-            <span className="tether-redirect-notice__icon">💼</span>
+            <span className="tether-redirect-notice__icon"><Briefcase size={16} /></span>
             <span>
               {isLogin
                 ? "Sign in to your account to continue to the job listing."
@@ -459,7 +460,7 @@ export default function AuthPage() {
                   ) : (
                     <>
                       <span>{t("auth.signIn")}</span>
-                      {isLocked && <span className="tether-btn__lock-icon">🔒</span>}
+                      {isLocked && <span className="tether-btn__lock-icon"><Check size={14} /></span>}
                     </>
                   )}
                 </button>
@@ -495,7 +496,9 @@ export default function AuthPage() {
                   onClick={() => fillDemo("demo_cand_sreymom", "CareerLens2026!Demo")}
                   className="tether-demo-btn"
                 >
-                  🎓 Candidate
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                    <GraduationCap size={14} /> Candidate
+                  </span>
                 </button>
                 <button
                   type="button"
@@ -503,7 +506,9 @@ export default function AuthPage() {
                   onClick={() => fillDemo("demo_comp_mekong", "CareerLens2026!Demo")}
                   className="tether-demo-btn"
                 >
-                  🏢 Company
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                    <Building2 size={14} /> Company
+                  </span>
                 </button>
                 <button
                   type="button"
@@ -511,7 +516,9 @@ export default function AuthPage() {
                   onClick={() => fillDemo("demo_admin", "CareerLens2026!Demo")}
                   className="tether-demo-btn"
                 >
-                  🛡️ Admin
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                    <ShieldCheck size={14} /> Admin
+                  </span>
                 </button>
               </div>
               <p className="tether-demo-pw">
@@ -733,7 +740,13 @@ export default function AuthPage() {
                           className={`tether-skill-chip-btn ${isSel ? "selected" : ""}`}
                           onClick={() => handleToggleSkill(skill)}
                         >
-                          {isSel ? `✓ ${skill}` : `+ ${skill}`}
+                          {isSel ? (
+                            <span style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                              <Check size={12} /> {skill}
+                            </span>
+                          ) : (
+                            `+ ${skill}`
+                          )}
                         </button>
                       );
                     })}

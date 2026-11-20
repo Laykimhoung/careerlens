@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Video } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 import { useLanguage } from "../../context/LanguageContext";
 import Button from "../../components/common/Button";
@@ -401,7 +401,9 @@ function CandidateInterviewsView() {
                     rel="noreferrer"
                   >
                     <Button variant="outline" size="sm">
-                      🎥 Join Video Call
+                      <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                        <Video size={14} /> Join Video Call
+                      </span>
                     </Button>
                   </a>
                 )}

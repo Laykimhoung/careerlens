@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
+import { Check, CheckCircle2 } from "lucide-react";
 import { useLanguage } from "../../../context/LanguageContext";
 import Button from "../../../components/common/Button";
 import { getJobById, normalizeJobRecord } from "../../../services/jobService";
@@ -182,11 +183,21 @@ export default function CandidateJobDetails() {
         </div>
         <div className="job-details__actions">
           <Button variant="outline" onClick={handleToggleSave} disabled={saving}>
-            {isSaved ? `✓ ${t("candidate.saved")}` : t("candidate.saveJob")}
+            {isSaved ? (
+              <span style={{ display: "inline-flex", alignItems: "center", gap: "5px" }}>
+                <Check size={14} /> {t("candidate.saved")}
+              </span>
+            ) : (
+              t("candidate.saveJob")
+            )}
           </Button>
           {isApplied ? (
             <Link to={`/candidate/applications/${existingApplication.id}`}>
-              <Button variant="primary">✓ {t("candidate.applied")}</Button>
+              <Button variant="primary">
+                <span style={{ display: "inline-flex", alignItems: "center", gap: "5px" }}>
+                  <CheckCircle2 size={14} /> {t("candidate.applied")}
+                </span>
+              </Button>
             </Link>
           ) : (
             <Button

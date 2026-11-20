@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { Camera } from "lucide-react";
 import { useAuth } from "../../../hooks/useAuth";
 import { useLanguage } from "../../../context/LanguageContext";
 import { getMeApi, updateMeApi } from "../../../services/authService";
@@ -225,7 +226,7 @@ function Settings() {
                     gap: "6px",
                   }}
                 >
-                  <span>📷</span> {t("admin.uploadPhoto", "Upload Photo")}
+                  <Camera size={14} /> <span>{t("admin.uploadPhoto", "Upload Photo")}</span>
                 </label>
                 <input
                   id="admin-avatar-file-input"

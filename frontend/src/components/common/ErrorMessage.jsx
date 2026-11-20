@@ -1,3 +1,4 @@
+import { X } from "lucide-react";
 import "./ErrorMessage.css";
 
 export default function ErrorMessage({ message, onDismiss }) {
@@ -11,7 +12,7 @@ export default function ErrorMessage({ message, onDismiss }) {
       <span className="error-message__text">{message}</span>
       {onDismiss && (
         <button type="button" onClick={onDismiss} className="error-message__dismiss" aria-label="Dismiss">
-          ✕
+          <X size={14} />
         </button>
       )}
     </div>
