@@ -793,23 +793,12 @@ export default function Messages() {
               <div className="chat-composer-wrap">
                 {/* Quick Phrases Tray */}
                 {showEmojiPicker && (
-                  <div className="emoji-tray animate-fade" style={{ display: "flex", flexWrap: "wrap", gap: "6px", padding: "10px", maxHeight: "140px", overflowY: "auto" }}>
+                  <div className="emoji-tray animate-fade">
                     {QUICK_PHRASES.map((phrase) => (
                       <button
                         key={phrase}
                         type="button"
                         className="quick-phrase-btn"
-                        style={{
-                          fontSize: "12px",
-                          padding: "6px 12px",
-                          borderRadius: "6px",
-                          background: "var(--color-surface, #ffffff)",
-                          border: "1px solid var(--color-border, #e2e8f0)",
-                          color: "var(--color-text-primary, #0f172a)",
-                          cursor: "pointer",
-                          fontWeight: 500,
-                          textAlign: "left",
-                        }}
                         onClick={() => {
                           setInputText((prev) => (prev ? prev + " " + phrase : phrase));
                           setShowEmojiPicker(false);

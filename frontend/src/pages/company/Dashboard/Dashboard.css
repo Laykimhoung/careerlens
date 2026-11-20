@@ -267,19 +267,45 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
+  flex: 1 1 0;
+  min-width: 0;
   height: 34px;
+  padding: 0 10px;
   border-radius: 999px;
   background: #016BFB;
   color: #FFFFFF;
   text-decoration: none;
   font-size: 0.78125rem;
   font-weight: 600;
-  transition: background 0.18s ease;
+  transition: all 0.18s ease;
+  white-space: nowrap;
 }
 
 .comp-spotlight-btn:hover {
   background: #0058D4;
+}
+
+.comp-spotlight-ranking-btn {
+  background: rgba(99, 102, 241, 0.12);
+  color: #4f46e5;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+}
+
+.comp-spotlight-ranking-btn:hover {
+  background: #6366f1;
+  color: #ffffff;
+  border-color: #6366f1;
+}
+
+[data-theme="dark"] .comp-spotlight-ranking-btn {
+  background: rgba(99, 102, 241, 0.22);
+  color: #c7d2fe;
+  border-color: rgba(99, 102, 241, 0.45);
+}
+
+[data-theme="dark"] .comp-spotlight-ranking-btn:hover {
+  background: #6366f1;
+  color: #ffffff;
 }
 
 /* 2. Center Overviews Bar Chart Card */

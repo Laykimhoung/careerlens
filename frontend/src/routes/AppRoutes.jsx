@@ -56,6 +56,7 @@ const CompanyCreateJob = safeLazy(() => import("../pages/company/CreateJob/Creat
 const CompanyEditJob = safeLazy(() => import("../pages/company/EditJob/EditJob"));
 const CompanyApplicants = safeLazy(() => import("../pages/company/Applicants/Applicants"));
 const CompanyApplicantDetails = safeLazy(() => import("../pages/company/ApplicantDetails/ApplicantDetails"));
+const CompanyCandidateRanking = safeLazy(() => import("../pages/company/CandidateRanking/CandidateRanking"));
 const CompanyInterviews = safeLazy(() => import("../pages/company/Interviews/Interviews"));
 
 // Admin Pages (Lazy Loaded)
@@ -140,7 +141,8 @@ export default function AppRoutes() {
             <Route path="jobs/:id/edit" element={<CompanyEditJob />} />
             <Route path="applicants" element={<CompanyApplicants />} />
             <Route path="applicants/:id" element={<CompanyApplicantDetails />} />
-            <Route path="candidate-ranking" element={<Navigate to="/company/applicants" replace />} />
+            <Route path="candidate-ranking" element={<CompanyCandidateRanking />} />
+            <Route path="ranking" element={<CompanyCandidateRanking />} />
             <Route path="interviews" element={<CompanyInterviews />} />
             <Route path="messages" element={<CandidateMessages />} />
             <Route path="talent-pool" element={<CandidatePlaceholder title="Talent Pool" />} />

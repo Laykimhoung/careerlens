@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Check, CheckCircle2 } from "lucide-react";
+import { Check, CheckCircle2, ArrowLeft } from "lucide-react";
 import { useLanguage } from "../../../context/LanguageContext";
 import Button from "../../../components/common/Button";
 import { getJobById, normalizeJobRecord } from "../../../services/jobService";
@@ -134,20 +134,7 @@ export default function CandidateJobDetails() {
   return (
     <div className="job-details-page">
       <Link to="/candidate/jobs" className="job-details__back">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          style={{ width: "16px", height: "16px" }}
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
-          />
-        </svg>
+        <ArrowLeft size={16} />
         {t("candidate.backToJobs")}
       </Link>
 
