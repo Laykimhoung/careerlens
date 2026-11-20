@@ -1,10 +1,63 @@
 import math
+import logging
+from apps.ml_engine.normalizer import extract_skills_from_text, normalize_skill_set, clean_text
+
+logger = logging.getLogger(__name__)
 
 
-def parse_resume_content(file_name, candidate, target_role=""):
+def extract_text_from_file(file_obj) -> str:
+    """
+    Extracts raw text content from an uploaded PDF, DOCX, or text document.
+    Uses pdfplumber with fallback to pypdf.
+    """
+    if not file_obj:
+        return ""
+    text_content = []
+    try:
+        raw_name = getattr(file_obj, "name", "").lower()
+        if raw_name.endswith((".txt", ".md")):
+            pos = file_obj.tell() if hasattr(file_obj, "tell") else 0
+            content = file_obj.read()
+            if hasattr(file_obj, "seek"):
+                file_obj.seek(pos)
+            if isinstance(content, bytes):
+                return content.decode("utf-8", errors="ignore")
+            return str(content)
+
+        import pdfplumber
+        if hasattr(file_obj, "seek"):
+            file_obj.seek(0)
+        with pdfplumber.open(file_obj) as pdf:
+            for page in pdf.pages:
+                page_text = page.extract_text()
+                if page_text:
+                    text_content.append(page_text)
+        if hasattr(file_obj, "seek"):
+            file_obj.seek(0)
+    except Exception as e:
+        logger.debug("pdfplumber extraction failed or not a standard PDF: %s", e)
+        try:
+            from pypdf import PdfReader
+            if hasattr(file_obj, "seek"):
+                file_obj.seek(0)
+            reader = PdfReader(file_obj)
+            for page in reader.pages:
+                t = page.extract_text()
+                if t:
+                    text_content.append(t)
+            if hasattr(file_obj, "seek"):
+                file_obj.seek(0)
+        except Exception as pypdf_err:
+            logger.debug("pypdf fallback extraction failed: %s", pypdf_err)
+
+    return "\n".join(text_content).strip()
+
+
+def parse_resume_content(file_name, candidate, target_role="", uploaded_file=None):
     """
     Constructs a well-structured parsed_data dictionary adhering to the
     frontend Resume.jsx parsedForm specification.
+    Extracts real document text if uploaded_file or candidate.resume_file is available.
     """
     user = candidate.user if candidate else None
     first = user.first_name if user else "Candidate"
@@ -16,13 +69,27 @@ def parse_resume_content(file_name, candidate, target_role=""):
     grad_year = str(candidate.graduation_year) if candidate and candidate.graduation_year else "2026"
     bio = candidate.bio if candidate and candidate.bio else ""
 
-    # Known candidate skills
+    # Real text extraction from uploaded file or existing resume file
+    raw_document_text = ""
+    target_file = uploaded_file or (candidate.resume_file if candidate and candidate.resume_file else None)
+    if target_file:
+        raw_document_text = extract_text_from_file(target_file)
+
+    # Known candidate skills from database
     tech_skills = []
     if candidate:
         for cs in candidate.skills.select_related("skill").all():
             if cs.skill and cs.skill.name not in tech_skills:
                 tech_skills.append(cs.skill.name)
 
+    # Extract additional skills from real document text
+    if raw_document_text:
+        extracted_skills = extract_skills_from_text(raw_document_text)
+        for es in extracted_skills:
+            if es not in tech_skills:
+                tech_skills.append(es)
+
+    tech_skills = normalize_skill_set(tech_skills)
     if not tech_skills:
         tech_skills = ["JavaScript", "React", "Python", "SQL", "Git"]
 
@@ -97,6 +164,7 @@ def parse_resume_content(file_name, candidate, target_role=""):
             {"language": "Khmer", "proficiency": "Native"},
             {"language": "English", "proficiency": "Professional Working"},
         ],
+        "raw_document_text": raw_document_text,
     }
 
 
