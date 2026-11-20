@@ -937,24 +937,35 @@
   height: 100px;
   border-radius: 50%;
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: center;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  gap: 2px;
+  box-shadow: 0 8px 24px rgba(1, 107, 251, 0.25);
   flex-shrink: 0;
   border: 4px solid #ffffff;
+  background: linear-gradient(135deg, #016BFB 0%, #0052cc 100%);
+  padding-top: 32px;
+  box-sizing: border-box;
 }
 
 .score-circular-num {
-  font-size: 28px;
+  font-size: 30px;
   font-weight: 800;
   color: #ffffff;
   line-height: 1;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .score-circular-denom {
   font-size: 14px;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1;
+}
+
+[data-theme="dark"] .score-circular-badge {
+  border-color: rgba(99, 142, 203, 0.4);
+  box-shadow: 0 0 24px rgba(1, 107, 251, 0.4);
 }
 
 .score-hero-details {

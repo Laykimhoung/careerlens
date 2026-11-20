@@ -5,6 +5,7 @@ import { useAuth } from "../../../hooks/useAuth";
 import SideRays from "../../../components/ui/SideRays";
 import CurvyInput from "../../../components/common/CurvyInput";
 import NeonCheckbox from "../../../components/common/NeonCheckbox";
+import ThemeLanguageToggle from "../../../components/common/ThemeLanguageToggle";
 import { useLanguage } from "../../../context/LanguageContext";
 import "./AuthPage.css";
 import { isDemoModeEnabled } from "../../../config/features";
@@ -89,91 +90,8 @@ export default function AuthPage() {
     terms: false,
   });
 
-  // Settigation Component 95: Tether button physics state
-  const [buttonOffset, setButtonOffset] = useState({ x: 0, y: 0 });
-  const [isFocused, setIsFocused] = useState(false);
-  const trackRef = useRef(null);
-
   const isEmailValid = Boolean(loginForm.email.trim());
   const isPasswordValid = Boolean(loginForm.password.trim());
-  const filledCount = (isEmailValid ? 1 : 0) + (isPasswordValid ? 1 : 0);
-  const isLocked = filledCount === 2;
-
-  // Snaps home and resets when form requirements are met or keyboard focus is active
-  useEffect(() => {
-    if (isLocked || isFocused) {
-      setButtonOffset({ x: 0, y: 0 });
-    }
-  }, [isLocked, isFocused]);
-
-  // Continuous mouse proximity tracking with vector evasion
-  useEffect(() => {
-    if (!isLogin || isLocked || isFocused) return;
-
-    const handleMouseMove = (e) => {
-      if (e.pointerType === "touch") return;
-      if (!trackRef.current) return;
-
-      const trackRect = trackRef.current.getBoundingClientRect();
-      const trackCenterX = trackRect.left + trackRect.width / 2;
-      const trackCenterY = trackRect.top + trackRect.height / 2;
-
-      // Current center of the button in viewport
-      const btnCenterX = trackCenterX + buttonOffset.x;
-      const btnCenterY = trackCenterY + buttonOffset.y;
-
-      const distX = e.clientX - btnCenterX;
-      const distY = e.clientY - btnCenterY;
-      const distToMouse = Math.hypot(distX, distY);
-
-      // Trigger proximity radius: 110px on empty form, 75px on half-filled
-      const triggerRadius = filledCount === 1 ? 75 : 110;
-
-      if (distToMouse < triggerRadius) {
-        // Component 95 logic:
-        // Empty form: bolts full travel (95px)
-        // 1 field filled: slows to half the travel (45px)
-        const travel = filledCount === 1 ? 45 : 95;
-        const maxBoundX = 135;
-        const maxBoundY = 60;
-
-        let angle = Math.atan2(-distY, -distX);
-        const jitter = (Math.random() - 0.5) * 0.4;
-        angle += jitter;
-
-        let nextX = buttonOffset.x + Math.cos(angle) * travel;
-        let nextY = buttonOffset.y + Math.sin(angle) * travel;
-
-        // Bounce back if hitting boundaries
-        if (Math.abs(nextX) > maxBoundX) {
-          nextX = -Math.sign(nextX) * (maxBoundX * 0.75);
-        }
-        if (Math.abs(nextY) > maxBoundY) {
-          nextY = -Math.sign(nextY) * (maxBoundY * 0.75);
-        }
-
-        setButtonOffset({ x: nextX, y: nextY });
-      }
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, [isLogin, isLocked, isFocused, filledCount, buttonOffset]);
-
-  const handleButtonHover = (e) => {
-    if (isLocked || isFocused) return;
-    const travel = filledCount === 1 ? 45 : 95;
-    const maxBoundX = 135;
-    const maxBoundY = 60;
-
-    const dirX = e.clientX > window.innerWidth / 2 ? -1 : 1;
-    const dirY = (Math.random() > 0.5 ? 1 : -1);
-
-    setButtonOffset({
-      x: dirX * Math.min(travel, maxBoundX),
-      y: dirY * Math.min(travel * 0.6, maxBoundY),
-    });
-  };
 
   useEffect(() => {
     if (isAuthenticated && user?.role) {
@@ -273,12 +191,21 @@ export default function AuthPage() {
     }));
   };
 
-  // Dynamic tether cable geometry
-  const cableLength = Math.hypot(buttonOffset.x, buttonOffset.y);
-  const cableAngle = Math.atan2(buttonOffset.y, buttonOffset.x) * (180 / Math.PI);
-
   return (
     <div className="auth-page-bg">
+      {/* Top Bar with Brand and Theme/Language switcher */}
+      <div className="auth-top-bar">
+        <Link to="/" className="auth-top-brand" title="Return to home">
+          <div className="tether-brand-badge">
+            <div className="tether-brand-ring">
+              <div className="tether-brand-dot" />
+            </div>
+            <span className="tether-brand-text">CareerLens</span>
+          </div>
+        </Link>
+        <ThemeLanguageToggle />
+      </div>
+
       {/* Sci-Fi Ambient Light Rays */}
       <div className="auth-rays-bg">
         <SideRays
@@ -316,7 +243,7 @@ export default function AuthPage() {
                 ? "Sign in to view job details and submit your application."
                 : "Create your candidate account to connect and apply directly."
             ) : isLogin ? (
-              "Welcome back. Two fields stand between you and that button."
+              t("auth.welcomeBack", "Welcome back! Enter your credentials to access your dashboard.")
             ) : (
               "Join CareerLens to connect with opportunities across Cambodia."
             )}
@@ -423,67 +350,21 @@ export default function AuthPage() {
               />
             </div>
 
-            {/* ── Animated Button & Tether Track (Settigation Component 95) ── */}
-            <div className="tether-track-container" ref={trackRef}>
-              <div className={`tether-track ${isLocked ? "locked" : ""}`} />
-
-              {/* Dynamic Glowing Laser Cable */}
-              {!isLocked && cableLength > 2 && (
-                <div
-                  className="tether-cable"
-                  style={{
-                    width: `${cableLength}px`,
-                    transform: `rotate(${cableAngle}deg)`,
-                  }}
-                />
+            {/* Submit Button */}
+            <button
+              type="submit"
+              className="tether-btn-submit"
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <span className="tether-spinner" />
+                  <span>{t("auth.signingIn", "Signing In...")}</span>
+                </>
+              ) : (
+                <span>{t("auth.signIn")}</span>
               )}
-
-              <div
-                className="tether-btn-wrapper"
-                style={{
-                  transform: `translate(${buttonOffset.x.toFixed(1)}px, ${buttonOffset.y.toFixed(1)}px)`,
-                }}
-              >
-                <button
-                  type="submit"
-                  className={`tether-btn ${isLocked ? "locked" : "unlocked"}`}
-                  onMouseEnter={handleButtonHover}
-                  onFocus={() => {
-                    setIsFocused(true);
-                    setButtonOffset({ x: 0, y: 0 }); // Tab reaches it and it stops!
-                  }}
-                  onBlur={() => setIsFocused(false)}
-                  disabled={loading}
-                >
-                  {loading ? (
-                    t("auth.signingIn")
-                  ) : (
-                    <>
-                      <span>{t("auth.signIn")}</span>
-                      {isLocked && <span className="tether-btn__lock-icon"><Check size={14} /></span>}
-                    </>
-                  )}
-                </button>
-              </div>
-            </div>
-
-            {/* Status Feedback & Keyboard Accessibility */}
-            <div className="tether-status">
-              <div className="tether-status-text">
-                <div className={`tether-status-dot ${isLocked ? "locked" : ""}`} />
-                <span className={`tether-status-msg ${isLocked ? "locked" : ""}`}>
-                  {isLocked
-                    ? "Locked in. Go on then."
-                    : filledCount === 1
-                    ? "One down. Still got legs."
-                    : "Two fields to fill before it stands still."}
-                </span>
-              </div>
-              <div className="tether-keyboard-hints">
-                <span className="tether-key">Tab</span> reaches it.{" "}
-                <span className="tether-key">Enter</span> submits.
-              </div>
-            </div>
+            </button>
 
             {/* Quick Demo Login Pills (Visible only when Demo Mode is enabled) */}
             {isDemoModeEnabled() && (
@@ -780,8 +661,15 @@ export default function AuthPage() {
               />
             </div>
 
-            <button type="submit" className="tether-btn locked" disabled={loading} style={{ height: "54px" }}>
-              {loading ? t("auth.creatingAccount") : t("auth.signUp")}
+            <button type="submit" className="tether-btn-submit" disabled={loading}>
+              {loading ? (
+                <>
+                  <span className="tether-spinner" />
+                  <span>{t("auth.creatingAccount", "Creating Account...")}</span>
+                </>
+              ) : (
+                <span>{t("auth.signUp")}</span>
+              )}
             </button>
 
             <div className="tether-switch">

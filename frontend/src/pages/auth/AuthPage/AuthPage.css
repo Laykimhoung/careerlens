@@ -18,8 +18,28 @@
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   position: relative;
   overflow-x: hidden;
-  padding: 40px 16px;
+  padding: 80px 16px 40px;
   box-sizing: border-box;
+}
+
+/* ── Top Bar with Brand Badge & Theme/Language Toggle ── */
+.auth-top-bar {
+  position: absolute;
+  top: 20px;
+  left: 28px;
+  right: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 50;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.auth-top-brand {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
 }
 
 /* Ambient Ray Background */
@@ -776,223 +796,59 @@
 }
 
 /* ═════════════════════════════════════════════════════════════════════
-   THE TETHER DOCKING TRACK & RUNAWAY BUTTON PHYSICS (COMPONENT 95)
+   MODERN ELECTRIC BLUE SUBMIT BUTTON (.tether-btn-submit)
+   Replaces frustrating runaway dodging with a high-performance,
+   smooth-lift ergonomic button with subtle electric blue glow hover.
    ═════════════════════════════════════════════════════════════════════ */
-
-.tether-track-container {
-  margin-top: 10px;
-  position: relative;
-  height: 52px;
+.tether-btn-submit {
   width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* The Dashed Home Socket */
-.tether-track {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border: 1.5px dashed rgba(1, 107, 251, 0.35);
-  border-radius: 26px;
-  background: rgba(1, 107, 251, 0.03);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1;
-  pointer-events: none;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.tether-track::before {
-  content: "";
-  width: 18px;
-  height: 18px;
-  background-color: transparent;
-  border: 1.5px solid rgba(1, 107, 251, 0.3);
-  border-radius: 50%;
-  position: absolute;
-}
-
-.tether-track.locked {
-  border: 1.5px solid rgba(1, 107, 251, 0.65);
-  background: rgba(1, 107, 251, 0.08);
-  box-shadow: 0 0 20px rgba(1, 107, 251, 0.25);
-}
-
-.tether-track.locked::before {
-  display: none;
-}
-
-/* Dynamic Glowing Laser Cable */
-.tether-cable {
-  position: absolute;
-  top: calc(50% - 2px);
-  left: 50%;
-  height: 4px;
-  background: linear-gradient(90deg, rgba(1, 107, 251, 0.4), #016BFB);
-  box-shadow: 
-    0 0 12px rgba(1, 107, 251, 0.95),
-    0 0 4px rgba(255, 255, 255, 0.7);
-  transform-origin: 0 50%;
-  z-index: 2;
-  border-radius: 2px;
-  pointer-events: none;
-  transition: width 0.06s linear;
-}
-
-/* Runaway Button Wrapper */
-.tether-btn-wrapper {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.22s cubic-bezier(0.18, 0.89, 0.32, 1.28);
-  will-change: transform;
-}
-
-/* The Button */
-.tether-btn {
-  width: 100%;
-  height: 100%;
+  height: 50px;
   border: none;
-  border-radius: 26px;
+  border-radius: 12px;
   font-size: 15px;
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
-  font-family: inherit;
+  background: linear-gradient(135deg, #016BFB 0%, #0052cc 100%);
+  color: #ffffff !important;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
   user-select: none;
   outline: none;
-}
-
-/* Unlocked (Runs away / empty form: dark matte, no neon color) */
-.tether-btn.unlocked {
-  background-color: #121a2c;
-  color: #ffffff;
-  border: 1px solid #1e2d4d;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-}
-
-.tether-btn.unlocked:hover:not(:disabled) {
-  background-color: #172238;
-  border-color: #273960;
-  color: #ffffff;
-}
-
-.tether-btn.unlocked:focus-visible {
-  border-color: #016BFB;
-  box-shadow: 0 0 0 3px rgba(1, 107, 251, 0.25);
-}
-
-/* Locked (Snaps home, #016BFB royal blue glow) */
-.tether-btn.locked {
-  background: linear-gradient(135deg, #2b8aff 0%, #016BFB 100%);
-  color: #ffffff;
-  font-weight: 800;
-  box-shadow: 
-    0 0 25px rgba(1, 107, 251, 0.5),
-    0 6px 20px rgba(1, 107, 251, 0.4);
-}
-
-.tether-btn.locked:hover {
-  filter: brightness(1.08);
-  box-shadow: 
-    0 0 30px rgba(1, 107, 251, 0.7),
-    0 8px 25px rgba(1, 107, 251, 0.5);
-  transform: translateY(-1px);
-}
-
-.tether-btn.locked:active {
-  transform: translateY(1px);
-}
-
-.tether-btn:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
-
-.tether-btn__lock-icon {
-  font-size: 14px;
-}
-
-/* ═════════════════════════════════════════════════════════════════════
-   STATUS FEEDBACK & KEYBOARD ESCAPE HATCHES
-   ═════════════════════════════════════════════════════════════════════ */
-
-.tether-status {
-  text-align: center;
+  font-family: inherit;
+  letter-spacing: 0.2px;
+  box-shadow: 0 4px 14px rgba(1, 107, 251, 0.35);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.2s ease,
+              background 0.2s ease;
   margin-top: 6px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
 }
 
-.tether-status-text {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
+.tether-btn-submit:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(1, 107, 251, 0.5), 0 0 15px rgba(1, 107, 251, 0.25);
+  filter: brightness(1.06);
 }
 
-.tether-status-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background-color: #ffaa44;
-  box-shadow: 0 0 8px rgba(255, 170, 68, 0.6);
-  transition: all 0.3s ease;
+.tether-btn-submit:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(1, 107, 251, 0.3);
+  filter: brightness(0.98);
 }
 
-.tether-status-dot.locked {
-  background-color: #016BFB;
-  box-shadow: 0 0 10px #016BFB;
+.tether-btn-submit:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(1, 107, 251, 0.4);
 }
 
-.tether-status-msg {
-  font-size: 13px;
-  color: #8fa2c0;
-  font-style: italic;
-  transition: color 0.3s ease;
-}
-
-.tether-status-msg.locked {
-  color: #016BFB;
-  font-weight: 600;
-  font-style: normal;
-}
-
-.tether-keyboard-hints {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  font-size: 11.5px;
-  color: #64748b;
-}
-
-.tether-key {
-  background-color: #121a2c;
-  color: #94a3b8;
-  border: 1px solid rgba(1, 107, 251, 0.25);
-  padding: 1px 6px;
-  border-radius: 4px;
-  font-size: 11px;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-weight: 600;
+.tether-btn-submit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: 0 2px 6px rgba(1, 107, 251, 0.2);
 }
 
 /* ═════════════════════════════════════════════════════════════════════
@@ -1208,4 +1064,273 @@
     width: 100%;
     padding: 8px 12px;
   }
+}
+
+/* ═════════════════════════════════════════════════════════════════════
+   LIGHT MODE OVERRIDES FOR AUTHPAGE
+   Applies when data-theme is "light" or not dark
+   ═════════════════════════════════════════════════════════════════════ */
+:root:not([data-theme="dark"]) .auth-page-bg,
+[data-theme="light"] .auth-page-bg {
+  background-color: #f8fafc;
+  background-image: 
+    radial-gradient(circle at 50% 15%, rgba(1, 107, 251, 0.08) 0%, transparent 60%),
+    radial-gradient(circle at 85% 85%, rgba(1, 107, 251, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 10% 70%, rgba(1, 107, 251, 0.04) 0%, transparent 50%);
+  color-scheme: light;
+}
+
+:root:not([data-theme="dark"]) .auth-rays-bg,
+[data-theme="light"] .auth-rays-bg {
+  opacity: 0.25;
+}
+
+:root:not([data-theme="dark"]) .tether-card,
+[data-theme="light"] .tether-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 
+    0 20px 45px -10px rgba(15, 23, 42, 0.08),
+    0 8px 24px -5px rgba(1, 107, 251, 0.06),
+    0 1px 3px rgba(0, 0, 0, 0.04);
+  color-scheme: light;
+}
+
+:root:not([data-theme="dark"]) .tether-title,
+[data-theme="light"] .tether-title {
+  color: #0f172a;
+}
+
+:root:not([data-theme="dark"]) .tether-subtitle,
+[data-theme="light"] .tether-subtitle {
+  color: #64748b;
+}
+
+:root:not([data-theme="dark"]) .tether-label,
+[data-theme="light"] .tether-label {
+  color: #334155;
+}
+
+:root:not([data-theme="dark"]) .tether-forgot,
+[data-theme="light"] .tether-forgot {
+  color: #016BFB;
+}
+
+:root:not([data-theme="dark"]) .tether-forgot:hover,
+[data-theme="light"] .tether-forgot:hover {
+  color: #0052cc;
+}
+
+:root:not([data-theme="dark"]) .tether-redirect-notice,
+[data-theme="light"] .tether-redirect-notice {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  color: #1e40af;
+  box-shadow: 0 2px 10px rgba(1, 107, 251, 0.08);
+}
+
+/* Hide dark conic glow overlays in light mode to keep input clean */
+:root:not([data-theme="dark"]) .tether-glow,
+:root:not([data-theme="dark"]) .tether-darkBorderBg,
+:root:not([data-theme="dark"]) .tether-white,
+:root:not([data-theme="dark"]) .tether-border,
+[data-theme="light"] .tether-glow,
+[data-theme="light"] .tether-darkBorderBg,
+[data-theme="light"] .tether-white,
+[data-theme="light"] .tether-border {
+  display: none !important;
+}
+
+/* Light mode input boxes */
+:root:not([data-theme="dark"]) .tether-poda,
+[data-theme="light"] .tether-poda {
+  background: transparent;
+}
+
+:root:not([data-theme="dark"]) .tether-input-inner,
+:root:not([data-theme="dark"]) .tether-input-wrapper,
+[data-theme="light"] .tether-input-inner,
+[data-theme="light"] .tether-input-wrapper {
+  background-color: #f8fafc;
+  border: 1.5px solid #cbd5e1 !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03) !important;
+}
+
+:root:not([data-theme="dark"]) .tether-poda:focus-within .tether-input-inner,
+:root:not([data-theme="dark"]) .tether-poda:focus-within .tether-input-wrapper,
+[data-theme="light"] .tether-poda:focus-within .tether-input-inner,
+[data-theme="light"] .tether-poda:focus-within .tether-input-wrapper {
+  background-color: #ffffff;
+  border-color: #016BFB !important;
+  box-shadow: 0 0 0 3px rgba(1, 107, 251, 0.15) !important;
+}
+
+:root:not([data-theme="dark"]) .tether-card input.tether-input,
+:root:not([data-theme="dark"]) .tether-poda input:not([type="checkbox"]),
+:root:not([data-theme="dark"]) .tether-input-inner input,
+:root:not([data-theme="dark"]) .tether-input-wrapper input,
+[data-theme="light"] .tether-card input.tether-input,
+[data-theme="light"] .tether-poda input:not([type="checkbox"]),
+[data-theme="light"] .tether-input-inner input,
+[data-theme="light"] .tether-input-wrapper input {
+  color: #0f172a !important;
+  caret-color: #016BFB !important;
+}
+
+:root:not([data-theme="dark"]) .tether-input::placeholder,
+[data-theme="light"] .tether-input::placeholder {
+  color: #94a3b8 !important;
+}
+
+:root:not([data-theme="dark"]) .tether-icon-left,
+[data-theme="light"] .tether-icon-left {
+  color: #64748b;
+}
+
+:root:not([data-theme="dark"]) .tether-poda:focus-within .tether-icon-left,
+:root:not([data-theme="dark"]) .tether-poda.valid .tether-icon-left,
+[data-theme="light"] .tether-poda:focus-within .tether-icon-left,
+[data-theme="light"] .tether-poda.valid .tether-icon-left {
+  color: #016BFB;
+}
+
+:root:not([data-theme="dark"]) .tether-icon-right.eye,
+[data-theme="light"] .tether-icon-right.eye {
+  color: #64748b;
+}
+
+:root:not([data-theme="dark"]) .tether-icon-right.eye:hover,
+[data-theme="light"] .tether-icon-right.eye:hover {
+  color: #0f172a;
+  background: rgba(15, 23, 42, 0.06);
+}
+
+/* Light mode demo box */
+:root:not([data-theme="dark"]) .tether-demo-box,
+[data-theme="light"] .tether-demo-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+:root:not([data-theme="dark"]) .tether-demo-title,
+[data-theme="light"] .tether-demo-title {
+  color: #64748b;
+}
+
+:root:not([data-theme="dark"]) .tether-demo-btn,
+[data-theme="light"] .tether-demo-btn {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+}
+
+:root:not([data-theme="dark"]) .tether-demo-btn:hover:not(:disabled),
+[data-theme="light"] .tether-demo-btn:hover:not(:disabled) {
+  background: #eff6ff;
+  border-color: #016BFB;
+  color: #016BFB;
+  box-shadow: 0 2px 8px rgba(1, 107, 251, 0.15);
+}
+
+:root:not([data-theme="dark"]) .tether-demo-pw,
+[data-theme="light"] .tether-demo-pw {
+  color: #64748b;
+}
+
+:root:not([data-theme="dark"]) .tether-demo-pw code,
+[data-theme="light"] .tether-demo-pw code {
+  color: #016BFB;
+  background: #eff6ff;
+}
+
+/* Light mode switch */
+:root:not([data-theme="dark"]) .tether-switch,
+[data-theme="light"] .tether-switch {
+  color: #64748b;
+}
+
+:root:not([data-theme="dark"]) .tether-switch a,
+[data-theme="light"] .tether-switch a {
+  color: #016BFB;
+}
+
+:root:not([data-theme="dark"]) .tether-switch a:hover,
+[data-theme="light"] .tether-switch a:hover {
+  color: #0052cc;
+}
+
+/* Light mode role toggle */
+:root:not([data-theme="dark"]) .tether-role-toggle,
+[data-theme="light"] .tether-role-toggle {
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+}
+
+:root:not([data-theme="dark"]) .tether-role-btn,
+[data-theme="light"] .tether-role-btn {
+  color: #64748b;
+}
+
+:root:not([data-theme="dark"]) .tether-role-btn.active,
+[data-theme="light"] .tether-role-btn.active {
+  background: #ffffff;
+  color: #016BFB;
+  border: 1px solid #cbd5e1;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Light mode skills */
+:root:not([data-theme="dark"]) .tether-skill-tag,
+[data-theme="light"] .tether-skill-tag {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1d4ed8;
+}
+
+:root:not([data-theme="dark"]) .tether-skill-chip-btn,
+[data-theme="light"] .tether-skill-chip-btn {
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+}
+
+:root:not([data-theme="dark"]) .tether-skill-chip-btn:hover,
+[data-theme="light"] .tether-skill-chip-btn:hover {
+  background: #eff6ff;
+  border-color: #016BFB;
+  color: #016BFB;
+}
+
+:root:not([data-theme="dark"]) .tether-skill-chip-btn.selected,
+[data-theme="light"] .tether-skill-chip-btn.selected {
+  background: #016BFB;
+  border-color: #016BFB;
+  color: #ffffff;
+}
+
+/* Light mode autofill overrides */
+:root:not([data-theme="dark"]) .auth-page-bg input:-webkit-autofill,
+:root:not([data-theme="dark"]) .auth-page-bg input:-webkit-autofill:hover, 
+:root:not([data-theme="dark"]) .auth-page-bg input:-webkit-autofill:focus, 
+:root:not([data-theme="dark"]) .auth-page-bg input:-webkit-autofill:active,
+:root:not([data-theme="dark"]) .tether-card input:-webkit-autofill,
+:root:not([data-theme="dark"]) .tether-input-inner input:-webkit-autofill,
+[data-theme="light"] .auth-page-bg input:-webkit-autofill,
+[data-theme="light"] .auth-page-bg input:-webkit-autofill:hover, 
+[data-theme="light"] .auth-page-bg input:-webkit-autofill:focus, 
+[data-theme="light"] .auth-page-bg input:-webkit-autofill:active,
+[data-theme="light"] .tether-card input:-webkit-autofill,
+[data-theme="light"] .tether-input-inner input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px #f8fafc inset !important;
+  box-shadow: 0 0 0 1000px #f8fafc inset !important;
+  -webkit-text-fill-color: #0f172a !important;
+  color: #0f172a !important;
+}
+
+:root:not([data-theme="dark"]) .tether-poda:focus-within input:-webkit-autofill,
+[data-theme="light"] .tether-poda:focus-within input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+  box-shadow: 0 0 0 1000px #ffffff inset !important;
+  -webkit-text-fill-color: #0f172a !important;
+  color: #0f172a !important;
 }

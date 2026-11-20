@@ -16,7 +16,6 @@ import {
   Star,
   CheckCircle2,
   ArrowUpRight,
-  Sparkles,
 } from "lucide-react";
 import { useAuth } from "../../../hooks/useAuth";
 import { getCurrentCompanyProfile } from "../../../services/companyService";
@@ -265,15 +264,9 @@ export default function CompanyDashboard() {
                 </div>
                 <h2 className="comp-spotlight-title">{jobs[0]?.title || "Lead Developer"}</h2>
                 <p className="comp-spotlight-desc">{activeJobs} {t("company.activeJobListings", "active job listings published")}</p>
-                <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginTop: "8px" }}>
-                  <Link to="/company/jobs" className="comp-spotlight-btn">
-                    {t("company.manageJobs", "Manage Jobs")} &rarr;
-                  </Link>
-                  <Link to="/company/candidate-ranking" className="comp-spotlight-btn comp-spotlight-ranking-btn">
-                    <Sparkles size={13} style={{ marginRight: "4px", verticalAlign: "-2px" }} />
-                    {t("company.candidateRankingNav", "AI Ranking")} &rarr;
-                  </Link>
-                </div>
+                <Link to="/company/jobs" className="comp-spotlight-btn">
+                  {t("company.manageJobs", "Manage Jobs")} &rarr;
+                </Link>
               </div>
             </div>
 

@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Sparkles } from "lucide-react";
 import {
   fetchNormalizedApplications,
   updateApplication,
@@ -94,30 +93,11 @@ export default function Applicants() {
 
   return (
     <section className="workspace-page">
-      <div className="workspace-heading" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "12px" }}>
+      <div className="workspace-heading">
         <div>
           <h1>{t("company.applicantsHeading", "Applicants")}</h1>
           <p>{t("company.applicantsSub", "Review candidates across your open roles.")}</p>
         </div>
-        <Link
-          to="/company/candidate-ranking"
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "8px",
-            padding: "9px 16px",
-            borderRadius: "8px",
-            background: "linear-gradient(135deg, #016bfb 0%, #0052cc 100%)",
-            color: "#ffffff",
-            fontWeight: "600",
-            fontSize: "14px",
-            textDecoration: "none",
-            boxShadow: "0 2px 8px rgba(1, 107, 251, 0.28)",
-          }}
-        >
-          <Sparkles size={16} />
-          <span>{t("company.candidateRankingNav", "AI Candidate Ranking")}</span>
-        </Link>
       </div>
 
       {error && (
