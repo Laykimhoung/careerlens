@@ -61,3 +61,8 @@
   color: var(--color-danger);
   margin-top: 4px;
 }
+
+[data-theme="dark"] .select-field option {
+  background-color: #0b112c;
+  color: #ffffff;
+}

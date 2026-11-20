@@ -671,6 +671,12 @@ html[data-theme="dark"] body {
   color: #ffffff !important;
 }
 
+[data-theme="dark"] select option,
+[data-theme="dark"] option {
+  background-color: #0b112c !important;
+  color: #ffffff !important;
+}
+
 [data-theme="dark"] input:focus,
 [data-theme="dark"] select:focus,
 [data-theme="dark"] textarea:focus,
