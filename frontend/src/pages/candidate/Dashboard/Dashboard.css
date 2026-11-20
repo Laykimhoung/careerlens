@@ -552,15 +552,19 @@
   height: 34px;
   border-radius: 999px;
   background: #016BFB;
-  color: #FFFFFF;
-  text-decoration: none;
+  color: #FFFFFF !important;
+  text-decoration: none !important;
   font-size: 0.78125rem;
   font-weight: 600;
-  transition: background 0.18s ease;
+  transition: all 0.18s ease;
 }
 
-.cand-spotlight-btn:hover {
+.cand-spotlight-btn:hover,
+.cand-spotlight-btn:focus {
   background: #0058D4;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 12px rgba(1, 107, 251, 0.35);
+  transform: translateY(-1px);
 }
 
 /* 2. Center Overviews Bar Chart Card */
@@ -720,15 +724,19 @@
   height: 34px;
   border-radius: 999px;
   background: #016BFB;
-  color: #FFFFFF;
-  text-decoration: none;
+  color: #FFFFFF !important;
+  text-decoration: none !important;
   font-size: 0.78125rem;
   font-weight: 600;
-  transition: background 0.18s ease;
+  transition: all 0.18s ease;
 }
 
-.cand-performer-btn:hover {
+.cand-performer-btn:hover,
+.cand-performer-btn:focus {
   background: #0256CA;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 12px rgba(1, 107, 251, 0.35);
+  transform: translateY(-1px);
 }
 
 /* ── Lower Section: Recommended Jobs ─────────────────────────────────────── */
