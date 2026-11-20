@@ -45,3 +45,53 @@ class NormalizerTests(TestCase):
         self.assertIn("Django REST Framework", extracted)
         self.assertIn("PostgreSQL", extracted)
         self.assertIn("Docker", extracted)
+
+
+class FeatureExtractionTests(TestCase):
+    def test_extract_features_shape_and_bounds(self):
+        from apps.ml_engine.features import extract_features_from_dict, FEATURE_NAMES
+
+        cand = {
+            "university": "Royal University of Phnom Penh",
+            "major": "Computer Science",
+            "graduation_year": 2025,
+            "bio": "Frontend developer with experience in React and JavaScript.",
+            "skills": [
+                {"name": "React", "proficiency": "EXPERT"},
+                {"name": "JavaScript", "proficiency": "EXPERT"},
+                {"name": "HTML5", "proficiency": "INTERMEDIATE"},
+            ],
+            "resume_file": True,
+        }
+        job = {
+            "title": "Junior React Developer",
+            "description": "Looking for a junior React developer to build web components.",
+            "location": "Phnom Penh",
+            "employment_type": "FULL_TIME",
+            "workplace_type": "ON_SITE",
+            "min_experience_years": 1,
+            "required_skills": ["React", "JavaScript", "CSS3"],
+        }
+        prefs = {
+            "target_role": "React Developer",
+            "preferred_location": "Phnom Penh",
+            "preferred_employment_type": "FULL_TIME",
+            "preferred_workplace_type": "ON_SITE",
+        }
+
+        vec, feat_dict = extract_features_from_dict(cand, job, prefs)
+        self.assertEqual(len(vec), 15)
+        self.assertEqual(len(vec), len(FEATURE_NAMES))
+        # Ensure no NaNs or Infinities
+        for val in vec:
+            self.assertFalse(val is None)
+            self.assertGreaterEqual(float(val), 0.0)
+            self.assertLessEqual(float(val), 1.0)
+
+        # React and JavaScript match 2 out of 3 required skills
+        self.assertAlmostEqual(feat_dict["skill_jaccard_ratio"], 2.0 / 3.0, places=2)
+        # Location and workplace match
+        self.assertEqual(feat_dict["location_compatibility"], 1.0)
+        self.assertEqual(feat_dict["workplace_compatibility"], 1.0)
+        self.assertEqual(feat_dict["employment_type_match"], 1.0)
+
