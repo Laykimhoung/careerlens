@@ -268,18 +268,24 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 34px;
+  height: 38px;
+  padding: 0 16px;
   border-radius: 999px;
   background: #016BFB;
-  color: #FFFFFF;
-  text-decoration: none;
-  font-size: 0.78125rem;
+  color: #FFFFFF !important;
+  text-decoration: none !important;
+  font-size: 0.8125rem;
   font-weight: 600;
-  transition: background 0.18s ease;
+  transition: all 0.18s ease;
+  box-sizing: border-box;
 }
 
-.comp-spotlight-btn:hover {
+.comp-spotlight-btn:hover,
+.comp-spotlight-btn:focus {
   background: #0058D4;
+  color: #FFFFFF !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(1, 107, 251, 0.3);
 }
 
 /* 2. Center Overviews Bar Chart Card */

@@ -33,6 +33,7 @@ export default function CreateJob() {
         workplace_type: toBackendWorkplaceType(values.setup),
         salary_min: values.salary_min ? Number(values.salary_min) : null,
         salary_max: values.salary_max ? Number(values.salary_max) : null,
+        min_experience_years: values.min_experience_years ? Math.max(0, parseInt(values.min_experience_years, 10) || 0) : 0,
         status: toBackendJobStatus(values.status || "Published"),
         deadline: values.deadline ? `${values.deadline}T23:59:59Z` : null,
         skills: skillList,

@@ -1,3 +1,4 @@
+import { Video, ArrowRight } from "lucide-react";
 import "./InterviewCard.css";
 
 export default function InterviewCard({ interview, onCancel, onComplete }) {
@@ -45,7 +46,9 @@ export default function InterviewCard({ interview, onCancel, onComplete }) {
               boxShadow: "0 2px 6px rgba(1, 107, 251, 0.25)",
             }}
           >
-            <span>🎥 Join Video Call</span> &rarr;
+            <Video size={14} />
+            <span>Join Video Call</span>
+            <ArrowRight size={14} />
           </a>
         </div>
       )}

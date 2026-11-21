@@ -196,7 +196,7 @@ class JobRecommendationView(APIView):
         # Check if candidate has persisted job match results in PostgreSQL database
         cache = CandidateJobMatchCache.objects.filter(candidate=candidate).first() if candidate else None
 
-        if cache and cache.results and not force_refresh:
+        if cache and cache.results and not force_refresh and getattr(cache, "model_version", None) == "v1.0-lightgbm":
             return Response({
                 "count": len(cache.results),
                 "top_score": cache.top_score,
@@ -207,6 +207,7 @@ class JobRecommendationView(APIView):
                 "results": cache.results,
                 "from_database": True,
                 "last_scanned_at": cache.updated_at.isoformat() if cache.updated_at else None,
+                "model_version": cache.model_version,
             })
 
         preferences = {
@@ -240,6 +241,7 @@ class JobRecommendationView(APIView):
                     "preferred_location": preferences["preferred_location"],
                     "preferred_employment_type": preferences["preferred_employment_type"],
                     "preferred_workplace_type": preferences["preferred_workplace_type"],
+                    "model_version": "v1.0-lightgbm",
                 }
             )
 
@@ -252,6 +254,7 @@ class JobRecommendationView(APIView):
             "preferred_workplace_type": preferences["preferred_workplace_type"],
             "results": results,
             "from_database": False,
+            "model_version": "v1.0-lightgbm",
         })
 
     def post(self, request):
@@ -293,6 +296,7 @@ class JobRecommendationView(APIView):
                     "preferred_location": preferences["preferred_location"],
                     "preferred_employment_type": preferences["preferred_employment_type"],
                     "preferred_workplace_type": preferences["preferred_workplace_type"],
+                    "model_version": "v1.0-lightgbm",
                 }
             )
 
@@ -305,4 +309,5 @@ class JobRecommendationView(APIView):
             "preferred_workplace_type": preferences["preferred_workplace_type"],
             "results": results,
             "from_database": True,
+            "model_version": "v1.0-lightgbm",
         })

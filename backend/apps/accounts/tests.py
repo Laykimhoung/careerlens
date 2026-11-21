@@ -3,6 +3,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 from django.contrib.auth import get_user_model
 from django.core import mail
+from django.core.cache import cache
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
@@ -162,6 +163,7 @@ class ProfileTests(APITestCase):
 
 class PasswordResetTests(APITestCase):
     def setUp(self):
+        cache.clear()
         self.forgot_url = reverse('forgot_password')
         self.reset_url = reverse('reset_password')
         self.user = User.objects.create_user(
@@ -227,8 +229,21 @@ class PasswordResetTests(APITestCase):
         data = {
             "uid": uid,
             "token": token,
-            "password": "123",
+            "password": "",
         }
         response = self.client.post(self.reset_url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_reset_password_simple_password_allowed(self):
+        token = default_token_generator.make_token(self.user)
+        uid = urlsafe_base64_encode(force_bytes(self.user.pk))
+        data = {
+            "uid": uid,
+            "token": token,
+            "password": "123",
+        }
+        response = self.client.post(self.reset_url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.check_password("123"))
 

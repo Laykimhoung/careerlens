@@ -94,7 +94,7 @@ class ResumeUploadView(APIView):
             return Response({"file": [upload_error]}, status=status.HTTP_400_BAD_REQUEST)
 
         target_role = (request.data.get("target_role") or "").strip()
-        parsed_data = parse_resume_content(uploaded_file.name, candidate, target_role=target_role)
+        parsed_data = parse_resume_content(uploaded_file.name, candidate, target_role=target_role, uploaded_file=uploaded_file)
         gemini_key = candidate.gemini_api_key or request.headers.get("X-Gemini-Api-Key")
         if gemini_key:
             from .gemini_service import gemini_analyze_cv

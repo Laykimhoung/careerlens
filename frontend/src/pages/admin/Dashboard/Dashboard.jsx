@@ -319,16 +319,6 @@ export default function AdminDashboard() {
             </select>
           </div>
 
-          <button
-            type="button"
-            className={`modern-refresh-btn ${loading ? 'modern-refresh-btn--loading' : ''}`}
-            onClick={loadData}
-            title="Refresh live dashboard"
-            aria-label="Refresh live data"
-          >
-            <RotateCcw size={16} />
-          </button>
-
           <Link to="/admin/notifications" className="modern-notif-bell" title="Notifications">
             <Bell size={20} />
             {unreadNotifCount > 0 && <span className="modern-notif-count">{unreadNotifCount}</span>}

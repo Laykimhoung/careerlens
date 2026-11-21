@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { CheckCircle2, UploadCloud } from "lucide-react";
 import { useAuth } from "../../../hooks/useAuth";
 import { useLanguage } from "../../../context/LanguageContext";
 import CompanyProfileCard from "../../../components/company/CompanyProfileCard";
@@ -187,9 +188,18 @@ export default function Profile() {
                 style={{
                   fontWeight: 600,
                   color: isVerified ? "#16a34a" : "#d97706",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "4px",
                 }}
               >
-                ({isVerified ? `✓ ${t("company.verified")}` : t("company.unverified")})
+                ({isVerified ? (
+                  <>
+                    <CheckCircle2 size={13} /> {t("company.verified")}
+                  </>
+                ) : (
+                  t("company.unverified")
+                )})
               </span>
             )}
           </p>
@@ -278,7 +288,7 @@ export default function Profile() {
                       gap: "6px",
                     }}
                   >
-                    <span>🖼️</span> {t("company.uploadLogo", "Upload Logo")}
+                    <UploadCloud size={14} /> <span>{t("company.uploadLogo", "Upload Logo")}</span>
                   </label>
                   <input
                     id="company-logo-file-input"

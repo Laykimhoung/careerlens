@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { X } from "lucide-react";
 import { useLanguage } from "../../../context/LanguageContext";
 import { extractResults } from "../../../services/api";
 import {
@@ -154,7 +155,9 @@ function Categories() {
       {error && (
         <div className="admin-alert-banner admin-alert-error" style={{ marginBottom: "16px" }}>
           <span>{error}</span>
-          <button type="button" onClick={() => setError(null)} style={{ background: "none", border: "none", cursor: "pointer", color: "inherit", fontWeight: 700 }}>✕</button>
+          <button type="button" onClick={() => setError(null)} style={{ background: "none", border: "none", cursor: "pointer", color: "inherit", display: "inline-flex", alignItems: "center" }} aria-label="Dismiss">
+            <X size={15} />
+          </button>
         </div>
       )}
 

@@ -614,7 +614,7 @@ export default function CVStudio() {
                 >
                   {versions.map((v) => (
                     <option key={v.id} value={v.id}>
-                      v{v.version_number} - {v.title} {v.is_approved ? "★ (Approved)" : ""}
+                      v{v.version_number} - {v.title} {v.is_approved ? "[Approved]" : ""}
                     </option>
                   ))}
                 </select>
@@ -690,7 +690,10 @@ export default function CVStudio() {
               </div>
               <ul className="changes-pills">
                 {currentVersion.changes_made.map((ch, idx) => (
-                  <li key={idx}>✓ {ch}</li>
+                  <li key={idx}>
+                    <Check size={13} style={{ display: "inline-block", verticalAlign: "middle", marginRight: "4px" }} />
+                    {ch}
+                  </li>
                 ))}
               </ul>
             </div>

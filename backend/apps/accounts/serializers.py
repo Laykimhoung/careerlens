@@ -42,7 +42,6 @@ class UserSerializer(serializers.ModelSerializer):
         for attr, val in validated_data.items():
             setattr(instance, attr, val)
         if password:
-            validate_password(password, user=instance)
             instance.set_password(password)
         instance.save()
         return instance
@@ -245,7 +244,6 @@ class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         write_only=True,
         required=True,
-        validators=[validate_password]
     )
     role = serializers.ChoiceField(
         choices=[
@@ -351,10 +349,9 @@ class ForgotPasswordSerializer(serializers.Serializer):
 class ResetPasswordSerializer(serializers.Serializer):
     uid = serializers.CharField(required=True)
     token = serializers.CharField(required=True)
-    password = serializers.CharField(required=True, min_length=8, write_only=True)
+    password = serializers.CharField(required=True, write_only=True)
 
     def validate_password(self, value):
-        validate_password(value)
         return value
 
 

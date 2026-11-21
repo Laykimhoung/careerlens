@@ -38,9 +38,14 @@ import {
   ExternalLink,
   AlertCircle,
   Loader2,
+  MapPin,
+  DollarSign,
+  Check,
+  Target,
 } from "lucide-react";
 import { useAuth } from "../../../hooks/useAuth";
 import JobCard from "../../../components/candidate/JobCard";
+import { getJobRecommendations } from "../../../services/jobRecommendationService";
 import {
   getGeminiKeyStatus,
   saveGeminiKey,
@@ -100,6 +105,7 @@ export default function CandidateDashboard() {
   const [interviews, setInterviews] = useState([]);
   const [offers, setOffers] = useState([]);
   const [savedRecords, setSavedRecords] = useState([]);
+  const [bestFitRecs, setBestFitRecs] = useState([]);
   const [unreadNotifCount, setUnreadNotifCount] = useState(0);
   const [applyingJobId, setApplyingJobId] = useState(null);
   const [usageSummary, setUsageSummary] = useState(null);
@@ -154,7 +160,7 @@ export default function CandidateDashboard() {
     setLoading(true);
     setError("");
     try {
-      const [prof, jobList, appList, intList, offerRes, savedList, usageRes, notifRes, geminiRes] = await Promise.all([
+      const [prof, jobList, appList, intList, offerRes, savedList, usageRes, notifRes, geminiRes, bestFitRes] = await Promise.all([
         getCurrentCandidateProfile(user?.id).catch(() => null),
         fetchNormalizedJobs().catch(() => []),
         fetchNormalizedApplications().catch(() => []),
@@ -164,6 +170,7 @@ export default function CandidateDashboard() {
         getUsageSummary().catch(() => ({ data: null })),
         getNotifications().catch(() => ({ data: [] })),
         getGeminiKeyStatus().catch(() => ({ data: null })),
+        getJobRecommendations().catch(() => ({ data: { results: [] } })),
       ]);
       setProfile(prof);
       setJobs((jobList || []).filter((j) => j.rawStatus === "PUBLISHED"));
@@ -171,6 +178,8 @@ export default function CandidateDashboard() {
       setInterviews(intList || []);
       setOffers(extractResults(offerRes));
       setSavedRecords(savedList || []);
+      const recs = bestFitRes?.data?.results || [];
+      setBestFitRecs(recs);
       const notifs = extractResults(notifRes);
       setUnreadNotifCount(notifs.filter((n) => !n.is_read).length);
       if (usageRes?.data) setUsageSummary(usageRes.data);
@@ -402,6 +411,29 @@ export default function CandidateDashboard() {
 
     return filtered.slice(0, 4);
   }, [jobs, profile, searchFilter]);
+
+  const displayedBestFit = useMemo(() => {
+    if (!bestFitRecs || bestFitRecs.length === 0) return [];
+    if (!searchFilter.trim()) {
+      return bestFitRecs.slice(0, 3);
+    }
+    const q = searchFilter.toLowerCase().trim();
+    return bestFitRecs.filter((rec) => {
+      const job = rec.job || {};
+      const titleMatch = (job.title || "").toLowerCase().includes(q);
+      const companyMatch = (job.company?.company_name || "").toLowerCase().includes(q);
+      const locMatch = (job.location || "").toLowerCase().includes(q);
+      const skillsMatch = (rec.matching_skills || []).some((s) => s.toLowerCase().includes(q));
+      return titleMatch || companyMatch || locMatch || skillsMatch;
+    }).slice(0, 3);
+  }, [bestFitRecs, searchFilter]);
+
+  const getBfBadgeClass = (score) => {
+    if (score >= 80) return "cand-bf-score--exceptional";
+    if (score >= 65) return "cand-bf-score--strong";
+    if (score >= 50) return "cand-bf-score--moderate";
+    return "cand-bf-score--potential";
+  };
 
   const handleSaveJob = async (job) => {
     try {
@@ -814,22 +846,132 @@ export default function CandidateDashboard() {
             </div>
           </div>
 
-          {/* Lower Grid: Recommended Jobs & Interview Calendar */}
+          {/* ── Position 2: Best-Fit Jobs (Core AI/ML Matching System) ───── */}
           <div className="cand-lower-section">
-            <div className="cand-jobs-panel">
+            <div className="cand-jobs-panel cand-best-fit-panel">
               <div className="cand-panel-header">
                 <div>
-                  <h2 className="cand-panel-title">{t("candidate.recommendedJobs", "Recommended Jobs")}</h2>
-                  <p className="cand-panel-sub">{t("candidate.matchedSkills", "Opportunities matched to your skills")}</p>
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap", marginBottom: "4px" }}>
+                    <h2 className="cand-panel-title">{t("candidate.bestFitJobs", "Best-Fit Job Matches")}</h2>
+                    <span className="cand-core-badge">
+                      <Sparkles size={11} />
+                      <span>CORE ML ENGINE</span>
+                    </span>
+                  </div>
+                  <p className="cand-panel-sub">
+                    {t("candidate.bestFitSub", "Ranked and scored by CareerLens supervised ML model based on your skills")}
+                  </p>
                 </div>
-                <Link to="/candidate/jobs" className="cand-see-all">
-                  {t("candidate.viewAll", "View All")} &rarr;
+                <Link to="/candidate/best-fit-jobs" className="cand-see-all">
+                  {t("candidate.viewAllMatches", "View All Best-Fit Matches")} &rarr;
                 </Link>
               </div>
 
               <div className="cand-job-cards-list">
                 {loading ? (
-                  <p className="cand-empty-msg">{t("common.loading", "Loading recommended opportunities...")}</p>
+                  <p className="cand-empty-msg">{t("common.loading", "Calculating your best-fit matches...")}</p>
+                ) : displayedBestFit.length > 0 ? (
+                  displayedBestFit.map((rec) => {
+                    const job = rec.job || {};
+                    const company = job.company || {};
+                    const isApplied = appliedJobIds.has(Number(job.id));
+                    const isSaved = savedJobIds.has(Number(job.id));
+                    const score = rec.match_score || 0;
+
+                    return (
+                      <article key={rec.id} className="cand-bf-card">
+                        <div className="cand-bf-card__top">
+                          <div className="cand-bf-card__info">
+                            <div className="cand-bf-card__title-row">
+                              <Link to={`/candidate/jobs/${job.id}`} className="cand-bf-job-title">
+                                {job.title}
+                              </Link>
+                              <div className={`cand-bf-score-badge ${getBfBadgeClass(score)}`}>
+                                <span className="cand-bf-score-num">{score}%</span>
+                                <span className="cand-bf-score-lbl">{rec.fit_verdict || "Match"}</span>
+                              </div>
+                            </div>
+
+                            <div className="cand-bf-meta-row">
+                              <span className="cand-bf-meta-item">
+                                <Building2 size={13} />
+                                {company.company_name || job.company || "Company"}
+                              </span>
+                              <span className="cand-bf-meta-bullet">&middot;</span>
+                              <span className="cand-bf-meta-item">
+                                <MapPin size={13} />
+                                {job.location || "Remote"}
+                              </span>
+                              <span className="cand-bf-meta-bullet">&middot;</span>
+                              <span className="cand-bf-meta-item">
+                                <Briefcase size={13} />
+                                {job.employment_type?.replace("_", " ") || "Full-time"}
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="cand-bf-card__actions">
+                            <button
+                              type="button"
+                              className={`cand-bf-btn-save ${isSaved ? "cand-bf-btn-save--saved" : ""}`}
+                              onClick={() => handleSaveJob(job)}
+                              title={isSaved ? "Saved" : "Save Job"}
+                            >
+                              <Bookmark size={14} />
+                              <span>{isSaved ? "Saved" : "Save"}</span>
+                            </button>
+
+                            <button
+                              type="button"
+                              className="cand-bf-btn-apply"
+                              onClick={() => handleApplyJob(job)}
+                              disabled={isApplied || applyingJobId === job.id}
+                            >
+                              {isApplied ? (
+                                <span style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                                  <CheckCircle2 size={13} />
+                                  <span>Applied</span>
+                                </span>
+                              ) : applyingJobId === job.id ? (
+                                <span>Applying...</span>
+                              ) : (
+                                <span style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                                  <span>Apply Now</span>
+                                  <ArrowRight size={13} />
+                                </span>
+                              )}
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Explanation rationale */}
+                        {rec.explanation && (
+                          <div className="cand-bf-explanation">
+                            <Sparkles size={13} className="cand-bf-exp-icon" />
+                            <p>{rec.explanation}</p>
+                          </div>
+                        )}
+
+                        {/* Skills alignment pills */}
+                        <div className="cand-bf-skills-row">
+                          {(rec.matching_skills || []).slice(0, 3).map((skill) => (
+                            <span key={skill} className="cand-bf-skill-pill cand-bf-skill-pill--match">
+                              <Check size={11} />
+                              <span>{skill}</span>
+                            </span>
+                          ))}
+                          {(rec.missing_skills || []).slice(0, 2).map((skill) => (
+                            <span key={skill} className="cand-bf-skill-pill cand-bf-skill-pill--missing">
+                              <span>Target: {skill}</span>
+                            </span>
+                          ))}
+                          <Link to="/candidate/best-fit-jobs" className="cand-bf-more-link">
+                            Full breakdown &rarr;
+                          </Link>
+                        </div>
+                      </article>
+                    );
+                  })
                 ) : recommendedJobs.length > 0 ? (
                   recommendedJobs.map((job) => (
                     <JobCard
@@ -872,6 +1014,12 @@ export default function CandidateDashboard() {
             </div>
 
             <div className="cand-ai-quick-links" style={{ marginTop: "0.5rem" }}>
+              <Link to="/candidate/best-fit-jobs" className="cand-ai-link-item" style={{ background: "rgba(1, 107, 251, 0.08)", borderColor: "rgba(1, 107, 251, 0.25)" }}>
+                <Sparkles size={14} color="#016BFB" />
+                <span style={{ fontWeight: 700, color: "var(--color-primary, #016BFB)" }}>Best-Fit Jobs</span>
+                <span style={{ fontSize: "10px", padding: "1px 6px", borderRadius: "999px", background: "#016BFB", color: "#fff", fontWeight: 800, marginLeft: "auto", marginRight: "6px" }}>CORE</span>
+                <ArrowUpRight size={13} className="cand-link-arrow" />
+              </Link>
               <Link to="/candidate/career-roadmap" className="cand-ai-link-item">
                 <Compass size={14} />
                 <span>My Career Roadmap</span>

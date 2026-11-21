@@ -20,7 +20,7 @@ class JobSkillSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = JobSkill
-        fields = ('id', 'skill', 'skill_id')
+        fields = ('id', 'skill', 'skill_id', 'is_required')
 
 class JobSerializer(serializers.ModelSerializer):
     company = CompanyProfileSerializer(read_only=True)
@@ -31,7 +31,7 @@ class JobSerializer(serializers.ModelSerializer):
         model = Job
         fields = (
             'id', 'company', 'title', 'description', 'location', 
-            'employment_type', 'workplace_type', 'salary_min', 'salary_max', 
+            'employment_type', 'workplace_type', 'min_experience_years', 'salary_min', 'salary_max', 
             'status', 'deadline', 'created_at', 'updated_at', 'job_skills', 'skills'
         )
         read_only_fields = ('company', 'created_at', 'updated_at', 'skills')

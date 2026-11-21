@@ -1,5 +1,21 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import { Link } from "react-router-dom";
+import {
+  Send,
+  Zap,
+  MapPin,
+  TrendingUp,
+  Bot,
+  Sparkles,
+  Briefcase,
+  Building2,
+  DollarSign,
+  ArrowRight,
+  Search,
+  Globe,
+  HelpCircle,
+  Check,
+} from "lucide-react";
 import api from "../../../services/api";
 import Radar from "../../../components/ui/Radar";
 import OrbitImages from "../../../components/ui/OrbitImages";
@@ -403,7 +419,7 @@ export default function Home() {
                   className="landing-hero__telegram-pill"
                 >
                   <span className="landing-telegram-pill__badge">BOT</span>
-                  <span className="landing-telegram-pill__icon">✈️</span>
+                  <span className="landing-telegram-pill__icon"><Send size={14} /></span>
                   <span className="landing-telegram-pill__text">
                     {t("common.telegramQuickFind", "Prefer Telegram? Find jobs instantly with @careerlens_jobs_bot")}
                   </span>
@@ -553,15 +569,15 @@ export default function Home() {
 
                   <div className="landing-telegram-features">
                     <div className="landing-telegram-feat-item">
-                      <span className="landing-telegram-feat-icon">⚡</span>
+                      <span className="landing-telegram-feat-icon"><Zap size={15} /></span>
                       <span>{t("common.telegramBotFeature1", "Search any role or skill (e.g. React, Python, Remote)")}</span>
                     </div>
                     <div className="landing-telegram-feat-item">
-                      <span className="landing-telegram-feat-icon">📍</span>
+                      <span className="landing-telegram-feat-icon"><MapPin size={15} /></span>
                       <span>{t("common.telegramBotFeature2", "Real-time listings with salaries, locations & deadlines")}</span>
                     </div>
                     <div className="landing-telegram-feat-item">
-                      <span className="landing-telegram-feat-icon">🚀</span>
+                      <span className="landing-telegram-feat-icon"><TrendingUp size={15} /></span>
                       <span>{t("common.telegramBotFeature3", "1-tap direct apply on CareerLens with your profile")}</span>
                     </div>
                   </div>
@@ -587,7 +603,7 @@ export default function Home() {
                 <div className="landing-telegram-card__preview">
                   <div className="telegram-mock-phone">
                     <div className="telegram-mock-header">
-                      <div className="telegram-mock-avatar">🤖</div>
+                      <div className="telegram-mock-avatar"><Bot size={16} /></div>
                       <div className="telegram-mock-meta">
                         <strong className="telegram-mock-name">CareerLens Jobs</strong>
                         <span className="telegram-mock-status">bot • always active</span>
@@ -601,7 +617,9 @@ export default function Home() {
                       </div>
 
                       <div className="telegram-msg telegram-msg--bot">
-                        <p className="telegram-bot-intro">👋 <b>Welcome to CareerLens Jobs Bot!</b></p>
+                        <p className="telegram-bot-intro" style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                          <Sparkles size={14} color="#016BFB" /> <b>Welcome to CareerLens Jobs Bot!</b>
+                        </p>
                         <p className="telegram-bot-text">Search high-impact tech, finance, and engineering jobs across Cambodia.</p>
                       </div>
 
@@ -611,22 +629,39 @@ export default function Home() {
                       </div>
 
                       <div className="telegram-msg telegram-msg--bot telegram-msg--job">
-                        <div className="telegram-job-badge">💼 NEW MATCH</div>
+                        <div className="telegram-job-badge" style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                          <Briefcase size={12} /> NEW MATCH
+                        </div>
                         <strong className="telegram-job-title">Senior React Engineer</strong>
-                        <span className="telegram-job-company">🏢 KhmerFintech Solutions</span>
-                        <span className="telegram-job-salary">💰 $1,200 - $1,800 • Phnom Penh</span>
-                        <div className="telegram-job-inline-btn">🚀 Apply on CareerLens</div>
+                        <span className="telegram-job-company" style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                          <Building2 size={13} /> KhmerFintech Solutions
+                        </span>
+                        <span className="telegram-job-salary" style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                          <DollarSign size={13} /> $1,200 - $1,800 • Phnom Penh
+                        </span>
+                        <div className="telegram-job-inline-btn" style={{ display: "inline-flex", alignItems: "center", gap: "6px", justifyContent: "center" }}>
+                          <span>Apply on CareerLens</span>
+                          <ArrowRight size={13} />
+                        </div>
                       </div>
                     </div>
 
                     <div className="telegram-mock-keyboard">
                       <div className="telegram-kb-row">
-                        <button type="button" className="telegram-kb-btn">📋 Browse Jobs</button>
-                        <button type="button" className="telegram-kb-btn">🔍 Search Jobs</button>
+                        <button type="button" className="telegram-kb-btn" style={{ display: "inline-flex", alignItems: "center", gap: "5px", justifyContent: "center" }}>
+                          <Briefcase size={13} /> Browse Jobs
+                        </button>
+                        <button type="button" className="telegram-kb-btn" style={{ display: "inline-flex", alignItems: "center", gap: "5px", justifyContent: "center" }}>
+                          <Search size={13} /> Search Jobs
+                        </button>
                       </div>
                       <div className="telegram-kb-row">
-                        <button type="button" className="telegram-kb-btn">🌐 Remote Jobs</button>
-                        <button type="button" className="telegram-kb-btn">💡 Help & Guide</button>
+                        <button type="button" className="telegram-kb-btn" style={{ display: "inline-flex", alignItems: "center", gap: "5px", justifyContent: "center" }}>
+                          <Globe size={13} /> Remote Jobs
+                        </button>
+                        <button type="button" className="telegram-kb-btn" style={{ display: "inline-flex", alignItems: "center", gap: "5px", justifyContent: "center" }}>
+                          <HelpCircle size={13} /> Help & Guide
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -717,7 +752,7 @@ export default function Home() {
                       t("common.pipelineFeature4"),
                     ].map((feat) => (
                       <div key={feat} className="landing-pipeline-feature-item">
-                        <span className="landing-pipeline-feature-check">✓</span>
+                        <span className="landing-pipeline-feature-check"><Check size={14} /></span>
                         <span>{feat}</span>
                       </div>
                     ))}

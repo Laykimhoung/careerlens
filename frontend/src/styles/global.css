@@ -13,8 +13,41 @@ a {
   transition: color var(--transition-fast);
 }
 
-a:hover {
+a:hover:not([class*="btn"]):not([class*="-btn"]):not([class*="_btn"]):not([role="button"]):not(.button) {
   color: var(--color-primary-hover);
+}
+
+/* Ensure button-styled anchors always preserve high-contrast white text on hover */
+.cand-spotlight-btn,
+.cand-spotlight-btn:hover,
+.cand-spotlight-btn:focus,
+.cand-spotlight-btn:active,
+.cand-performer-btn,
+.cand-performer-btn:hover,
+.cand-performer-btn:focus,
+.cand-performer-btn:active,
+.comp-spotlight-btn,
+.comp-spotlight-btn:hover,
+.comp-spotlight-btn:focus,
+.comp-spotlight-btn:active,
+.spotlight-action-btn,
+.spotlight-action-btn:hover,
+.spotlight-action-btn:focus,
+.spotlight-action-btn:active,
+.performer-action-btn,
+.performer-action-btn:hover,
+.performer-action-btn:focus,
+.performer-action-btn:active,
+.comp-performer-btn,
+.comp-performer-btn:hover,
+.comp-performer-btn:focus,
+.comp-performer-btn:active,
+.btn--primary,
+.btn--primary:hover,
+.btn--primary:focus,
+.btn--primary:active {
+  color: #ffffff !important;
+  text-decoration: none !important;
 }
 
 /* Legacy global utilities */
@@ -535,6 +568,7 @@ html[data-theme="dark"] body {
 [data-theme="dark"] .cand-performer-btn:hover,
 [data-theme="dark"] .comp-performer-btn:hover {
   background: var(--color-primary-hover, #0058d4) !important;
+  color: #ffffff !important;
 }
 
 [data-theme="dark"] .cand-overview-badge,
@@ -668,6 +702,12 @@ html[data-theme="dark"] body {
 [data-theme="dark"] .admin-layout .workspace-toolbar select {
   background-color: rgba(10, 16, 38, 0.88) !important;
   border: 1px solid rgba(99, 142, 203, 0.3) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] select option,
+[data-theme="dark"] option {
+  background-color: #0b112c !important;
   color: #ffffff !important;
 }
 

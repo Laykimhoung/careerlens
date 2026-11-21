@@ -116,7 +116,7 @@ function AuditLogs() {
                     <td>
                       <strong>{log.actor}</strong>
                     </td>
-                    <td>{log.text}</td>
+                    <td className="audit-text">{log.text}</td>
                   </tr>
                 ))}
                 {filtered.length === 0 && (
