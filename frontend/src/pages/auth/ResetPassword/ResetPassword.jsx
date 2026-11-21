@@ -50,10 +50,7 @@ export default function ResetPassword() {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
 
-  const isPasswordValid =
-    values.password.length >= 8 &&
-    /[A-Z]/.test(values.password) &&
-    /[0-9]/.test(values.password);
+  const isPasswordValid = Boolean(values.password.trim());
 
   const isConfirmValid =
     Boolean(values.confirm_password) && values.confirm_password === values.password;
@@ -62,9 +59,6 @@ export default function ResetPassword() {
 
   const validate = () => {
     if (!values.password) return "Password is required.";
-    if (values.password.length < 8) return "Password must be at least 8 characters.";
-    if (!/[A-Z]/.test(values.password)) return "Password must contain at least one uppercase letter.";
-    if (!/[0-9]/.test(values.password)) return "Password must contain at least one number.";
     if (!values.confirm_password) return "Please confirm your password.";
     if (values.confirm_password !== values.password) return "Passwords do not match.";
     return null;
@@ -178,7 +172,7 @@ export default function ResetPassword() {
             <div className="tether-header">
               <h1 className="tether-title">Set new password</h1>
               <p className="tether-subtitle">
-                Choose a strong password containing at least 8 characters, an uppercase letter, and a number.
+                Choose a new password for your account.
               </p>
             </div>
 
@@ -195,7 +189,7 @@ export default function ResetPassword() {
                   <input
                     type={showPassword ? "text" : "password"}
                     autoComplete="new-password"
-                    placeholder="Min. 8 characters"
+                    placeholder="Enter new password"
                     value={values.password}
                     onChange={(e) => {
                       setValues((prev) => ({ ...prev, password: e.target.value }));

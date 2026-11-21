@@ -9,25 +9,44 @@
 .admin-layout .reports-panel {
   margin-bottom: 0;
   height: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .admin-layout .reports-panel .workspace-table {
   border: 1px solid var(--color-border);
   border-radius: 10px;
   overflow: hidden;
+  width: 100%;
+}
+
+.admin-layout .reports-panel .workspace-table th:last-child,
+.admin-layout .reports-panel .workspace-table td:last-child {
+  text-align: right !important;
+  white-space: nowrap !important;
+  min-width: auto !important;
+  width: auto !important;
 }
 
 .admin-layout .reports-card {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 20px;
-  padding: 20px 24px;
+  gap: 16px;
+  padding: 18px 22px;
+  box-sizing: border-box;
+  max-width: 100%;
+  overflow: hidden;
   transition: box-shadow var(--transition-fast), border-color var(--transition-fast);
 }
 
 .admin-layout .reports-card:hover {
   box-shadow: var(--shadow-md);
+}
+
+.admin-layout .reports-card > div {
+  min-width: 0;
+  flex: 1;
 }
 
 .admin-layout .reports-card h3 {
@@ -43,6 +62,11 @@
   font-size: 13.5px;
   color: var(--color-text-muted);
   line-height: 1.45;
+  word-break: break-word;
+}
+
+.admin-layout .reports-card .workspace-button {
+  flex-shrink: 0;
 }
 
 @media (max-width: 900px) {

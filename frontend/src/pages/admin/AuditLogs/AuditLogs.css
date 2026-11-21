@@ -1,7 +1,26 @@
 /* AuditLogs CSS */
-.audit-timestamp {
+.admin-layout .workspace-table td.audit-timestamp {
   color: var(--color-text-muted);
   font-size: 12px;
-  white-space: nowrap;
-  font-family: monospace;
+  white-space: nowrap !important;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  width: 170px !important;
+  min-width: 170px !important;
+  max-width: 170px !important;
+}
+
+.admin-layout .workspace-page .workspace-table th:last-child,
+.admin-layout .workspace-page .workspace-table td:last-child {
+  text-align: left !important;
+  white-space: normal !important;
+  min-width: auto !important;
+  width: auto !important;
+}
+
+.admin-layout .audit-text {
+  word-break: break-word !important;
+  white-space: normal !important;
+  text-align: left !important;
+  line-height: 1.5;
+  color: var(--color-text-primary);
 }

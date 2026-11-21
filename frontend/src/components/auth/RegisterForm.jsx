@@ -26,9 +26,6 @@ export default function RegisterForm({ onSubmit, loading, error, onClearError })
       errs.major = t("validation.required");
     }
     if (!data.password) errs.password = t("validation.required");
-    else if (data.password.length < 8) errs.password = t("validation.passwordTooShort");
-    else if (!/[A-Z]/.test(data.password)) errs.password = "Must contain at least one uppercase letter.";
-    else if (!/[0-9]/.test(data.password)) errs.password = "Must contain at least one number.";
     if (!data.confirm_password) errs.confirm_password = t("validation.required");
     else if (data.confirm_password !== data.password) errs.confirm_password = t("validation.passwordMismatch");
     return errs;

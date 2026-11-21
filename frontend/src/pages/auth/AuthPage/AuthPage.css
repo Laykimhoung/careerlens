@@ -22,7 +22,7 @@
   box-sizing: border-box;
 }
 
-/* ── Top Bar with Brand Badge & Theme/Language Toggle ── */
+/* ── Top Bar with Theme/Language Toggle (Aligned to Top Right) ── */
 .auth-top-bar {
   position: absolute;
   top: 20px;
@@ -30,16 +30,32 @@
   right: 28px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   z-index: 50;
   max-width: 1200px;
   margin: 0 auto;
 }
 
-.auth-top-brand {
-  text-decoration: none;
-  display: inline-flex;
+/* ── Center Head Logo inside Card ── */
+.auth-card-logo-wrap {
+  display: flex;
+  justify-content: center;
   align-items: center;
+  margin-bottom: 18px;
+}
+
+.auth-card-logo {
+  width: 80px;
+  height:80px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 12px rgba(1, 107, 251, 0.28));
+  transition: transform 0.25s ease, filter 0.25s ease;
+  user-select: none;
+}
+
+.auth-card-logo:hover {
+  transform: scale(1.05);
+  filter: drop-shadow(0 6px 16px rgba(1, 107, 251, 0.45));
 }
 
 /* Ambient Ray Background */
@@ -1030,16 +1046,39 @@
    RESPONSIVE DESIGN FOR MOBILE SCREENS
    ═════════════════════════════════════════════════════════════════════ */
 
-@media (max-width: 520px) {
+@media (max-width: 768px) {
+  .auth-top-bar {
+    top: 16px;
+    right: 16px;
+    left: 16px;
+  }
+
   .auth-page-bg {
-    padding: 24px 12px;
+    padding: 76px 16px 36px;
     align-items: flex-start;
   }
 
   .tether-card {
-    padding: 28px 20px 24px;
+    margin-top: 14px;
+  }
+}
+
+@media (max-width: 520px) {
+  .auth-top-bar {
+    top: 14px;
+    right: 14px;
+    left: 14px;
+  }
+
+  .auth-page-bg {
+    padding: 72px 12px 32px;
+    align-items: flex-start;
+  }
+
+  .tether-card {
+    padding: 26px 18px 24px;
     border-radius: 20px;
-    margin-top: 10px;
+    margin-top: 16px;
   }
 
   .tether-title {

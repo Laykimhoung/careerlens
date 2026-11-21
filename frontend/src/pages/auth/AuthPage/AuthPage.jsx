@@ -193,16 +193,8 @@ export default function AuthPage() {
 
   return (
     <div className="auth-page-bg">
-      {/* Top Bar with Brand and Theme/Language switcher */}
+      {/* Top Bar with Theme/Language switcher */}
       <div className="auth-top-bar">
-        <Link to="/" className="auth-top-brand" title="Return to home">
-          <div className="tether-brand-badge">
-            <div className="tether-brand-ring">
-              <div className="tether-brand-dot" />
-            </div>
-            <span className="tether-brand-text">CareerLens</span>
-          </div>
-        </Link>
         <ThemeLanguageToggle />
       </div>
 
@@ -234,6 +226,11 @@ export default function AuthPage() {
       <div className="tether-card">
         {/* Top Header */}
         <div className="tether-header">
+          <div className="auth-card-logo-wrap">
+            <Link to="/" title="CareerLens">
+              <img src="/favicon.svg" alt="CareerLens" className="auth-card-logo" />
+            </Link>
+          </div>
           <h1 className="tether-title">
             {isLogin ? t("auth.signIn") : t("auth.createAccount")}
           </h1>
@@ -481,7 +478,7 @@ export default function AuthPage() {
               <CurvyInput isValid={Boolean(registerForm.password.trim())}>
                 <input
                   type={showRegisterPassword ? "text" : "password"}
-                  placeholder="At least 8 characters"
+                  placeholder={t("auth.enterPassword", "Enter your password")}
                   value={registerForm.password}
                   onChange={(e) => setRegisterForm({ ...registerForm, password: e.target.value })}
                   disabled={loading}
