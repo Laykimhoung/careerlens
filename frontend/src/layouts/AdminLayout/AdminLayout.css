@@ -570,6 +570,12 @@
   font-size: 14px;
 }
 
+.admin-layout .workspace-panel .workspace-table {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
 .admin-layout .workspace-table-wrap .workspace-table {
   min-width: 640px;
 }

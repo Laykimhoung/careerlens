@@ -16,15 +16,24 @@
   border: 1px solid var(--color-border);
   border-radius: 10px;
   overflow: hidden;
-  width: 100%;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  table-layout: auto;
+}
+
+.admin-layout .settings-grid .workspace-table th:first-child,
+.admin-layout .settings-grid .workspace-table td:first-child {
+  text-align: left !important;
+  white-space: normal;
 }
 
 .admin-layout .settings-grid .workspace-table th:last-child,
 .admin-layout .settings-grid .workspace-table td:last-child {
   text-align: right !important;
   white-space: nowrap !important;
-  min-width: auto !important;
-  width: auto !important;
+  width: 1% !important;
+  min-width: 70px !important;
 }
 
 .admin-layout .settings-danger-zone {

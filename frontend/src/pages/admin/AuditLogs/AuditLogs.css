@@ -9,14 +9,6 @@
   max-width: 170px !important;
 }
 
-.admin-layout .workspace-page .workspace-table th:last-child,
-.admin-layout .workspace-page .workspace-table td:last-child {
-  text-align: left !important;
-  white-space: normal !important;
-  min-width: auto !important;
-  width: auto !important;
-}
-
 .admin-layout .audit-text {
   word-break: break-word !important;
   white-space: normal !important;
