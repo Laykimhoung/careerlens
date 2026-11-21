@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo, useRef } from "react"
 import { useSearchParams } from "react-router-dom";
 import {
   MessageSquare,
+  MessageSquarePlus,
   Send,
   Plus,
   Search,
@@ -10,7 +11,6 @@ import {
   Building2,
   User as UserIcon,
   Sparkles,
-  Smile,
   X,
   Circle,
 } from "lucide-react";
@@ -79,13 +79,20 @@ function getAvatarColor(name = "User") {
   return colors[Math.abs(hash) % colors.length];
 }
 
-const QUICK_EMOJIS = ["👋", "👍", "😊", "💼", "🚀", "📄", "🎯", "❤️", "✨", "🙌"];
+const QUICK_PHRASES = [
+  "Thank you for reaching out!",
+  "I would love to connect.",
+  "Looking forward to hearing from you.",
+  "Available for an interview.",
+  "My CV is updated on my profile.",
+  "Let me know if you need more details.",
+];
 
 const ICEBREAKER_PROMPTS = [
-  "👋 Hello! Nice to connect with you.",
-  "💼 I am interested in discussing potential opportunities.",
-  "📄 Thank you for reviewing my profile and credentials.",
-  "📅 Are you available for a brief conversation this week?",
+  "Hello! Nice to connect with you.",
+  "I am interested in discussing potential opportunities.",
+  "Thank you for reviewing my profile and credentials.",
+  "Are you available for a brief conversation this week?",
 ];
 
 export default function Messages() {
@@ -614,7 +621,7 @@ export default function Messages() {
                               conv.lastMessage.text || conv.lastMessage.content
                             )
                           ) : (
-                            <span className="snippet-new">Start conversation 👋</span>
+                            <span className="snippet-new">Start conversation</span>
                           )}
                         </span>
 
@@ -784,20 +791,21 @@ export default function Messages() {
 
               {/* Chat Composer / Input Bar */}
               <div className="chat-composer-wrap">
-                {/* Quick Emoji Tray */}
+                {/* Quick Phrases Tray */}
                 {showEmojiPicker && (
                   <div className="emoji-tray animate-fade">
-                    {QUICK_EMOJIS.map((emoji) => (
+                    {QUICK_PHRASES.map((phrase) => (
                       <button
-                        key={emoji}
+                        key={phrase}
                         type="button"
-                        className="emoji-btn"
+                        className="quick-phrase-btn"
                         onClick={() => {
-                          setInputText((prev) => prev + emoji);
+                          setInputText((prev) => (prev ? prev + " " + phrase : phrase));
+                          setShowEmojiPicker(false);
                           if (inputRef.current) inputRef.current.focus();
                         }}
                       >
-                        {emoji}
+                        {phrase}
                       </button>
                     ))}
                   </div>
@@ -808,9 +816,9 @@ export default function Messages() {
                     type="button"
                     className={`btn-emoji-toggle ${showEmojiPicker ? "active" : ""}`}
                     onClick={() => setShowEmojiPicker((prev) => !prev)}
-                    title="Insert emoji"
+                    title="Quick message templates"
                   >
-                    <Smile size={18} />
+                    <MessageSquarePlus size={18} />
                   </button>
 
                   <input

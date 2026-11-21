@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Check } from "lucide-react";
 import "./RunawayButton.css";
 
 /**
@@ -82,11 +83,11 @@ export default function RunawayButton({
 
         setOffset({ x: nextX, y: nextY });
 
-        // Playful feedback hint
+        // Clean feedback hint
         if (completedFields === 0) {
-          setHint("Fill in username & password first! 🏃💨");
+          setHint("Please enter your username and password to proceed");
         } else if (completedFields === 1) {
-          setHint("Halfway there! 1 more field 🏃");
+          setHint("Almost ready! Complete the remaining field");
         }
 
         if (hintTimeoutRef.current) clearTimeout(hintTimeoutRef.current);
@@ -156,8 +157,8 @@ export default function RunawayButton({
         <span className="auth-runaway-btn__content">
           {children}
           {isLocked && !loading && (
-            <span className="auth-runaway-btn__lock-icon" title="Unlocked & Ready">
-              🔒
+            <span className="auth-runaway-btn__lock-icon" title="Ready to submit">
+              <Check size={14} />
             </span>
           )}
         </span>

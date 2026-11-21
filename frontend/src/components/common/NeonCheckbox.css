@@ -325,3 +325,22 @@
 .neon-checkbox__rings .ring:nth-child(1) { animation-delay: 0s; }
 .neon-checkbox__rings .ring:nth-child(2) { animation-delay: 0.08s; }
 .neon-checkbox__rings .ring:nth-child(3) { animation-delay: 0.16s; }
+
+/* ═════════════════════════════════════════════════════════════════════
+   LIGHT MODE OVERRIDES FOR NEON CHECKBOX
+   ═════════════════════════════════════════════════════════════════════ */
+:root:not([data-theme="dark"]) .neon-checkbox__label-text,
+[data-theme="light"] .neon-checkbox__label-text {
+  color: #475569;
+}
+
+:root:not([data-theme="dark"]) .neon-checkbox-wrapper:hover .neon-checkbox__label-text,
+[data-theme="light"] .neon-checkbox-wrapper:hover .neon-checkbox__label-text {
+  color: #0f172a;
+}
+
+:root:not([data-theme="dark"]) .neon-checkbox__box,
+[data-theme="light"] .neon-checkbox__box {
+  background: #ffffff;
+  border-color: #cbd5e1;
+}

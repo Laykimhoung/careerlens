@@ -353,7 +353,7 @@
   outline-offset: 1px;
 }
 
-.workspace-table-wrap {
+.company-shell .workspace-table-wrap {
   overflow-x: auto;
   margin-bottom: 18px;
   background: var(--color-surface);
@@ -361,14 +361,17 @@
   border-radius: var(--radius-md);
 }
 
-.workspace-table {
+.company-shell .workspace-table {
   width: 100%;
-  min-width: 690px;
   border-collapse: collapse;
   font-size: 13px;
 }
 
-.workspace-table th {
+.company-shell .workspace-table-wrap .workspace-table {
+  min-width: 690px;
+}
+
+.company-shell .workspace-table th {
   padding: 12px;
   color: var(--color-text-muted);
   background: var(--color-surface-hover);
@@ -377,20 +380,20 @@
   text-transform: uppercase;
 }
 
-.workspace-table td {
+.company-shell .workspace-table td {
   padding: 12px;
   border-top: 1px solid var(--color-border);
   vertical-align: middle;
 }
 
-.workspace-table-actions {
+.company-shell .workspace-table-actions {
   display: flex;
   justify-content: flex-end;
   gap: 6px;
   flex-wrap: wrap;
 }
 
-.workspace-table button {
+.company-shell .workspace-table button {
   padding: 5px 8px;
   color: var(--color-text-primary);
   background: var(--color-surface);
@@ -401,7 +404,7 @@
   transition: var(--transition-fast);
 }
 
-.workspace-table button:hover {
+.company-shell .workspace-table button:hover {
   background: var(--color-surface-hover);
 }
 

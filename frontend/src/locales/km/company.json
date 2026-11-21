@@ -83,6 +83,7 @@
   "workplaceTypeLabel": "ការរៀបចំកន្លែងធ្វើការ",
   "minSalaryLabel": "ប្រាក់ខែអប្បបរមា ($ / ខែ)",
   "maxSalaryLabel": "ប្រាក់ខែអតិបរមា ($ / ខែ)",
+  "minExperienceLabel": "បទពិសោធន៍អប្បបរមា (ឆ្នាំ)",
   "skillsRequiredLabel": "ជំនាញដែលត្រូវការ (ញែកដោយសញ្ញាក្បៀស)",
   "deadlineLabel": "ថ្ងៃផុតកំណត់ទទួលពាក្យ",
   "jobDescriptionLabel": "ការពិពណ៌នាការងារ",

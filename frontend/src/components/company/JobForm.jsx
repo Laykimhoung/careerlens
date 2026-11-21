@@ -80,6 +80,15 @@ export default function JobForm({
           defaultValue={initialJob.salary_max ?? initialJob.salaryMax ?? ""}
           placeholder="e.g. 1200"
         />
+        <Input
+          id="min_experience_years"
+          name="min_experience_years"
+          type="number"
+          min="0"
+          label={t("company.minExperienceLabel", "Min. Experience (Years)")}
+          defaultValue={initialJob.min_experience_years ?? initialJob.minExperienceYears ?? 0}
+          placeholder="0 for entry level, 2 for mid..."
+        />
         <Select
           id="status"
           name="status"

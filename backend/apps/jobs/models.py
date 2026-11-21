@@ -44,6 +44,7 @@ class Job(models.Model):
     location = models.CharField(max_length=255, blank=True)
     employment_type = models.CharField(max_length=20, choices=EmploymentType.choices, default=EmploymentType.FULL_TIME)
     workplace_type = models.CharField(max_length=20, choices=WorkplaceType.choices, default=WorkplaceType.ON_SITE)
+    min_experience_years = models.PositiveIntegerField(default=0, help_text="Minimum professional experience required.")
     salary_min = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     salary_max = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.DRAFT)
@@ -57,6 +58,7 @@ class Job(models.Model):
 class JobSkill(models.Model):
     job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name="job_skills")
     skill = models.ForeignKey(Skill, on_delete=models.CASCADE, related_name="job_skills")
+    is_required = models.BooleanField(default=True, help_text="Distinguishes mandatory skills from preferred skills.")
 
     class Meta:
         unique_together = ('job', 'skill')
@@ -98,6 +100,7 @@ class CandidateJobMatchCache(models.Model):
     preferred_location = models.CharField(max_length=255, blank=True)
     preferred_employment_type = models.CharField(max_length=50, blank=True)
     preferred_workplace_type = models.CharField(max_length=50, blank=True)
+    model_version = models.CharField(max_length=50, default="v1.0-heuristic")
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):

@@ -552,15 +552,19 @@
   height: 34px;
   border-radius: 999px;
   background: #016BFB;
-  color: #FFFFFF;
-  text-decoration: none;
+  color: #FFFFFF !important;
+  text-decoration: none !important;
   font-size: 0.78125rem;
   font-weight: 600;
-  transition: background 0.18s ease;
+  transition: all 0.18s ease;
 }
 
-.cand-spotlight-btn:hover {
+.cand-spotlight-btn:hover,
+.cand-spotlight-btn:focus {
   background: #0058D4;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 12px rgba(1, 107, 251, 0.35);
+  transform: translateY(-1px);
 }
 
 /* 2. Center Overviews Bar Chart Card */
@@ -720,15 +724,19 @@
   height: 34px;
   border-radius: 999px;
   background: #016BFB;
-  color: #FFFFFF;
-  text-decoration: none;
+  color: #FFFFFF !important;
+  text-decoration: none !important;
   font-size: 0.78125rem;
   font-weight: 600;
-  transition: background 0.18s ease;
+  transition: all 0.18s ease;
 }
 
-.cand-performer-btn:hover {
+.cand-performer-btn:hover,
+.cand-performer-btn:focus {
   background: #0256CA;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 12px rgba(1, 107, 251, 0.35);
+  transform: translateY(-1px);
 }
 
 /* ── Lower Section: Recommended Jobs ─────────────────────────────────────── */
@@ -776,6 +784,319 @@
   display: flex;
   flex-direction: column;
   gap: 14px;
+}
+
+/* ── Best-Fit Core Panel & Cards ─────────────────────────────────────────── */
+
+.cand-core-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 0.65625rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  background: linear-gradient(135deg, rgba(1, 107, 251, 0.12) 0%, rgba(56, 189, 248, 0.14) 100%);
+  color: #016BFB;
+  border: 1px solid rgba(1, 107, 251, 0.28);
+}
+
+.cand-bf-card {
+  background: var(--color-surface, #FFFFFF);
+  border: 1px solid var(--color-border, #E2E8F0);
+  border-radius: 14px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.cand-bf-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(1, 107, 251, 0.4);
+  box-shadow: 0 6px 18px rgba(1, 107, 251, 0.08);
+}
+
+.cand-bf-card__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.cand-bf-card__info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 240px;
+}
+
+.cand-bf-card__title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.cand-bf-job-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-text-primary, #0F172A);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.cand-bf-job-title:hover {
+  color: #016BFB;
+}
+
+.cand-bf-score-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 0.71875rem;
+  font-weight: 700;
+}
+
+.cand-bf-score--exceptional {
+  background: #ECFDF5;
+  color: #059669;
+  border: 1px solid #A7F3D0;
+}
+
+.cand-bf-score--strong {
+  background: #EFF6FF;
+  color: #0284C7;
+  border: 1px solid #BFDBFE;
+}
+
+.cand-bf-score--moderate {
+  background: #F5F3FF;
+  color: #7C3AED;
+  border: 1px solid #DDD6FE;
+}
+
+.cand-bf-score--potential {
+  background: #FFFBEB;
+  color: #D97706;
+  border: 1px solid #FDE68A;
+}
+
+.cand-bf-score-num {
+  font-weight: 800;
+}
+
+.cand-bf-score-lbl {
+  font-size: 0.6875rem;
+  opacity: 0.9;
+}
+
+.cand-bf-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-size: 0.75rem;
+  color: var(--color-text-muted, #64748B);
+}
+
+.cand-bf-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.cand-bf-meta-bullet {
+  color: #CBD5E1;
+}
+
+.cand-bf-card__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.cand-bf-btn-save {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: transparent;
+  border: 1px solid var(--color-border, #E2E8F0);
+  color: var(--color-text-muted, #64748B);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.cand-bf-btn-save:hover {
+  background: var(--color-surface-hover, #F8FAFC);
+  color: var(--color-text-primary, #0F172A);
+  border-color: #CBD5E1;
+}
+
+.cand-bf-btn-save--saved {
+  background: #EFF6FF;
+  border-color: #BFDBFE;
+  color: #016BFB;
+}
+
+.cand-bf-btn-apply {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  background: #016BFB;
+  border: 1px solid transparent;
+  color: #FFFFFF;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.cand-bf-btn-apply:hover:not(:disabled) {
+  background: #0058D4;
+}
+
+.cand-bf-btn-apply:disabled {
+  background: #E2E8F0;
+  color: #94A3B8;
+  cursor: not-allowed;
+}
+
+.cand-bf-explanation {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: rgba(1, 107, 251, 0.04);
+  border: 1px solid rgba(1, 107, 251, 0.12);
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+.cand-bf-exp-icon {
+  color: #016BFB;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.cand-bf-explanation p {
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: var(--color-text-secondary, #334155);
+}
+
+.cand-bf-skills-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.cand-bf-skill-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+}
+
+.cand-bf-skill-pill--match {
+  background: #ECFDF5;
+  color: #059669;
+  border: 1px solid #A7F3D0;
+}
+
+.cand-bf-skill-pill--missing {
+  background: #FFFBEB;
+  color: #B45309;
+  border: 1px solid #FDE68A;
+}
+
+.cand-bf-more-link {
+  margin-left: auto;
+  font-size: 0.71875rem;
+  font-weight: 700;
+  color: #016BFB;
+  text-decoration: none;
+}
+
+.cand-bf-more-link:hover {
+  text-decoration: underline;
+}
+
+/* Dark mode overrides for Best-Fit cards */
+[data-theme="dark"] .cand-bf-card {
+  background: rgba(13, 21, 48, 0.88) !important;
+  border-color: rgba(99, 142, 203, 0.32) !important;
+}
+
+[data-theme="dark"] .cand-bf-card:hover {
+  border-color: rgba(147, 197, 253, 0.6) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), 0 0 16px rgba(1, 107, 251, 0.25) !important;
+}
+
+[data-theme="dark"] .cand-bf-job-title {
+  color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .cand-bf-explanation {
+  background: rgba(1, 107, 251, 0.12) !important;
+  border-color: rgba(1, 107, 251, 0.3) !important;
+}
+
+[data-theme="dark"] .cand-bf-explanation p {
+  color: #E2E8F0 !important;
+}
+
+[data-theme="dark"] .cand-bf-score--exceptional {
+  background: rgba(16, 185, 129, 0.2) !important;
+  color: #34D399 !important;
+  border-color: rgba(16, 185, 129, 0.4) !important;
+}
+
+[data-theme="dark"] .cand-bf-score--strong {
+  background: rgba(1, 107, 251, 0.2) !important;
+  color: #60A5FA !important;
+  border-color: rgba(1, 107, 251, 0.4) !important;
+}
+
+[data-theme="dark"] .cand-bf-score--moderate {
+  background: rgba(139, 92, 246, 0.2) !important;
+  color: #C084FC !important;
+  border-color: rgba(139, 92, 246, 0.4) !important;
+}
+
+[data-theme="dark"] .cand-bf-score--potential {
+  background: rgba(245, 158, 11, 0.2) !important;
+  color: #FBBF24 !important;
+  border-color: rgba(245, 158, 11, 0.4) !important;
+}
+
+[data-theme="dark"] .cand-bf-skill-pill--match {
+  background: rgba(16, 185, 129, 0.18) !important;
+  color: #6EE7B7 !important;
+  border-color: rgba(16, 185, 129, 0.35) !important;
+}
+
+[data-theme="dark"] .cand-bf-skill-pill--missing {
+  background: rgba(245, 158, 11, 0.18) !important;
+  color: #FCD34D !important;
+  border-color: rgba(245, 158, 11, 0.35) !important;
 }
 
 .cand-empty-box {

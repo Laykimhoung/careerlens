@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useParams, Link, useNavigate, useSearchParams } from "react-router-dom";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Video, ArrowRight } from "lucide-react";
 import { useLanguage } from "../../../context/LanguageContext";
 import Button from "../../../components/common/Button";
 import InterviewPrepModal from "../../../components/candidate/InterviewPrepModal";
@@ -422,7 +422,7 @@ export default function CandidateApplicationDetails() {
                       rel="noreferrer"
                       className="app-interview-card__video-btn"
                     >
-                      <span>🎥 Join Video Call</span> &rarr;
+                      <Video size={14} /> <span>Join Video Call</span> <ArrowRight size={14} />
                     </a>
                   )}
                 </div>

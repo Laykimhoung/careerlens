@@ -570,6 +570,12 @@
   font-size: 14px;
 }
 
+.admin-layout .workspace-panel .workspace-table {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
 .admin-layout .workspace-table-wrap .workspace-table {
   min-width: 640px;
 }
@@ -616,12 +622,10 @@
   white-space: nowrap;
 }
 
-.admin-layout .workspace-table th:last-child,
-.admin-layout .workspace-table td:last-child {
+.admin-layout .workspace-table td:has(.workspace-table-actions) {
   text-align: right;
   white-space: nowrap;
-  min-width: 290px;
-  width: 290px;
+  min-width: 180px;
 }
 
 .admin-layout .workspace-table .workspace-button {

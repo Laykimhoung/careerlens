@@ -177,3 +177,51 @@
   font-weight: 700;
   margin-bottom: 16px;
 }
+
+/* ── Dark Mode Overrides for Job Details ───────────────────────────────── */
+[data-theme="dark"] .job-details__header,
+[data-theme="dark"] .job-details__body,
+[data-theme="dark"] .job-not-found {
+  background-color: rgba(13, 21, 48, 0.88) !important;
+  border-color: rgba(99, 142, 203, 0.28) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .job-details__title,
+[data-theme="dark"] .job-details__section h3,
+[data-theme="dark"] .job-not-found h2 {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .job-details__subtitle,
+[data-theme="dark"] .job-details__section p,
+[data-theme="dark"] .job-details__section li {
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .job-details__tag {
+  background-color: rgba(99, 142, 203, 0.18) !important;
+  color: #93c5fd !important;
+  border: 1px solid rgba(99, 142, 203, 0.3) !important;
+}
+
+[data-theme="dark"] .job-details__sidebar {
+  background-color: rgba(10, 16, 38, 0.82) !important;
+  border-color: rgba(99, 142, 203, 0.25) !important;
+}
+
+[data-theme="dark"] .job-summary__label {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .job-summary__value {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .job-details__back {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .job-details__back:hover {
+  color: #ffffff !important;
+}

@@ -83,6 +83,7 @@
   "workplaceTypeLabel": "Workplace Setup",
   "minSalaryLabel": "Minimum Salary ($ / month)",
   "maxSalaryLabel": "Maximum Salary ($ / month)",
+  "minExperienceLabel": "Minimum Experience (Years)",
   "skillsRequiredLabel": "Skills Required (comma-separated)",
   "deadlineLabel": "Application Deadline",
   "jobDescriptionLabel": "Job Description",

@@ -1,0 +1,82 @@
+{
+  "model_version": "v1.0-lightgbm",
+  "algorithm": "LightGBM Regressor",
+  "trained_at": "2026-11-20 16:10:07",
+  "features": [
+    "sim_skills",
+    "sim_experience",
+    "sim_title_role",
+    "sim_combined_doc",
+    "skill_jaccard_ratio",
+    "proficiency_weighted_score",
+    "missing_required_ratio",
+    "missing_required_count",
+    "preferred_skills_ratio",
+    "location_compatibility",
+    "workplace_compatibility",
+    "employment_type_match",
+    "experience_compatibility",
+    "education_alignment",
+    "profile_completeness"
+  ],
+  "feature_importances": {
+    "skill_jaccard_ratio": 166,
+    "location_compatibility": 124,
+    "employment_type_match": 117,
+    "sim_skills": 59,
+    "workplace_compatibility": 59,
+    "sim_combined_doc": 43,
+    "proficiency_weighted_score": 43,
+    "sim_title_role": 35,
+    "preferred_skills_ratio": 29,
+    "missing_required_ratio": 18,
+    "missing_required_count": 9,
+    "sim_experience": 8,
+    "experience_compatibility": 0,
+    "education_alignment": 0,
+    "profile_completeness": 0
+  },
+  "evaluation_metrics": {
+    "Baseline 1: Rule-Based Heuristic": {
+      "MAE": 0.6105,
+      "Pearson r": 0.8905,
+      "NDCG@10": 0.977,
+      "Precision@3": 1.0,
+      "Recall@10": 0.9458
+    },
+    "Baseline 2: Cosine Similarity Only": {
+      "MAE": 0.6458,
+      "Pearson r": 0.815,
+      "NDCG@10": 0.9499,
+      "Precision@3": 1.0,
+      "Recall@10": 0.9304
+    },
+    "Baseline 3: Ridge Regression": {
+      "MAE": 0.3398,
+      "Pearson r": 0.9238,
+      "NDCG@10": 0.9877,
+      "Precision@3": 1.0,
+      "Recall@10": 0.9558
+    },
+    "Primary Model: LightGBM Regressor": {
+      "MAE": 0.3654,
+      "Pearson r": 0.9226,
+      "NDCG@10": 0.9893,
+      "Precision@3": 1.0,
+      "Recall@10": 0.9669
+    }
+  },
+  "parameters": {
+    "n_estimators": 120,
+    "learning_rate": 0.04,
+    "max_depth": 3,
+    "num_leaves": 7,
+    "min_child_samples": 15
+  },
+  "calibration": {
+    "target_scale_min": 0.0,
+    "target_scale_max": 3.0,
+    "output_scale_min": 0,
+    "output_scale_max": 100
+  }
+}

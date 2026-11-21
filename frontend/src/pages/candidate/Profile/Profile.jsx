@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { Camera, Check } from "lucide-react";
 import { useAuth } from "../../../hooks/useAuth";
 import Input from "../../../components/common/Input";
 import Textarea from "../../../components/common/Textarea";
@@ -294,7 +295,7 @@ export default function CandidateProfile() {
                   gap: "6px",
                 }}
               >
-                <span>📷</span> {t("candidate.uploadPhoto", "Upload Photo")}
+                <Camera size={14} /> <span>{t("candidate.uploadPhoto", "Upload Photo")}</span>
               </label>
               {avatar && (
                 <button
@@ -495,7 +496,13 @@ export default function CandidateProfile() {
                             className={`profile-suggestion-chip ${isSelected ? "is-selected" : ""}`}
                             onClick={() => handleToggleSkill(s)}
                           >
-                            {isSelected ? `✓ ${s}` : `+ ${s}`}
+                            {isSelected ? (
+                              <span style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                                <Check size={12} /> {s}
+                              </span>
+                            ) : (
+                              `+ ${s}`
+                            )}
                           </button>
                         );
                       })}

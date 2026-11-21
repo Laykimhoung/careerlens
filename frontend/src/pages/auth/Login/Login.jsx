@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { ShieldCheck, GraduationCap, Building2 } from "lucide-react";
 import { useAuth } from '../../../hooks/useAuth';
 import AuthLayout from '../../../components/auth/AuthLayout';
 import LoginForm from '../../../components/auth/LoginForm';
@@ -71,7 +72,9 @@ export default function Login() {
             onMouseOver={(e) => { e.currentTarget.style.borderColor = "#1fd5a8"; }}
             onMouseOut={(e) => { e.currentTarget.style.borderColor = "#1f2a2a"; }}
           >
-            🛡️ Admin
+            <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+              <ShieldCheck size={14} /> Admin
+            </span>
           </button>
           <button
             type="button"
@@ -91,7 +94,9 @@ export default function Login() {
             onMouseOver={(e) => { e.currentTarget.style.borderColor = "#1fd5a8"; }}
             onMouseOut={(e) => { e.currentTarget.style.borderColor = "#1f2a2a"; }}
           >
-            🎓 Candidate
+            <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+              <GraduationCap size={14} /> Candidate
+            </span>
           </button>
           <button
             type="button"
@@ -111,7 +116,9 @@ export default function Login() {
             onMouseOver={(e) => { e.currentTarget.style.borderColor = "#1fd5a8"; }}
             onMouseOut={(e) => { e.currentTarget.style.borderColor = "#1f2a2a"; }}
           >
-            🏢 Company
+            <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+              <Building2 size={14} /> Company
+            </span>
           </button>
         </div>
         <p style={{ fontSize: "11px", color: "#818b8b", marginTop: "10px", marginBottom: 0 }}>

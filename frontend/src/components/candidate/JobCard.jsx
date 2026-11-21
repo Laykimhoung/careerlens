@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
+import { Check, Bookmark, CheckCircle2 } from "lucide-react";
 import Button from "../common/Button";
 import "./JobCard.css";
 
@@ -50,7 +51,13 @@ export default function JobCard({
 
       <div className="job-card__actions">
         <Button variant="outline" size="sm" onClick={handleSaveClick}>
-          {isSaved ? "Saved ✓" : "Save"}
+          {isSaved ? (
+            <span style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}>
+              <Check size={14} /> Saved
+            </span>
+          ) : (
+            "Save"
+          )}
         </Button>
         <Button
           variant="teal"
@@ -58,7 +65,15 @@ export default function JobCard({
           onClick={handleApplyClick}
           disabled={isApplied || applying}
         >
-          {isApplied ? "Applied ✓" : applying ? "Applying..." : "Apply"}
+          {isApplied ? (
+            <span style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}>
+              <CheckCircle2 size={14} /> Applied
+            </span>
+          ) : applying ? (
+            "Applying..."
+          ) : (
+            "Apply"
+          )}
         </Button>
       </div>
     </div>

@@ -59,8 +59,8 @@ export default function CandidateSidebar({ isOpen, open, onClose }) {
 
   const items = [
     { to: '/candidate', label: t('nav.dashboard', 'Dashboard'), icon: LayoutDashboard, end: true },
-    { to: '/candidate/career-roadmap', label: t('nav.careerRoadmap', 'Career Roadmap'), icon: Compass },
     { to: '/candidate/best-fit-jobs', label: t('nav.bestFitJobs', 'Best-Fit Jobs'), icon: Sparkles },
+    { to: '/candidate/career-roadmap', label: t('nav.careerRoadmap', 'Career Roadmap'), icon: Compass },
     { to: '/candidate/jobs', label: t('nav.findJobs', 'Find Jobs'), icon: Search },
     { to: '/candidate/applications', label: t('nav.myApplications', 'My Applications'), icon: FileText },
     { to: '/candidate/saved-jobs', label: t('nav.savedJobs', 'Saved Jobs'), icon: Bookmark },
