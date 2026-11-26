@@ -20,7 +20,7 @@ import {
   getOffers,
 } from "../../services/applicationService";
 import { fetchNormalizedJobs } from "../../services/jobService";
-import { extractResults } from "../../services/api";
+import { extractResults, extractApiErrorMessage } from "../../services/api";
 import "./PlaceholderPage.css";
 
 function NotificationsView() {
@@ -210,11 +210,7 @@ function AccountSettingsView() {
       setForm((prev) => ({ ...prev, password: "" }));
       setMsg({ type: "success", text: "Account settings saved to database." });
     } catch (err) {
-      const detail =
-        err.response?.data?.detail ||
-        Object.values(err.response?.data || {})?.[0] ||
-        "Failed to update account settings.";
-      setMsg({ type: "error", text: String(detail) });
+      setMsg({ type: "error", text: extractApiErrorMessage(err, "Failed to update account settings.") });
     } finally {
       setSaving(false);
     }

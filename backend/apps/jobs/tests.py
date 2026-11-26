@@ -225,3 +225,49 @@ class JobCategoryTests(APITestCase):
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(JobCategory.objects.filter(id=self.cat1.id).exists())
+
+
+class JobCreationAndStartupMigrationTests(APITestCase):
+    def setUp(self):
+        self.company_user = User.objects.create_user(
+            username="jinghub_co", email="jinghub@test.com", password="pw", role=User.Role.COMPANY
+        )
+
+    def test_company_create_job_with_experience_and_skills(self):
+        self.client.force_authenticate(user=self.company_user)
+        url = reverse('job-list')
+        payload = {
+            "title": "AI Engineer",
+            "description": "Build and deploy ML models.",
+            "location": "Siem Reap",
+            "employment_type": "INTERNSHIP",
+            "workplace_type": "ON_SITE",
+            "salary_min": 200,
+            "salary_max": 350,
+            "min_experience_years": 0,
+            "status": "PUBLISHED",
+            "deadline": "2026-12-20T23:59:59Z",
+            "skills": ["Python", "PyTorch"],
+        }
+        res = self.client.post(url, payload, format='json')
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(res.data["title"], "AI Engineer")
+        self.assertEqual(res.data["min_experience_years"], 0)
+        self.assertEqual(set(res.data["skills"]), {"Python", "PyTorch"})
+
+    def test_startup_migration_helper_skips_in_test_cli_and_migrates_when_pending(self):
+        from unittest.mock import MagicMock, patch
+        from config.startup_migrations import ensure_migrations_applied
+
+        # In test CLI (`manage.py test`), auto-migrate is safely skipped
+        self.assertFalse(ensure_migrations_applied())
+
+        mock_executor = MagicMock()
+        mock_executor.migration_plan.return_value = [("jobs", "0006_pending")]
+        with patch("config.startup_migrations._should_skip_auto_migrate", return_value=False), \
+             patch("django.db.migrations.executor.MigrationExecutor", return_value=mock_executor), \
+             patch("django.core.management.call_command") as mock_call:
+            ran = ensure_migrations_applied()
+        self.assertTrue(ran)
+        mock_call.assert_called_once_with("migrate", database="default", interactive=False, verbosity=1)
+

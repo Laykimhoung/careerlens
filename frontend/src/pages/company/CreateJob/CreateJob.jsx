@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "../../../context/LanguageContext";
 import JobForm from "../../../components/company/JobForm";
+import { extractApiErrorMessage } from "../../../services/api";
 import {
   createJob as createJobApi,
   toBackendEmploymentType,
@@ -42,11 +43,7 @@ export default function CreateJob() {
       await createJobApi(payload);
       navigate("/company/jobs");
     } catch (err) {
-      const detail =
-        err.response?.data?.detail ||
-        Object.values(err.response?.data || {})?.[0] ||
-        "Failed to create job posting.";
-      setError(String(detail));
+      setError(extractApiErrorMessage(err, "Failed to create job posting."));
     } finally {
       setLoading(false);
     }
