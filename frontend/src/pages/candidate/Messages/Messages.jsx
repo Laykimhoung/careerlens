@@ -491,10 +491,10 @@ export default function Messages() {
         <button
           className="btn-add-message"
           onClick={() => setIsNewMessageModalOpen(true)}
-          title={t("messages.addMessage", "Add Message").replace(/^\+\s*/, "")}
+          title={t("messages.addMessage", "Add Message")}
         >
           <Plus size={16} />
-          <span>{t("messages.addMessage", "Add Message").replace(/^\+\s*/, "")}</span>
+          <span>{t("messages.addMessage", "Add Message")}</span>
         </button>
       </div>
 
@@ -858,7 +858,7 @@ export default function Messages() {
                 onClick={() => setIsNewMessageModalOpen(true)}
               >
                 <Plus size={16} />
-                <span>{t("messages.addMessage", "+ Add Message for New User")}</span>
+                <span>{t("messages.addMessage", "Add Message")}</span>
               </button>
             </div>
           )}
