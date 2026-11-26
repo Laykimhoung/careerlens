@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useLanguage } from "../../../context/LanguageContext";
 import JobForm from "../../../components/company/JobForm";
+import { extractApiErrorMessage } from "../../../services/api";
 import {
   getJobById,
   updateJob as updateJobApi,
@@ -65,11 +66,7 @@ export default function EditJob() {
       await updateJobApi(id, payload);
       navigate("/company/jobs");
     } catch (err) {
-      const detail =
-        err.response?.data?.detail ||
-        Object.values(err.response?.data || {})?.[0] ||
-        "Failed to update job posting.";
-      setError(String(detail));
+      setError(extractApiErrorMessage(err, "Failed to update job posting."));
     } finally {
       setSaving(false);
     }
