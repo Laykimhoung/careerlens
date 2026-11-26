@@ -11,6 +11,7 @@ import {
   getCurrentCompanyProfile,
   updateCompanyProfile,
 } from "../../../services/companyService";
+import { extractApiErrorMessage } from "../../../services/api";
 import { updateMeApi } from "../../../services/authService";
 import { clearLegacyImageStorage } from "../../../utils/storage";
 import "./Profile.css";
@@ -166,11 +167,7 @@ export default function Profile() {
         text: t("company.profileSaved"),
       });
     } catch (err) {
-      const detail =
-        err.response?.data?.detail ||
-        Object.values(err.response?.data || {})?.[0] ||
-        t("common.error");
-      setStatusMsg({ type: "error", text: String(detail) });
+      setStatusMsg({ type: "error", text: extractApiErrorMessage(err, t("common.error")) });
     } finally {
       setSaving(false);
     }

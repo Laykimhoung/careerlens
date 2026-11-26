@@ -13,7 +13,7 @@ import {
   getOffers,
   createOffer,
 } from "../../../services/applicationService";
-import { extractResults } from "../../../services/api";
+import { extractResults, extractApiErrorMessage } from "../../../services/api";
 import "./ApplicantDetails.css";
 
 export default function ApplicantDetails() {
@@ -127,11 +127,7 @@ export default function ApplicantDetails() {
         text: t("common.success"),
       });
     } catch (err) {
-      const detail =
-        err.response?.data?.detail ||
-        Object.values(err.response?.data || {})?.[0] ||
-        t("common.error");
-      setStatusMsg({ type: "error", text: String(detail) });
+      setStatusMsg({ type: "error", text: extractApiErrorMessage(err, t("common.error")) });
     } finally {
       setSavingOffer(false);
     }

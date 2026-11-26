@@ -8,6 +8,7 @@ import {
   getCurrentCandidateProfile,
   updateCandidateProfile,
 } from "../../../services/candidateService";
+import { extractApiErrorMessage } from "../../../services/api";
 import { updateMeApi } from "../../../services/authService";
 import { clearLegacyImageStorage } from "../../../utils/storage";
 import { useLanguage } from "../../../context/LanguageContext";
@@ -177,11 +178,7 @@ export default function CandidateProfile() {
       setIsEditing(false);
       setStatusMsg({ type: "success", text: "Profile updated and saved to database." });
     } catch (err) {
-      const detail =
-        err.response?.data?.detail ||
-        Object.values(err.response?.data || {})?.[0] ||
-        "Failed to save profile changes.";
-      setStatusMsg({ type: "error", text: String(detail) });
+      setStatusMsg({ type: "error", text: extractApiErrorMessage(err, "Failed to save profile changes.") });
     } finally {
       setLoading(false);
     }

@@ -148,4 +148,34 @@ export function extractResults(response) {
   return [];
 }
 
+/**
+ * Safely extracts a human-readable error message from Axios/DRF error responses.
+ * Guards against non-JSON HTML error pages (e.g. Render/Django 500) returning empty/HTML chars.
+ */
+export function extractApiErrorMessage(err, fallback = "Something went wrong. Please try again.") {
+  const data = err?.response?.data;
+  if (typeof data === "string") {
+    const trimmed = data.trim();
+    if (!trimmed || trimmed.startsWith("<")) {
+      return fallback;
+    }
+    return trimmed;
+  }
+  if (data && typeof data === "object") {
+    if (typeof data.detail === "string" && data.detail.trim()) {
+      return data.detail.trim();
+    }
+    if (typeof data.message === "string" && data.message.trim()) {
+      return data.message.trim();
+    }
+    for (const [field, val] of Object.entries(data)) {
+      const firstMsg = Array.isArray(val) ? val[0] : val;
+      if (typeof firstMsg === "string" && firstMsg.trim()) {
+        return field === "non_field_errors" ? firstMsg.trim() : `${field}: ${firstMsg.trim()}`;
+      }
+    }
+  }
+  return err?.message && !err?.response ? err.message : fallback;
+}
+
 export default api;

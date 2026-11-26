@@ -4,6 +4,7 @@ import InterviewCard from "../../../components/company/InterviewCard";
 import Input from "../../../components/common/Input";
 import Select from "../../../components/common/Select";
 import Button from "../../../components/common/Button";
+import { extractApiErrorMessage } from "../../../services/api";
 import {
   fetchNormalizedApplications,
   updateApplication,
@@ -115,11 +116,10 @@ export default function Interviews() {
         text: t("common.success"),
       });
     } catch (err) {
-      const detail =
-        err.response?.data?.detail ||
-        Object.values(err.response?.data || {})?.[0] ||
-        t("common.error");
-      setStatusMsg({ type: "error", text: String(detail) });
+      setStatusMsg({
+        type: "error",
+        text: extractApiErrorMessage(err, t("common.error")),
+      });
     } finally {
       setSubmitting(false);
     }
