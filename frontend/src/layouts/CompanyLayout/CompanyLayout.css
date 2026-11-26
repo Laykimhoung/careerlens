@@ -258,6 +258,11 @@
   border-top: 0;
 }
 
+.workspace-row strong {
+  overflow-wrap: anywhere;
+  text-align: right;
+}
+
 .workspace-actions {
   display: flex;
   flex-wrap: wrap;
@@ -285,16 +290,22 @@
 
 .workspace-button:hover {
   background: var(--color-surface-hover);
+  color: var(--color-text-primary);
 }
 
-.workspace-button-primary {
-  color: var(--color-surface);
+.workspace-button-primary,
+.workspace-button-primary:visited {
+  color: #ffffff !important;
   background: var(--color-primary);
   border-color: var(--color-primary);
 }
 
-.workspace-button-primary:hover {
+.workspace-button-primary:hover,
+.workspace-button-primary:focus,
+.workspace-button-primary:active {
+  color: #ffffff !important;
   background: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
 }
 
 .workspace-button-danger {
@@ -345,6 +356,7 @@
   border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-sm);
   background: var(--color-surface);
+  color: var(--color-text-primary);
 }
 
 .workspace-search:focus {
@@ -460,6 +472,33 @@
 
 [data-theme="dark"] .company-shell .chart-label {
   color: #f1f5f9 !important;
+}
+
+[data-theme="dark"] .company-shell .workspace-button-danger {
+  color: #f87171 !important;
+  border-color: rgba(248, 113, 113, 0.45) !important;
+  background: rgba(239, 68, 68, 0.12) !important;
+}
+
+[data-theme="dark"] .company-shell .workspace-button-danger:hover {
+  background: rgba(239, 68, 68, 0.24) !important;
+  color: #fca5a5 !important;
+}
+
+[data-theme="dark"] .company-shell .workspace-table button {
+  background: rgba(14, 22, 52, 0.85) !important;
+  color: #ffffff !important;
+  border-color: rgba(99, 142, 203, 0.35) !important;
+}
+
+[data-theme="dark"] .company-shell .workspace-table button:hover {
+  background: rgba(99, 142, 203, 0.25) !important;
+}
+
+[data-theme="dark"] .company-shell .workspace-table button.workspace-button-danger {
+  color: #f87171 !important;
+  border-color: rgba(248, 113, 113, 0.45) !important;
+  background: rgba(239, 68, 68, 0.12) !important;
 }
 
 

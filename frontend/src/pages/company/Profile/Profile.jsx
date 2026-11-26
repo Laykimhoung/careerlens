@@ -341,18 +341,17 @@ export default function Profile() {
                 label={t("company.companySize")}
                 value={profile.size || ""}
                 onChange={updateField}
-                options={[
-                  "1-10 employees",
-                  "11-50 employees",
-                  "51-200 employees",
-                  "201-500 employees",
-                  "500+ employees",
-                  "1-10",
-                  "11-50",
-                  "51-200",
-                  "201-500",
-                  "500+",
-                ]}
+                options={Array.from(
+                  new Set([
+                    ...(profile.size ? [profile.size] : []),
+                    "1-10 employees",
+                    "11-50 employees",
+                    "20-50 employees",
+                    "51-200 employees",
+                    "201-500 employees",
+                    "500+ employees",
+                  ])
+                )}
               />
               <Input
                 id="location"

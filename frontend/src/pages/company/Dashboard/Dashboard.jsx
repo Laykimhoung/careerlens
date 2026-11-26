@@ -98,24 +98,39 @@ export default function CompanyDashboard() {
     setLoading(true);
     setError("");
     try {
+      let coreFailed = false;
       const [compProf, allJobs, appList, intList, offerRes, notifRes] = await Promise.all([
         getCurrentCompanyProfile(user?.id).catch(() => null),
-        fetchNormalizedJobs(),
-        fetchNormalizedApplications(),
+        fetchNormalizedJobs().catch(() => {
+          coreFailed = true;
+          return null;
+        }),
+        fetchNormalizedApplications().catch(() => {
+          coreFailed = true;
+          return null;
+        }),
         fetchInterviewsList().catch(() => []),
         getOffers().catch(() => ({ data: [] })),
         getNotifications().catch(() => ({ data: [] })),
       ]);
       setCompanyProfile(compProf);
+      if (compProf?.logo) {
+        setCompanyLogo(compProf.logo);
+      }
 
-      const ownJobs = allJobs.filter(
+      if (coreFailed && allJobs === null && appList === null) {
+        setError(t("company.loadDashboardError", "Failed to load company dashboard."));
+      }
+
+      const safeJobs = Array.isArray(allJobs) ? allJobs : [];
+      const ownJobs = safeJobs.filter(
         (j) =>
           (compProf?.id && Number(j.companyId) === Number(compProf.id)) ||
           (user?.id && Number(j.companyUserId) === Number(user.id))
       );
       setJobs(ownJobs);
-      setApplications(appList);
-      setInterviews(intList);
+      setApplications(Array.isArray(appList) ? appList : []);
+      setInterviews(Array.isArray(intList) ? intList : []);
       setOffers(extractResults(offerRes));
       const notifs = extractResults(notifRes);
       setUnreadNotifCount(notifs.filter((n) => !n.is_read).length);
@@ -124,7 +139,7 @@ export default function CompanyDashboard() {
     } finally {
       setLoading(false);
     }
-  }, [user?.id]);
+  }, [user?.id, t]);
 
   useEffect(() => {
     loadDashboard();
@@ -159,7 +174,7 @@ export default function CompanyDashboard() {
     };
     applications.forEach((a) => {
       if (a.rawStatus === "APPLIED") counts.Applied += 1;
-      else if (a.rawStatus === "REVIEWING" || a.rawStatus === "SCREENING") counts.Reviewing += 1;
+      else if (a.rawStatus === "REVIEWING" || a.rawStatus === "SCREENING" || a.rawStatus === "SHORTLISTED") counts.Reviewing += 1;
       else if (a.rawStatus === "INTERVIEW") counts.Interview += 1;
       else if (a.rawStatus === "OFFERED") counts.Offered += 1;
       else if (a.rawStatus === "REJECTED") counts.Rejected += 1;
@@ -170,6 +185,7 @@ export default function CompanyDashboard() {
 
   const activeJobs = jobs.filter((j) => j.rawStatus === "PUBLISHED").length;
   const totalApplicants = applications.length;
+  const searchTerm = searchFilter.trim().toLowerCase();
 
   const barData = [
     { name: t("admin.applied", "Applied"), value: statusCounts.Applied, color: "#F97316" },
@@ -181,12 +197,25 @@ export default function CompanyDashboard() {
 
   const maxVal = Math.max(4, ...barData.map((d) => d.value));
 
+  const filteredJobs = useMemo(() => {
+    if (!searchTerm) return jobs;
+    return jobs.filter((j) =>
+      `${j.title} ${j.location} ${j.type} ${j.workMode} ${(j.tags || []).join(" ")}`
+        .toLowerCase()
+        .includes(searchTerm)
+    );
+  }, [jobs, searchTerm]);
+
   // "On Process" Active Applicants
   const inProcessApplicants = useMemo(() => {
     return applications
-      .filter((a) => ["APPLIED", "REVIEWING", "SCREENING", "INTERVIEW"].includes(a.rawStatus))
+      .filter((a) => ["APPLIED", "REVIEWING", "SCREENING", "SHORTLISTED", "INTERVIEW"].includes(a.rawStatus))
+      .filter((a) =>
+        !searchTerm ||
+        `${a.candidateName} ${a.jobTitle} ${a.status}`.toLowerCase().includes(searchTerm)
+      )
       .slice(0, 5);
-  }, [applications]);
+  }, [applications, searchTerm]);
 
   const todayFormatted = new Date().toLocaleDateString(language === "km" ? "km-KH" : "en-US", {
     weekday: "long",
@@ -237,8 +266,20 @@ export default function CompanyDashboard() {
       </header>
 
       {error && (
-        <div className="comp-error-banner" role="alert">
-          {error}
+        <div
+          className="comp-error-banner"
+          role="alert"
+          style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px" }}
+        >
+          <span>{error}</span>
+          <button
+            type="button"
+            className="workspace-button"
+            onClick={loadDashboard}
+            disabled={loading}
+          >
+            {t("common.retry", "Retry")}
+          </button>
         </div>
       )}
 
@@ -303,7 +344,7 @@ export default function CompanyDashboard() {
                       tick={{ fill: "#94A3B8", fontSize: 11 }}
                     />
                     <Tooltip cursor={{ fill: "rgba(249, 115, 22, 0.08)" }} content={<CustomBarTooltip />} />
-                    <Bar dataKey="value" radius={[6, 6, 0, 0]} maxBarSize={30}>
+                    <Bar dataKey="value" radius={[6, 6, 0, 0]} maxBarSize={30} isAnimationActive={false}>
                       {barData.map((entry) => (
                         <Cell key={entry.name} fill={entry.color} />
                       ))}
@@ -332,7 +373,7 @@ export default function CompanyDashboard() {
                 </div>
               </div>
 
-              <Link to="/company/jobs" className="comp-performer-btn">
+              <Link to="/company/jobs/create" className="comp-performer-btn">
                 + {t("company.postJob", "Post Job")}
               </Link>
             </div>
@@ -352,16 +393,20 @@ export default function CompanyDashboard() {
               </div>
 
               <div className="comp-job-cards-list">
-                {jobs.length === 0 ? (
+                {filteredJobs.length === 0 ? (
                   <div className="comp-empty-box">
                     <EmptyStateIllustration />
-                    <p>{t("company.noJobsPrompt", "No job postings yet. Create your first opening today!")}</p>
-                    <Link to="/company/jobs" className="comp-create-job-btn">
+                    <p>
+                      {searchTerm
+                        ? t("company.noJobs", "No roles found.")
+                        : t("company.noJobsPrompt", "No job postings yet. Create your first opening today!")}
+                    </p>
+                    <Link to="/company/jobs/create" className="comp-create-job-btn">
                       + {t("company.postJob", "Post a Job")}
                     </Link>
                   </div>
                 ) : (
-                  jobs.slice(0, 4).map((j) => (
+                  filteredJobs.slice(0, 4).map((j) => (
                     <div key={j.id} className="comp-job-row-card">
                       <div className="comp-job-row-info">
                         <strong>{j.title}</strong>
@@ -371,7 +416,7 @@ export default function CompanyDashboard() {
                       </div>
                       <div className="comp-job-row-actions">
                         <span className="comp-job-status-pill">{j.status}</span>
-                        <Link to={`/company/jobs`} className="comp-manage-link">
+                        <Link to={`/company/jobs/${j.id}/edit`} className="comp-manage-link">
                           {t("company.manageJobs", "Manage")} &rarr;
                         </Link>
                       </div>

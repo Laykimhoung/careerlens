@@ -199,7 +199,7 @@
   "messages": {
     "title": "Messages & Real-Time Chat",
     "subtitle": "Live messaging with candidates, companies & recruiters",
-    "addMessage": "+ Add Message",
+    "addMessage": "Add Message",
     "searchPlaceholder": "Search conversations...",
     "all": "All",
     "unread": "Unread",

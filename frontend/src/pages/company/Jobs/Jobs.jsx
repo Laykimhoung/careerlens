@@ -103,19 +103,33 @@ export default function Jobs() {
         <div
           style={{
             padding: "12px 16px",
-            backgroundColor: "#fef2f2",
-            color: "#b91c1c",
+            backgroundColor: "var(--color-danger-bg, #fef2f2)",
+            color: "var(--color-danger, #b91c1c)",
+            border: "1px solid var(--color-danger-border, #fecaca)",
             borderRadius: "8px",
             marginBottom: "16px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: "12px",
           }}
+          role="alert"
         >
-          {error}
+          <span>{error}</span>
+          <button
+            type="button"
+            className="workspace-button"
+            onClick={loadJobs}
+            disabled={loading}
+          >
+            {t("common.retry", "Retry")}
+          </button>
         </div>
       )}
 
       <div
         className="workspace-toolbar"
-        style={{ display: "flex", gap: "12px", marginBottom: "20px" }}
+        style={{ display: "flex", gap: "12px", marginBottom: "20px", flexWrap: "wrap" }}
       >
         <input
           type="search"
@@ -140,11 +154,11 @@ export default function Jobs() {
         </select>
       </div>
 
-      <div className="dashboard-panel" style={{ padding: 0, overflow: "hidden" }}>
+      <div className="workspace-table-wrap">
         <table className="workspace-table">
           <thead>
             <tr>
-              <th>{t("company.role", "Role")}</th>
+              <th>{t("company.jobRole", "Role")}</th>
               <th>{t("company.locationSetup", "Location & Setup")}</th>
               <th>{t("company.compensation", "Compensation")}</th>
               <th>{t("common.status", "Status")}</th>
@@ -156,7 +170,7 @@ export default function Jobs() {
               <tr>
                 <td
                   colSpan="5"
-                  style={{ textAlign: "center", padding: "40px", color: "#666" }}
+                  className="workspace-empty"
                 >
                   {t("company.loadingJobs", "Loading job postings...")}
                 </td>
@@ -166,7 +180,7 @@ export default function Jobs() {
                 <tr key={job.id}>
                   <td>
                     <strong>{job.title}</strong>
-                    <div style={{ color: "#666", fontSize: "12px", marginTop: "4px" }}>
+                    <div style={{ color: "var(--color-text-muted, #64748b)", fontSize: "12px", marginTop: "4px" }}>
                       {job.type}
                       {job.tags?.length ? ` · ${job.tags.slice(0, 3).join(", ")}` : ""}
                     </div>
@@ -233,10 +247,7 @@ export default function Jobs() {
               ))
             ) : (
               <tr>
-                <td
-                  colSpan="5"
-                  style={{ textAlign: "center", padding: "40px", color: "#666" }}
-                >
+                <td colSpan="5" className="workspace-empty">
                   {t("company.noJobs", "No roles found.")}
                 </td>
               </tr>
