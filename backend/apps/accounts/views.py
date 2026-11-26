@@ -148,6 +148,8 @@ class CompanyProfileViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
 
     def get_queryset(self):
+        from .utils import ensure_company_profile
+        ensure_company_profile(self.request.user)
         return super().get_queryset()
 
     def perform_update(self, serializer):

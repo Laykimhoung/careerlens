@@ -54,6 +54,29 @@ class JobTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue(Job.objects.filter(title="New Job").exists())
 
+    def test_company_without_profile_auto_provisions_on_jobs_endpoints(self):
+        orphan_company = User.objects.create_user(
+            username="jinghub_orphan",
+            email="jinghub_orphan@test.com",
+            first_name="JingHub",
+            last_name="Company",
+            password="pw1",
+            role=User.Role.COMPANY,
+        )
+        self.assertFalse(CompanyProfile.objects.filter(user=orphan_company).exists())
+        self.client.force_authenticate(user=orphan_company)
+
+        list_res = self.client.get(reverse('job-list'))
+        self.assertEqual(list_res.status_code, status.HTTP_200_OK)
+        self.assertTrue(CompanyProfile.objects.filter(user=orphan_company).exists())
+
+        create_res = self.client.post(
+            reverse('job-list'),
+            {"title": "JingHub Engineer", "description": "Full stack role", "status": "PUBLISHED"},
+            format='json',
+        )
+        self.assertEqual(create_res.status_code, status.HTTP_201_CREATED)
+
     def test_create_job_as_candidate(self):
         """Candidates cannot create jobs."""
         self.client.force_authenticate(user=self.candidate_user)

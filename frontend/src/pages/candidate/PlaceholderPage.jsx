@@ -461,23 +461,17 @@ function CompanyTalentPoolView() {
         </div>
         <input
           type="text"
+          className="ph-search-input"
           placeholder="Search by name, skill, major, or university..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          style={{
-            padding: "9px 14px",
-            border: "1px solid #cbd5e1",
-            borderRadius: "8px",
-            minWidth: "280px",
-            fontSize: "14px",
-          }}
         />
       </div>
 
       {loading ? (
-        <p style={{ color: "#64748b" }}>Loading candidate profiles...</p>
+        <p className="ph-desc">Loading candidate profiles...</p>
       ) : filtered.length === 0 ? (
-        <p style={{ color: "#64748b" }}>No candidates match your search.</p>
+        <p className="ph-desc">No candidates match your search.</p>
       ) : (
         <div style={{ display: "grid", gap: "12px" }}>
           {filtered.map((c) => {
@@ -487,57 +481,30 @@ function CompanyTalentPoolView() {
               `Candidate #${c.id}`;
             const skillNames = (c.skills || []).map((s) => s.skill?.name || s.name).filter(Boolean);
             return (
-              <div
-                key={c.id}
-                style={{
-                  padding: "16px",
-                  borderRadius: "8px",
-                  border: "1px solid #e2e8f0",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "flex-start",
-                  gap: "16px",
-                  flexWrap: "wrap",
-                }}
-              >
+              <div key={c.id} className="ph-talent-card">
                 <div>
-                  <div style={{ fontWeight: 700, fontSize: "16px", color: "#0f172a" }}>
-                    {fullName}
-                  </div>
-                  <div style={{ fontSize: "13px", color: "#475569", marginTop: "2px" }}>
+                  <div className="ph-talent-name">{fullName}</div>
+                  <div className="ph-talent-meta">
                     {c.major || "General Studies"} &middot; {c.university || "University"}
                     {c.graduation_year ? ` (Class of ${c.graduation_year})` : ""}
                   </div>
-                  {c.bio && (
-                    <p style={{ fontSize: "13px", color: "#334155", margin: "8px 0" }}>
-                      {c.bio}
-                    </p>
-                  )}
+                  {c.bio && <p className="ph-talent-bio">{c.bio}</p>}
                   <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", marginTop: "6px" }}>
                     {skillNames.map((sk) => (
-                      <span
-                        key={sk}
-                        style={{
-                          fontSize: "12px",
-                          padding: "2px 8px",
-                          borderRadius: "999px",
-                          backgroundColor: "#f1f5f9",
-                          color: "#0f172a",
-                        }}
-                      >
+                      <span key={sk} className="ph-skill-chip">
                         {sk}
                       </span>
                     ))}
                   </div>
                 </div>
-                <div style={{ fontSize: "13px", color: "#475569", textAlign: "right" }}>
+                <div className="ph-talent-aside">
                   <div>{c.user?.email}</div>
                   {c.resume_file && (
                     <a
                       href={c.resume_file}
                       target="_blank"
                       rel="noreferrer"
-                      style={{ color: "#0d9488", fontWeight: 600, display: "inline-block", marginTop: "6px" }}
+                      className="ph-resume-link"
                     >
                       View Resume &rarr;
                     </a>
@@ -597,50 +564,48 @@ function CompanyReportsView() {
       </p>
 
       {loading ? (
-        <p style={{ color: "#64748b" }}>Loading recruitment analytics...</p>
+        <p className="ph-desc">Loading recruitment analytics...</p>
       ) : (
         <>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: "16px", marginBottom: "28px" }}>
-            <div style={{ padding: "16px", borderRadius: "8px", border: "1px solid #e2e8f0", background: "#f8fafc" }}>
-              <div style={{ fontSize: "24px", fontWeight: 700, color: "#0f172a" }}>{jobs.length}</div>
-              <div style={{ fontSize: "13px", color: "#64748b" }}>Total Job Postings</div>
+            <div className="ph-stat-card">
+              <div className="ph-stat-val">{jobs.length}</div>
+              <div className="ph-stat-label">Total Job Postings</div>
             </div>
-            <div style={{ padding: "16px", borderRadius: "8px", border: "1px solid #e2e8f0", background: "#f8fafc" }}>
-              <div style={{ fontSize: "24px", fontWeight: 700, color: "#0d9488" }}>
+            <div className="ph-stat-card">
+              <div className="ph-stat-val ph-stat-val--teal">
                 {jobs.filter((j) => j.rawStatus === "PUBLISHED").length}
               </div>
-              <div style={{ fontSize: "13px", color: "#64748b" }}>Published Jobs</div>
+              <div className="ph-stat-label">Published Jobs</div>
             </div>
-            <div style={{ padding: "16px", borderRadius: "8px", border: "1px solid #e2e8f0", background: "#f8fafc" }}>
-              <div style={{ fontSize: "24px", fontWeight: 700, color: "#0f172a" }}>{applications.length}</div>
-              <div style={{ fontSize: "13px", color: "#64748b" }}>Total Applications</div>
+            <div className="ph-stat-card">
+              <div className="ph-stat-val">{applications.length}</div>
+              <div className="ph-stat-label">Total Applications</div>
             </div>
-            <div style={{ padding: "16px", borderRadius: "8px", border: "1px solid #e2e8f0", background: "#f8fafc" }}>
-              <div style={{ fontSize: "24px", fontWeight: 700, color: "#2563eb" }}>{interviews.length}</div>
-              <div style={{ fontSize: "13px", color: "#64748b" }}>Interviews Scheduled</div>
+            <div className="ph-stat-card">
+              <div className="ph-stat-val ph-stat-val--blue">{interviews.length}</div>
+              <div className="ph-stat-label">Interviews Scheduled</div>
             </div>
-            <div style={{ padding: "16px", borderRadius: "8px", border: "1px solid #e2e8f0", background: "#f8fafc" }}>
-              <div style={{ fontSize: "24px", fontWeight: 700, color: "#16a34a" }}>{offers.length}</div>
-              <div style={{ fontSize: "13px", color: "#64748b" }}>Offers Extended</div>
+            <div className="ph-stat-card">
+              <div className="ph-stat-val ph-stat-val--green">{offers.length}</div>
+              <div className="ph-stat-label">Offers Extended</div>
             </div>
           </div>
 
-          <h3 style={{ fontSize: "16px", color: "#0f172a", marginBottom: "12px" }}>
-            Pipeline Stage Breakdown
-          </h3>
-          <div style={{ display: "grid", gap: "10px" }}>
+          <h3 className="ph-section-title">Pipeline Stage Breakdown</h3>
+          <div style={{ display: "grid", gap: "12px" }}>
             {Object.entries(statusBreakdown).map(([stage, count]) => {
               const pct = applications.length > 0 ? Math.round((count / applications.length) * 100) : 0;
               return (
                 <div key={stage}>
-                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: "13px", marginBottom: "4px" }}>
+                  <div className="ph-bar-row">
                     <span style={{ fontWeight: 600 }}>{stage}</span>
                     <span>
                       {count} ({pct}%)
                     </span>
                   </div>
-                  <div style={{ height: "8px", background: "#e2e8f0", borderRadius: "999px", overflow: "hidden" }}>
-                    <div style={{ width: `${pct}%`, height: "100%", background: "#0d9488" }} />
+                  <div className="ph-bar-track">
+                    <div className="ph-bar-fill" style={{ width: `${pct}%` }} />
                   </div>
                 </div>
               );

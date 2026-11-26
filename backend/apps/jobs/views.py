@@ -50,13 +50,18 @@ class JobViewSet(viewsets.ModelViewSet):
         return [permission() for permission in permission_classes]
 
     def get_queryset(self):
+        from apps.accounts.utils import ensure_company_profile
         qs = super().get_queryset()
         # If user is not authenticated or a candidate, only show published jobs
         if self.request.user.is_anonymous or (self.request.user.is_authenticated and self.request.user.role == self.request.user.Role.CANDIDATE):
             qs = qs.filter(status=Job.Status.PUBLISHED)
         elif self.request.user.is_authenticated and self.request.user.role == self.request.user.Role.COMPANY:
             from django.db.models import Q
-            qs = qs.filter(Q(status=Job.Status.PUBLISHED) | Q(company=self.request.user.company_profile))
+            company_profile = ensure_company_profile(self.request.user)
+            if company_profile:
+                qs = qs.filter(Q(status=Job.Status.PUBLISHED) | Q(company=company_profile))
+            else:
+                qs = qs.filter(status=Job.Status.PUBLISHED)
         search = self.request.query_params.get("search")
         location = self.request.query_params.get("location")
         if search or location:
@@ -64,8 +69,8 @@ class JobViewSet(viewsets.ModelViewSet):
         return qs
 
     def perform_create(self, serializer):
-        from apps.accounts.utils import log_audit_action
-        company_profile = getattr(self.request.user, 'company_profile', None)
+        from apps.accounts.utils import log_audit_action, ensure_company_profile
+        company_profile = ensure_company_profile(self.request.user)
         if not company_profile and self.request.user.role == self.request.user.Role.ADMIN:
             comp_id = self.request.data.get('company_id')
             comp_name = self.request.data.get('company_name')

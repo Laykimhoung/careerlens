@@ -209,7 +209,7 @@ export default function Messages() {
       }
     };
 
-    const intervalId = setInterval(pollMessages, 2000);
+    const intervalId = setInterval(pollMessages, 5000);
     window.addEventListener("focus", pollMessages);
     document.addEventListener("visibilitychange", pollMessages);
 
@@ -491,10 +491,10 @@ export default function Messages() {
         <button
           className="btn-add-message"
           onClick={() => setIsNewMessageModalOpen(true)}
-          title={t("messages.addMessage", "+ Add Message")}
+          title={t("messages.addMessage", "Add Message").replace(/^\+\s*/, "")}
         >
           <Plus size={16} />
-          <span>{t("messages.addMessage", "+ Add Message")}</span>
+          <span>{t("messages.addMessage", "Add Message").replace(/^\+\s*/, "")}</span>
         </button>
       </div>
 

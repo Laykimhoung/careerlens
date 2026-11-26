@@ -820,6 +820,7 @@
 .btn-send-message {
   width: 36px;
   height: 36px;
+  padding: 0;
   border-radius: 50%;
   border: none;
   background: linear-gradient(135deg, #638ECB 0%, #466ea8 100%);
@@ -1112,6 +1113,28 @@
 }
 
 /* ── Dark Mode Overrides ────────────────────────────────────────────────── */
+[data-theme="dark"] .social-chat-title,
+[data-theme="dark"] .chat-header__name,
+[data-theme="dark"] .conversation-card__name,
+[data-theme="dark"] .icebreaker-title,
+[data-theme="dark"] .social-modal-title,
+[data-theme="dark"] .modal-contact-name {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .chat-header__headline,
+[data-theme="dark"] .conversation-card__preview,
+[data-theme="dark"] .icebreaker-desc,
+[data-theme="dark"] .modal-contact-sub {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .btn-send-message:disabled {
+  background: rgba(148, 163, 184, 0.25);
+  color: #cbd5e1;
+  opacity: 0.75;
+}
+
 [data-theme="dark"] .social-chat-card {
   background: #111827;
   border-color: #1f2937;

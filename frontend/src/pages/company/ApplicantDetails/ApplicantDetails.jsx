@@ -69,7 +69,7 @@ export default function ApplicantDetails() {
       await updateApplication(applicant.id, { status: backendStatus });
       setApplicant((prev) =>
         normalizeApplicationRecord({
-          ...prev.raw,
+          ...(prev.raw || prev),
           status: backendStatus,
         })
       );
@@ -118,7 +118,7 @@ export default function ApplicantDetails() {
       setOffer(res.data);
       setApplicant((prev) =>
         normalizeApplicationRecord({
-          ...prev.raw,
+          ...(prev.raw || prev),
           status: "OFFERED",
         })
       );

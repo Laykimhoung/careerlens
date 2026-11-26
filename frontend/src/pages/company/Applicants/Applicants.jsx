@@ -57,7 +57,7 @@ export default function Applicants() {
         prev.map((item) =>
           item.id === app.id
             ? normalizeApplicationRecord({
-                ...item.raw,
+                ...(item.raw || item),
                 status: backendStatus,
               })
             : item
@@ -85,8 +85,10 @@ export default function Applicants() {
     const v = String(s || "").toLowerCase();
     if (v === "applied") return t("admin.applied", "Applied");
     if (v === "screening" || v === "reviewing" || v === "review") return t("candidate.reviewing", "Reviewing");
-    if (v === "interviewing" || v === "interview") return t("admin.interview", "Interview");
+    if (v === "shortlisted") return t("company.shortlisted", "Shortlisted");
+    if (v === "interviewing" || v === "interview") return t("admin.interview", "Interviewing");
     if (v === "offered" || v === "offer") return t("candidate.offered", "Offered");
+    if (v === "hired") return t("company.hired", "Hired");
     if (v === "rejected") return t("common.rejected", "Rejected");
     return s;
   };
@@ -104,19 +106,33 @@ export default function Applicants() {
         <div
           style={{
             padding: "12px 16px",
-            backgroundColor: "#fef2f2",
-            color: "#b91c1c",
+            backgroundColor: "var(--color-danger-bg, #fef2f2)",
+            color: "var(--color-danger, #b91c1c)",
+            border: "1px solid var(--color-danger-border, #fecaca)",
             borderRadius: "8px",
             marginBottom: "16px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: "12px",
           }}
+          role="alert"
         >
-          {error}
+          <span>{error}</span>
+          <button
+            type="button"
+            className="workspace-button"
+            onClick={loadApplicants}
+            disabled={loading}
+          >
+            {t("common.retry", "Retry")}
+          </button>
         </div>
       )}
 
       <div
         className="workspace-toolbar"
-        style={{ display: "flex", gap: "12px", marginBottom: "20px" }}
+        style={{ display: "flex", gap: "12px", marginBottom: "20px", flexWrap: "wrap" }}
       >
         <input
           type="search"
@@ -137,13 +153,15 @@ export default function Applicants() {
           <option value="All statuses">{t("company.allStatuses", "All statuses")}</option>
           <option value="Applied">{t("admin.applied", "Applied")}</option>
           <option value="Reviewing">{t("candidate.reviewing", "Reviewing")}</option>
-          <option value="Interview">{t("admin.interview", "Interview")}</option>
+          <option value="Shortlisted">{t("company.shortlisted", "Shortlisted")}</option>
+          <option value="Interviewing">{t("admin.interview", "Interviewing")}</option>
           <option value="Offered">{t("candidate.offered", "Offered")}</option>
+          <option value="Hired">{t("company.hired", "Hired")}</option>
           <option value="Rejected">{t("common.rejected", "Rejected")}</option>
         </select>
       </div>
 
-      <div className="dashboard-panel" style={{ padding: 0, overflow: "hidden" }}>
+      <div className="workspace-table-wrap">
         <table className="workspace-table">
           <thead>
             <tr>
@@ -159,7 +177,7 @@ export default function Applicants() {
               <tr>
                 <td
                   colSpan="5"
-                  style={{ textAlign: "center", padding: "40px", color: "#666" }}
+                  className="workspace-empty"
                 >
                   {t("company.loadingApplicants", "Loading applicants...")}
                 </td>
@@ -171,7 +189,7 @@ export default function Applicants() {
                   <tr key={app.id}>
                     <td>
                       <strong>{app.candidateName}</strong>
-                      <div style={{ color: "#666", fontSize: "12px", marginTop: "4px" }}>
+                      <div style={{ color: "var(--color-text-muted, #64748b)", fontSize: "12px", marginTop: "4px" }}>
                         {app.candidateEmail || "No email"}
                       </div>
                     </td>
@@ -186,10 +204,11 @@ export default function Applicants() {
                       <div className="workspace-table-actions">
                         <select
                           className="admin-input"
+                          aria-label={`Update status for ${app.candidateName}`}
                           style={{
-                            width: "130px",
+                            width: "136px",
                             padding: "4px 8px",
-                            minHeight: "30px",
+                            minHeight: "32px",
                             fontSize: "12px",
                           }}
                           value={displayStatus}
@@ -198,8 +217,10 @@ export default function Applicants() {
                         >
                           <option value="Applied">{t("admin.applied", "Applied")}</option>
                           <option value="Reviewing">{t("candidate.reviewing", "Reviewing")}</option>
-                          <option value="Interview">{t("admin.interview", "Interview")}</option>
+                          <option value="Shortlisted">{t("company.shortlisted", "Shortlisted")}</option>
+                          <option value="Interviewing">{t("admin.interview", "Interviewing")}</option>
                           <option value="Offered">{t("candidate.offered", "Offered")}</option>
+                          <option value="Hired">{t("company.hired", "Hired")}</option>
                           <option value="Rejected">{t("common.rejected", "Rejected")}</option>
                         </select>
                         <Link
@@ -215,10 +236,7 @@ export default function Applicants() {
               })
             ) : (
               <tr>
-                <td
-                  colSpan="5"
-                  style={{ textAlign: "center", padding: "40px", color: "#666" }}
-                >
+                <td colSpan="5" className="workspace-empty">
                   {t("company.noApplicantsFound", "No applicants found.")}
                 </td>
               </tr>

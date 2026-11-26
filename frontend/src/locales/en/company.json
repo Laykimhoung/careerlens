@@ -58,6 +58,7 @@
   "draft": "Draft",
   "closed": "Closed",
   "role": "Employer / Recruiter",
+  "jobRole": "Role",
   "locationSetup": "Location & Setup",
   "compensation": "Compensation",
   "loadingJobs": "Loading job postings...",

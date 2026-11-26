@@ -449,8 +449,8 @@
   height: 34px;
   border-radius: 999px;
   background: #016BFB;
-  color: #FFFFFF;
-  text-decoration: none;
+  color: #FFFFFF !important;
+  text-decoration: none !important;
   font-size: 0.78125rem;
   font-weight: 600;
   transition: background 0.18s ease;
@@ -458,6 +458,7 @@
 
 .comp-performer-btn:hover {
   background: #0058D4;
+  color: #FFFFFF !important;
 }
 
 /* ── Lower Section: Active Jobs ───────────────────────────────────────────── */
