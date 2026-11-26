@@ -219,8 +219,6 @@ class CompanyProfileSerializer(serializers.ModelSerializer):
                         else CompanyProfile.VerificationStatus.PENDING
                     )
 
-            user = instance.user
-            user_changed = False
             if 'first_name' in self.initial_data:
                 user.first_name = self.initial_data['first_name']
                 user_changed = True

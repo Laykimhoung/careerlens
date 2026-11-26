@@ -13,7 +13,7 @@ a {
   transition: color var(--transition-fast);
 }
 
-a:hover:not([class*="btn"]):not([class*="-btn"]):not([class*="_btn"]):not([role="button"]):not(.button) {
+a:hover:not([class*="btn"]):not([class*="-btn"]):not([class*="_btn"]):not([class*="button"]):not([role="button"]):not(.button) {
   color: var(--color-primary-hover);
 }
 
@@ -30,6 +30,14 @@ a:hover:not([class*="btn"]):not([class*="-btn"]):not([class*="_btn"]):not([role=
 .comp-spotlight-btn:hover,
 .comp-spotlight-btn:focus,
 .comp-spotlight-btn:active,
+.comp-performer-btn,
+.comp-performer-btn:hover,
+.comp-performer-btn:focus,
+.comp-performer-btn:active,
+.comp-create-job-btn,
+.comp-create-job-btn:hover,
+.comp-create-job-btn:focus,
+.comp-create-job-btn:active,
 .spotlight-action-btn,
 .spotlight-action-btn:hover,
 .spotlight-action-btn:focus,
@@ -38,10 +46,10 @@ a:hover:not([class*="btn"]):not([class*="-btn"]):not([class*="_btn"]):not([role=
 .performer-action-btn:hover,
 .performer-action-btn:focus,
 .performer-action-btn:active,
-.comp-performer-btn,
-.comp-performer-btn:hover,
-.comp-performer-btn:focus,
-.comp-performer-btn:active,
+.workspace-button-primary,
+.workspace-button-primary:hover,
+.workspace-button-primary:focus,
+.workspace-button-primary:active,
 .btn--primary,
 .btn--primary:hover,
 .btn--primary:focus,

@@ -820,6 +820,7 @@
 .btn-send-message {
   width: 36px;
   height: 36px;
+  padding: 0;
   border-radius: 50%;
   border: none;
   background: linear-gradient(135deg, #638ECB 0%, #466ea8 100%);
@@ -872,13 +873,13 @@
 .chat-empty-title {
   font-size: 18px;
   font-weight: 700;
-  color: var(--text-primary, #0f172a);
+  color: var(--color-text-primary, #0f172a);
   margin: 0;
 }
 
 .chat-empty-desc {
   font-size: 13px;
-  color: var(--text-secondary, #64748b);
+  color: var(--color-text-secondary, #64748b);
   line-height: 1.5;
   margin: 0 0 8px 0;
 }
@@ -926,13 +927,13 @@
 .social-modal-title {
   font-size: 16.5px;
   font-weight: 700;
-  color: var(--text-primary, #0f172a);
+  color: var(--color-text-primary, #0f172a);
   margin: 0 0 2px 0;
 }
 
 .social-modal-subtitle {
   font-size: 12.5px;
-  color: var(--text-secondary, #64748b);
+  color: var(--color-text-secondary, #64748b);
   margin: 0;
 }
 
@@ -947,8 +948,8 @@
 }
 
 .modal-close-btn:hover {
-  background: var(--bg-secondary, #f1f5f9);
-  color: #0f172a;
+  background: var(--color-surface-hover, #f1f5f9);
+  color: var(--color-text-primary, #0f172a);
 }
 
 .modal-search-wrap {
@@ -992,19 +993,19 @@
 
 .filter-pill {
   padding: 4px 10px;
-  background: var(--bg-secondary, #f1f5f9);
-  border: 1px solid var(--border-color, #e2e8f0);
+  background: var(--color-surface-hover, #f1f5f9);
+  border: 1px solid var(--color-border, #e2e8f0);
   border-radius: 20px;
   font-size: 11.5px;
   font-weight: 600;
-  color: var(--text-secondary, #64748b);
+  color: var(--color-text-secondary, #64748b);
   cursor: pointer;
   white-space: nowrap;
   transition: all 0.15s;
 }
 
 .filter-pill:hover {
-  color: var(--text-primary, #0f172a);
+  color: var(--color-text-primary, #0f172a);
 }
 
 .filter-pill.active {
@@ -1112,6 +1113,31 @@
 }
 
 /* ── Dark Mode Overrides ────────────────────────────────────────────────── */
+[data-theme="dark"] .social-chat-title,
+[data-theme="dark"] .chat-empty-title,
+[data-theme="dark"] .chat-header__name,
+[data-theme="dark"] .conversation-card__name,
+[data-theme="dark"] .icebreaker-title,
+[data-theme="dark"] .social-modal-title,
+[data-theme="dark"] .modal-contact-name {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .chat-empty-desc,
+[data-theme="dark"] .chat-header__headline,
+[data-theme="dark"] .conversation-card__preview,
+[data-theme="dark"] .icebreaker-desc,
+[data-theme="dark"] .social-modal-subtitle,
+[data-theme="dark"] .modal-contact-sub {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .btn-send-message:disabled {
+  background: rgba(148, 163, 184, 0.25);
+  color: #cbd5e1;
+  opacity: 0.75;
+}
+
 [data-theme="dark"] .social-chat-card {
   background: #111827;
   border-color: #1f2937;
@@ -1138,9 +1164,23 @@
   background: #1f2937;
 }
 
+[data-theme="dark"] .chat-tab {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .chat-tab:hover {
+  color: #f8fafc;
+}
+
 [data-theme="dark"] .chat-tab.active {
   background: #374151;
   color: #93c5fd;
+}
+
+[data-theme="dark"] .chat-date-separator span {
+  background: #1f2937;
+  border-color: #374151;
+  color: #94a3b8;
 }
 
 [data-theme="dark"] .conversation-card:hover {
@@ -1206,6 +1246,35 @@
 
 [data-theme="dark"] .social-modal-header {
   border-color: #1f2937;
+}
+
+[data-theme="dark"] .modal-close-btn {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .modal-close-btn:hover {
+  background: #1f2937;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .modal-filter-pills {
+  border-color: #1f2937;
+}
+
+[data-theme="dark"] .filter-pill {
+  background: #1f2937;
+  border-color: #374151;
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .filter-pill:hover {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .filter-pill.active {
+  background: #638ECB;
+  border-color: #638ECB;
+  color: #ffffff;
 }
 
 [data-theme="dark"] .modal-search-input {

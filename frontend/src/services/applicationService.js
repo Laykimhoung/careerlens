@@ -108,9 +108,11 @@ export function normalizeApplicationRecord(rawApp) {
     candidateMajor: candObj.major || "—",
     candidateGraduationYear: candObj.graduation_year || "—",
     candidateBio: candObj.bio || "",
-    candidateResume: candObj.resume_file || null,
+    candidateResume: candObj.resume_file || rawApp.resume_file || null,
+    resumeFile: candObj.resume_file || rawApp.resume_file || null,
     candidateSkills,
     candidateDetails: candObj,
+    raw: rawApp,
     rawStatus,
     status: displayStatus,
     appliedDate: rawApp.applied_at

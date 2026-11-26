@@ -15,7 +15,7 @@ from .serializers import (
 )
 from .permissions import IsApplicationCompanyOrReadOnly
 from apps.accounts.permissions import IsCandidateUser, IsCompanyUser, IsCompanyOrAdminUser
-from apps.accounts.utils import log_audit_action
+from apps.accounts.utils import log_audit_action, ensure_company_profile
 
 class ApplicationViewSet(viewsets.ModelViewSet):
     """
@@ -35,9 +35,10 @@ class ApplicationViewSet(viewsets.ModelViewSet):
                 return Application.objects.none()
             return base_qs.filter(candidate=self.request.user.candidate_profile).order_by('-applied_at')
         elif self.request.user.role == self.request.user.Role.COMPANY:
-            if not hasattr(self.request.user, 'company_profile'):
+            company_profile = ensure_company_profile(self.request.user)
+            if not company_profile:
                 return Application.objects.none()
-            return base_qs.filter(job__company=self.request.user.company_profile).order_by('-applied_at')
+            return base_qs.filter(job__company=company_profile).order_by('-applied_at')
         return Application.objects.none()
 
     def get_serializer_class(self):
@@ -354,9 +355,10 @@ class ApplicationStatusHistoryViewSet(viewsets.ReadOnlyModelViewSet):
                 return ApplicationStatusHistory.objects.none()
             return ApplicationStatusHistory.objects.filter(application__candidate=self.request.user.candidate_profile).order_by('created_at')
         elif self.request.user.role == self.request.user.Role.COMPANY:
-            if not hasattr(self.request.user, 'company_profile'):
+            company_profile = ensure_company_profile(self.request.user)
+            if not company_profile:
                 return ApplicationStatusHistory.objects.none()
-            return ApplicationStatusHistory.objects.filter(application__job__company=self.request.user.company_profile).order_by('created_at')
+            return ApplicationStatusHistory.objects.filter(application__job__company=company_profile).order_by('created_at')
         return ApplicationStatusHistory.objects.none()
 
 class InterviewViewSet(viewsets.ModelViewSet):
@@ -371,9 +373,10 @@ class InterviewViewSet(viewsets.ModelViewSet):
                 return Interview.objects.none()
             return Interview.objects.filter(application__candidate=self.request.user.candidate_profile).order_by('scheduled_at')
         elif self.request.user.role == self.request.user.Role.COMPANY:
-            if not hasattr(self.request.user, 'company_profile'):
+            company_profile = ensure_company_profile(self.request.user)
+            if not company_profile:
                 return Interview.objects.none()
-            return Interview.objects.filter(application__job__company=self.request.user.company_profile).order_by('scheduled_at')
+            return Interview.objects.filter(application__job__company=company_profile).order_by('scheduled_at')
         return Interview.objects.none()
 
     def perform_create(self, serializer):
@@ -381,7 +384,8 @@ class InterviewViewSet(viewsets.ModelViewSet):
             raise PermissionDenied("Only companies can schedule interviews.")
         
         application = serializer.validated_data.get('application')
-        if self.request.user.role == self.request.user.Role.COMPANY and application.job.company != self.request.user.company_profile:
+        company_profile = ensure_company_profile(self.request.user)
+        if self.request.user.role == self.request.user.Role.COMPANY and (not company_profile or application.job.company != company_profile):
             raise PermissionDenied("You do not own this application.")
 
         # Auto-generate video meeting room link if not provided
@@ -425,9 +429,10 @@ class OfferViewSet(viewsets.ModelViewSet):
                 return Offer.objects.none()
             return Offer.objects.filter(application__candidate=self.request.user.candidate_profile).order_by('-sent_at')
         elif self.request.user.role == self.request.user.Role.COMPANY:
-            if not hasattr(self.request.user, 'company_profile'):
+            company_profile = ensure_company_profile(self.request.user)
+            if not company_profile:
                 return Offer.objects.none()
-            return Offer.objects.filter(application__job__company=self.request.user.company_profile).order_by('-sent_at')
+            return Offer.objects.filter(application__job__company=company_profile).order_by('-sent_at')
         return Offer.objects.none()
 
     def perform_create(self, serializer):
@@ -435,7 +440,8 @@ class OfferViewSet(viewsets.ModelViewSet):
             raise PermissionDenied("Only companies can send offers.")
         
         application = serializer.validated_data.get('application')
-        if self.request.user.role == self.request.user.Role.COMPANY and application.job.company != self.request.user.company_profile:
+        company_profile = ensure_company_profile(self.request.user)
+        if self.request.user.role == self.request.user.Role.COMPANY and (not company_profile or application.job.company != company_profile):
             raise PermissionDenied("You do not own this application.")
 
         instance = serializer.save()
@@ -478,9 +484,10 @@ class OfferViewSet(viewsets.ModelViewSet):
     def perform_destroy(self, instance):
         if self.request.user.role not in (self.request.user.Role.COMPANY, self.request.user.Role.ADMIN):
             raise PermissionDenied("Only companies or admins can delete offers.")
+        company_profile = ensure_company_profile(self.request.user)
         if (
             self.request.user.role == self.request.user.Role.COMPANY
-            and instance.application.job.company != self.request.user.company_profile
+            and (not company_profile or instance.application.job.company != company_profile)
         ):
             raise PermissionDenied("You do not own this offer.")
         instance.delete()
@@ -492,10 +499,14 @@ class ApplicationNoteViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         if self.request.user.role == self.request.user.Role.ADMIN:
             return ApplicationNote.objects.all().order_by('-created_at')
-        return ApplicationNote.objects.filter(application__job__company=self.request.user.company_profile).order_by('-created_at')
+        company_profile = ensure_company_profile(self.request.user)
+        if not company_profile:
+            return ApplicationNote.objects.none()
+        return ApplicationNote.objects.filter(application__job__company=company_profile).order_by('-created_at')
 
     def perform_create(self, serializer):
         application = serializer.validated_data.get('application')
-        if self.request.user.role == self.request.user.Role.COMPANY and application.job.company != self.request.user.company_profile:
+        company_profile = ensure_company_profile(self.request.user)
+        if self.request.user.role == self.request.user.Role.COMPANY and (not company_profile or application.job.company != company_profile):
             raise PermissionDenied("You do not own this application.")
         serializer.save(author=self.request.user)
